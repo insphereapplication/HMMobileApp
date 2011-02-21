@@ -1,0 +1,63 @@
+<div class="pageTitle">
+  <h1><%= @opportunity.status %></h1>
+</div>
+
+<div class="toolbar">
+  <div class="leftItem backButton">
+    <a href="<%= url_for :action => :index %>">Back</a>
+  </div>
+  <div class="rightItem regularButton">
+    <a href="<%= url_for :action => :edit, :id => @opportunity.object %>">Edit</a>
+  </div>
+</div>
+
+<div class="content">
+  <ul>
+    
+        <li>
+          <div class="itemLabel">Status</div>
+          <div class="itemValue"><%= @opportunity.status %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">Source</div>
+          <div class="itemValue"><%= @opportunity.source %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">StatusReason</div>
+          <div class="itemValue"><%= @opportunity.status_reason %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">Vendor</div>
+          <div class="itemValue"><%= @opportunity.vendor %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">LeadType</div>
+          <div class="itemValue"><%= @opportunity.lead_type %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">CreatedOn</div>
+          <div class="itemValue"><%= @opportunity.created_on %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">UpdatedOn</div>
+          <div class="itemValue"><%= @opportunity.updated_on %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">Priority</div>
+          <div class="itemValue"><%= @opportunity.priority %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">Category</div>
+          <div class="itemValue"><%= @opportunity.category %></div>
+        </li>
+    
+  </ul>
+</div>

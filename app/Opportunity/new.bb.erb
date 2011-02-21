@@ -1,0 +1,64 @@
+<div id="pageTitle">
+    <h1>New Opportunity</h1>
+</div>
+
+<div id="toolbar">
+    <%= link_to "Back", :action => :index %>
+</div>
+
+
+<div id="content">
+
+    <form method="POST" action="<%= url_for :action => :create %>">
+	    <input type="hidden" name="id" value="<%= @opportunity.object %>"/>
+        <table>
+    		
+    		  <tr>
+    			  <td class="itemLabel">Status: </td>
+    			  <td class="itemValue"><input type="text" name="opportunity[status]"/></td>
+    		  </tr>
+    		
+    		  <tr>
+    			  <td class="itemLabel">Source: </td>
+    			  <td class="itemValue"><input type="text" name="opportunity[source]"/></td>
+    		  </tr>
+    		
+    		  <tr>
+    			  <td class="itemLabel">Status reason: </td>
+    			  <td class="itemValue"><input type="text" name="opportunity[status_reason]"/></td>
+    		  </tr>
+    		
+    		  <tr>
+    			  <td class="itemLabel">Vendor: </td>
+    			  <td class="itemValue"><input type="text" name="opportunity[vendor]"/></td>
+    		  </tr>
+    		
+    		  <tr>
+    			  <td class="itemLabel">Lead type: </td>
+    			  <td class="itemValue"><input type="text" name="opportunity[lead_type]"/></td>
+    		  </tr>
+    		
+    		  <tr>
+    			  <td class="itemLabel">Created on: </td>
+    			  <td class="itemValue"><input type="text" name="opportunity[created_on]"/></td>
+    		  </tr>
+    		
+    		  <tr>
+    			  <td class="itemLabel">Updated on: </td>
+    			  <td class="itemValue"><input type="text" name="opportunity[updated_on]"/></td>
+    		  </tr>
+    		
+    		  <tr>
+    			  <td class="itemLabel">Priority: </td>
+    			  <td class="itemValue"><input type="text" name="opportunity[priority]"/></td>
+    		  </tr>
+    		
+    		  <tr>
+    			  <td class="itemLabel">Category: </td>
+    			  <td class="itemValue"><input type="text" name="opportunity[category]"/></td>
+    		  </tr>
+    		
+        </table>
+        <input type="submit" class="standardButton" value="Create" />
+    </form>
+</div>

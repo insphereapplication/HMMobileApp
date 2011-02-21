@@ -1,0 +1,58 @@
+<div class="pageTitle">
+  <h1><%= @contact.first_name %></h1>
+</div>
+
+<div class="toolbar">
+  <div class="leftItem backButton">
+    <a href="<%= url_for :action => :index %>">Back</a>
+  </div>
+  <div class="rightItem regularButton">
+    <a href="<%= url_for :action => :edit, :id => @contact.object %>">Edit</a>
+  </div>
+</div>
+
+<div class="content">
+  <ul>
+    
+        <li>
+          <div class="itemLabel">FirstName</div>
+          <div class="itemValue"><%= @contact.first_name %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">LastName</div>
+          <div class="itemValue"><%= @contact.last_name %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">City</div>
+          <div class="itemValue"><%= @contact.city %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">State</div>
+          <div class="itemValue"><%= @contact.state %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">Zip</div>
+          <div class="itemValue"><%= @contact.zip %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">Phone</div>
+          <div class="itemValue"><%= @contact.phone %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">Sex</div>
+          <div class="itemValue"><%= @contact.sex %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">DateOfBirth</div>
+          <div class="itemValue"><%= @contact.date_of_birth %></div>
+        </li>
+    
+  </ul>
+</div>

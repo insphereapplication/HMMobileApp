@@ -1,0 +1,43 @@
+<div class="pageTitle">
+  <h1><%= @task.activity_type %></h1>
+</div>
+
+<div class="toolbar">
+  <div class="leftItem backButton">
+    <a href="<%= url_for :action => :index %>">Back</a>
+  </div>
+  <div class="rightItem regularButton">
+    <a href="<%= url_for :action => :edit, :id => @task.object %>">Edit</a>
+  </div>
+</div>
+
+<div class="content">
+  <ul>
+    
+        <li>
+          <div class="itemLabel">ActivityType</div>
+          <div class="itemValue"><%= @task.activity_type %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">Subject</div>
+          <div class="itemValue"><%= @task.subject %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">FollowUpDate</div>
+          <div class="itemValue"><%= @task.follow_up_date %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">StartTime</div>
+          <div class="itemValue"><%= @task.start_time %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">EndTime</div>
+          <div class="itemValue"><%= @task.end_time %></div>
+        </li>
+    
+  </ul>
+</div>

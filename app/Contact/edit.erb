@@ -1,0 +1,62 @@
+<div class="pageTitle">
+  <h1>Edit <%= @contact.first_name %></h1>
+</div>
+
+<div class="toolbar">
+  <div class="leftItem backButton">
+    <a href="<%= url_for :action => :show, :id => @contact.object %>">Cancel</a>
+  </div>
+  <div class="rightItem regularButton">
+    <a class="button" href="<%= url_for :action => :delete, :id => @contact.object %>">Delete</a>
+  </div>
+</div>
+
+<div class="content">
+  <form method="POST" action="<%= url_for :action => :update %>">
+    <input type="hidden" name="id" value="<%= @contact.object %>"/>
+    <ul>
+      
+          <li>
+            <label for="contact[first_name]" class="fieldLabel">First name</label>
+            <input type="text" name="contact[first_name]" value="<%= @contact.first_name %>" <%= placeholder( "First name" ) %> />
+          </li>
+      
+          <li>
+            <label for="contact[last_name]" class="fieldLabel">Last name</label>
+            <input type="text" name="contact[last_name]" value="<%= @contact.last_name %>" <%= placeholder( "Last name" ) %> />
+          </li>
+      
+          <li>
+            <label for="contact[city]" class="fieldLabel">City</label>
+            <input type="text" name="contact[city]" value="<%= @contact.city %>" <%= placeholder( "City" ) %> />
+          </li>
+      
+          <li>
+            <label for="contact[state]" class="fieldLabel">State</label>
+            <input type="text" name="contact[state]" value="<%= @contact.state %>" <%= placeholder( "State" ) %> />
+          </li>
+      
+          <li>
+            <label for="contact[zip]" class="fieldLabel">Zip</label>
+            <input type="text" name="contact[zip]" value="<%= @contact.zip %>" <%= placeholder( "Zip" ) %> />
+          </li>
+      
+          <li>
+            <label for="contact[phone]" class="fieldLabel">Phone</label>
+            <input type="text" name="contact[phone]" value="<%= @contact.phone %>" <%= placeholder( "Phone" ) %> />
+          </li>
+      
+          <li>
+            <label for="contact[sex]" class="fieldLabel">Sex</label>
+            <input type="text" name="contact[sex]" value="<%= @contact.sex %>" <%= placeholder( "Sex" ) %> />
+          </li>
+      
+          <li>
+            <label for="contact[date_of_birth]" class="fieldLabel">Date of birth</label>
+            <input type="text" name="contact[date_of_birth]" value="<%= @contact.date_of_birth %>" <%= placeholder( "Date of birth" ) %> />
+          </li>
+      
+    </ul>
+    <input type="submit" class="standardButton" value="Update"/>
+  </form>
+</div>

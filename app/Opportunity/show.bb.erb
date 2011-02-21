@@ -1,0 +1,61 @@
+<div id="pageTitle">
+	<h1><%= @opportunity.status%></h1>
+</div>
+
+<div id="toolbar">
+        <%= link_to "Back", :action => :index %>
+        <%= link_to "Edit", :action => :edit, :id => @opportunity.object %>
+</div>
+
+
+<div id="content">
+
+    <table>
+      
+      <tr>
+    	<td class="itemLabel">Status</td>
+        <td class="itemValue"><%= @opportunity.status%></td>
+      </tr>
+      
+      <tr>
+    	<td class="itemLabel">Source</td>
+        <td class="itemValue"><%= @opportunity.source%></td>
+      </tr>
+      
+      <tr>
+    	<td class="itemLabel">StatusReason</td>
+        <td class="itemValue"><%= @opportunity.status_reason%></td>
+      </tr>
+      
+      <tr>
+    	<td class="itemLabel">Vendor</td>
+        <td class="itemValue"><%= @opportunity.vendor%></td>
+      </tr>
+      
+      <tr>
+    	<td class="itemLabel">LeadType</td>
+        <td class="itemValue"><%= @opportunity.lead_type%></td>
+      </tr>
+      
+      <tr>
+    	<td class="itemLabel">CreatedOn</td>
+        <td class="itemValue"><%= @opportunity.created_on%></td>
+      </tr>
+      
+      <tr>
+    	<td class="itemLabel">UpdatedOn</td>
+        <td class="itemValue"><%= @opportunity.updated_on%></td>
+      </tr>
+      
+      <tr>
+    	<td class="itemLabel">Priority</td>
+        <td class="itemValue"><%= @opportunity.priority%></td>
+      </tr>
+      
+      <tr>
+    	<td class="itemLabel">Category</td>
+        <td class="itemValue"><%= @opportunity.category%></td>
+      </tr>
+      
+    </table>
+</div>
