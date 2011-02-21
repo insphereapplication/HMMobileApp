@@ -26,3 +26,19 @@ end
 
 load rakefilepath
 
+namespace :deploy do 
+  task :persist_build_yml do 
+    File.open("#{$app_path}/build.yml", 'w') {|f| f.write($app_config.to_yaml) }
+  end
+  
+  task :sim do
+    $app_config["iphone"]["sdk"] = 'iphonesimulator4.2'
+    Rake::Task['deploy:persist_build_yml'].invoke
+  end
+  
+  task :device do 
+    $app_config["iphone"]["sdk"] = 'iphoneos4.2'
+    Rake::Task['deploy:persist_build_yml'].invoke
+  end
+end
+
