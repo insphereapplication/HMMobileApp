@@ -1,0 +1,4 @@
+Task/task
+Opportunity/opportunity
+Note/note
+Contact/contact
