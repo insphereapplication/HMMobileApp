@@ -1,6 +1,6 @@
 describe "Contact" do
-  
-  it "should be a fixed schema" do
-    Contact.fixed_schema?.should be_true
+  it "should have a blah setter" do
+    c = Contact.new
+    c.respond_to?(:blah).should be_true
   end
 end

@@ -4,6 +4,10 @@ class Contact
   enable :sync
 
   property :first_name, :string
+  
+  def blah
+    "blah"
+  end
   # property :last_name, :string
   # property :city, :string
   # property :state, :string
