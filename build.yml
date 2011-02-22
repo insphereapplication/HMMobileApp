@@ -1,4 +1,4 @@
-sdk: "/opt/resque/sdks/rhodes-2.3.0"
+sdk: "/Library/InsiteRhoMobile/rhodes"
 sdkversion: 2.3.0
 name: InsiteMobile-rhodes
 version: 1.0
