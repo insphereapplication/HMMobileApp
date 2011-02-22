@@ -1,5 +1,5 @@
 # startup page for your application
-start_path = '/app'
+start_path = '/app/SpecRunner'
 
 # path to the options page (in this case handled by javascript)
 options_path = '/app/Settings'
@@ -47,7 +47,11 @@ LastVisitedPage = ''
 
 # sync server url, typically this will look like 'http://<hostname>:<port>/application'
 # for example: 'http://localhost:9292/application'
+<<<<<<< HEAD
 #syncserver = 'http://rhohub-insphere-c58af007.rhosync.com/application'
+=======
+# syncserver = 'http://rhohub-insphere-c58af007.rhosync.com/application'
+>>>>>>> 12a9d4c87442b7eb871695b2bfe93139a0f74fd8
 syncserver = 'http://localhost:9292/application'
 
 # geo location inactivity timeout (in seconds)
@@ -85,3 +89,6 @@ syncserver = 'http://localhost:9292/application'
 jqtouch_mode=1
 
 splash_screen='zoom'
+
+test_user = ""
+test_password = ""

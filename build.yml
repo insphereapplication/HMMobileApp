@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 sdk: "/Library/InsiteRhoMobile/rhodes"
+=======
+sdk: "/Library/ParivedaInsite/rhodes"
+>>>>>>> 12a9d4c87442b7eb871695b2bfe93139a0f74fd8
 sdkversion: 2.3.0
 name: InsiteMobile-rhodes
 version: 1.0
@@ -16,4 +20,4 @@ iphone:
   BundleIdentifier: com.rhomobile.InsiteMobile-rhodes
   BundleURLScheme: InsiteMobile-rhodes
 
-extensions: ["json", "another-extension"]
+extensions: ["json", "another-extension", "fileutils", "mspec"]
