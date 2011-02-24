@@ -3,21 +3,31 @@ require 'helpers/browser_helper'
 
 class ContactController < Rho::RhoController
   include BrowserHelper
+  layout :layout_jquerymobile
 
   #GET /Contact
   def index
     @contacts = Contact.find(:all)
-    render
   end
 
   # GET /Contact/{1}
   def show
     @contact = Contact.find(@params['id'])
     if @contact
-      render :action => :show
+      @next_id = (@contact.object.to_i + 1).to_s
+      @prev_id = (@contact.object.to_i - 1).to_s
+      render :action => :show,
+              :layout => 'layout_jquerymobile'     
     else
       redirect :action => :index
     end
+  end
+  
+  def seed_db_150
+    #Norton, Kyle - Pariveda Solutions - 22 Feb 2011
+    #Purpose: Used to seed database with a test set of contacts
+    Contact.seed_db(150)
+    WebView.navigate('/app?msg=Seeded%20Database%20with%20150%20contacts')
   end
 
   # GET /Contact/new

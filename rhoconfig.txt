@@ -1,5 +1,5 @@
 # startup page for your application
-start_path = '/app/SpecRunner'
+start_path = '/app/'
 
 # path to the options page (in this case handled by javascript)
 options_path = '/app/Settings'
@@ -68,7 +68,7 @@ syncserver = 'http://localhost:9292/application'
 # Port of the local (embedded) HTTP server. This parameter is mainly for debug purposes.
 # If not specified, application will use dynamically selected one.
 # WARNING!!! Remove this parameter before put application to production.
-#local_server_port = 8080
+local_server_port = 8080
 
 # show status bar on windows mobile. default 1
 #wm_show_statusbar = 1
