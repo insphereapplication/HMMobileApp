@@ -1,9 +1,9 @@
 <div data-role="page" data-theme="b" data-cache="never">
-	<div data-role="header">
+	<div data-role="header" data-backbtn="false">
 				<a href="<%=url_for(:action=>:index)%>" data-direction="reverse" data-icon="back">Back</a>
 				<h1>Contact Detail</h1>
-				<a href="<%=url_for(:action=>:index)%>" data-icon="gear"> Edit </a>
-			</div>
+				<a href="<%=url_for(:action=>:edit, :id => @contact.object)%>" data-direction="forward" data-icon="gear"> Edit </a>
+	</div>
 			<div data-role="content">
 				<a onclick="goBack()" href="#" data-transition="slideback" data-icon="back">Back</a>
 				<ul data-role="listview" data-theme="d" data-inset="true" > 
