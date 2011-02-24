@@ -1,13 +1,10 @@
 class Contact
-  include Rhom::FixedSchema
+  include Rhom::PropertyBag
 
   enable :sync
 
-  property :first_name, :string
-  
-  def blah
-    "blah"
-  end
+  # property :first_name, :string
+  # 
   # property :last_name, :string
   # property :city, :string
   # property :state, :string
