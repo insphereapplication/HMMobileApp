@@ -5,7 +5,6 @@
 				<a href="<%=url_for(:action=>:edit, :id => @contact.object)%>" data-direction="forward" data-icon="gear"> Edit </a>
 	</div>
 			<div data-role="content">
-				<a onclick="goBack()" href="#" data-transition="slideback" data-icon="back">Back</a>
 				<ul data-role="listview" data-theme="d" data-inset="true" > 
 					<li>
 							<h3><%= @contact.firstname + " " + @contact.lastname %></h3>
