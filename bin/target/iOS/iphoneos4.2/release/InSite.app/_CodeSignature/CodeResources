@@ -38,7 +38,7 @@
 		</data>
 		<key>apps/app/Contact/contact_controller.iseq</key>
 		<data>
-		cpIXQFP8QuRTByKhCYB04VGlSIE=
+		YhM8r5m50z59mjTFMREek7L2tMA=
 		</data>
 		<key>apps/app/Contact/edit_erb.iseq</key>
 		<data>
@@ -46,7 +46,7 @@
 		</data>
 		<key>apps/app/Contact/index_erb.iseq</key>
 		<data>
-		EeB1QiH84aq4cxMtboGcnWJthk4=
+		6Cz1zLoGfD/6ZvybeamRPpk65D0=
 		</data>
 		<key>apps/app/Contact/new_erb.iseq</key>
 		<data>
@@ -54,7 +54,7 @@
 		</data>
 		<key>apps/app/Contact/show_erb.iseq</key>
 		<data>
-		mTChrp15pUpB6EIvfL0llmtOqmU=
+		CfniQa7ftm1M+7XMYXMqPoRIxx0=
 		</data>
 		<key>apps/app/Note/edit_erb.iseq</key>
 		<data>
@@ -106,7 +106,7 @@
 		</data>
 		<key>apps/app/Settings/controller.iseq</key>
 		<data>
-		0McqW7NT/VgXF5+vvLQ/k7lnWKw=
+		XHWdT26F3aloJfXK2Y1nU+ehVCA=
 		</data>
 		<key>apps/app/Settings/home_erb.iseq</key>
 		<data>
@@ -118,7 +118,7 @@
 		</data>
 		<key>apps/app/Settings/login_erb.iseq</key>
 		<data>
-		mpJj1OMLYxwhJTzVe6nlXbVJ4/k=
+		fpR6pwQVTSfWiZFkbaklmu83/ac=
 		</data>
 		<key>apps/app/Settings/reset_erb.iseq</key>
 		<data>
@@ -175,6 +175,10 @@
 		<key>apps/app/index_erb.iseq</key>
 		<data>
 		Wk6qr7Spa8IeCl/tSbE/dqU6h0c=
+		</data>
+		<key>apps/app/layout_JQM_Lite_erb.iseq</key>
+		<data>
+		1RysIXLyT0ASgzH3KveF5Zmq23Y=
 		</data>
 		<key>apps/app/layout_erb.iseq</key>
 		<data>
@@ -404,6 +408,10 @@
 		<data>
 		1k6VX9/hQanpLBlqx4iw9nf0ltY=
 		</data>
+		<key>apps/public/images/logo.png</key>
+		<data>
+		AQt3S07RA37smeAQwoqo5v4qCSc=
+		</data>
 		<key>apps/public/images/pinstripes.png</key>
 		<data>
 		rJeKbR4/TjtnkwIXkVjFhKd3woc=
@@ -626,7 +634,7 @@
 		</data>
 		<key>apps/rhoconfig.txt.timestamp</key>
 		<data>
-		SrIr83oIQrne0XbbQZWVopxuN80=
+		TwKNxk/wdTtMlMH/cWWRdIO483w=
 		</data>
 		<key>back_btn.png</key>
 		<data>
@@ -666,7 +674,7 @@
 		</data>
 		<key>hash</key>
 		<data>
-		z3n3h3O02tXwcdP0d1YUQAej9eM=
+		wPhN5D+LiDzwDXyV0pV/yQriGc0=
 		</data>
 		<key>home_btn.png</key>
 		<data>
