@@ -5,6 +5,7 @@ require 'helpers/browser_helper'
 
 class SettingsController < Rho::RhoController
   include BrowserHelper
+  #layout :layout_jquerymobile
   
   def index
     @msg = @params['msg']
@@ -53,7 +54,8 @@ class SettingsController < Rho::RhoController
   def logout
     SyncEngine.logout
     @msg = "You have been logged out."
-    render :action => :login
+    render :action => :login,
+            :layout => 'layout_jquerymobile'
   end
   
   def reset

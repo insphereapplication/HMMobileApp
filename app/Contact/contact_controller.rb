@@ -3,12 +3,13 @@ require 'helpers/browser_helper'
 
 class ContactController < Rho::RhoController
   include BrowserHelper
-  layout :layout_jquerymobile
 
   #GET /Contact
   def index
     puts "INDEX!!"
     @contacts = Contact.find(:all)
+    render :action => :index,
+            :layout => 'layout_JQM_Lite'
   end
 
   # GET /Contact/{1}
