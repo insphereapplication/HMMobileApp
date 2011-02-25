@@ -8,10 +8,10 @@ bbver: 4.6
 wmsdk: "Windows Mobile 6 Professional SDK (ARMV4I)"
 applog: rholog.txt
 iphone:
-  #configuration: Debug
-  #sdk: iphonesimulator4.0
-  configuration: release
-  sdk: iphoneos4.2
+  configuration: Debug
+  sdk: iphonesimulator4.0
+  #configuration: release
+  #sdk: iphoneos4.2
   provisionprofile: 744CDBA2-0D49-4427-BABE-93AB1B61C24A
   codesignidentity: "iPhone Developer: Kyle Norton (6YC5XZZ7BM)"
   entitlements:
