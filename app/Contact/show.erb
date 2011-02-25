@@ -8,22 +8,22 @@
 				<a onclick="goBack()" href="#" data-transition="slideback" data-icon="back">Back</a>
 				<ul data-role="listview" data-theme="d" data-inset="true" > 
 					<li>
-							<h3><%= @contact.first_name + " " + @contact.last_name %></h3>
+							<h3><%= @contact.full_name %></h3>
 							<p><%= @contact.gendercode %></p>
 							<p>DOB: <%= @contact.birthdate %></p>
 							<p>Preferred Phone: <%= @contact.cssi_preferredphone %> </p>
 					</li> 
-					<li data-icon="false"><a href="<%= "tel:" + @contact.mobilephone.to_s %>">Mobile: <%= @contact.mobilephone %></a></li>
-					<li data-icon="false"><a href="<%= "tel:" + @contact.telephone1.to_s %>">Business: <%= @contact.telephone1 %></a></li>
-					<li data-icon="false"><a href="<%= "tel:" + @contact.telephone2.to_s %>">Home: <%= @contact.telephone2 %></a></li>
-					<li data-icon="false"><a href="<%= "tel:" + @contact.telephone3.to_s %>">Alternate: <%= @contact.telephone3 %></a></li>
+					<li data-icon="false"><a href="tel: <%= @contact.mobilephone.to_s %>"> Mobile: <%= @contact.mobilephone %></a></li>
+					<li data-icon="false"><a href="tel: <%= @contact.telephone1.to_s %>">Business: <%= @contact.telephone1 %></a></li>
+					<li data-icon="false"><a href="tel: <%= @contact.telephone2.to_s %>">Home: <%= @contact.telephone2 %></a></li>
+					<li data-icon="false"><a href="tel: <%= @contact.telephone3.to_s %>">Alternate: <%= @contact.telephone3 %></a></li>
 					<li data-icon="false"><a href="mailto:<%= @contact.emailaddress1.to_s %>"><%= @contact.emailaddress1.to_s %></a></li>
 					<li data-role="list-divider">Business Address</li>
 					<li data-icon="false">
 						<a href="http://maps.google.com?q= <%= @contact.address2_line1 %> 	<%= @contact.address2_line2 %>  <%= @contact.address2_city %>, <%= @contact.cssi_state2id %>  <%= @contact.address2_postalcode %> ">
 							<%= @contact.address2_line1 %> <br/>
 							<%= @contact.address2_line2 %><br/>
-							<%= @contact.address2_city + ", " + @contact.cssi_state2id + " " + @contact.address2_postalcode %><br/>
+							<%= "#{@contact.address2_city} #{@contact.cssi_state2id} #{@contact.address2_postalcode}" %><br/>
 						</a>
 					</li>
 					<li data-role="list-divider">Home Address</li>
@@ -31,7 +31,7 @@
 						<a href="http://maps.google.com?q= <%= @contact.address1_line1 %> 	<%= @contact.address1_line2 %>  <%= @contact.address1_city %>, <%= @contact.cssi_state1id %>  <%= @contact.address1_postalcode %> ">
 								<%= @contact.address1_line1 %> <br/>
 								<%= @contact.address1_line2 %><br/>
-								<%= @contact.address1_city + ", " + @contact.cssi_state1id + " " + @contact.address1_postalcode %><br/>
+								<%= "#{@contact.address1_city}  #{@contact.cssi_state1id} #{@contact.address1_postalcode}" %><br/>
 						</a>
 					</li>
 				</ul>

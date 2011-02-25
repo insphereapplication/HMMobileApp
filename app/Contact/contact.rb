@@ -24,7 +24,11 @@ class Contact
   property :address2_city, :string #business address city
   property :cssi_state2id, :string #business address state
   property :address2_postalcode, :string 
+  property :contactid, :string
   
+  def full_name
+    "#{firstname} #{lastname}"
+  end
 
   def self.seed_db(number)
     #Norton, Kyle - Pariveda Solutions - 22 Feb 2011
