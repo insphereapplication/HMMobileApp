@@ -9,8 +9,9 @@
 				<ul data-role="listview" data-theme="d" data-inset="true" > 
 					<li>
 							<h3><%= @contact.firstname + " " + @contact.lastname %></h3>
-							<p><%= @contact.gendercode %>, Age --WRITE CALCULATION--</p>
+							<p><%= @contact.gendercode %></p>
 							<p>DOB: <%= @contact.birthdate %></p>
+							<p>Preferred Phone: <%= @contact.cssi_preferredphone %> </p>
 					</li> 
 					<li data-icon="false"><a href="<%= "tel:" + @contact.mobilephone.to_s %>">Mobile: <%= @contact.mobilephone %></a></li>
 					<li data-icon="false"><a href="<%= "tel:" + @contact.telephone1.to_s %>">Business: <%= @contact.telephone1 %></a></li>

@@ -74,4 +74,12 @@ class Contact
       db.rollback
     end
   end
+
+  def age(dob)
+     day_diff = Date.today - dob.day
+     month_diff = Date.today.month - dob.month - (day_diff < 0 ? 1 : 0)
+     puts Date.today.year - dob.year - (month_diff < 0 ? 1 : 0)
+  end
+
+
 end
