@@ -13,7 +13,7 @@ class SettingsController < Rho::RhoController
 
   def login
     @msg = @params['msg']
-    render :action => :login, :back => '/app'
+    render :action => :login, :back => '/app', :layout => 'layout_jquerymobile'
   end
 
   def login_callback

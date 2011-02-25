@@ -1,16 +1,17 @@
 <div data-role="page" data-theme="b" data-cache="never">
-	<div data-role="header">
+	<div data-role="header" data-backbtn="false">
 				<a href="<%=url_for(:action=>:index)%>" data-direction="reverse" data-icon="back">Back</a>
 				<h1>Contact Detail</h1>
-				<a href="<%=url_for(:action=>:index)%>" data-icon="gear"> Edit </a>
-			</div>
+				<a href="<%=url_for(:action=>:edit, :id => @contact.object)%>" data-direction="forward" data-icon="gear"> Edit </a>
+	</div>
 			<div data-role="content">
 				<a onclick="goBack()" href="#" data-transition="slideback" data-icon="back">Back</a>
 				<ul data-role="listview" data-theme="d" data-inset="true" > 
 					<li>
-							<h3><%= @contact.firstname + " " + @contact.lastname %></h3>
-							<p><%= @contact.gendercode %>, Age --WRITE CALCULATION--</p>
+							<h3><%= @contact.first_name + " " + @contact.last_name %></h3>
+							<p><%= @contact.gendercode %></p>
 							<p>DOB: <%= @contact.birthdate %></p>
+							<p>Preferred Phone: <%= @contact.cssi_preferredphone %> </p>
 					</li> 
 					<li data-icon="false"><a href="<%= "tel:" + @contact.mobilephone.to_s %>">Mobile: <%= @contact.mobilephone %></a></li>
 					<li data-icon="false"><a href="<%= "tel:" + @contact.telephone1.to_s %>">Business: <%= @contact.telephone1 %></a></li>
@@ -34,7 +35,7 @@
 						</a>
 					</li>
 				</ul>
-				<!-- <ul data-role="listview" data-filter="false" data-inset="true">
+				<ul data-role="listview" data-filter="false" data-inset="true">
 								<li data-role="list-divider">Notes</li>
 								<li>
 									<p><strong>01/02/2011</strong> - Has 2 kids.  Family needs insurance.</p>
@@ -43,7 +44,7 @@
 									<p><strong>01/07/2011</strong> - Likes to be called in the evenings.</p>
 								</li>
 							</ul>
-							<ul data-role="listview" data-filter="false" data-inset="true">
+					<!-- <ul data-role="listview" data-filter="false" data-inset="true">
 									<li data-role="list-divider">Opportunities</li>
 									<li>
 										<h3><a href="opportunity_detail_v2.html"></a></h3>

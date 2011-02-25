@@ -7,6 +7,7 @@ class ContactController < Rho::RhoController
 
   #GET /Contact
   def index
+    puts "INDEX!!"
     @contacts = Contact.find(:all)
   end
 

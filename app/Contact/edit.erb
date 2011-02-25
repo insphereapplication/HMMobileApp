@@ -1,62 +1,116 @@
-<div class="pageTitle">
-  <h1>Edit <%= @contact.first_name %></h1>
-</div>
+<div data-role="page" data-theme="b">
+	
+	<div data-role="header" data-backbtn="false">
+		<a href="<%=url_for(:action=>:show, :id => @contact.object)%>" data-direction="reverse" data-icon="back">Back</a>
+		<h1>Edit <%= @contact.firstname + " " + @contact.lastname %></h1>
+		<a href="<%= url_for :action => :show, :id => @contact.object %>" data-direction="reverse" data-icon="delete">Cancel</a>
+	</div>
 
-<div class="toolbar">
-  <div class="leftItem backButton">
-    <a href="<%= url_for :action => :show, :id => @contact.object %>">Cancel</a>
-  </div>
-  <div class="rightItem regularButton">
-    <a class="button" href="<%= url_for :action => :delete, :id => @contact.object %>">Delete</a>
-  </div>
-</div>
+	<div class="toolbar">
+	  <div class="leftItem backButton">
 
-<div class="content">
-  <form method="POST" action="<%= url_for :action => :update %>">
-    <input type="hidden" name="id" value="<%= @contact.object %>"/>
-    <ul>
-      
-          <li>
-            <label for="contact[first_name]" class="fieldLabel">First name</label>
-            <input type="text" name="contact[first_name]" value="<%= @contact.first_name %>" <%= placeholder( "First name" ) %> />
-          </li>
-      
-          <li>
-            <label for="contact[last_name]" class="fieldLabel">Last name</label>
-            <input type="text" name="contact[last_name]" value="<%= @contact.last_name %>" <%= placeholder( "Last name" ) %> />
-          </li>
-      
-          <li>
-            <label for="contact[city]" class="fieldLabel">City</label>
-            <input type="text" name="contact[city]" value="<%= @contact.city %>" <%= placeholder( "City" ) %> />
-          </li>
-      
-          <li>
-            <label for="contact[state]" class="fieldLabel">State</label>
-            <input type="text" name="contact[state]" value="<%= @contact.state %>" <%= placeholder( "State" ) %> />
-          </li>
-      
-          <li>
-            <label for="contact[zip]" class="fieldLabel">Zip</label>
-            <input type="text" name="contact[zip]" value="<%= @contact.zip %>" <%= placeholder( "Zip" ) %> />
-          </li>
-      
-          <li>
-            <label for="contact[phone]" class="fieldLabel">Phone</label>
-            <input type="text" name="contact[phone]" value="<%= @contact.phone %>" <%= placeholder( "Phone" ) %> />
-          </li>
-      
-          <li>
-            <label for="contact[sex]" class="fieldLabel">Sex</label>
-            <input type="text" name="contact[sex]" value="<%= @contact.sex %>" <%= placeholder( "Sex" ) %> />
-          </li>
-      
-          <li>
-            <label for="contact[date_of_birth]" class="fieldLabel">Date of birth</label>
-            <input type="text" name="contact[date_of_birth]" value="<%= @contact.date_of_birth %>" <%= placeholder( "Date of birth" ) %> />
-          </li>
-      
-    </ul>
-    <input type="submit" class="standardButton" value="Update"/>
-  </form>
+	  </div>
+
+	</div>
+
+	<div data-role="content">
+	  <form method="post" action="<%= url_for :action => :update %>">
+	    <input type="hidden" name="id" value="<%= @contact.object %>"/>
+	    <ul data-role="listview">
+
+	          <li>
+	            <label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:</label>
+	            <input type="text" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %> />
+	          </li>
+	
+	          <li>
+	            <label for="contact[telephone1]" class="fieldLabel">Business Phone:</label>
+	            <input type="text" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %> />
+	          </li>
+	
+	          <li>
+	            <label for="contact[telephone2]" class="fieldLabel">Home Phone:</label>
+	            <input type="text" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %> />
+	          </li>
+	
+	          <li>
+	            <label for="contact[telephone3]" class="fieldLabel">Alternate Phone:</label>
+	            <input type="text" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %> />
+	          </li>
+	
+			<li>	
+			<label for="contact[cssi_preferredphone]" class="select">Preferred Phone:</label>
+				<select name="contact[cssi_preferredphone]" id="select-choice-1">
+					<option value="<%= @contact.cssi_preferredphone %>"> <%= @contact.cssi_preferredphone %> </option>
+					<option value="Mobile">Mobile</option>
+					<option value="Business">Business</option>
+					<option value="Home">Home</option>
+					<option value="Alternate">Alternate</option>
+				</select>
+			</li>
+	
+	          <li>
+	            <label for="contact[emailaddress1]" class="fieldLabel">Email Address:</label>
+	            <input type="text" name="contact[emailaddress1]" value="<%= @contact.emailaddress1 %>" <%= placeholder( "Email Address" ) %> />
+	          </li>
+	
+			<li data-role="list-divider">Business Address</li>
+			
+			  <li>
+	            <label for="contact[address2_line1]" class="fieldLabel">Address Line 1:</label>
+	            <input type="text" name="contact[address2_line1]" value="<%= @contact.address2_line1 %>" <%= placeholder( "Business Address Line 1" ) %> />
+	          </li>
+	
+			  <li>
+	            <label for="contact[address2_line2]" class="fieldLabel">Address Line 2:</label>
+	            <input type="text" name="contact[address2_line2]" value="<%= @contact.address2_line1 %>" <%= placeholder( "Business Address Line 2" ) %> />
+	          </li>
+	
+			  <li>
+	            <label for="contact[address2_city]" class="fieldLabel">City:</label>
+	            <input type="text" name="contact[address2_city]" value="<%= @contact.address2_city %>" <%= placeholder( "Business City" ) %> />
+	          </li>
+	
+			  <li>
+	            <label for="contact[cssi_state2id]" class="fieldLabel">State:</label>
+	            <input type="text" name="contact[cssi_state2id]" value="<%= @contact.cssi_state2id %>" <%= placeholder( "Business State" ) %> />
+	          </li>
+	
+			  <li>
+	            <label for="contact[address2_postalcode]" class="fieldLabel">ZIP:</label>
+	            <input type="text" name="contact[address2_postalcode]" value="<%= @contact.address2_postalcode %>" <%= placeholder( "Business ZIP" ) %> />
+	          </li>
+			
+			<li data-role="list-divider">Home Address</li>
+			
+			  <li>
+	            <label for="contact[address1_line1]" class="fieldLabel">Address Line 1:</label>
+	            <input type="text" name="contact[address1_line1]" value="<%= @contact.address1_line1 %>" <%= placeholder( "Home Address Line 1" ) %> />
+	          </li>
+	
+			  <li>
+	            <label for="contact[address1_line2]" class="fieldLabel">Address Line 2:</label>
+	            <input type="text" name="contact[address1_line2]" value="<%= @contact.address1_line2 %>" <%= placeholder( "Home Address Line 2" ) %> />
+	          </li>
+	
+			  <li>
+	            <label for="contact[address1_city]" class="fieldLabel">City:</label>
+	            <input type="text" name="contact[address1_city]" value="<%= @contact.address1_city %>" <%= placeholder( "Home City" ) %> />
+	          </li>
+	
+			  <li>
+	            <label for="contact[cssi_state1id]" class="fieldLabel">State:</label>
+	            <input type="text" name="contact[cssi_state1id]" value="<%= @contact.cssi_state1id %>" <%= placeholder( "Home State" ) %> />
+	          </li>
+	
+			  <li>
+	            <label for="contact[address1_postalcode]" class="fieldLabel">ZIP:</label>
+	            <input type="text" name="contact[address1_postalcode]" value="<%= @contact.address1_postalcode %>" <%= placeholder( "Home ZIP" ) %> />
+	          </li>
+
+	    </ul>
+	    <input type="submit" class="standardButton" value="Update"/>
+	  </form>
+	</div>
+
 </div>

@@ -1,7 +1,7 @@
-<div data-role="page">
-<div data-role="none">
+<div data-role="page" data-theme="b">
+
 	<div data-role="header" data-backbtn="false">
-				<h1>Contact Detail</h1>
+				<h1>Contacts</h1>
 	</div>
 
 	<div class="ui-content" data-role="none" role="main">
@@ -10,7 +10,7 @@
 				<li role="option" tabindex="0" data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
 					<div class="ui-btn-inner">
 						<div class="ui-btn-text">
-							<h3 class="ui-li-heading"><a href="<%= url_for :action => :show, :id => contact.object %>" class="ui-link-inherit"><%= contact.firstname+" "+contact.lastname %></a></h3>			
+							<h3 class="ui-li-heading"><a href="<%= url_for :action => :show, :id => contact.object %>" class="ui-link-inherit"><%= contact.first_name+" "+contact.last_name %></a></h3>			
 						</div>
 					</div>
 				</li>
@@ -19,13 +19,13 @@
 	</div>
 	
 	<div data-role="footer" data-id="myfooter" data-theme="a">
-			<div data-role="navbar">
-				<ul>
-					<li><a href="opportunities_newleads_v2.html" data-icon="dollar" data-transition="none">Opps</a></li>
-					<li><a href="contacts.html" id="contacts" data-icon="grid" data-transition="none"   class="ui-btn-active">Contacts</a></li>
-					<!--<li><a href="othertasks.html" id="othertasks" data-icon="check" data-transition="none">Tasks</a></li>-->
-					<li><a href="settings.html" id="settings" data-icon="gear" data-transition="none">Settings</a></li>
-				</ul>
-			</div><!-- /navbar -->
-</div>
+		<div data-role="navbar">
+			<ul>
+				<li><a href="opportunities_newleads_v2.html" data-icon="dollar" data-transition="none">Opps</a></li>
+				<li><a href="contacts.html" id="contacts" data-icon="grid" data-transition="none"   class="ui-btn-active">Contacts</a></li>
+				<!--<li><a href="othertasks.html" id="othertasks" data-icon="check" data-transition="none">Tasks</a></li>-->
+				<li><a href="settings.html" id="settings" data-icon="gear" data-transition="none">Settings</a></li>
+			</ul>
+		</div><!-- /navbar -->
+    </div>
 </div>

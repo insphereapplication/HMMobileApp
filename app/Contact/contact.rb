@@ -1,7 +1,7 @@
 class Contact
   include Rhom::PropertyBag
 
-  #enable :sync
+  enable :sync
   #Note: These property names are derived from the field names in Microsoft Dynamics CRM--to prevent mapping issues
   property :firstname, :string
   property :lastname, :string
@@ -73,4 +73,12 @@ class Contact
       db.rollback
     end
   end
+
+  def age(dob)
+     day_diff = Date.today - dob.day
+     month_diff = Date.today.month - dob.month - (day_diff < 0 ? 1 : 0)
+     puts Date.today.year - dob.year - (month_diff < 0 ? 1 : 0)
+  end
+
+
 end

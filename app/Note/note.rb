@@ -1,6 +1,6 @@
 class Note
   include Rhom::FixedSchema
-  enable :sync
+  # enable :sync
 
   belongs_to :parent_id, ['Contact', 'Opportunity', 'Task']
 end
