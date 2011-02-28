@@ -9,7 +9,7 @@ class SettingsController < Rho::RhoController
   
   def index
     @msg = @params['msg']
-    render
+    render :action => :index
   end
 
   def login
@@ -18,20 +18,17 @@ class SettingsController < Rho::RhoController
   end
 
   def login_callback
+    puts @params.inspect
     errCode = @params['error_code'].to_i
     if errCode == 0
-      # run sync if we were successful
-      WebView.navigate Rho::RhoConfig.options_path
       SyncEngine.dosync
+      WebView.navigate ( url_for :controller => :Contact, :action => :index )
     else
       if errCode == Rho::RhoError::ERR_CUSTOMSYNCSERVER
         @msg = @params['error_message']
       end
-        
-      if !@msg || @msg.length == 0   
-        @msg = Rho::RhoError.new(errCode).message
-      end
-      
+  
+      @msg = "The user name or password you entered is not valid"    
       WebView.navigate ( url_for :action => :login, :query => {:msg => @msg} )
     end  
   end
