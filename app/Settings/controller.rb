@@ -74,4 +74,11 @@ class SettingsController < Rho::RhoController
     @msg =  "Sync has been triggered."
     redirect :action => :index, :query => {:msg => @msg}
   end
+  
+  def sync_notify
+    status = @params['status'] ? @params['status'] : ""
+    if status == "ok" && @params["source_name"] == "Contact"
+      WebView.navigate ( url_for :controller => :Contact, :action => :index )
+    end
+  end
 end

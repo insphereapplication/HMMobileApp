@@ -1,7 +1,7 @@
 class Contact
-  include Rhom::FixedSchema
+  include Rhom::PropertyBag
 
-  #enable :sync
+  enable :sync
   #Note: These property names are derived from the field names in Microsoft Dynamics CRM--to prevent mapping issues
   property :firstname, :string
   property :lastname, :string
@@ -24,9 +24,12 @@ class Contact
   property :address2_city, :string #business address city
   property :cssi_state2id, :string #business address state
   property :address2_postalcode, :string 
+  property :contactid, :string
   
+  def full_name
+    "#{firstname} #{lastname}"
+  end
 
-  
   def self.seed_db(number)
     #Norton, Kyle - Pariveda Solutions - 22 Feb 2011
     #Purpose: Used in testing to populate dummy list of contacts

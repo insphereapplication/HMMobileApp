@@ -1,7 +1,7 @@
 class Opportunity
   include Rhom::FixedSchema
 
-  enable :sync
+  # enable :sync
 
   property :status, :string
   property :source, :string

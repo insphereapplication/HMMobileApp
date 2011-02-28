@@ -6,6 +6,7 @@ class ContactController < Rho::RhoController
 
   #GET /Contact
   def index
+    puts "INDEX!!"
     @contacts = Contact.find(:all)
     render :action => :index,
             :layout => 'layout_JQM_Lite'
