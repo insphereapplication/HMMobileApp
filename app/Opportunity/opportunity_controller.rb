@@ -7,7 +7,8 @@ class OpportunityController < Rho::RhoController
   #GET /Opportunity
   def index
     @opportunities = Opportunity.find(:all)
-    render
+    render :action => :index,
+            :layout => 'layout_JQM_Lite'
   end
 
   # GET /Opportunity/{1}
