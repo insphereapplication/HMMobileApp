@@ -1,3 +1,5 @@
+
+
 class Contact
   include Rhom::PropertyBag
 
@@ -29,6 +31,11 @@ class Contact
   def full_name
     "#{firstname} #{lastname}"
   end
+  
+  def last_first
+      "#{lastname}, #{firstname}"
+  end
+  
 
   def self.seed_db(number)
     #Norton, Kyle - Pariveda Solutions - 22 Feb 2011
@@ -78,11 +85,7 @@ class Contact
     end
   end
 
-  def age(dob)
-     day_diff = Date.today - dob.day
-     month_diff = Date.today.month - dob.month - (day_diff < 0 ? 1 : 0)
-     puts Date.today.year - dob.year - (month_diff < 0 ? 1 : 0)
-  end
+
 
 
 end

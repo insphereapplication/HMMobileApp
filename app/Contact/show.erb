@@ -8,21 +8,24 @@
 				<ul data-role="listview" data-theme="d" data-inset="true" > 
 					<li>
 							<h3><%= @contact.full_name %></h3>
-							<p><%= @contact.gendercode %></p>
+							<p><%= @contact.gendercode %>, Age <%= age(@contact.birthdate).to_s %> </p>
 							<p>DOB: <%= @contact.birthdate %></p>
-							<p>Preferred Phone: <%= @contact.cssi_preferredphone %> </p>
 					</li> 
-					<li data-icon="false"><a href="tel: <%= @contact.mobilephone.to_s %>"> Mobile: <%= @contact.mobilephone %></a></li>
-					<li data-icon="false"><a href="tel: <%= @contact.telephone1.to_s %>">Business: <%= @contact.telephone1 %></a></li>
-					<li data-icon="false"><a href="tel: <%= @contact.telephone2.to_s %>">Home: <%= @contact.telephone2 %></a></li>
-					<li data-icon="false"><a href="tel: <%= @contact.telephone3.to_s %>">Alternate: <%= @contact.telephone3 %></a></li>
+					<li data-icon="<%= check_preferred("Mobile", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.mobilephone.to_s %>"> Mobile: <%= @contact.mobilephone %></a></li>
+					<li data-icon="<%= check_preferred("Business", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone1.to_s %>">Bus: <%= @contact.telephone1 %></a>
+						<% if (@contact.cssi_businessphoneext != nil || @contact.cssi_businessphoneext == "")%> 
+							<!-- <div align="center"><p> -->x<%= @contact.cssi_businessphoneext %><!-- </p></div> -->
+						<% end %>
+					</li>
+					<li data-icon="<%= check_preferred("Home", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone2.to_s %>">Home: <%= @contact.telephone2 %></a></li>
+					<li data-icon="<%= check_preferred("Alternate", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone3.to_s %>">Alternate: <%= @contact.telephone3 %></a></li>
 					<li data-icon="false"><a href="mailto:<%= @contact.emailaddress1.to_s %>"><%= @contact.emailaddress1.to_s %></a></li>
 					<li data-role="list-divider">Business Address</li>
 					<li data-icon="false">
 						<a href="http://maps.google.com?q= <%= @contact.address2_line1 %> 	<%= @contact.address2_line2 %>  <%= @contact.address2_city %>, <%= @contact.cssi_state2id %>  <%= @contact.address2_postalcode %> ">
 							<%= @contact.address2_line1 %> <br/>
 							<%= @contact.address2_line2 %><br/>
-							<%= "#{@contact.address2_city} #{@contact.cssi_state2id} #{@contact.address2_postalcode}" %><br/>
+							<%= "#{@contact.address2_city}, #{@contact.cssi_state2id} #{@contact.address2_postalcode}" %><br/>
 						</a>
 					</li>
 					<li data-role="list-divider">Home Address</li>
@@ -30,7 +33,7 @@
 						<a href="http://maps.google.com?q= <%= @contact.address1_line1 %> 	<%= @contact.address1_line2 %>  <%= @contact.address1_city %>, <%= @contact.cssi_state1id %>  <%= @contact.address1_postalcode %> ">
 								<%= @contact.address1_line1 %> <br/>
 								<%= @contact.address1_line2 %><br/>
-								<%= "#{@contact.address1_city}  #{@contact.cssi_state1id} #{@contact.address1_postalcode}" %><br/>
+								<%= "#{@contact.address1_city},  #{@contact.cssi_state1id} #{@contact.address1_postalcode}" %><br/>
 						</a>
 					</li>
 				</ul>
@@ -53,14 +56,4 @@
 							<a href="activity_summary.html" data-role="button" data-icon="arrow-r" data-iconpos="right">Activity Summary</a> -->
 			</div>
 			
-		<div data-role="footer" data-id="myfooter" data-theme="a">
-				<div data-role="navbar">
-					<ul>
-						<li><a href="opportunities_newleads_v2.html" data-icon="dollar" data-transition="none">Opps</a></li>
-						<li><a href="contacts.html" id="contacts" data-icon="grid" data-transition="none"   class="ui-btn-active">Contacts</a></li>
-						<!--<li><a href="othertasks.html" id="othertasks" data-icon="check" data-transition="none">Tasks</a></li>-->
-						<li><a href="settings.html" id="settings" data-icon="gear" data-transition="none">Settings</a></li>
-					</ul>
-				</div><!-- /navbar -->
-			</div><!-- /footer -->
 </div>
