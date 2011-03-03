@@ -10,6 +10,18 @@ class OpportunityController < Rho::RhoController
     render :action => :index,
             :layout => 'layout_JQM_Lite'
   end
+  
+  def index_follow_up
+    @opportunities = Opportunity.find(:all)
+    render :action => :index_follow_up,
+            :layout => 'layout_JQM_Lite'
+  end
+  
+  def index_appointments
+    @opportunities = Opportunity.find(:all)
+    render :action => :index_appointments,
+            :layout => 'layout_JQM_Lite'
+  end
 
   # GET /Opportunity/{1}
   def show
