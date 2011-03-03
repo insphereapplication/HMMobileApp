@@ -18,6 +18,7 @@ class ContactController < Rho::RhoController
   # GET /Contact/{1}
   def show
     @contact = Contact.find(@params['id'])
+  
     if @contact
       @next_id = (@contact.object.to_i + 1).to_s
       @prev_id = (@contact.object.to_i - 1).to_s
