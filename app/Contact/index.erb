@@ -7,7 +7,7 @@
 
 	<div class="ui-content" data-role="none" role="main">
 		<ul data-role="listview" data-counttheme="e" class="ui-listview" role="listbox">
-			
+			<!-- <%= link_to "MAP", "/system/map?q=5918 Capella Park Dr Spring TX 77379"%> -->
 			 <% @grouped_contacts.each do |group| %>
 				<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-b ui-btn-up-undefined"><%= group[0].upcase %></li>
 				<% group[1].each do |contact| %>
