@@ -337,3 +337,6 @@ bin/target/iOS/iphoneos4.2/release/InSite.app/lib/time.iseq
 bin/target/iOS/iphoneos4.2/release/InSite.app/lib/version.iseq
 bin/target/iOS/iphoneos4.2/release/InSite.app/name
 bin/target/iOS/iphoneos4.2/release/app_info.txt
+.DS_Store
+rholog-4.2.txt
+sim-public-4.2
