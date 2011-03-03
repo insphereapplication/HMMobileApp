@@ -12,15 +12,17 @@
 	<div data-role="content" class="ui-content" role="main">
 		<ul data-counttheme="e" data-split-theme="b" data-split-icon="phoneopp" data-role="listview" class="ui-listview" role="listbox">
 			<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-b ui-btn-up-undefined">Today</li> 
+			<% @new_leads.each do |lead| %>
 			<li role="option" tabindex="-1" data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-btn-up-c"><div class="ui-btn-inner"><div class="ui-btn-text"><p class="ui-li-aside ui-li-desc"><strong>2/14/11 10:05 AM</strong></p>
-				<h3 class="ui-li-heading"><a href="opportunity_detail_v2.html" class="ui-link-inherit">Steve Jensen</a></h3>
+				<h3 class="ui-li-heading"><a href="opportunity_detail_v2.html" class="ui-link-inherit"><%= lead.contact.full_name %></a></h3>
 				<p class="ui-li-desc">
 					</p><div class="ui-grid-a ui-li-desc">
-						<div class="ui-block-a">M 35 - Plano, TX</div>
+						<div class="ui-block-a"><%= "#{lead.contact.gendercode} #{lead.contact} - Plano, TX" %></div>
 						<div align="right" class="ui-block-b">Created: Today</div>
 					</div>
-				<a href="tel:8325157955" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c"><span class="ui-btn-inner"><span class="ui-btn-text"></span><span title="" data-theme="b" class="ui-btn ui-btn-up-b ui-btn-icon-notext ui-btn-corner-all ui-shadow"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text"></span><span class="ui-icon ui-icon-phoneopp ui-icon-shadow"></span></span></span></span></a>				
+				<a href="tel:<%= lead.contact.mobilephone %>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c"><span class="ui-btn-inner"><span class="ui-btn-text"></span><span title="" data-theme="b" class="ui-btn ui-btn-up-b ui-btn-icon-notext ui-btn-corner-all ui-shadow"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text"></span><span class="ui-icon ui-icon-phoneopp ui-icon-shadow"></span></span></span></span></a>				
 			</div></div></li>
+			<% end %>
 		</ul>
 	</div>
 </div>

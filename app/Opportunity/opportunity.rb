@@ -1,5 +1,5 @@
 class Opportunity
-  include Rhom::FixedSchema
+  include Rhom::PropertyBag
 
   enable :sync
 
@@ -17,7 +17,13 @@ class Opportunity
   property :modifiedon, :string
   property :cssi_lastactivitydate, :string
   property :cssi_callcounter, :string
+  property :contact_id, :string
+  
   
   belongs_to :contact_id, 'Contact'
+  
+  def contact
+    @contact = Contact.find(self.contact_id)
+  end
   
 end

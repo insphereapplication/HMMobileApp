@@ -1,5 +1,3 @@
-
-
 class Contact
   include Rhom::PropertyBag
 

@@ -38,8 +38,6 @@ class ContactController < Rho::RhoController
   end
   
   def seed_db_150
-    #Norton, Kyle - Pariveda Solutions - 22 Feb 2011
-    #Purpose: Used to seed database with a test set of contacts
     Contact.seed_db(150)
     WebView.navigate('/app/Settings?msg=Seeded%20Database%20with%20150%20contacts')
   end
