@@ -26,16 +26,18 @@
 								<h3 class="ui-li-heading"><a href="opportunity_detail_v2.html" class="ui-link-inherit ui-block-a"><%= contact.full_name %></a></h3>
 								<p class="ui-li-desc"></p>
 								<div class="ui-grid-a ui-li-desc">
-										<div class="ui-block-a"><%= "#{contact.gendercode} - #{contact.address1_city}, #{contact.cssi_state1id}"%></div>
+										<div class="ui-block-a"><%= contact.age_sex_loc %> &nbsp;</div>
 										<div align="right" class="ui-block-b">Created: Today</div>
 								</div>
 							</div>
 					</div>
 					<a href="tel:<%= contact.mobilephone %>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c"><span class="ui-btn-inner"><span class="ui-btn-text"></span><span title="" data-theme="b" class="ui-btn ui-btn-up-b ui-btn-icon-notext ui-btn-corner-all ui-shadow"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text"></span><span class="ui-icon ui-icon-phoneopp ui-icon-shadow"></span></span></span></span></a>			
 				</li>
+				<div><li>Phone Dialog </li></div>
 			<% end %>
 			<!-- LEADS FROM PREVIOUS DAYS -->
-				<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-grey ui-btn-up-undefined">Previous Days</li> 
+				<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-grey ui-btn-up-undefined">Previous Days</li>
+				
 				
 		</ul>
 	</div>

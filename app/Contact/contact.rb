@@ -34,6 +34,36 @@ class Contact
       "#{lastname}, #{firstname}"
   end
   
+#RETURNS A DESCRIPTIVE SUMMARY FOR THE CONTACT
+  def age_sex_loc
+    asl = ""
+    if gendercode != nil
+      asl += gendercode[0,1]
+    end
+    if(age != nil)
+      asl += " " + age
+    end
+    if(address1_city != nil)
+      asl += " " + address1_city + ", " + cssi_state1id
+    else
+      if(address2_city != nil)
+        asl += " " + address2_city + ", " + cssi_state2id
+      end
+    end
+    asl
+  end
+  
+  def age
+    begin
+      birthday = Date.parse(birthdate)
+       day_diff = Date.today - birthday.day
+       month_diff = Date.today.month - birthday.month - (day_diff < 0 ? 1 : 0)
+        (Date.today.year - birthday.year - (month_diff < 0 ? 1 : 0)).to_s
+    rescue
+      puts "Invalid date parameter in age calculation method; no age returned"
+    end
+  end
+  
   def opportunities
     Opportunity.find(
      :all, 

@@ -11,6 +11,10 @@
    Syntax recommendation http://www.w3.org/TR/REC-CSS2/
 */
 
+/* Phone Dialog */
+.phone-div {
+	display: none;
+}
 /* Color-coded sidebars */
 .ui-li-sidebar-red { position: absolute; width: 10px; height: 100%; border-width: 0; border-right-width: 1px; top: 0; left: 0; margin: 0; padding: 0; background:#900;}
 .ui-li-sidebar-orange { position: absolute; width: 10px; height: 100%; border-width: 0; border-right-width: 1px; top: 0; left: 0; margin: 0; padding: 0; background:#A65100;}
