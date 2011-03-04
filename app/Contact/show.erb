@@ -8,7 +8,7 @@
 				<ul data-role="listview" data-theme="d" data-inset="true" > 
 					<li>
 							<h3><%= @contact.full_name %></h3>
-							<p><%= @contact.gendercode %>, Age <%= age(@contact.birthdate).to_s %> </p>
+							<p><%= @contact.gendercode %>, <%= age(@contact.birthdate).to_s %> </p>
 							<p>DOB: <%= @contact.birthdate %></p>
 					</li> 
 					<li data-icon="<%= check_preferred("Mobile", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.mobilephone.to_s %>"> Mobile: <%= @contact.mobilephone %></a></li>

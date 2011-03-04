@@ -11,13 +11,13 @@ class OpportunityController < Rho::RhoController
   end
   
   def index_follow_up
-    @opportunities = Opportunity.find(:all)
+    @new_leads = Opportunity.new_leads
     render :action => :index_follow_up,
             :layout => 'layout_JQM_Lite'
   end
   
   def index_appointments
-    @opportunities = Opportunity.find(:all)
+    @new_leads = Opportunity.new_leads
     render :action => :index_appointments,
             :layout => 'layout_JQM_Lite'
   end
