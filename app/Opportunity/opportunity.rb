@@ -1,3 +1,6 @@
+require 'date'
+require 'time'
+
 class Opportunity
   include Rhom::PropertyBag
 
@@ -25,5 +28,9 @@ class Opportunity
   def contact
     @contact = Contact.find(self.contact_id)
   end
+  
+  def self.new_leads
+    Opportunity.find(:all, :conditions => {"statuscode" => "New Opportunity"}).sort{|opp1, opp2| Date.parse(opp1.createdon) <=> Date.parse(opp2.createdon) }
+  end 
   
 end

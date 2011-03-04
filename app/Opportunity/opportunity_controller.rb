@@ -6,7 +6,7 @@ class OpportunityController < Rho::RhoController
 
   #GET /Opportunity
   def index
-    @new_leads = Opportunity.find(:all, :conditions => {"statuscode" => "New Opportunity"}).sort{|opp1, opp2| opp1.createdon <=> opp2.createdon }
+    @new_leads = Opportunity.new_leads
     render :action => :index, :layout => 'layout_JQM_Lite'
   end
 
