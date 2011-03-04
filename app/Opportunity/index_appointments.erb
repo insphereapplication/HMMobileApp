@@ -1,0 +1,81 @@
+<div class="ui-page ui-body-b ui-page-active" data-role="page">
+	<div data-nobackbtn="true" data-role="header" class="ui-bar-b ui-header" role="banner">
+		<h1 class="ui-title" tabindex="0" role="heading" aria-level="1">Opportunities</h1>
+	</div>
+	<div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
+		<ul class="ui-grid-b">
+			<li class="ui-block-a"><a class="ui-btn ui-btn-up-a" data-transition="none" data-theme="a" href="<%= url_for(:action => :index) %>"><span class="ui-btn-inner"><span class="ui-btn-text">New Leads</span></span></a></li>
+			<li class="ui-block-b"><a data-transition="none" data-theme="a" href="<%= url_for(:action => :index_follow_up) %>" class="ui-btn ui-btn-up-a"><span class="ui-btn-inner"><span class="ui-btn-text">Follow-Up</span></span></a></li>
+			<li class="ui-block-c"><a data-transition="none" data-theme="a" href="<%= url_for(:action => :index_appointments) %>" class="ui-btn ui-btn-active ui-btn-up-a"><span class="ui-btn-inner"><span class="ui-btn-text">Appts</span></span></a></li>
+		</ul>
+	</div>
+	<div data-role="content" class="ui-content" role="main">
+		<ul data-counttheme="e" data-split-theme="b" data-split-icon="phoneopp" data-role="listview" class="ui-listview" role="listbox">
+
+			
+			<!-- PAST DUE APPOINTMENTS -->
+			<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-red ui-btn-up-undefined">Past Due</li> 
+			<% @new_leads.each do |opportunity| %>
+			<% contact = opportunity.contact %>
+				<li role="option" tabindex="0" data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-btn-up-c">
+				 <a class="ui-li-sidebar-red ui-btn-up-c"> </a> 
+					<div class="ui-btn-inner">
+							<div class="ui-btn-text">
+								<p class="ui-li-aside ui-li-desc"><strong>~Appt Date</strong></p>
+								<h3 class="ui-li-heading"><a href="opportunity_detail_v2.html" class="ui-link-inherit ui-block-a"><%= contact.full_name %></a></h3>
+								<p class="ui-li-desc"></p>
+								<div class="ui-grid-a ui-li-desc">
+										<div class="ui-block-a"><%= contact.age_sex_loc %> &nbsp;</div>
+										<div align="right" class="ui-block-b">~-xd</div>
+								</div>
+							</div>
+					</div>
+					<a href="tel:<%= contact.mobilephone %>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c"><span class="ui-btn-inner"><span class="ui-btn-text"></span><span title="" data-theme="b" class="ui-btn ui-btn-up-b ui-btn-icon-notext ui-btn-corner-all ui-shadow"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text"></span><span class="ui-icon ui-icon-phoneopp ui-icon-shadow"></span></span></span></span></a>			
+				</li>
+			<% end %>
+			
+			<!-- TODAY APPOINTMENTS -->
+			<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-orange ui-btn-up-undefined">Today</li>	
+			<% @new_leads.each do |opportunity| %>
+			<% contact = opportunity.contact %>
+				<li role="option" tabindex="0" data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-btn-up-c">
+				 <a class="ui-li-sidebar-orange ui-btn-up-c"> </a> 
+					<div class="ui-btn-inner">
+							<div class="ui-btn-text">
+								<p class="ui-li-aside ui-li-desc"><strong>~Time</strong></p>
+								<h3 class="ui-li-heading"><a href="opportunity_detail_v2.html" class="ui-link-inherit ui-block-a"><%= contact.full_name %></a></h3>
+								<p class="ui-li-desc"></p>
+								<div class="ui-grid-a ui-li-desc">
+										<div class="ui-block-a"><%= contact.age_sex_loc %> &nbsp;</div>
+										<div align="right" class="ui-block-b">Today</div>
+								</div>
+							</div>
+					</div>
+					<a href="tel:<%= contact.mobilephone %>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c"><span class="ui-btn-inner"><span class="ui-btn-text"></span><span title="" data-theme="b" class="ui-btn ui-btn-up-b ui-btn-icon-notext ui-btn-corner-all ui-shadow"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text"></span><span class="ui-icon ui-icon-phoneopp ui-icon-shadow"></span></span></span></span></a>			
+				</li>
+			<% end %>
+			
+			<!-- FUTURE ACTIVITIES -->
+			<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-green ui-btn-up-undefined">Future</li>
+			<% @new_leads.each do |opportunity| %>
+			<% contact = opportunity.contact %>
+				<li role="option" tabindex="0" data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-btn-up-c">
+				 <a class="ui-li-sidebar-green ui-btn-up-c"> </a> 
+					<div class="ui-btn-inner">
+							<div class="ui-btn-text">
+								<p class="ui-li-aside ui-li-desc"><strong>~Appt Date-Time</strong></p>
+								<h3 class="ui-li-heading"><a href="opportunity_detail_v2.html" class="ui-link-inherit ui-block-a"><%= contact.full_name %></a></h3>
+								<p class="ui-li-desc"></p>
+								<div class="ui-grid-a ui-li-desc">
+										<div class="ui-block-a"><%= contact.age_sex_loc %> &nbsp;</div>
+										<div align="right" class="ui-block-b">~in x d</div>
+								</div>
+							</div>
+					</div>
+					<a href="tel:<%= contact.mobilephone %>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c"><span class="ui-btn-inner"><span class="ui-btn-text"></span><span title="" data-theme="b" class="ui-btn ui-btn-up-b ui-btn-icon-notext ui-btn-corner-all ui-shadow"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text"></span><span class="ui-icon ui-icon-phoneopp ui-icon-shadow"></span></span></span></span></a>			
+				</li>
+			<% end %>
+		</ul>
+	</div>
+	
+</div>
