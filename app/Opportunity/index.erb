@@ -12,6 +12,7 @@
 	
 	<div data-role="content" class="ui-content" role="main">
 		<ul data-counttheme="e" data-split-theme="b" data-split-icon="phoneopp" data-role="listview" class="ui-listview" role="listbox">
+
 			
 			<!-- LEADS FROM TODAY -->
 			<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-red ui-btn-up-undefined">Today</li> 
@@ -33,6 +34,22 @@
 
 			<!-- LEADS FROM PREVIOUS DAYS -->
 				<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-grey ui-btn-up-undefined">Previous Days</li> 
+
+			<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-b ui-btn-up-undefined">Today</li> 
+			<li>TEST</li>
+			<% @new_lead_contacts.each do |c| %>
+			<li role="option" tabindex="-1" data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-btn-up-c"><div class="ui-btn-inner"><div class="ui-btn-text"><p class="ui-li-aside ui-li-desc"><strong>2/14/11 10:05 AM</strong></p>
+				<h3 class="ui-li-heading"><a href="opportunity_detail_v2.html" class="ui-link-inherit"><%= c.full_name %></a></h3>
+				<p class="ui-li-desc">
+					</p><div class="ui-grid-a ui-li-desc">
+						<div class="ui-block-a"><%= "#{c.gendercode} - #{c.address1_city}, #{c.cssi_state1id}"%></div>
+						<div align="right" class="ui-block-b">Created: Today</div>
+					</div>
+				<a href="tel:<%= c.mobilephone %>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c"><span class="ui-btn-inner"><span class="ui-btn-text"></span><span title="" data-theme="b" class="ui-btn ui-btn-up-b ui-btn-icon-notext ui-btn-corner-all ui-shadow"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text"></span><span class="ui-icon ui-icon-phoneopp ui-icon-shadow"></span></span></span></span></a>				
+			</div></div></li>
+			<% end %>
+		</ul>
+	</div>
 </div>
 
 

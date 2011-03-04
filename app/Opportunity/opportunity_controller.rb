@@ -6,9 +6,9 @@ class OpportunityController < Rho::RhoController
 
   #GET /Opportunity
   def index
-    @opportunities = Opportunity.find(:all)
-    render :action => :index,
-            :layout => 'layout_JQM_Lite'
+    @new_lead_contacts = Opportunity.find(:all).map{|opp| opp.contact }
+    puts @new_leads.inspect
+    render :action => :index, :layout => 'layout_JQM_Lite'
   end
   
   def index_follow_up

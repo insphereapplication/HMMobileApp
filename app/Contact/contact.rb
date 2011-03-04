@@ -1,5 +1,3 @@
-
-
 class Contact
   include Rhom::PropertyBag
 
@@ -36,6 +34,17 @@ class Contact
       "#{lastname}, #{firstname}"
   end
   
+  def opportunities
+    Opportunity.find(
+     :all, 
+     :conditions => [ 
+       "contact_id = #{self.contactid}", 
+       query, 
+       query
+     ], 
+     :select => ['title','description'] 
+    )
+  end
 
   def self.seed_db(number)
     #Norton, Kyle - Pariveda Solutions - 22 Feb 2011
