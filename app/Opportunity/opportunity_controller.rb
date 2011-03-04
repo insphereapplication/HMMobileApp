@@ -11,15 +11,15 @@ class OpportunityController < Rho::RhoController
   end
   
   def index_follow_up
-    @new_leads = Opportunity.new_leads
-    render :action => :index_follow_up,
-            :layout => 'layout_JQM_Lite'
+    @follow_ups = Opportunity.follow_up_activities
+    @last_activities = Opportunity.last_activities
+    puts @follow_ups.inspect
+    render :action => :index_follow_up, :layout => 'layout_JQM_Lite'
   end
   
   def index_appointments
-    @new_leads = Opportunity.new_leads
-    render :action => :index_appointments,
-            :layout => 'layout_JQM_Lite'
+    @open_appointments = Activity.open_appointments
+    render :action => :index_appointments, :layout => 'layout_JQM_Lite'
   end
 
   # GET /Opportunity/{1}

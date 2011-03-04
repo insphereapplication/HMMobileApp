@@ -1,0 +1,56 @@
+<div id="pageTitle">
+	<h1><%= @activity.type%></h1>
+</div>
+
+<div id="toolbar">
+        <%= link_to "Back", :action => :index %>
+        <%= link_to "Edit", :action => :edit, :id => @activity.object %>
+</div>
+
+
+<div id="content">
+
+    <table>
+      
+      <tr>
+    	<td class="itemLabel">Type</td>
+        <td class="itemValue"><%= @activity.type%></td>
+      </tr>
+      
+      <tr>
+    	<td class="itemLabel">ParentId</td>
+        <td class="itemValue"><%= @activity.parent_id%></td>
+      </tr>
+      
+      <tr>
+    	<td class="itemLabel">ParentType</td>
+        <td class="itemValue"><%= @activity.parent_type%></td>
+      </tr>
+      
+      <tr>
+    	<td class="itemLabel">Activityid</td>
+        <td class="itemValue"><%= @activity.activityid%></td>
+      </tr>
+      
+      <tr>
+    	<td class="itemLabel">Statecode</td>
+        <td class="itemValue"><%= @activity.statecode%></td>
+      </tr>
+      
+      <tr>
+    	<td class="itemLabel">Statuscode</td>
+        <td class="itemValue"><%= @activity.statuscode%></td>
+      </tr>
+      
+      <tr>
+    	<td class="itemLabel">Scheduledstart</td>
+        <td class="itemValue"><%= @activity.scheduledstart%></td>
+      </tr>
+      
+      <tr>
+    	<td class="itemLabel">Scheduledend</td>
+        <td class="itemValue"><%= @activity.scheduledend%></td>
+      </tr>
+      
+    </table>
+</div>
