@@ -43,7 +43,7 @@ class Opportunity
   #   :statecode=>"Open", 
   #   :statuscode=>"Open", 
   #   :subject=>"No Answer - LoggerTest 7, Test - 2/10/2011", 
-  #   :type=>"PhoneCall"}> 
+  #   :type=>"PhoneCall"}>
     
   def contact
     @contact = Contact.find(self.contact_id)
@@ -71,7 +71,7 @@ class Opportunity
   end
 
   def has_open_activities?
-    activities && activities.any?{|a| a.statecode == "Open" || a.statecode == "Scheduled" }
+    activities && activities.any?{|a| a.open? }
   end
   
   def activities
@@ -79,7 +79,7 @@ class Opportunity
   end
   
   def open_phone_calls
-    @open_calls ||= Activity.find(:all, :conditions => {"type" => "PhoneCall", "statuscode" => "Open", "parent_type" => "opportunity", "parent_id" => self.opportunityid })
+    @open_calls ||= PhoneCall.find(:all, :conditions => {"statuscode" => "Open", "parent_type" => "opportunity", "parent_id" => self.opportunityid })
   end
   
 end

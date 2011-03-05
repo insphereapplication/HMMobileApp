@@ -3,15 +3,13 @@ class Activity
 
   enable :sync
   
+  OPEN_STATE_CODES = ['Open', 'Scheduled']
+  
   def self.follow_up_activities
     Opportunity.find(:all)
       .map{|opp| opp.open_phone_calls.first }
       .compact
       .sort{|c1, c2| Date.parse(c1.scheduledend) <=> Date.parse(c2.scheduledend) }
-  end
-  
-  def self.open_appointments
-    find(:all, :conditions => {'statecode' => 'Scheduled'})
   end
   
   def parent
@@ -27,5 +25,9 @@ class Activity
   
   def contact
     parent if parent && parent_type == "Contact"
+  end
+  
+  def open?
+    OPEN_STATE_CODES.include?(statecode)
   end
 end

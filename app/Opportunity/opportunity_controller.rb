@@ -18,7 +18,7 @@ class OpportunityController < Rho::RhoController
   end
   
   def index_appointments
-    @open_appointments = Activity.open_appointments
+    @open_appointments = Appointment.open_appointments
     render :action => :index_appointments, :layout => 'layout_JQM_Lite'
   end
 
