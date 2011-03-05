@@ -1,7 +1,7 @@
 #
 # A simple STI framework for Rhom::PropertyBag that supports a single-level inheritance model (i.e., children, but no grandchildren).
 # This will use a 'type' attribute in the schema to resolve the class name.'find' will be scoped to the child type and  the 'type'
-# attribute will automatically be added when the child class is instantiated.
+# attribute will automatically be added when a child class is instantiated.
 #
 module Rhom
   module PropertyBag   
@@ -58,15 +58,4 @@ module Rhom
       model.extend PropertyBag
     end
   end
-end
- 
-class Base
-  include Rhom::PropertyBag
-  def self.find(*args, &block)
-    puts args.inspect
-    block.call if block_given?
-  end
-end
-
-class Child < Base
 end
