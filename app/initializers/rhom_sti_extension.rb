@@ -5,41 +5,42 @@
 #
 module Rhom
   module PropertyBag   
-    module STIClassMethods
-      
-      # Override find to scope for the sti child type
-      def find(*args, &block)
-        if args[1] && args[1][:conditions]
-          if args[1][:conditions].kind_of? Hash
-            args[1][:conditions].merge!({:type => self.sti_name})
-          elsif args[1][:conditions].kind_of? String
-            args[1][:conditions] << "and type='#{self.sti_name}'"
+    module STI
+      module ClassMethods
+        # Override find to scope for the sti child type
+        def find(*args, &block)
+          if args[1] && args[1][:conditions]
+            if args[1][:conditions].kind_of? Hash
+              args[1][:conditions].merge!({:type => self.sti_name})
+            elsif args[1][:conditions].kind_of? String
+              args[1][:conditions] << "and type='#{self.sti_name}'"
+            end
+          else
+            (args[1] ||= {})[:conditions] = {:type => self.sti_name}
           end
-        else
-          (args[1] ||= {})[:conditions] = {:type => self.sti_name}
+          super(*args, &block)
         end
-        super(*args, &block)
-      end
       
-      # override 'name' so that Rho can resolve the source table name to the registered parent (see: RhomObjectFactory.get_source_name)
-      def name
-        self.superclass.name
-      end
+        # override 'name' so that Rho can resolve the source table name to the registered parent (see: RhomObjectFactory.get_source_name)
+        def name
+          self.superclass.name
+        end
       
-      # provide a way for child sti classes to access their class name since 'name' is overriden
-      def sti_name=(name)
-        @sti_name = name
-      end
+        # provide a way for child sti classes to access their class name since 'name' is overriden
+        def sti_name=(name)
+          @sti_name = name
+        end
       
-      def sti_name
-        @sti_name
+        def sti_name
+          @sti_name
+        end
       end
-    end
 
-    module STIInstanceMethods
-      def initialize(*args)
-        type = self.class.sti_name
-        super(*args)
+      module InstanceMethods
+        def initialize(*args)
+          type = self.class.sti_name
+          super(*args)
+        end
       end
     end
 
@@ -47,9 +48,9 @@ module Rhom
       def inherited(sti_model)
         # someone has inherited from a class that included Rhom::PropertyBag -- this is an STI model
         sti_name = sti_model.name # store name before it's overidden
-        sti_model.extend STIClassMethods
+        sti_model.extend STI::ClassMethods
         sti_model.sti_name = sti_name
-        sti_model.send(:include, STIInstanceMethods)
+        sti_model.send(:include, STI::InstanceMethods)
       end
     end
 
