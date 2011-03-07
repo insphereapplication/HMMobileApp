@@ -1,0 +1,6 @@
+<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-red ui-btn-up-undefined"><%= label %></li> 
+<% follow_ups.each do |phone_call| %>
+	<% opportunity = phone_call.parent %>
+	<% contact = opportunity.contact %>
+	<%= render :partial =>"contact", :locals => { :contact => contact } %>
+<% end %>
