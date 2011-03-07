@@ -1,5 +1,9 @@
 require 'rho/rhoapplication'
 require 'rho/rhotabbar'
+require 'initializers/rhom_sti_extension'
+['activity/phone_call', 'activity/appointment'].each {|model| require model}
+
+# Dir[File.join(File.dirname(__FILE__),'initializers','**','*.rb')].each { |file| require file }
 
 class AppApplication < Rho::RhoApplication
   def initialize

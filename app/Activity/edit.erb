@@ -1,0 +1,62 @@
+<div class="pageTitle">
+  <h1>Edit <%= @activity.type %></h1>
+</div>
+
+<div class="toolbar">
+  <div class="leftItem backButton">
+    <a href="<%= url_for :action => :show, :id => @activity.object %>">Cancel</a>
+  </div>
+  <div class="rightItem regularButton">
+    <a class="button" href="<%= url_for :action => :delete, :id => @activity.object %>">Delete</a>
+  </div>
+</div>
+
+<div class="content">
+  <form method="POST" action="<%= url_for :action => :update %>">
+    <input type="hidden" name="id" value="<%= @activity.object %>"/>
+    <ul>
+      
+          <li>
+            <label for="activity[type]" class="fieldLabel">Type</label>
+            <input type="text" name="activity[type]" value="<%= @activity.type %>" <%= placeholder( "Type" ) %> />
+          </li>
+      
+          <li>
+            <label for="activity[parent_id]" class="fieldLabel">Parent</label>
+            <input type="text" name="activity[parent_id]" value="<%= @activity.parent_id %>" <%= placeholder( "Parent" ) %> />
+          </li>
+      
+          <li>
+            <label for="activity[parent_type]" class="fieldLabel">Parent type</label>
+            <input type="text" name="activity[parent_type]" value="<%= @activity.parent_type %>" <%= placeholder( "Parent type" ) %> />
+          </li>
+      
+          <li>
+            <label for="activity[activityid]" class="fieldLabel">Activityid</label>
+            <input type="text" name="activity[activityid]" value="<%= @activity.activityid %>" <%= placeholder( "Activityid" ) %> />
+          </li>
+      
+          <li>
+            <label for="activity[statecode]" class="fieldLabel">Statecode</label>
+            <input type="text" name="activity[statecode]" value="<%= @activity.statecode %>" <%= placeholder( "Statecode" ) %> />
+          </li>
+      
+          <li>
+            <label for="activity[statuscode]" class="fieldLabel">Statuscode</label>
+            <input type="text" name="activity[statuscode]" value="<%= @activity.statuscode %>" <%= placeholder( "Statuscode" ) %> />
+          </li>
+      
+          <li>
+            <label for="activity[scheduledstart]" class="fieldLabel">Scheduledstart</label>
+            <input type="text" name="activity[scheduledstart]" value="<%= @activity.scheduledstart %>" <%= placeholder( "Scheduledstart" ) %> />
+          </li>
+      
+          <li>
+            <label for="activity[scheduledend]" class="fieldLabel">Scheduledend</label>
+            <input type="text" name="activity[scheduledend]" value="<%= @activity.scheduledend %>" <%= placeholder( "Scheduledend" ) %> />
+          </li>
+      
+    </ul>
+    <input type="submit" class="standardButton" value="Update"/>
+  </form>
+</div>
