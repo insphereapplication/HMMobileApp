@@ -55,7 +55,7 @@ class Contact
   
   def age
     begin
-      birthday = Date.parse(birthdate)
+      birthday = Time.parse(birthdate)
        day_diff = Date.today - birthday.day
        month_diff = Date.today.month - birthday.month - (day_diff < 0 ? 1 : 0)
         (Date.today.year - birthday.year - (month_diff < 0 ? 1 : 0)).to_s

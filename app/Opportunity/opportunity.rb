@@ -1,5 +1,5 @@
-require 'date'
 require 'time'
+require 'date'
 
 class Opportunity
   include Rhom::PropertyBag
@@ -48,6 +48,19 @@ class Opportunity
     follow_up_phone_calls.select{|call| call.scheduledend && Date.today < Date.strptime(call.scheduledend, "%m/%d/%Y")}
   end
   
+  def days_ago()
+    begin
+      (Date.today - Date.strptime(createdon, "%m/%d/%Y")).to_i
+    rescue
+      puts "Unable to parse date: #{}; no age returned"
+    end
+  end
+  
+  def self.follow_up_activities
+    opportunities = find(:all)
+    opportunities.map{|opp| opp.open_phone_calls.first }.compact#.sort{|c1, c2| Date.parse(c1.scheduledend) <=> Date.parse(c2.scheduledend) }
+  end
+  
   def self.last_activities
     find(:all).select {|opp| !opp.is_new? && opp.has_activities? && !opp.has_open_activities? }
   end
@@ -75,5 +88,6 @@ class Opportunity
   def open_phone_calls
     @open_calls ||= phone_calls.select{|pc| pc.statuscode == "Open"} 
   end
+
   
 end
