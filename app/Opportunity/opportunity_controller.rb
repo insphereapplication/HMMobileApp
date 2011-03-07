@@ -20,7 +20,7 @@ class OpportunityController < Rho::RhoController
   end
   
   def index_appointments
-    @past_due = Appointment.past_due_appointments
+    @past_due_appointments = Appointment.past_due_appointments
     @todays_appointments = Appointment.todays_appointments
     @future_appointments = Appointment.future_appointments
     render :action => :index_appointments, :layout => 'layout_JQM_Lite'
