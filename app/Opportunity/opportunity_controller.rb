@@ -11,9 +11,10 @@ class OpportunityController < Rho::RhoController
   end
   
   def index_follow_up
-    @follow_ups = Opportunity.follow_up_activities
+    @todays_follow_ups = Opportunity.todays_follow_ups
+    @past_due_follow_ups = Opportunity.past_due_follow_ups
+    @future_follow_ups = Opportunity.future_follow_ups
     @last_activities = Opportunity.last_activities
-    puts @follow_ups.inspect
     render :action => :index_follow_up, :layout => 'layout_JQM_Lite'
   end
   

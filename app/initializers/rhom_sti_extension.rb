@@ -1,7 +1,22 @@
 #
 # A simple STI framework for Rhom::PropertyBag that supports a single-level inheritance model (i.e., children, but no grandchildren).
-# This will use a 'type' attribute in the schema to resolve the class name.'find' will be scoped to the child type and  the 'type'
-# attribute will automatically be added when a child class is instantiated.
+# 
+# It provides a scoped 'find' class method -- calling 'find' on a child of a Rhom model will add a type field condition for the child name.
+# Works for hash or SQL formats, i.e.:
+#    class Base 
+#      include Rhom::PropertyBag
+#    end
+#    
+#    class Child < Base
+#    end
+#  
+#    Child.find(:all) # is the same as calling Base.find(:all, :conditions => {:type => 'Child'}) or Base.find(:all, :conditions => "type = 'Child'")
+# 
+# The type condition will be appended to any passed-in condtions, in hash or SQL format. The 'type' field is added and set to the child name in the
+# Child class initializer. 
+#
+# NOTE:'name' is overidden because Rho uses the class name to find the registered Rhom source. 'sti_name' is provided so that child classes of Rhom
+# models have access to their class name.
 #
 module Rhom
   module PropertyBag   
@@ -46,7 +61,7 @@ module Rhom
 
     module RhomClassMethods
       def inherited(sti_model)
-        # someone has inherited from a class that included Rhom::PropertyBag -- this is an STI model
+        # sti_model has inherited from a class that itself included Rhom::PropertyBag, therefore this is an STI child class
         sti_name = sti_model.name # store name before it's overidden
         sti_model.extend STI::ClassMethods
         sti_model.sti_name = sti_name
