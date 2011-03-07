@@ -13,15 +13,17 @@
 	<div data-role="content" class="ui-content" role="main">
 
 		<ul data-counttheme="e" data-split-theme="b" data-split-icon="phoneopp" data-role="listview" class="ui-listview" role="listbox">
-
-			
-			<!-- LEADS FROM TODAY -->
-			<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-red ui-btn-up-undefined">Today</li> 
 			<% @new_leads.each do |opportunity| %>
+<<<<<<< HEAD
 			<% contact = opportunity.contact %>
 				<li role="option" tabindex="0" data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-btn-up-c ui-btn-down-c">
 				 <a class="ui-li-sidebar-red ui-btn-up-c"> </a> 
 					<div class="ui-btn-inner" onclick="window.open('<%= url_for(:action => :show, :id => opportunity.object) %>')">
+=======
+				<% contact = opportunity.contact %>
+				<li role="option" tabindex="0" data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-btn-up-c">
+					<div class="ui-btn-inner">
+>>>>>>> 98b0422cdcabfe7ec5abc08f5596d06f054efe14
 							<div class="ui-btn-text">
 								<p class="ui-li-aside ui-li-desc"><strong><%= opportunity.createdon %></strong></p>
 								<h3 class="ui-li-heading"><a href="<%= url_for(:action => :show, :id => opportunity.object) %>" class="ui-link-inherit ui-block-a"><%= contact.full_name %></a></h3>
@@ -54,10 +56,13 @@
 							</div>
 						</div>
 			<% end %>
+<<<<<<< HEAD
+=======
 			
 			<!-- LEADS FROM PREVIOUS DAYS -->
 				<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-grey ui-btn-up-undefined">Previous Days</li>
 	
+>>>>>>> 189a0985d857c46596da8f1f156c6e79f9396618
 		</ul>
 	</div>
 </div>
