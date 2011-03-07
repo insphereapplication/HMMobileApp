@@ -26,7 +26,10 @@ class OpportunityController < Rho::RhoController
   def show
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
-      render :action => :show
+      @next_id = (@opportunity.object.to_i + 1).to_s
+      @prev_id = (@opportunity.object.to_i - 1).to_s
+      render :action => :show,
+              :layout => 'layout_jquerymobile'
     else
       redirect :action => :index
     end

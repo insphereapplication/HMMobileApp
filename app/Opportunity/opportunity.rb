@@ -53,7 +53,7 @@ class Opportunity
     @new_leads ||= find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities? }#.sort{|opp1, opp2| Date.parse(opp1.createdon) <=> Date.parse(opp2.createdon) }
   end 
   
-<<<<<<< HEAD
+
   def days_ago()
     begin
       (Date.today - Date.strptime(createdon, "%m/%d/%Y")).to_i
@@ -89,6 +89,16 @@ class Opportunity
   
   def open_phone_calls
     @open_calls ||= PhoneCall.find(:all, :conditions => {"statuscode" => "Open", "parent_type" => "opportunity", "parent_id" => self.opportunityid })
+  end
+  
+  def is_high_cost
+    if(cssi_leadcost != nil or cssi_leadcost != "")
+      if Rho::RhoConfig.exists?('lead_cost_threshold')
+        if cssi_leadcost.to_f > Rho::RhoConfig.lead_cost_threshold
+          return true
+        end
+      end
+    end
   end
 
   
