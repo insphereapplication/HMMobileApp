@@ -1,5 +1,5 @@
-require 'date'
 require 'time'
+require 'date'
 
 class Opportunity
   include Rhom::PropertyBag
@@ -32,5 +32,14 @@ class Opportunity
   def self.new_leads
     Opportunity.find(:all, :conditions => {"statuscode" => "New Opportunity"}).sort{|opp1, opp2| Date.parse(opp1.createdon) <=> Date.parse(opp2.createdon) }
   end 
+  
+  def days_ago()
+    begin
+      (Date.today - Date.strptime(createdon, "%m/%d/%Y")).to_i
+    rescue
+      puts "Unable to parse date: #{}; no age returned"
+    end
+  end
+  
   
 end
