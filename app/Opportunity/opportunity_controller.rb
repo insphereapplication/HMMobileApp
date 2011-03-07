@@ -6,7 +6,8 @@ class OpportunityController < Rho::RhoController
 
   #GET /Opportunity
   def index
-    @new_leads = Opportunity.new_leads
+    @todays_new_leads = Opportunity.todays_new_leads
+    @previous_days_leads = Opportunity.previous_days_leads
     render :action => :index, :layout => 'layout_JQM_Lite'
   end
   
@@ -19,7 +20,9 @@ class OpportunityController < Rho::RhoController
   end
   
   def index_appointments
-    @open_appointments = Appointment.open_appointments
+    @past_due = Appointment.past_due_appointments
+    @todays_appointments = Appointment.todays_appointments
+    @future_appointments = Appointment.future_appointments
     render :action => :index_appointments, :layout => 'layout_JQM_Lite'
   end
 

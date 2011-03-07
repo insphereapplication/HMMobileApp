@@ -13,7 +13,7 @@
 	<div data-role="content" class="ui-content" role="main">
 
 		<ul data-counttheme="e" data-split-theme="b" data-split-icon="phoneopp" data-role="listview" class="ui-listview" role="listbox">
-			<% @new_leads.each do |opportunity| %>
+			<% [[@todays_new_leads, "red"]].each do |opportunity, color| %>
 				<% contact = opportunity.contact %>
 				<li role="option" tabindex="0" data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-btn-up-c">
 					<div class="ui-btn-inner">
@@ -31,31 +31,24 @@
 				</li>
 				
 				<div id="<%= contact.contactid %>" class="ui-grid-c" style="display: none">
-							<div class="ui-block-a">
-								<a href="tel:<%= contact.mobilephone %>" data-role="button" data-theme="c" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-hover-c ui-btn-down-c">
-									<span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">M</span></span></a>
-							</div>
-							<div class="ui-block-b">
-								<a href="tel:<%= contact.telephone2 %>" data-role="button" data-theme="c" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-hover-c ui-btn-down-c">
-									<span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">H</span></span></a>
-							</div>
-							<div class="ui-block-c">
-								<a href="tel:<%= contact.telephone1 %>" data-role="button" data-theme="c" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-hover-c ui-btn-down-c">
-									<span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">B</span></span></a>
-							</div>
-							<div class="ui-block-d">
-								<a href="tel:<%= contact.telephone3 %>" data-role="button" data-theme="c" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-hover-c ui-btn-down-c">
-									<span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">A</span></span></a>
-							</div>
-						</div>
+					<div class="ui-block-a">
+						<a href="tel:<%= contact.mobilephone %>" data-role="button" data-theme="c" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-hover-c ui-btn-down-c">
+							<span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">M</span></span></a>
+					</div>
+					<div class="ui-block-b">
+						<a href="tel:<%= contact.telephone2 %>" data-role="button" data-theme="c" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-hover-c ui-btn-down-c">
+							<span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">H</span></span></a>
+					</div>
+					<div class="ui-block-c">
+						<a href="tel:<%= contact.telephone1 %>" data-role="button" data-theme="c" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-hover-c ui-btn-down-c">
+							<span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">B</span></span></a>
+					</div>
+					<div class="ui-block-d">
+						<a href="tel:<%= contact.telephone3 %>" data-role="button" data-theme="c" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-hover-c ui-btn-down-c">
+							<span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">A</span></span></a>
+					</div>
+				</div>
 			<% end %>
-<<<<<<< HEAD
-=======
-			
-			<!-- LEADS FROM PREVIOUS DAYS -->
-				<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-grey ui-btn-up-undefined">Previous Days</li>
-	
->>>>>>> 189a0985d857c46596da8f1f156c6e79f9396618
 		</ul>
 	</div>
 </div>
