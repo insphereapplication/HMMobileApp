@@ -48,6 +48,14 @@ class Opportunity
     follow_up_phone_calls.select{|call| call.scheduledend && Date.today < Date.strptime(call.scheduledend, "%m/%d/%Y")}
   end
   
+  def self.todays_new_leads
+    new_leads#.select{|lead| lead.createdon && (Date.today == Date.strptime(lead.createdon, "%m/%d/%Y"))}
+  end
+  
+  def self.previous_days_leads
+    new_leads.select{|opportunity| opportunity.createdon && (Date.today > Date.strptime(opportunity.createdon, "%m/%d/%Y"))}
+  end
+  
   def days_ago()
     begin
       (Date.today - Date.strptime(createdon, "%m/%d/%Y")).to_i
@@ -87,6 +95,16 @@ class Opportunity
   
   def open_phone_calls
     @open_calls ||= phone_calls.select{|pc| pc.statuscode == "Open"} 
+  end
+  
+  def is_high_cost
+    if(cssi_leadcost != nil or cssi_leadcost != "")
+      if Rho::RhoConfig.exists?('lead_cost_threshold')
+        if cssi_leadcost.to_f > Rho::RhoConfig.lead_cost_threshold
+          return true
+        end
+      end
+    end
   end
 
   
