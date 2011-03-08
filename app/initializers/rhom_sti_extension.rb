@@ -3,6 +3,7 @@
 # 
 # It provides a scoped 'find' class method -- calling 'find' on a child of a Rhom model will add a type field condition for the child name.
 # Works for hash or SQL formats, i.e.:
+#
 #    class Base 
 #      include Rhom::PropertyBag
 #    end
