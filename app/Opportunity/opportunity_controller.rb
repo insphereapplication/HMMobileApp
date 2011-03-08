@@ -58,6 +58,15 @@ class OpportunityController < Rho::RhoController
       redirect :action => :index
     end
   end
+  
+  def status_update
+    @opportunity = Opportunity.find(@params['id'])
+    if @opportunity
+      render :action => :status_update
+    else
+      redirect :action => :index
+    end
+  end 
 
   # POST /Opportunity/create
   def create
