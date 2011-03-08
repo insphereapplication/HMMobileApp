@@ -12,9 +12,10 @@
 	
 	<div data-role="content" class="ui-content" role="main">
 		<ul data-counttheme="e" data-split-theme="b" data-split-icon="phoneopp" data-role="listview" class="ui-listview" role="listbox">
-			<% [[@todays_new_leads, "Today", "red"], [@previous_days_leads, "Previous Days", "grey"]].each do |leads, label, color| %>
-			   <li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-<%=color%> ui-btn-up-undefined"><%= label %></li> 
-				<% leads.each do |opportunity| %>
+			<% [[@todays_new_leads, "Today", "red"], 
+				[@previous_days_leads, "Previous Days", "grey"]].each do |leads, label, color| %>
+			    <li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-<%=color%> ui-btn-up-undefined"><%= label %></li> 
+					<% leads.each do |opportunity| %>
 					<% contact = opportunity.contact %>
 					<li role="option" tabindex="0" data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-btn-up-c">	
 						<div class="ui-btn-inner" onclick="window.open('<%= url_for(:action => :show, :id => opportunity.object) %>')">
