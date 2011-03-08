@@ -32,6 +32,7 @@ class OpportunityController < Rho::RhoController
     if @opportunity
       @next_id = (@opportunity.object.to_i + 1).to_s
       @prev_id = (@opportunity.object.to_i - 1).to_s
+      @contact = @opportunity.contact
       render :action => :show,
               :layout => 'layout_jquerymobile'
     else
