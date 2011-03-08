@@ -29,11 +29,11 @@ class Opportunity
   end
   
   def self.new_leads
-    @new_leads ||= find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities? }#.sort{|opp1, opp2| Date.parse(opp1.createdon) <=> Date.parse(opp2.createdon) }
+    find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities? }.date_sort(:createdon)
   end 
 
   def self.follow_up_phone_calls
-    @follow_up_phone_calls ||= find(:all).map{|opportunity| opportunity.open_phone_calls.first }.compact#.sort{|c1, c2| Date.parse(c1.scheduledend) <=> Date.parse(c2.scheduledend) }
+    find(:all).map{|opportunity| opportunity.open_phone_calls.first }.compact.date_sort(:scheduledend)
   end
   
   def self.todays_follow_ups
@@ -41,11 +41,11 @@ class Opportunity
   end
   
   def self.past_due_follow_ups
-    follow_up_phone_calls.select_all_after_today(:scheduledend)
+    follow_up_phone_calls.select_all_before_today(:scheduledend)
   end
   
   def self.future_follow_ups
-    follow_up_phone_calls.select_all_before_today(:scheduledend)
+    follow_up_phone_calls.select_all_after_today(:scheduledend)
   end
   
   def self.todays_new_leads
@@ -56,17 +56,17 @@ class Opportunity
     new_leads.select_all_before_today(:createdon)
   end
   
-  def days_ago
+  def days_ago()
     begin
       (Date.today - Date.strptime(createdon, "%m/%d/%Y")).to_i
     rescue
-      puts "Unable to parse date: #{createdon}; no age returned"
+      puts "Unable to parse date: #{}; no age returned"
     end
   end
   
   def self.follow_up_activities
     opportunities = find(:all)
-    opportunities.map{|opp| opp.open_phone_calls.first }.compact#.sort{|c1, c2| Date.parse(c1.scheduledend) <=> Date.parse(c2.scheduledend) }
+    opportunities.map{|opp| opp.open_phone_calls.first }.compact.date_sort(:scheduledend)
   end
   
   def self.last_activities
@@ -98,8 +98,10 @@ class Opportunity
   end
   
   def is_high_cost
-    !cssi_leadcost.blank? && Rho::RhoConfig.lead_cost_threshold && (cssi_leadcost.to_f > Rho::RhoConfig.lead_cost_threshold)
+    if(cssi_leadcost != nil && cssi_leadcost != "")
+      if Rho::RhoConfig.exists?('lead_cost_threshold')
+        cssi_leadcost.to_f > Rho::RhoConfig.lead_cost_threshold
+      end
+    end
   end
-
-  
 end
