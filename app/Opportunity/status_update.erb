@@ -1,0 +1,15 @@
+<div class="pageTitle">
+  <h1>Update Status</h1>
+  <h1><%= @opportunity.contact.full_name %>
+</div>
+
+
+<div class="content">
+	<a href="<%=url_for(:action=>:show, :id => @opportunity.object)%>" data-direction="reverse" rel="external" data-icon="back">Back</a><br /><br />
+	<form method="POST">
+		<a href="<%= url_for(:controller => :Activity, :action => :update_status, :disposition => 'Left Message', :disposition_detail => '', :id => @opportunityid )%>"> Left Message </a>
+		<br />
+		<br />
+		<a href="<%= url_for(:controller => :Activity, :action => :update_status, :disposition => 'No Answer', :disposition_detail => '', :id => @opportunityid )%>"> No Answer </a>
+	</form>
+</div>
