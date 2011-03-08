@@ -1,2 +1,0 @@
-class PhoneCall < Activity
-end

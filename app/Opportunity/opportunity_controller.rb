@@ -28,7 +28,11 @@ class OpportunityController < Rho::RhoController
     Appointment.clear_cache
     render :action => :index_appointments, :layout => 'layout_JQM_Lite'
   end
-
+  
+  def sync_object_notify
+    WebView.refresh
+  end
+  
   # GET /Opportunity/{1}
   def show
     @opportunity = Opportunity.find(@params['id'])

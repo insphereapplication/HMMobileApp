@@ -4,6 +4,7 @@ require 'date'
 # Convenience extension methods to Enumerable (Array and Hash) to avoid a lot of duplicate date sorting and selecting and parsing, etc.
 #
 module Enumerable
+  
   # this is necessary because apparently on Rhodes, the default date format is %d/%m/%Y, so we have to explicitly set the normal format
   DEFAULT_PARSE_FORMAT = "%m/%d/%Y"
   
@@ -39,7 +40,7 @@ module Enumerable
     end
   end
   
-  # If date_value a Date type then return, otherwise attempt to parse the String into a Date
+  # If date_value is a Date type then return it, otherwise attempt to parse the String into a Date
   def get_date(date_value, format)
     return date_value if date_value.kind_of?(Date)
     begin
@@ -49,14 +50,3 @@ module Enumerable
     end
   end
 end
-
-# t1,t2,t3,t4,t5,t6 = (Date.today - 1), (Date.today), (Date.today), (Date.today + 1), (Date.today + 2), (Date.today - 2)
-# ary = [t1,t2,t3,t4,t5,t6]
-# 
-# before = ary.select_all_before_today(:to_s)
-# after = ary.select_all_after_today(:to_s)
-# today = ary.select_all_occurring_today(:to_s)
-# 
-# res = [before, after, today]
-# 
-# res.each {|r| puts "$$$$"; r.each {|t| puts t.to_s}}

@@ -2,7 +2,7 @@ require 'rho/rhoapplication'
 require 'rho/rhotabbar'
 require 'initializers/enumerable_extension'
 require 'initializers/rhom_sti_extension'
-['activity/phone_call', 'activity/appointment'].each {|model| require model}
+# ['activity/phone_call', 'activity/appointment'].each {|model| require model}
 
 # Dir[File.join(File.dirname(__FILE__),'initializers','**','*.rb')].each { |file| require file }
 
@@ -18,15 +18,18 @@ class AppApplication < Rho::RhoApplication
           { :label => "Settings",  :action => '/app/Settings',  
             :icon => "/public/images/iphone/tabs/settings_tab_icon.png" },
         ]
-        # Important to call super _after_ you define @tabs!
-        super
-    
-    #To remove default toolbar uncomment next line:
-    #@@toolbar = nil
+    # Important to call super _after_ you define @tabs!
     super
 
     # Uncomment to set sync notification callback to /app/Settings/sync_notify.
-    SyncEngine.set_notification(-1, "/app/Settings/sync_notify", '')
-    System.set_push_notification("/app/Settings/push_notify", '')
+    # SyncEngine.set_notification(-1, "/app/Settings/sync_notify", '')
+    #     System.set_push_notification("/app/Settings/push_notify", '')
+    SyncEngine.set_objectnotify_url(
+      url_for(
+        :controller => "Opportunity",
+        :action => :sync_object_notify
+      )
+    )
+    
   end
 end

@@ -41,15 +41,45 @@ class Activity
   end
   
   def opportunity
-    parent if parent && parent_type == "Opportunity"
+    parent if parent && parent_type.downcase == "opportunity"
   end
   
   def contact
-    parent if parent && parent_type == "Contact"
+    parent if parent && parent_type.downcase == "contact"
   end
   
   def open?
     OPEN_STATE_CODES.include?(statecode)
   end
   
+end
+
+class PhoneCall < Activity
+end
+
+class Appointment < Activity
+  
+  # an array of class-level cache objects
+  CACHED = [@open_appointments]
+  
+  # clear out all class-level cache objects
+  def self.clear_cache
+    CACHED.each {|cache| cache = nil }
+  end
+  
+  def self.open_appointments
+    @open_appointments ||= find(:all, :conditions => {'statecode' => 'Scheduled'})
+  end
+  
+  def self.past_due_appointments
+    open_appointments.select_all_before_today(:scheduledend) 
+  end
+  
+  def self.future_appointments
+    open_appointments.select_all_after_today(:scheduledend)
+  end
+  
+  def self.todays_appointments
+    open_appointments.select_all_occurring_today(:scheduledend)
+  end
 end

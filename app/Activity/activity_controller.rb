@@ -3,6 +3,15 @@ require 'helpers/browser_helper'
 
 class ActivityController < Rho::RhoController
   include BrowserHelper
+  
+  def update_status
+    opportunity = Opportunity.find(@params['opportunityid'])
+    phone_call = opportunity.create_or_find_earliest_phone_call
+    phone_call.cssi_disposition = @params['disposition']
+    phone_call.update
+    SyncEngine.dosync
+    redirect :controller => :opportunity, :action => :show, :id => opportunity.object
+  end
 
   #GET /Activity
   def index
