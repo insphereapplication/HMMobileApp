@@ -8,6 +8,7 @@ class OpportunityController < Rho::RhoController
   def index
     @todays_new_leads = Opportunity.todays_new_leads
     @previous_days_leads = Opportunity.previous_days_leads
+    Opportunity.clear_cache
     render :action => :index, :layout => 'layout_JQM_Lite'
   end
   
@@ -16,6 +17,7 @@ class OpportunityController < Rho::RhoController
     @past_due_follow_ups = Opportunity.past_due_follow_ups
     @future_follow_ups = Opportunity.future_follow_ups
     @last_activities = Opportunity.last_activities
+    Opportunity.clear_cache
     render :action => :index_follow_up, :layout => 'layout_JQM_Lite'
   end
   
@@ -23,6 +25,7 @@ class OpportunityController < Rho::RhoController
     @past_due_appointments = Appointment.past_due_appointments
     @todays_appointments = Appointment.todays_appointments
     @future_appointments = Appointment.future_appointments
+    Appointment.clear_cache
     render :action => :index_appointments, :layout => 'layout_JQM_Lite'
   end
 

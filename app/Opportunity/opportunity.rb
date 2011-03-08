@@ -23,17 +23,25 @@ class Opportunity
   property :contact_id, :string
   
   belongs_to :contact_id, 'Contact'
+  
+  # an array of class-level cache objects
+  CACHED = [@new_leads, @phone_calls]
+  
+  # clear out all class-level cache objects
+  def self.clear_cache
+    CACHED.each {|cache| cache = nil }
+  end
     
   def contact
     @contact ||= Contact.find(self.contact_id)
   end
   
   def self.new_leads
-    find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities? }.date_sort(:createdon)
+    @new_leads ||= find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities? }.compact.date_sort(:createdon)
   end 
 
   def self.follow_up_phone_calls
-    find(:all).map{|opportunity| opportunity.open_phone_calls.first }.compact.date_sort(:scheduledend)
+    @phone_calls ||= find(:all).map{|opportunity| opportunity.open_phone_calls.first }.compact.date_sort(:scheduledend)
   end
   
   def self.todays_follow_ups
