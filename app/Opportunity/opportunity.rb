@@ -21,6 +21,7 @@ class Opportunity
   property :cssi_lastactivitydate, :string
   property :cssi_callcounter, :string
   property :contact_id, :string
+  property :cssi_lineofbusiness, :string
   
   belongs_to :contact_id, 'Contact'
     

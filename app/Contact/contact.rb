@@ -53,6 +53,28 @@ class Contact
     asl
   end
   
+  def age_sex
+    result = ""
+    if gendercode != nil
+      result += gendercode
+    end
+    if(age != nil)
+      result += " " + age
+    end
+    result
+  end
+  
+  def city_summary
+    result = ""
+    if(address1_city != nil)
+      result += " " + address1_city + ", " + cssi_state1id + " " + address1_postalcode
+    else
+      if(address2_city != nil)
+        asl += " " + address2_city + ", " + cssi_state2id + " " + address2_postalcode
+      end
+    end
+  end
+  
   def age
     begin
       birthday = Time.parse(birthdate)
