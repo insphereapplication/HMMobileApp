@@ -5,6 +5,7 @@
 
 
 <div class="content">
+	<a href="<%=url_for(:action=>:show, :id => @opportunity.object)%>" data-direction="reverse" rel="external" data-icon="back">Back</a><br /><br />
 	<form method="POST">
 		<a href="<%= url_for(:controller => :Activity, :action => :update_status, :disposition => 'Left Message', :disposition_detail => '', :id => @opportunityid )%>"> Left Message </a>
 		<br />
