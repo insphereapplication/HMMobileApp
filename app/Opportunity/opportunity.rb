@@ -64,14 +64,6 @@ class Opportunity
     new_leads.select_all_before_today(:createdon)
   end
   
-  def days_ago()
-    begin
-      (Date.today - Date.strptime(createdon, "%m/%d/%Y")).to_i
-    rescue
-      puts "Unable to parse date: #{}; no age returned"
-    end
-  end
-  
   def self.follow_up_activities
     opportunities = find(:all)
     opportunities.map{|opp| opp.open_phone_calls.first }.compact.date_sort(:scheduledend)
@@ -103,6 +95,14 @@ class Opportunity
   
   def open_phone_calls
     @open_calls ||= phone_calls.select{|pc| pc.statuscode == "Open"} 
+  end
+  
+  def days_ago()
+    begin
+      (Date.today - Date.strptime(createdon, "%m/%d/%Y")).to_i
+    rescue
+      puts "Unable to parse date: #{}; no age returned"
+    end
   end
   
   def is_high_cost
