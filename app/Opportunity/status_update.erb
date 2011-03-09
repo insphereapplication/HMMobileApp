@@ -16,9 +16,18 @@
 		</div> 		
 		<ul data-role="listview" data-inset="true"> 
 			<li data-role="list-divider">Follow-Up</li> 
-			<li><a href="<%= url_for(:controller => :Activity, :action => :update_status, :id => @opportunity.object, :query => {:disposition => 'Left Message', :disposition_detail => ''}  )%>" data-transition="fade">Left Message</a></li> 
-			<li><a href="<%= url_for(:controller => :Activity, :action => :update_status, :id => @opportunity.object , :query => {:disposition => 'No Answer', :disposition_detail => ''})%>" data-transition="fade">No Answer</a></li> 
-			<li><a href="<%= url_for(:controller => :Activity, :action => :update_status, :id => @opportunity.object , :query => {:disposition => 'No Answer', :disposition_detail => ''})%>" data-transition="slide">Call Back Requested...</a></li> 
+			<% [['Left Message', 'Left Message'], ['No Answer', 'No Answer'], ['No Answer', 'Call Back Requested...']].each do |disposition, text| %>
+				<li>
+					<a href="<%= url_for(:controller => :Activity, 
+						:action => :update_status, 
+						:id => @opportunity.object, 
+						:query => {:disposition => disposition, 
+						:disposition_detail => ''}  )%>" 
+						rel="external" data-transition="fade">
+						<%=text%>
+					</a>
+				</li> 
+			<% end %>
 			<li><a href="status_update_set_appt.html" data-transition="slide">Set Appointment...</a></li>
 			<li data-role="list-divider">Lost</li> 
 			<li><a href="#" data-transition="fade">Not Interested</a></li> 

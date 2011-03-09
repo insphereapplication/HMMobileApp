@@ -14,7 +14,7 @@
 			</div> 
 			<ul data-role="listview" data-theme="d" data-inset="true" > 
 				<li>
-					<p class="ui-li-aside"><strong>~Rollup Status</strong></br></p> 
+					<p class="ui-li-aside"><strong><%= @opportunity.cssi_disposition if @opportunity.cssi_disposition%></strong></br></p> 
 				</li>
 				<li>
 					<h3><a href="<%= url_for(:controller => :Contact, :action => :show, :id => @contact.object) %>"><%= @contact.full_name %></a></h3> 

@@ -6,17 +6,27 @@ class ActivityController < Rho::RhoController
   include BrowserHelper
   
   def update_status
+      puts "UPDATING STATUS"
     opportunity = Opportunity.find(@params['id'])
+    disposition_attrs = {
+      :cssi_disposition => @params['disposition'],
+      :scheduledend => Date.today.to_s,
+      :statecode => 'Completed'
+    }
       
     if opportunity.phone_calls.size > 0
-      phone_call = phone_calls.compact.date_sort(:scheduledstart).first
+      puts "Updating Phone Call"
+      phone_call = opportunity.phone_calls.compact.date_sort(:scheduledstart).first
+      phone_call.update_attributes(disposition_attrs)
     else
-      phone_call = PhoneCall.new(:parent_type => 'opportunity', :parent_id => opportunity.opportunityid)
+      puts "Creating Phone Call"
+      phone_call = PhoneCall.create(
+        { :parent_type => 'opportunity', 
+          :parent_id => opportunity.opportunityid 
+        }.merge(disposition_attrs)
+      )
     end
-   
-    phone_call.cssi_disposition = @params['disposition']
-    phone_call.scheduledend = Date.today.to_s
-    phone_call.statecode = 'Completed';
+    
     Activity.sync
     
     redirect :controller => :Opportunity, :action => :index_follow_up

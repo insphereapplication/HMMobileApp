@@ -102,6 +102,14 @@ class Opportunity
     @open_calls ||= phone_calls.select{|pc| pc.statuscode == "Open"} 
   end
   
+  def rollup_status
+    last_activity ? last_activity.cssi_disposition : ""
+  end
+  
+  def last_activity
+    activities.first if activities
+  end
+  
   def create_or_find_earliest_phone_call(attributes)
     if phone_calls.size > 0
       return phone_calls.compact.date_sort(:scheduledstart).first
