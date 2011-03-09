@@ -1,14 +1,32 @@
-<div class="pageTitle">
-  <h1>Update Status</h1>
-  <h1><%= @opportunity.contact.full_name %>
-</div>
-
-
-<div class="content">
-	<a href="<%=url_for(:action=>:show, :id => @opportunity.object)%>" data-direction="reverse" rel="external" data-icon="back">Back</a><br /><br />
-	<a href="<%= url_for(:controller => :Activity, :action => :update_status, :id => @opportunity.object, :query => {:disposition => 'Left Message', :disposition_detail => ''}  )%>"> Left Message </a>
-	<br />
-	<br />
-	<a href="<%= url_for(:controller => :Activity, :action => :update_status, :id => @opportunity.object , :query => {:disposition => 'No Answer', :disposition_detail => ''})%>"> No Answer </a>
-
+<div data-role="page" data-theme="b">
+	<div data-role="header" data-theme="d" data-position="inline">
+		<a href="<%=url_for(:action=>:show, :id => @opportunity.object)%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
+		<h1>Update Status</h1>
+		<div style="text-align:center" class="ui-bar ui-bar-c"> 
+			<%= "#{@opportunity.contact.full_name} - #{to_date(@opportunity.createdon)}" %>
+		</div>
+	</div>
+	<div id="contentDiv" data-role="content">
+		<div data-role="fieldcontain"> 
+		 	<fieldset data-role="controlgroup"> 
+				<legend>Did you complete any appointments?</legend>  
+				<input type="checkbox" name="checkbox-2a" id="checkbox-2a" class="custom" /> 
+				<label for="checkbox-2a">List Appts Here...</label> 
+		    </fieldset> 
+		</div> 		
+		<ul data-role="listview" data-inset="true"> 
+			<li data-role="list-divider">Follow-Up</li> 
+			<li><a href="<%= url_for(:controller => :Activity, :action => :update_status, :id => @opportunity.object, :query => {:disposition => 'Left Message', :disposition_detail => ''}  )%>" data-transition="fade">Left Message</a></li> 
+			<li><a href="<%= url_for(:controller => :Activity, :action => :update_status, :id => @opportunity.object , :query => {:disposition => 'No Answer', :disposition_detail => ''})%>" data-transition="fade">No Answer</a></li> 
+			<li><a href="status_update_callback.html" data-transition="slide">Call Back Requested</a></li> 
+			<li><a href="status_update_set_appt.html" data-transition="slide">Set Appointment</a></li>
+			<li data-role="list-divider">Lost</li> 
+			<li><a href="#" data-transition="fade">Not Interested</a></li> 
+			<li><a href="#" data-transition="fade">Wrong Number</a></li>
+			<li><a href="#" data-transition="fade">Disconnected</a></li>
+			<li><a href="status_update_lost.html" data-transition="slide">Other</a></li>
+			<li data-role="list-divider">Won</li> 
+			<li><a href="task_win.html" data-transition="slide" data-transition="fade">Won</a></li> 
+		</ul>
+	</div>
 </div>

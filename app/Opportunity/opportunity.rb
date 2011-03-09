@@ -113,9 +113,9 @@ class Opportunity
     end
   end
   
-  def days_ago()
+  def days_ago(past_date)
     begin
-      (Date.today - Date.strptime(createdon, "%m/%d/%Y")).to_i
+      (Date.today - Date.strptime(past_date, "%m/%d/%Y")).to_i
     rescue
       puts "Unable to parse date: #{}; no age returned"
     end

@@ -46,7 +46,7 @@ module Enumerable
     begin
       Date.strptime(date_value, format)
     rescue Exception => ex
-      app_error "Error parsing Date: #{ex.inspect}"
+      puts "Error parsing Date: #{ex.inspect}"
     end
   end
 end
