@@ -106,8 +106,15 @@ class ContactController < Rho::RhoController
     Rho::AsyncHttp.get(
                       :url => url,
                       :callback => (url_for :action => :httpget_callback_map),
-                      :callback_param => ("test")) 
-         
+                      :callback_param => ("test"))    
+  end
+  
+  def map_show
+    System.open_url('maps:q=2811+mckinney+ave+dallas+tx')
+  end
+  
+  def map_show_android
+    System.open_url('http://maps.google.com/?q=2811+mckinney+ave+dallas+tx')
   end
   
   def httpget_callback_map
