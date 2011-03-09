@@ -65,13 +65,10 @@ class Contact
   end
   
   def city_summary
-    result = ""
-    if(address1_city != nil)
-      result += " " + address1_city + ", " + cssi_state1id + " " + address1_postalcode
-    else
-      if(address2_city != nil)
-        asl += " " + address2_city + ", " + cssi_state2id + " " + address2_postalcode
-      end
+    if address1_city
+      " #{address1_city}, #{cssi_state1id}, #{address1_postalcode}"
+    elsif address2_city
+      " #{address2_city}, #{cssi_state2id}, #{address2_postalcode}"
     end
   end
   
@@ -97,56 +94,4 @@ class Contact
      :select => ['title','description'] 
     )
   end
-
-  def self.seed_db(number)
-    #Norton, Kyle - Pariveda Solutions - 22 Feb 2011
-    #Purpose: Used in testing to populate dummy list of contacts
-    
-    #clean db
-    Rhom::Rhom.database_full_reset    
-
-    #db transaction wrapper
-    db = ::Rho::RHO.get_src_db('Contact')
-    db.start_transaction
-    begin
-      i=0
-      while i < number
-      
-        tempContact = {} #contact hash
-        tempContact["object"] = i.to_s  #set parameters
-        tempContact["firstname"] = "First"
-        tempContact["lastname"] = "Last"+i.to_s
-        tempContact["gendercode"] = "Male"
-        tempContact["birthdate"] = "01/01/190" + i.to_s 
-        tempContact["telephone2"] = "832-515-7955" + i.to_s #home phone
-        tempContact["mobilephone"] = "832-515-7955" + i.to_s
-        tempContact["telephone1"] = "832-515-7955" + i.to_s #business phone
-         tempContact["cssi_businessphoneext"] = "1234" + i.to_s
-        tempContact["telephone3"] = "832-515-7955" + i.to_s #alternate phone
-        tempContact["cssi_preferredphone"] = "Home" #preferred phone number type
-        tempContact["emailaddress1"] = "fake-email@aol.com" #email address
-        tempContact["address1_line1"] = "123 fake st" #home address line 1
-        tempContact["address1_line2"] = "#1111" #home address line 2
-        tempContact["address1_city"] = "Yourtown" # home address city
-        tempContact["cssi_state1id"] = "CA" #home address state
-        tempContact["address1_postalcode"] = "11111" #home zip
-        tempContact["address2_line1"] = "123 Biz Avenue" #business address line 1
-        tempContact["address2_line2"] = "Ste 200" # business address line 2
-        tempContact["address2_city"] = "Businessville" #business address city
-        tempContact["cssi_state2id"] = "BZ" #business address state
-        tempContact["address2_postalcode"] = "22222" #business address zip
-        
-        Contact.create(tempContact) #add contact to db table
-        
-        i=i+1
-      end
-      db.commit
-    rescue
-      db.rollback
-    end
-  end
-
-
-
-
 end
