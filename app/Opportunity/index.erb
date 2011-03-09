@@ -18,9 +18,9 @@
 					<% leads.each do |opportunity| %>
 						<% contact = opportunity.contact %>
 						<%= render :partial =>"opportunity", :locals => { 
-							:opportunity => lead, 
+							:opportunity => opportunity	, 
 							:color => color, 
-							:bottom_right_text => "Created #{lead.days_ago}",
+							:bottom_right_text => "Created #{opportunity.days_ago}",
 							:top_right_text => opportunity.createdon
 						} %>
 					
