@@ -5,12 +5,23 @@ class ActivityController < Rho::RhoController
   include BrowserHelper
   
   def update_status
-    opportunity = Opportunity.find(@params['opportunityid'])
-    phone_call = opportunity.create_or_find_earliest_phone_call
-    phone_call.cssi_disposition = @params['disposition']
-    phone_call.update
-    SyncEngine.dosync
-    redirect :controller => :opportunity, :action => :show, :id => opportunity.object
+    puts "UPDATE STATUS: #{@params.inspect}"
+    opportunity = Opportunity.find(@params['id'])
+    puts "OPPORTUNITY: #{opportunity.inspect}"
+    if opportunity
+       puts "CREATE OR FIND"
+        if opportunity.phone_calls.size > 0
+          puts "FOUND PHONE CALLS #{opportunity.opportunityid}"
+          return phone_calls.compact.date_sort(:scheduledstart).first
+        else
+          puts "CREATING NEW PHONE CALL: #{opportunity.opportunityid}"
+          phone_call = Activity.create('type' => 'PhoneCall', 'cssi_disposition' => @params['disposition'], 'parent_id' => opportunity.opportunityid, 'parent_type' => 'Opportunity')
+          puts "CREATED PHONE CALL: #{phone_call.inspect}"
+          Activity.sync
+          puts "SYNCED"
+        end
+      redirect :controller => :Opportunity, :action => :show, :id => opportunity.object
+    end
   end
 
   #GET /Activity

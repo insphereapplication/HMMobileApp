@@ -8,7 +8,6 @@ class ContactController < Rho::RhoController
 
   #GET /Contact
   def index
-    puts "INDEX!!"
     @contacts = Contact.find(:all)
     @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.chars.first}
     render :action => :index,
@@ -77,8 +76,10 @@ class ContactController < Rho::RhoController
 
   # POST /Contact/{1}/update
   def update
+    puts "CONTACT UPDATE: #{@params.inspect}"
     @contact = Contact.find(@params['id'])
     @contact.update_attributes(@params['contact']) if @contact
+    SyncEngine.dosync
     redirect :action => :show,
               :id => @contact.object
   end

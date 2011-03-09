@@ -38,11 +38,11 @@ class Opportunity
   end
   
   def self.new_leads
-    @new_leads ||= find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities? }.compact.date_sort(:createdon)
+    @new_leads ||= find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities? }.compact#.date_sort(:createdon)
   end 
 
   def self.follow_up_phone_calls
-    @phone_calls ||= find(:all).map{|opportunity| opportunity.open_phone_calls.first }.compact.date_sort(:scheduledend)
+    @phone_calls ||= find(:all).map{|opportunity| opportunity.open_phone_calls.first }.compact#.date_sort(:scheduledend)
   end
   
   def self.todays_follow_ups
@@ -67,7 +67,7 @@ class Opportunity
   
   def self.follow_up_activities
     opportunities = find(:all)
-    opportunities.map{|opp| opp.open_phone_calls.first }.compact.date_sort(:scheduledend)
+    opportunities.map{|opp| opp.open_phone_calls.first }.compact#.date_sort(:scheduledend)
   end
   
   def self.last_activities
@@ -91,11 +91,26 @@ class Opportunity
   end
   
   def phone_calls
-    @phone_calls ||= PhoneCall.find(:all, :conditions => {"parent_type" => "opportunity", "parent_id" => self.opportunityid })
+    Activity.find(:all, :conditions => {"type" => "PhoneCall", "parent_type" => "opportunity", "parent_id" => self.opportunityid })
   end
   
   def open_phone_calls
     @open_calls ||= phone_calls.select{|pc| pc.statuscode == "Open"} 
+  end
+  
+  def create_or_find_earliest_phone_call(attributes)
+    puts "CREATE OR FIND"
+    if phone_calls.size > 0
+      puts "FOUND PHONE CALLS #{opportunityid}"
+      return phone_calls.compact.date_sort(:scheduledstart).first
+    else
+      puts "CREATING NEW PHONE CALL: #{opportunityid}"
+      phone_call = Activity.create('type' => 'PhoneCall', 'disposition' => params['cssi_disposition'], 'parent_id' => opportunityid, 'parent_type' => 'Opportunity')
+      puts "CREATED PHONE CALL: #{phone_call.inspect}"
+      SyncEngine.dosync
+      puts "SYNCED"
+      return phone_call
+    end
   end
   
   def days_ago()
