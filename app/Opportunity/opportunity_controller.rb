@@ -1,5 +1,6 @@
 require 'rho/rhocontroller'
 require 'helpers/browser_helper'
+require 'helpers/application_helper'
 
 class OpportunityController < Rho::RhoController
   include BrowserHelper
@@ -17,6 +18,7 @@ class OpportunityController < Rho::RhoController
     @past_due_follow_ups = Opportunity.past_due_follow_ups
     @future_follow_ups = Opportunity.future_follow_ups
     @last_activities = Opportunity.last_activities
+    #all_opps = [@todays_follow_ups | @past_due_follow_ups].map{|opp| opp.object }
     Opportunity.clear_cache
     render :action => :index_follow_up, :layout => 'layout_JQM_Lite'
   end
@@ -62,11 +64,21 @@ class OpportunityController < Rho::RhoController
   def status_update
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
-      render :action => :status_update
+      render :action => :status_update,
+              :layout => 'layout_jquerymobile'
     else
       redirect :action => :index
     end
   end 
+  
+  # GET /Opportunity/{1}/activity_summary
+  def activity_summary
+    @opportunity = Opportunity.find(@params['id'])
+    if @opportunity
+      render :action => :activity_summary,
+              :layout => 'layout_jquerymobile'
+    end
+  end
 
   # POST /Opportunity/create
   def create

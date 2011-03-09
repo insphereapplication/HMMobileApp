@@ -41,11 +41,11 @@ class Activity
   end
   
   def opportunity
-    parent if parent && parent_type == "Opportunity"
+    parent if parent && parent_type.downcase == "opportunity"
   end
   
   def contact
-    parent if parent && parent_type == "Contact"
+    parent if parent && parent_type.downcase == "contact"
   end
   
   def open?

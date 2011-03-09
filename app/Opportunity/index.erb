@@ -26,7 +26,7 @@
 								<p class="ui-li-desc"></p>
 								<div class="ui-grid-a ui-li-desc"> 
 									<div class="ui-block-a"><%= contact.age_sex_loc %> <% if contact.is_high_cost%> $ <% end %> &nbsp;</div>
-									<div align="right" class="ui-block-b">Created: <%= opportunity.days_ago %>d </div>
+									<div align="right" class="ui-block-b">Created: <%= opportunity.days_ago(opportunity.createdon) %>d </div>
 								</div>
 							</div>	
 						</div>			

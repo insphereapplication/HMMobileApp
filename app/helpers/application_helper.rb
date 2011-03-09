@@ -1,3 +1,4 @@
+require 'date'
 
 module ApplicationHelper
   
@@ -8,6 +9,8 @@ module ApplicationHelper
       </form>
     }
   end
+  
+  
   
   def strip_braces(str=nil)
     str ? str.gsub(/\{/, "").gsub(/\}/, "") : nil
