@@ -68,7 +68,7 @@ class Appointment < Activity
   end
   
   def self.open_appointments
-    @open_appointments ||= find(:all, :conditions => {'statecode' => 'Scheduled'})
+    find(:all, :conditions => {'statecode' => 'Scheduled'})
   end
   
   def self.past_due_appointments
