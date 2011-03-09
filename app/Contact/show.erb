@@ -5,12 +5,13 @@
 				<a href="<%=url_for(:action=>:edit, :id => @contact.object)%>" data-direction="forward" data-icon="gear"> Edit </a>
 	</div>
 			<div data-role="content">
+				<!-- <a href="<%=url_for(:action=>:map_show)%>" rel="external"> Show Map-iPhone </a><br /> -->
+				<a href="<%=url_for(:action=>:map_show_android)%>" rel="external"> Show Map-Android </a>
 				<ul data-role="listview" data-theme="d" data-inset="true" > 
 					<li>
 							<h3><%= @contact.full_name %></h3>
 							<p><%= @contact.gendercode %>, Age <%= (@contact.age).to_s %> </p>
-							<p>DOB: <%= @contact.birthdate %></p>
-							
+							<p>DOB: <%= @contact.birthdate %></p>	
 					</li> 
 					<li data-icon="<%= check_preferred("Mobile", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.mobilephone.to_s %>"> Mobile: <%= @contact.mobilephone %></a></li>
 					<li data-icon="<%= check_preferred("Business", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone1.to_s %>">Bus: <%= @contact.telephone1 %></a>

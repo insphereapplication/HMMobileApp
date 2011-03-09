@@ -10,7 +10,7 @@
 		<div data-role="fieldcontain"> 
 		 	<fieldset data-role="controlgroup"> 
 				<legend>Did you complete any appointments?</legend>  
-				<input type="checkbox" name="checkbox-2a" id="checkbox-2a" class="custom" /> 
+				<input type="checkbox" name="checkbox-2a" id="checkbox-2a" /> 
 				<label for="checkbox-2a">List Appts Here...</label> 
 		    </fieldset> 
 		</div> 		
@@ -18,8 +18,8 @@
 			<li data-role="list-divider">Follow-Up</li> 
 			<li><a href="<%= url_for(:controller => :Activity, :action => :update_status, :id => @opportunity.object, :query => {:disposition => 'Left Message', :disposition_detail => ''}  )%>" data-transition="fade">Left Message</a></li> 
 			<li><a href="<%= url_for(:controller => :Activity, :action => :update_status, :id => @opportunity.object , :query => {:disposition => 'No Answer', :disposition_detail => ''})%>" data-transition="fade">No Answer</a></li> 
-			<li><a href="status_update_callback.html" data-transition="slide">Call Back Requested</a></li> 
-			<li><a href="status_update_set_appt.html" data-transition="slide">Set Appointment</a></li>
+			<li><a href="<%= url_for(:controller => :Activity, :action => :update_status, :id => @opportunity.object , :query => {:disposition => 'No Answer', :disposition_detail => ''})%>" data-transition="slide">Call Back Requested...</a></li> 
+			<li><a href="status_update_set_appt.html" data-transition="slide">Set Appointment...</a></li>
 			<li data-role="list-divider">Lost</li> 
 			<li><a href="#" data-transition="fade">Not Interested</a></li> 
 			<li><a href="#" data-transition="fade">Wrong Number</a></li>

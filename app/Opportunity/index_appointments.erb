@@ -19,10 +19,10 @@
 					<% contact = appointment.parent.contact %>
 					<li role="option" tabindex="0" data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-btn-up-c">
 					 <a class="ui-li-sidebar-<%=color%> ui-btn-up-c"> </a> 
-						<div class="ui-btn-inner">
+						<div class="ui-btn-inner" onclick="window.open('<%= url_for(:action => :show, :id => opportunity.object) %>')">
 							<div class="ui-btn-text">
 								<p class="ui-li-aside ui-li-desc"><strong><%=appointment.scheduledstart%></strong></p>
-								<h3 class="ui-li-heading"><a href="opportunity_detail_v2.html" class="ui-link-inherit ui-block-a"><%= contact.full_name %></a></h3>
+								<h3 class="ui-li-heading"><a href="<%= url_for(:action => :show, :id => opportunity.object) %>" class="ui-link-inherit ui-block-a"><%= contact.full_name %></a></h3>
 								<p class="ui-li-desc"></p>
 								<div class="ui-grid-a ui-li-desc">
 									<div class="ui-block-a"><%= contact.age_sex_loc %> &nbsp;</div>
