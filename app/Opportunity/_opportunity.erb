@@ -3,15 +3,23 @@
 	<a class="ui-li-sidebar-<%=color%> ui-btn-up-c"> </a> 
 	<div class="ui-btn-inner">
 		<div class="ui-btn-text">
-			<p class="ui-li-aside ui-li-desc"><strong>~Rollup Status</strong></p>
+			<p class="ui-li-aside ui-li-desc"><strong><%= top_right_text %></strong></p>
 			<h3 class="ui-li-heading"><a href="opportunity_detail_v2.html" class="ui-link-inherit ui-block-a"><%= contact.full_name %></a></h3>
 			<p class="ui-li-desc"></p>
 			<div class="ui-grid-a ui-li-desc">
-				<div class="ui-block-a"> <%= contact.age_sex_loc %> &nbsp;</div>
-				<div align="right" class="ui-block-b">"#{date_label} #d</div>
+				<div class="ui-block-a"><%= contact.age_sex_loc %></div>
+				<div align="right" class="ui-block-b"><%= bottom_right_text %> #d</div>
 			</div>
 		</div>
 	</div>
 	<div class="ui-li-count ui-btn-up-e ui-btn-corner-all" style="top:70%;right:45%">Call Ct</div>
-	<a href="tel:<%= contact.mobilephone %>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c"><span class="ui-btn-inner"><span class="ui-btn-text"></span><span title="" data-theme="b" class="ui-btn ui-btn-up-b ui-btn-icon-notext ui-btn-corner-all ui-shadow"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text"></span><span class="ui-icon ui-icon-phoneopp ui-icon-shadow"></span></span></span></span></a>			
+	<a href="tel:<%= contact.mobilephone %>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
+		<span class="ui-btn-inner"><span class="ui-btn-text"></span>
+		<span title="" data-theme="b" class="ui-btn ui-btn-up-b ui-btn-icon-notext ui-btn-corner-all ui-shadow">
+			<span class="ui-btn-inner ui-btn-corner-all">
+				<span class="ui-btn-text"></span>
+				<span class="ui-icon ui-icon-phoneopp ui-icon-shadow"></span>
+			</span>
+		</span>
+	</a>			
 </li>

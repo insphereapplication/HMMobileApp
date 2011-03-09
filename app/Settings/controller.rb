@@ -9,7 +9,7 @@ class SettingsController < Rho::RhoController
   
   def index
     @msg = @params['msg']
-    render :action => :index
+    render :controller => :Setting, :action => :index
   end
 
   def login

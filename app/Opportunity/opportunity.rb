@@ -38,11 +38,11 @@ class Opportunity
   end
   
   def self.new_leads
-    @new_leads ||= find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities? }.compact#.date_sort(:createdon)
+    find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities? }.compact#.date_sort(:createdon)
   end 
 
   def self.follow_up_phone_calls
-    @phone_calls ||= find(:all).map{|opportunity| opportunity.open_phone_calls.first }.compact#.date_sort(:scheduledend)
+    find(:all).map{|opportunity| opportunity.open_phone_calls.first }.compact#.date_sort(:scheduledend)
   end
   
   def self.todays_follow_ups
@@ -71,7 +71,7 @@ class Opportunity
   end
   
   def self.last_activities
-    find(:all).select {|opp| !opp.is_new? && opp.has_activities? && !opp.has_open_activities? }
+    find(:all).select {|opp| opp.has_activities? && !opp.has_open_activities? }
   end
   
   def has_activities?
@@ -87,11 +87,15 @@ class Opportunity
   end
   
   def activities
-    @activities ||= Activity.find(:all, :conditions => {"parent_type" => "opportunity", "parent_id" => self.opportunityid })
+    Activity.find(:all, :conditions => {"parent_type" => "opportunity", "parent_id" => self.opportunityid })
   end
   
   def phone_calls
     Activity.find(:all, :conditions => {"type" => "PhoneCall", "parent_type" => "opportunity", "parent_id" => self.opportunityid })
+  end
+  
+  def most_recent_phone_call
+    phone_calls.first
   end
   
   def open_phone_calls
@@ -99,25 +103,12 @@ class Opportunity
   end
   
   def create_or_find_earliest_phone_call(attributes)
-    puts "CREATE OR FIND"
     if phone_calls.size > 0
-      puts "FOUND PHONE CALLS #{opportunityid}"
       return phone_calls.compact.date_sort(:scheduledstart).first
     else
-      puts "CREATING NEW PHONE CALL: #{opportunityid}"
-      phone_call = Activity.create('type' => 'PhoneCall', 'disposition' => params['cssi_disposition'], 'parent_id' => opportunityid, 'parent_type' => 'Opportunity')
-      puts "CREATED PHONE CALL: #{phone_call.inspect}"
+      phone_call = Activity.create('type' => 'PhoneCall', 'disposition' => params['cssi_disposition'], 'parent_id' => opportunityid, 'parent_type' => 'opportunity')
       SyncEngine.dosync
-      puts "SYNCED"
       return phone_call
-    end
-  end
-  
-  def days_ago(past_date)
-    begin
-      (Date.today - Date.strptime(past_date, "%m/%d/%Y")).to_i
-    rescue
-      puts "Unable to parse date: #{}; no age returned"
     end
   end
   
@@ -126,6 +117,16 @@ class Opportunity
       if Rho::RhoConfig.exists?('lead_cost_threshold')
         cssi_leadcost.to_f > Rho::RhoConfig.lead_cost_threshold
       end
+    end
+  end
+end
+
+module DateUtil
+  def self.days_ago(past_date)
+    begin
+      (Date.today - Date.strptime(past_date, "%m/%d/%Y")).to_i
+    rescue
+      puts "Unable to parse date: #{}; no age returned"
     end
   end
 end
