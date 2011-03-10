@@ -5,11 +5,11 @@ module BrowserHelper
       <a href=" #{ url_for(:controller => :Activity, :action => :update_status, 
 				:query => {
 				  :opportunity_id => opportunity.object,
-		 		  'phone_call[disposition_detail]' => '',
+		 		    'phone_call[disposition_detail]' => '',
 			      'phone_call[cssi_disposition]' => disposition,
-		          'phone_call[scheduledend]' => Date.today.to_s,
-		          'phone_call[statecode]' => 'Completed'
-			      })
+		        'phone_call[scheduledend]' => Date.today.to_s,
+		        'phone_call[statecode]' => 'Completed'
+			    })
 				}" 
 				rel="external" data-transition="fade">
 				#{disposition}
