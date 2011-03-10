@@ -36,6 +36,11 @@ module Rhom
           end
           super(*args, &block)
         end
+        
+        def create(*args)
+          args[0].merge!({'type' => @sti_name})
+          super(*args)
+        end
       
         # override 'name' so that Rho can resolve the source table name to the registered parent (see: RhomObjectFactory.get_source_name)
         def name
@@ -54,7 +59,7 @@ module Rhom
 
       module InstanceMethods
         def initialize(*args)
-          type = self.class.sti_name
+          args[0].merge!({'type' => self.class.sti_name})
           super(*args)
         end
       end

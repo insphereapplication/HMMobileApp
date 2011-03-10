@@ -11,20 +11,34 @@
 	</div>
 	<div data-role="content" class="ui-content" role="main">
 		<ul data-counttheme="e" data-split-theme="b" data-split-icon="phoneopp" data-role="listview" class="ui-listview" role="listbox">
-		<% [[@past_due_follow_ups, "Past Due", "red", lambda {|opp| "Due: #{DateUtil.days_ago(opp.most_recent_phone_call.scheduledend)}"}],
-			[@todays_follow_ups, "Today", "orange", lambda {|opp| "Today: ~hh:mm:MM"}],
-			[@last_activities, "By Last Activity", "yellow", lambda {|opp| "Last Act:"}],
-			[@future_follow_ups, "Future", "green", lambda {|opp| "Due:"}]].each do |follow_ups, label, color, date_proc| %>
+		<% [[@past_due_follow_ups, 
+				"Past Due", 
+				"red", 
+				lambda {|opp| "Due: -#{DateUtil.days_ago(opp.most_recent_phone_call.scheduledend)} d" if opp.most_recent_phone_call.scheduledend}],
+			[@todays_follow_ups, 
+				"Today", 
+				"orange", 
+				lambda {|opp| "Today: #{opp.most_recent_phone_call.scheduledend}" if opp.most_recent_phone_call.scheduledend}],
+			[@last_activities, 
+				"By Last Activity", 
+				"yellow", 
+				lambda {|opp| "Last Act: #{opp.last_activity.scheduledend}" if opp.last_activity.scheduledend}],
+			[@future_follow_ups, 
+				"Future", 
+				"green", 
+				lambda {|opp| "Due: #{opp.most_recent_phone_call.scheduledend}" if opp.most_recent_phone_call.scheduledend }]].each do |follow_ups, label, color, date_proc| %>
+			
 				<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-<%=color%> ui-btn-up-undefined"><%= label %></li> 
 				<% follow_ups.each do |item| %>
 					<% opportunity = item.kind_of?(Activity) ? item.opportunity : item %>
 					<%= render :partial =>"opportunity", :locals => { 
 							:opportunity => opportunity, 
 							:color => color, 
-							:top_right_text => "~Rollup Status",
+							:top_right_text => opportunity.rollup_status,
 							:bottom_right_text => date_proc.call(opportunity)
 						 } 
 					%>
+					
 				<% end %>
 			<% end %>
 		</ul>
