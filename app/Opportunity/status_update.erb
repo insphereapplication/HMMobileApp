@@ -46,7 +46,7 @@
 			            <select name="phone_call[phonetype]" id="select-choice-1">
 							<option></option>
 							<% @opportunity.contact.phone_numbers.each do |type, number| %>
-								<option value="<%= number %>">type</option>
+								<option value="<%= number %>"><%= type %></option>
 							<% end %>
 						</select>
 						<label for="phone_call[phonenumber]" class="fieldLabel">Phone Number:</label>
