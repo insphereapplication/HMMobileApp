@@ -83,6 +83,10 @@ class Contact
     end
   end
   
+  def phone_numbers
+    {'Home' => telephone2, 'Mobile' => mobilephone, 'Business' => telephone1, 'Alternate' => telephone3 }.reject{|type, number| number.blank? }
+  end
+  
   def opportunities
     Opportunity.find(
      :all, 
