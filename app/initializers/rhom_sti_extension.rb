@@ -11,10 +11,10 @@
 #    class Child < Base
 #    end
 #  
-#    Child.find(:all) # is the same as calling Base.find(:all, :conditions => {:type => 'Child'}) or Base.find(:all, :conditions => "type = 'Child'")
+#    Child.find(:all) # is now the same as calling Base.find(:all, :conditions => {:type => 'Child'}) or Base.find(:all, :conditions => "type = 'Child'")
 # 
-# The type condition will be appended to any passed-in condtions, in hash or SQL format. The 'type' field is added and set to the child name in the
-# Child class initializer. 
+# The type condition will be appended to any passed-in condtions, in hash or SQL format. The 'type' field is added and set to the child name in 
+# Child.new or Child.create. 
 #
 # NOTE:'name' is overidden because Rho uses the class name to find the registered Rhom source. 'sti_name' is provided so that child classes of Rhom
 # models have access to their class name.
@@ -37,7 +37,13 @@ module Rhom
           super(*args, &block)
         end
         
+        # set child type on new instances
         def create(*args)
+          args[0].merge!({'type' => @sti_name})
+          super(*args)
+        end
+        
+        def new(*args)
           args[0].merge!({'type' => @sti_name})
           super(*args)
         end
@@ -56,13 +62,6 @@ module Rhom
           @sti_name
         end
       end
-
-      module InstanceMethods
-        def initialize(*args)
-          args[0].merge!({'type' => self.class.sti_name})
-          super(*args)
-        end
-      end
     end
 
     module RhomClassMethods
@@ -71,7 +70,6 @@ module Rhom
         sti_name = sti_model.name # store name before it's overidden
         sti_model.extend STI::ClassMethods
         sti_model.sti_name = sti_name
-        sti_model.send(:include, STI::InstanceMethods)
       end
     end
 

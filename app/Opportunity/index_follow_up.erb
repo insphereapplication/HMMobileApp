@@ -14,19 +14,19 @@
 		<% [[@past_due_follow_ups, 
 				"Past Due", 
 				"red", 
-				lambda {|opp| "Due: -#{DateUtil.days_ago(opp.most_recent_phone_call.scheduledend)} d" if opp.most_recent_phone_call.scheduledend}],
+				lambda {|opportunity| "Due: -#{opportunity.days_past_due} d" unless opportunity.days_past_due.blank?}],
 			[@todays_follow_ups, 
 				"Today", 
 				"orange", 
-				lambda {|opp| "Today: #{opp.most_recent_phone_call.scheduledend}" if opp.most_recent_phone_call.scheduledend}],
+				lambda {|opportunity| "Today: #{opportunity.next_activity_due_date}" unless opportunity.next_activity_due_date.blank?}],
 			[@last_activities, 
 				"By Last Activity", 
 				"yellow", 
-				lambda {|opp| "Last Act: #{opp.last_activity.scheduledend}" if opp.last_activity.scheduledend}],
+				lambda {|opportunity| "Last Act: #{opportunity.last_activity_date}" unless opportunity.last_activity_date.blank?}],
 			[@future_follow_ups, 
 				"Future", 
 				"green", 
-				lambda {|opp| "Due: #{opp.most_recent_phone_call.scheduledend}" if opp.most_recent_phone_call.scheduledend }]].each do |follow_ups, label, color, date_proc| %>
+				lambda {|opportunity| "Due: #{opportunity.next_activity_due_date}" unless opportunity.next_activity_due_date.blank?}]].each do |follow_ups, label, color, date_proc| %>
 			
 				<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-<%=color%> ui-btn-up-undefined"><%= label %></li> 
 				<% follow_ups.each do |item| %>
