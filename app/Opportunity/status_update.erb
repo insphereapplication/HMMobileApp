@@ -40,10 +40,9 @@
 						<label for="phone_call[phonetype]" class="fieldLabel">Phone Type:</label>
 			            <select name="phone_call[phonetype]" id="select-choice-1">
 							<option></option>
-							<option value="Mobile">Mobile</option>
-							<option value="Business">Business</option>
-							<option value="Home">Home</option>
-							<option value="Alternate">Alternate</option>
+							<% @opportunity.contact.phone_numbers.each do |type, number| %>
+								<option value="<%= number %>">type</option>
+							<% end %>
 						</select>
 						<label for="phone_call[phonenumber]" class="fieldLabel">Phone Number:</label>
 			            <input type="text" name="phone_call[phonenumber]" />
