@@ -1,17 +1,7 @@
 require 'date'
 
 module ApplicationHelper
-  
-  def submit_button(params)
-    %Q{
-      <form>
-      <input type='submit'>
-      </form>
-    }
-  end
-  
-  
-  
+    
   def strip_braces(str=nil)
     str ? str.gsub(/\{/, "").gsub(/\}/, "") : nil
   end

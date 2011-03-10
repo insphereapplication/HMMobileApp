@@ -6,8 +6,9 @@ class ActivityController < Rho::RhoController
   include BrowserHelper
   
   def update_status
-    phone_call_attrs = @params['phone_call']
+    phone_call_attrs = @params['phone_call'].merge({'disposition_detail' => ''})
     opportunity = Opportunity.find(@params['opportunity_id'])
+    
     if !opportunity.phone_calls.blank?
       phone_call = opportunity.most_recent_phone_call
       phone_call.update_attributes(phone_call_attrs)
@@ -20,7 +21,6 @@ class ActivityController < Rho::RhoController
     end
     
     Activity.sync
-    
     redirect :controller => :Opportunity, :action => :index_follow_up
   end
 
