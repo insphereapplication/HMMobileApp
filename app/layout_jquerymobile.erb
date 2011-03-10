@@ -9,6 +9,17 @@
         <link type="text/css" rel="stylesheet" href="/public/jquerymobile/insphere.css" />
         <script src="/public/jquerymobile/jquery-1.4.4.min.js" type="text/javascript"></script>
         <script src="/public/jquerymobile/jquery-mobile.js" type="text/javascript"></script>
+		<script language="javascript"> 
+		function toggle(showHideDiv) {
+			var ele = document.getElementById(showHideDiv);
+			if(ele.style.display == "block") {
+		    		ele.style.display = "none";
+		  	}
+			else {
+				ele.style.display = "block";
+			}
+		} 
+		</script>
 </head>
 
 <body>

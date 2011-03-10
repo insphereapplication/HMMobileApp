@@ -5,8 +5,6 @@
 				<a href="<%=url_for(:action=>:edit, :id => @contact.object)%>" data-direction="forward" data-icon="gear"> Edit </a>
 	</div>
 			<div data-role="content">
-				<!-- <a href="<%=url_for(:action=>:map_show)%>" rel="external"> Show Map-iPhone </a><br /> -->
-				<a href="<%=url_for(:action=>:map_show_android)%>" rel="external"> Show Map-Android </a>
 				<ul data-role="listview" data-theme="d" data-inset="true" > 
 					<li>
 							<h3><%= @contact.full_name %></h3>
@@ -24,7 +22,7 @@
 					<li data-icon="false"><a href="mailto:<%= @contact.emailaddress1.to_s %>"><%= @contact.emailaddress1.to_s %></a></li>
 					<li data-role="list-divider">Business Address</li>
 					<li data-icon="false">
-						<a href="http://maps.google.com?q= <%= @contact.address2_line1 %> 	<%= @contact.address2_line2 %>  <%= @contact.address2_city %>, <%= @contact.cssi_state2id %>  <%= @contact.address2_postalcode %> ">
+						<a rel="external" href="<%= url_for(:action => :map_show_business, :id => @contact.object)%>">
 							<%= @contact.address2_line1 %> <br/>
 							<%= @contact.address2_line2 %><br/>
 							<%= "#{@contact.address2_city}, #{@contact.cssi_state2id} #{@contact.address2_postalcode}" %><br/>

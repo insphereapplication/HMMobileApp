@@ -90,83 +90,17 @@ class ContactController < Rho::RhoController
     redirect :action => :index
   end
 
-  #Send address information and call callback method to display map
-  def show_map
-    puts "INTO THE SHOW MAP METHOD* * * * * * * * * * * * * * * * *"
-    #contact = @params['id']
-    street = "5918 Capella Park Dr"
-    city = "Spring"
-    state = "TX"
-    
-    url_addition = format_address_for_mapping(street, city, state, nil, false)
-    
-    #url with added address information
-    url = "http://maps.google.com/maps/api/geocode/json?address=#{url_addition}&sensor=false"
-        
-    Rho::AsyncHttp.get(
-                      :url => url,
-                      :callback => (url_for :action => :httpget_callback_map),
-                      :callback_param => ("test"))    
-  end
-  
-  def map_show
-    System.open_url('maps:q=2811+mckinney+ave+dallas+tx')
-  end
-  
-  def map_show_android
-    System.open_url('http://maps.google.com/?q=2811+mckinney+ave+dallas+tx')
-  end
-  
-  def httpget_callback_map
-    puts "httpget_callback: #{@params}"
-
-    if @params['status'] != 'ok'
-        @@error_params = @params
-        WebView.navigate ( url_for :action => :show_error )        
-    else
-      
-      if @params['body']['status'] == "ZERO_RESULTS"
-        #TODO: Improve show_error.erb for better error handling
-        WebView.navigate ( url_for :action => :show_error )  
-        
+  def map_show_business
+      puts "SHOW MAP: #{@params.inspect}"
+      @contact = Contact.find(@params['id'])
+      if System::get_property('platform') == 'APPLE'
+        System.open_url("maps:q=#{@contact.address2_line1}+#{@contact.address2_city}+#{@contact.cssi_state2id}")
       else
-      
-        @@get_result = @params['body']
-        results = @@get_result['results']
-        
-        results.each do |res|
-          
-          @lat = res['geometry']['location']['lat']
-          @long = res['geometry']['location']['lng']
-          
-          puts "LAT: #{@lat}"
-          puts "LONG: #{@long}"
-          
-          display_map(@lat, @long)
-          
-        end
-      end  
+        System.open_url('http://maps.google.com/?q=' + address)
+      end
+  end
+    
+    def map_show_home
     end
-  end
-  
-  def display_map(lat, long)   
-    map_params = {
-      :settings => {:map_type => "hybrid",:region => [lat, long, 0.2, 0.2],
-      :zoom_enabled => true,:scroll_enabled => true,:shows_user_location => false,
-      :api_key => 'Google Maps API Key'},
-        :annotations => [{
-          :latitude => lat, 
-          :longitude => long, 
-          :title => "Contact Name Here", 
-          :subtitle => "Contact Subtitle Here",
-          :url => "/app/"
-        }]
-      }
-    
-    MapView.create map_params
-    
-   # WebView.navigate ( url_for :action => :get_directions, :query => {:store_info_id => get_store_info().store_info_id} )
-    
-  end
-  
+
 end

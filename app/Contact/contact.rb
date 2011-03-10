@@ -94,4 +94,15 @@ class Contact
      :select => ['title','description'] 
     )
   end
+  
+  def business_map
+    begin
+    result = ""
+    if address2_line1 && address2_city && cssi_state2id
+      result += address2_line1 << "+" << address2_city << "+" << cssi_state2id
+    end
+    rescue
+      puts "Could not generate business map string; Value is #{}"
+    end
+  end
 end
