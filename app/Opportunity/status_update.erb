@@ -18,11 +18,16 @@
 			<li data-role="list-divider">Follow-Up</li> 
 			<% [['Left Message', 'Left Message'], ['No Answer', 'No Answer'], ['No Answer', 'Call Back Requested...']].each do |disposition, text| %>
 				<li>
-					<a href="<%= url_for(:controller => :Activity, 
-						:action => :update_status, 
-						:id => @opportunity.object, 
-						:query => {:disposition => disposition, 
-						:disposition_detail => ''}  )%>" 
+					<a href="<%= url_for(:controller => :Activity, :action => :update_status, 
+						:query => {
+						  :opportunity_id => @opportunity.object,
+						  :phone_call => {
+							:disposition_detail => '',
+							:cssi_disposition => disposition,
+				            :scheduledend => Date.today.to_s,
+				            :statecode => 'Completed'
+						  }
+						})%>" 
 						rel="external" data-transition="fade">
 						<%=text%>
 					</a>

@@ -34,7 +34,7 @@ class Opportunity
   end
     
   def contact
-    @contact ||= Contact.find(self.contact_id)
+    Contact.find(self.contact_id)
   end
   
   def self.new_leads
@@ -78,6 +78,18 @@ class Opportunity
     activities && activities.size > 0
   end
   
+  def days_past_due
+    DateUtil.days_ago(next_activity_due_date) 
+  end
+  
+  def next_activity_due_date
+    most_recent_phone_call.scheduledend if most_recent_phone_call && most_recent_phone_call.scheduledend 
+  end
+  
+  def last_activity_date
+    last_activity.scheduledend if last_activity && last_activity.scheduledend 
+  end
+  
   def is_new?
     statuscode == "New Opportunity"
   end
@@ -99,11 +111,11 @@ class Opportunity
   end
   
   def open_phone_calls
-    @open_calls ||= phone_calls.select{|pc| pc.statuscode == "Open"} 
+    phone_calls.select{|pc| pc.statuscode == "Open"} 
   end
   
   def rollup_status
-    last_activity ? last_activity.cssi_disposition : ""
+    last_activity && !last_activity.cssi_disposition.blank? ? last_activity.cssi_disposition : "Callback"
   end
   
   def last_activity
@@ -115,7 +127,6 @@ class Opportunity
       return phone_calls.compact.date_sort(:scheduledstart).first
     else
       phone_call = Activity.create('type' => 'PhoneCall', 'disposition' => params['cssi_disposition'], 'parent_id' => opportunityid, 'parent_type' => 'opportunity')
-      SyncEngine.dosync
       return phone_call
     end
   end

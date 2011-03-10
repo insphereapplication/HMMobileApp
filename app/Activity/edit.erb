@@ -13,11 +13,12 @@
 
 <div class="content">
   <form method="POST" action="<%= url_for :action => :update %>">
-    <input type="hidden" name="id" value="<%= @activity.object %>"/>
+    <input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>"/>
+	<input type="hidden" name="phone_call[disposition]" value="Callback Requested"/>
     <ul>
       
           <li>
-            <label for="activity[type]" class="fieldLabel">Type</label>
+            <label for="phone_call[disposition]" class="fieldLabel">Type</label>
             <input type="text" name="activity[type]" value="<%= @activity.type %>" <%= placeholder( "Type" ) %> />
           </li>
       
