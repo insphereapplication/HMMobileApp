@@ -28,6 +28,29 @@
 					</a>
 				</li> 
 			<% end %>
+			<li>
+					<a href="javascript:toggle('call_back_detail');" data-transition="slide">Call Back Requested...</a>
+			</li>
+			<div id="call_back_detail" class="ui-body ui-body-d" style="display: none">
+				<form method="POST" action="<%= url_for :controller => :Activity, :action => :update_status %>">
+					<input type="hidden" name="id" />
+					<div data-role="fieldcontain">
+						<label for="phone_call[cssi_followupcall]" class="fieldLabel">Call Back DateTime:</label>
+			            <input type="text" name="phone_call[cssi_followupcall]" />
+						<label for="phone_call[phonetype]" class="fieldLabel">Phone Type:</label>
+			            <select name="phone_call[phonetype]" id="select-choice-1">
+							<option></option>
+							<option value="Mobile">Mobile</option>
+							<option value="Business">Business</option>
+							<option value="Home">Home</option>
+							<option value="Alternate">Alternate</option>
+						</select>
+						<label for="phone_call[phonenumber]" class="fieldLabel">Phone Number:</label>
+			            <input type="text" name="phone_call[phonenumber]" />
+						<input type="submit" class="standardButton" value="Update"/>
+					</div>
+				</form>
+			</div>
 			<li><a href="status_update_set_appt.html" data-transition="slide">Set Appointment...</a></li>
 			<li data-role="list-divider">Lost</li> 
 			<li><a href="#" data-transition="fade">Not Interested</a></li> 
