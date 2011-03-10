@@ -6,19 +6,16 @@ class ActivityController < Rho::RhoController
   include BrowserHelper
   
   def update_status
-    puts 
-    puts @params.inspect
+    phone_call_attrs = @params['phone_call']
     opportunity = Opportunity.find(@params['opportunity_id'])
-    puts @params.inspect
     if !opportunity.phone_calls.blank?
-      puts "Updating Phone Call"
       phone_call = opportunity.most_recent_phone_call
-      phone_call.update_attributes(@params['phone_call'].merge({:disposition_detail => ""}))
+      phone_call.update_attributes(phone_call_attrs)
     else
       phone_call = PhoneCall.create(
         { :parent_type => 'opportunity', 
           :parent_id => opportunity.opportunityid 
-        }.merge(@params['phone_call'].merge({:disposition_detail => ""}))
+        }.merge(phone_call_attrs)
       )
     end
     
