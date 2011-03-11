@@ -26,12 +26,12 @@
 			</li>
 			<div id="call_back_detail" class="ui-body ui-body-d" style="display: none">
 				<form method="POST" action="<%= url_for :controller => :Activity, :action => :update_status %>">
-					<input type="hidden" name="id" />
+					<input type="hidden" name="opportunity_id" value="<%=@opportunity.object%>" />
 					<div data-role="fieldcontain">
 						<label for="phone_call[cssi_followupcall]" class="fieldLabel">Call Back DateTime:</label>
 			            <input type="text" name="phone_call[cssi_followupcall]" />
-						<label for="phone_call[phonetype]" class="fieldLabel">Phone Type:</label>
-			            <select name="phone_call[phonetype]" id="select-choice-1">
+						<label for="phone_call[cssi_phonetype]" class="fieldLabel">Phone Type:</label>
+			            <select name="phone_call[cssi_phonetype]" id="select-choice-1">
 							<option></option>
 							<% @opportunity.contact.phone_numbers.each do |type, number| %>
 								<option value="<%= number %>"><%= type %></option>
@@ -52,7 +52,9 @@
 			<% end %>
 			<li><a href="status_update_lost.html" data-transition="slide">Other</a></li>
 			<li data-role="list-divider">Won</li> 
-			<li><a href="task_win.html" data-transition="slide" data-transition="fade">Won</a></li> 
+			<li>
+				<%= update_opportunity_statecode_link(@opportunity, 'Won')%>
+			</li> 
 		</ul>
 	</div>
 </div>
