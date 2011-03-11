@@ -6,18 +6,28 @@ class ActivityController < Rho::RhoController
   include BrowserHelper
   
   def update_status
-    phone_call_attrs = @params['phone_call'].merge({'disposition_detail' => ''})
+    phone_call_attrs = @params['phone_call'].merge({'cssi_disposition detail' => ''})
     opportunity = Opportunity.find(@params['opportunity_id'])
+    
+    parent_attrs = { 
+      :parent_type => 'opportunity', 
+      :parent_id => opportunity.opportunityid 
+    }
     
     if !opportunity.phone_calls.blank?
       phone_call = opportunity.most_recent_phone_call
-      phone_call.update_attributes(phone_call_attrs)
+      phone_call.update_attributes(phone_call_attrs.merge(parent_attrs))
     else
       phone_call = PhoneCall.create(
-        { :parent_type => 'opportunity', 
-          :parent_id => opportunity.opportunityid 
-        }.merge(phone_call_attrs)
+        parent_attrs.merge(phone_call_attrs).merge(parent_attrs)
       )
+    end
+    
+    if @params['appointment'] 
+      Appointment.create(@params['appointment'].merge(parent_attrs).merge({
+          :statecode => "Scheduled",
+          :statuscode => "Busy"
+        }))
     end
     
     Activity.sync

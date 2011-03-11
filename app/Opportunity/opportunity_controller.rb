@@ -94,6 +94,7 @@ class OpportunityController < Rho::RhoController
   def update
     @opportunity = Opportunity.find(@params['id'])
     @opportunity.update_attributes(@params['opportunity']) if @opportunity
+    Opportunity.sync
     redirect :action => :index
   end
 
