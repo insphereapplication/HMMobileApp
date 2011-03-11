@@ -16,19 +16,9 @@
 		</div> 		
 		<ul data-role="listview" data-inset="true"> 
 			<li data-role="list-divider">Follow-Up</li> 
-			<% [['Left Message', 'Left Message'], ['No Answer', 'No Answer']].each do |disposition, text| %>
+			<% ['Left Message', 'No Answer'].each do |disposition| %>
 				<li>
-					<a href="<%= url_for(:controller => :Activity, :action => :update_status, 
-						:query => {
-						  :opportunity_id => @opportunity.object,
-				 		  'phone_call[disposition_detail]' => '',
-					      'phone_call[cssi_disposition]' => disposition,
-				          'phone_call[scheduledend]' => Date.today.to_s,
-				          'phone_call[statecode]' => 'Completed'
-						})%>" 
-						rel="external" data-transition="fade">
-						<%=text%>
-					</a>
+					<%= udpate_status_link(@opportunity, disposition) %>
 				</li> 
 			<% end %>
 			
@@ -128,9 +118,11 @@
 				</form>
 			</div>
 			<li data-role="list-divider">Lost</li> 
-			<li><a href="#" data-transition="fade">Not Interested</a></li> 
-			<li><a href="#" data-transition="fade">Wrong Number</a></li>
-			<li><a href="#" data-transition="fade">Disconnected</a></li>
+			<% ['Not Interested', 'Wrong Number', 'Disconnected'].each do |disposition| %>
+				<li>
+					<%= udpate_status_link(@opportunity, disposition) %>
+				</li> 
+			<% end %>
 			<li><a href="status_update_lost.html" data-transition="slide">Other</a></li>
 			<li data-role="list-divider">Won</li> 
 			<li><a href="task_win.html" data-transition="slide" data-transition="fade">Won</a></li> 

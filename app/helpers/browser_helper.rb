@@ -1,5 +1,22 @@
 module BrowserHelper
 
+  def udpate_status_link(opportunity, disposition)
+    %Q{
+      <a href=" #{ url_for(:controller => :Activity, :action => :update_status, 
+				:query => {
+				  :opportunity_id => opportunity.object,
+		 		    'phone_call[disposition_detail]' => '',
+			      'phone_call[cssi_disposition]' => disposition,
+		        'phone_call[scheduledend]' => Date.today.to_s,
+		        'phone_call[statecode]' => 'Completed'
+			    })
+				}" 
+				rel="external" data-transition="fade">
+				#{disposition}
+			</a>
+    }
+  end
+  
   def placeholder(label=nil)
     "placeholder='#{label}'" if platform == 'apple'
   end
