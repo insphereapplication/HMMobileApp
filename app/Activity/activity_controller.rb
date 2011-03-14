@@ -38,7 +38,7 @@ class ActivityController < Rho::RhoController
         }))
     end
     
-    Activity.sync
+    SyncEngine.dosync
     redirect :controller => :Opportunity, :action => :show, :id => opportunity.object
   end
 
