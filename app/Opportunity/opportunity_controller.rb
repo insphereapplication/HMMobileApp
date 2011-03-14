@@ -1,6 +1,8 @@
 require 'rho/rhocontroller'
 require 'helpers/browser_helper'
 require 'helpers/application_helper'
+require 'date'
+require 'time'
 
 class OpportunityController < Rho::RhoController
   include BrowserHelper
@@ -140,5 +142,18 @@ class OpportunityController < Rho::RhoController
         $choosed[datetime_vars[:flag]] = formatted_result
         WebView.execute_js('setFieldValue("'+datetime_vars[:field_key]+'","'+formatted_result+'");')
       end
+    end
+    
+    def date_build(date_string, time_value)
+      date = (Date.strptime(date_string, '%m/%d/%Y'))
+      result = date.strftime('%Y/%m/%d')
+      result += " " + time_value[0,5]
+      result
+    end
+    
+    def end_date_time(date_value, time_value, duration)
+      date = (DateTime.strptime(date_value + " " + time_value, '%m/%d/%Y %H:%M:%S'))
+      end_date = date + ((duration.to_f)/60/24)
+      end_date 
     end
 end
