@@ -11,9 +11,7 @@ class ActivityController < Rho::RhoController
     
     #If this is a callback requested status, convert the call start date, time and duration to correct format
     if @params['callback_date']
-      puts "I have a call duration" + @params['call_duration']
-      phone_call_attrs.merge!({:scheduledstart => date_build(@params['callback_date'], @params['callback_time'])})
-      phone_call_attrs.merge!({:scheduledend => end_date_time(@params['callback_date'], @params['callback_time'], @params['call_duration'])})
+      phone_call_attrs.merge!({:cssi_followupcall => date_build(@params['callback_date'], @params['callback_time'])})
     end
     
     parent_attrs = { 
@@ -24,7 +22,7 @@ class ActivityController < Rho::RhoController
     if !opportunity.phone_calls.blank?
       phone_call = opportunity.most_recent_phone_call
       phone_call.update_attributes(phone_call_attrs.merge(parent_attrs))
-    else
+    elsif @params['appointment'].blank?
       phone_call = PhoneCall.create(
         parent_attrs.merge(phone_call_attrs).merge(parent_attrs)
       )
