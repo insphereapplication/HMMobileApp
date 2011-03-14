@@ -2,6 +2,8 @@ require 'time'
 require 'date'
 
 class Opportunity
+
+  
   include Rhom::PropertyBag
 
   enable :sync
@@ -27,6 +29,7 @@ class Opportunity
   
   # an array of class-level cache objects
   CACHED = [@new_leads, @phone_calls]
+  CLOSED_STATECODES = ['Won', 'Lost']
   
   # clear out all class-level cache objects
   def self.clear_cache
@@ -38,7 +41,7 @@ class Opportunity
   end
   
   def self.new_leads
-    find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities? }.compact#.date_sort(:createdon)
+    find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities? || opp.closed?}.compact#.date_sort(:createdon)
   end 
 
   def self.follow_up_phone_calls
@@ -72,6 +75,10 @@ class Opportunity
   
   def self.last_activities
     find(:all).select {|opp| opp.has_activities? && !opp.has_open_activities? }
+  end
+  
+  def closed?
+    CLOSED_STATECODES.include?(statecode)
   end
   
   def has_activities?

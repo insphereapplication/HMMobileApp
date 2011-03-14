@@ -21,29 +21,103 @@
 					<%= udpate_status_link(@opportunity, disposition) %>
 				</li> 
 			<% end %>
+			
+			<!-- CALL BACK REQUESTED PANEL -->
+			<!-- TODO: Move this into a partial -->
 			<li>
-					<a href="javascript:toggle('call_back_detail');" data-transition="slide">Call Back Requested...</a>
+				<a href="javascript:toggle('call_back_detail');" data-transition="slide">Call Back Requested...</a>
 			</li>
 			<div id="call_back_detail" class="ui-body ui-body-d" style="display: none">
-				<form method="POST" action="<%= url_for :controller => :Activity, :action => :update_status %>">
-					<input type="hidden" name="opportunity_id" value="<%=@opportunity.object%>" />
+
+				<form name="call_back_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status %>">
+					<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
+					<input type="hidden" name="phone_call[scheduledstart]" value="<%= @opportunity.object %>" />
+					<input type="hidden" name="phone_call[scheduledend]" value="<%= @opportunity.object %>" />
 					<div data-role="fieldcontain">
-						<label for="phone_call[cssi_followupcall]" class="fieldLabel">Call Back DateTime:</label>
-			            <input type="text" name="phone_call[cssi_followupcall]" />
-						<label for="phone_call[cssi_phonetype]" class="fieldLabel">Phone Type:</label>
-			            <select name="phone_call[cssi_phonetype]" id="select-choice-1">
-							<option></option>
+			            <label for="callback_date">Call Back Date:</label>
+						<input type="date" name="callback_date" id="callback_date" value=""  />
+						<label for="callback_time" class="fieldLabel">Time:</label>
+						<input id="callback_time" type="text" name="callback_time" readonly value="<%= $choosed['2'] %>"  onClick="popupDateTimeAJPicker('2', 'Choose Time', 'callback_time');"></input>
+						<label for="call_duration" class="fieldLabel">Duration:</label>
+						<select name="call_duration" id="call_duration">
+							<option value="01:30:00">1.5 Hours</option>
+							<option value="00:30:00">30 Minutes</option>
+							<option value="01:00:00">1 Hour</option>
+							<option value="02:00:00">2 Hours</option>
+						</select>
+						<label for="phoneList" class="fieldLabel">Phone Type:</label>
+			            <select name="phoneList" id="phoneList" onchange='populatePhone(this.form.phoneList);'>
+							<option data-placeholder="true"></option>
 							<% @opportunity.contact.phone_numbers.each do |type, number| %>
 								<option value="<%= number %>"><%= type %></option>
 							<% end %>
-						</select>
+								<option value="&nbsp;">Ad-Hoc</option>
+						</select><br />
 						<label for="phone_call[phonenumber]" class="fieldLabel">Phone Number:</label>
-			            <input type="text" name="phone_call[phonenumber]" />
+			            <input type="tel" id="phoneNumber" name="phoneNumber" /><br />
 						<input type="submit" class="standardButton" value="Update"/>
 					</div>
 				</form>
 			</div>
-			<li><a href="status_update_set_appt.html" data-transition="slide">Set Appointment...</a></li>
+			
+			
+			<!-- SET APPOINTMENT PANEL -->
+			<!-- TODO: Move this into a partial -->
+			<li>
+				<a href="javascript:toggle('appointment_detail');" data-transition="slide">Set Appointment...</a>
+			</li>
+			<div id="appointment_detail" class="ui-body ui-body-d" style="display: none">
+				<form name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status %>">
+					<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
+					<div data-role="fieldcontain">
+			            <label for="appointment_date">Appointment Date:</label>
+						<input type="date" name="appointment_date" id="appointment_date" value=""  />
+						<label for="appointment_time" class="fieldLabel">Time:</label>
+						<input id="appointment_time" type="text" name="appointment_time" readonly value="<%= $choosed['2'] %>"  onClick="popupDateTimeAJPicker('2', 'Choose Time', 'appointment_time');"></input>
+						<label for="appointment_duration" class="fieldLabel">Duration:</label>
+						<select name="appointment_duration" id="appointment_duration">
+							<option value="01:30:00">1.5 Hours</option>
+							<option value="00:30:00">30 Minutes</option>
+							<option value="01:00:00">1 Hour</option>
+							<option value="02:00:00">2 Hours</option>
+						</select>
+						<label for="select_location" class="fieldLabel">Location:</label>
+			            <select name="select_location" id="select_location" onchange='populateAddress(this.form.select_location);'>
+							<% @opportunity.contact.addresses.each do |type, address| %>
+								<option value="<%= address %>"><%= type %></option>
+							<% end %>
+								<option value="&nbsp;">Ad-Hoc</option>
+						</select><br />
+						<label for="[appointment]location" class="fieldLabel">Address:</label>
+			            <input type="text" id="[appointment]location" name="[appointment]location" value="<%= @opportunity.contact.default_address %>" /><br />
+						<input type="submit" class="standardButton" value="Update"/>
+						    <% if not $saved.nil? %>
+						      Saved date/time values:<br/>
+						      <% $choosed.each do |k,v| %>
+						        <b>Format (<%=k%>): <%= v %></b><br/>
+						      <% end %>
+						    <% end %>
+
+						<% unless System::get_property('platform') == 'Blackberry'%>
+
+						  <script type="text/javascript">
+
+						function setFieldValue(field, value) {
+						  document.getElementById(field).value=value;
+						}
+
+						function popupDateTimeAJPicker(flag, title, field_key) {
+						  $.get('/app/Opportunity/popup', { flag: flag, title: title, field_key: field_key });
+						  return false;
+						}
+
+						  </script>
+
+						<%end%>
+						
+					</div>
+				</form>
+			</div>
 			<li data-role="list-divider">Lost</li> 
 			<% ['Not Interested', 'Wrong Number', 'Disconnected'].each do |disposition| %>
 				<li>

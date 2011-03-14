@@ -89,6 +89,16 @@ class Contact
     {'Home' => telephone2, 'Mobile' => mobilephone, 'Business' => telephone1, 'Alternate' => telephone3 }.reject{|type, number| number.blank? }
   end
   
+  def addresses
+    {'Home' => "#{address1_line1} #{address1_line2} #{address1_city}, #{cssi_state1id} #{address1_postalcode}", 'Business' => "#{address2_line1} #{address2_line2} #{address2_city}, #{cssi_state2id} #{address2_postalcode}" }.reject{|type, address| address.blank? }
+  end
+  
+  def default_address
+    addresses.each do |type, address|
+      return address
+    end
+  end
+  
   def opportunities
     Opportunity.find(
      :all, 
