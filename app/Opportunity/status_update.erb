@@ -37,13 +37,6 @@
 						<input type="date" name="callback_date" id="callback_date" value=""  />
 						<label for="callback_time" class="fieldLabel">Time:</label>
 						<input id="callback_time" type="text" name="callback_time" readonly value="<%= $choosed['2'] %>"  onClick="popupDateTimeAJPicker('2', 'Choose Time', 'callback_time');"></input>
-						<label for="call_duration" class="fieldLabel">Duration:</label>
-						<select name="call_duration" id="call_duration">
-							<option value="90">1.5 Hours</option>
-							<option value="30">30 Minutes</option>
-							<option value="60">1 Hour</option>
-							<option value="120">2 Hours</option>
-						</select>
 						<label for="phoneList" class="fieldLabel">Phone Type:</label>
 			            <select name="phoneList" id="phoneList" onchange='populatePhone(this.form.phoneList);'>
 							<option data-placeholder="true"></option>
