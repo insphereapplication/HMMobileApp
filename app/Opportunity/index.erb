@@ -21,7 +21,7 @@
 							:opportunity => opportunity	, 
 							:color => color, 
 							:bottom_right_text => "Created #{opportunity.days_ago}",
-							:top_right_text => opportunity.createdon
+							:top_right_text => opportunity.createdon.time_formatted_string
 						} %>
 					
 						<div id="<%= contact.contactid %>" class="ui-grid-c" style="display: none">

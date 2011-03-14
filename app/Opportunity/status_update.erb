@@ -28,6 +28,7 @@
 				<a href="javascript:toggle('call_back_detail');" data-transition="slide">Call Back Requested...</a>
 			</li>
 			<div id="call_back_detail" class="ui-body ui-body-d" style="display: none">
+
 				<form name="call_back_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status %>">
 					<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
 					<input type="hidden" name="phone_call[cssi_disposition detail]" value="" />
@@ -203,7 +204,9 @@
 				</div>
 			
 			<li data-role="list-divider">Won</li> 
-			<li><a href="task_win.html" data-transition="slide" data-transition="fade">Won</a></li> 
+			<li>
+				<%= update_opportunity_statecode_link(@opportunity, 'Won')%>
+			</li> 
 		</ul>
 	</div>
 </div>
