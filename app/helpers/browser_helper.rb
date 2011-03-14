@@ -1,17 +1,18 @@
 module BrowserHelper
 
-  def udpate_status_link(opportunity, disposition)
+  def udpate_status_link(opportunity, disposition, text, disposition_detail='')
     %Q{
       <a href="#{ url_for(:controller => :Activity, :action => :update_status, 
 				:query => {
 				  :opportunity_id => opportunity.object,
 			    'phone_call[cssi_disposition]' => disposition,
+			    'phone_call[cssi_dispositiondetail]' => disposition_detail,
 		      'phone_call[scheduledend]' => Date.today.to_s,
 		      'phone_call[statecode]' => 'Completed'
 			    })
 				}" 
 				rel="external" data-transition="fade">
-				#{disposition}
+				#{text}
 			</a>
     }
   end

@@ -53,7 +53,7 @@ class ActivityController < Rho::RhoController
   def end_date_time(date_value, time_value, duration)
     date = (DateTime.strptime(date_value + " " + time_value, '%m/%d/%Y %H:%M:%S'))
     end_date = date + ((duration.to_f)/60/24)
-    end_date 
+    end_date.strftime('%m/%d/%Y %H:%M:%S')
   end
   
   
