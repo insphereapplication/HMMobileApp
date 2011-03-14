@@ -9,6 +9,15 @@ class ActivityController < Rho::RhoController
     phone_call_attrs = @params['phone_call'].merge({'cssi_disposition detail' => ''})
     opportunity = Opportunity.find(@params['opportunity_id'])
     
+    #If this is a callback requested status, convert the call start date, time and duration to correct format
+    if @params['call_duration']
+      puts "I have a call duration" + @params['call_duration']
+      phone_call_attrs.merge({:scheduledstart => date_build(@params['callback_date'], @params['callback_time'])})
+      phone_call_attrs.merge({:scheduledend => end_date_time(@params['callback_date'], @params['callback_time'], @params['call_duration'])})
+      #puts "Call scheduled start set to:" + date_build(@params['callback_date'], @params['callback_time'])
+      #puts "Call end set to:" + end_date_time(@params['callback_date'], @params['callback_time'], @params['call_duration'])
+    end
+    
     parent_attrs = { 
       :parent_type => 'opportunity', 
       :parent_id => opportunity.opportunityid 
@@ -26,7 +35,10 @@ class ActivityController < Rho::RhoController
     if @params['appointment'] 
       Appointment.create(@params['appointment'].merge(parent_attrs).merge({
           :statecode => "Scheduled",
-          :statuscode => "Busy"
+          :statuscode => "Busy",
+          :scheduledstart => date_build(@params['appointment_date'], @params['appointment_time']),
+          :scheduledend => end_date_time(@params['appointment_date'], @params['appointment_time'], @params['appointment_duration']),
+          :subject => "#{@params['firstname']}, #{@params['lastname']} - #{@params['createdon']}"
         }))
     end
     
@@ -34,6 +46,21 @@ class ActivityController < Rho::RhoController
     redirect :controller => :Opportunity, :action => :index_follow_up
   end
 
+
+  def date_build(date_string, time_value)
+    date = (Date.strptime(date_string, '%m/%d/%Y'))
+    result = date.strftime('%Y/%m/%d')
+    result += " " + time_value[0,5]
+    result
+  end
+  
+  def end_date_time(date_value, time_value, duration)
+    date = (DateTime.strptime(date_value + " " + time_value, '%m/%d/%Y %H:%M:%S'))
+    end_date = date + ((duration.to_f)/60/24)
+    end_date 
+  end
+  
+  
   #GET /Activity
   def index
     @activities = Activity.find(:all)

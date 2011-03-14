@@ -31,8 +31,7 @@
 
 				<form name="call_back_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status %>">
 					<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
-					<input type="hidden" name="phone_call[scheduledstart]" value="<%= @opportunity.object %>" />
-					<input type="hidden" name="phone_call[scheduledend]" value="<%= @opportunity.object %>" />
+					<input type="hidden" name="phone_call[cssi_disposition detail]" value="" />
 					<div data-role="fieldcontain">
 			            <label for="callback_date">Call Back Date:</label>
 						<input type="date" name="callback_date" id="callback_date" value=""  />
@@ -40,10 +39,10 @@
 						<input id="callback_time" type="text" name="callback_time" readonly value="<%= $choosed['2'] %>"  onClick="popupDateTimeAJPicker('2', 'Choose Time', 'callback_time');"></input>
 						<label for="call_duration" class="fieldLabel">Duration:</label>
 						<select name="call_duration" id="call_duration">
-							<option value="01:30:00">1.5 Hours</option>
-							<option value="00:30:00">30 Minutes</option>
-							<option value="01:00:00">1 Hour</option>
-							<option value="02:00:00">2 Hours</option>
+							<option value="90">1.5 Hours</option>
+							<option value="30">30 Minutes</option>
+							<option value="60">1 Hour</option>
+							<option value="120">2 Hours</option>
 						</select>
 						<label for="phoneList" class="fieldLabel">Phone Type:</label>
 			            <select name="phoneList" id="phoneList" onchange='populatePhone(this.form.phoneList);'>
@@ -69,6 +68,14 @@
 			<div id="appointment_detail" class="ui-body ui-body-d" style="display: none">
 				<form name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status %>">
 					<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
+					<input type="hidden" name="phone_call[disposition]" value="Other" />
+					<input type="hidden" name="appointment[statecode]" value="Scheduled" />
+					<input type="hidden" name="appointment[statuscode]" value="Busy" />
+					<input type="hidden" name="firstname" value="<%= @opportunity.contact.firstname %>" />
+					<input type="hidden" name="lastname" value="<%= @opportunity.contact.lastname %>" />
+					<input type="hidden" name="createdon" value="<%= @opportunity.createdon %>" />
+					
+					
 					<div data-role="fieldcontain">
 			            <label for="appointment_date">Appointment Date:</label>
 						<input type="date" name="appointment_date" id="appointment_date" value=""  />
@@ -76,10 +83,10 @@
 						<input id="appointment_time" type="text" name="appointment_time" readonly value="<%= $choosed['2'] %>"  onClick="popupDateTimeAJPicker('2', 'Choose Time', 'appointment_time');"></input>
 						<label for="appointment_duration" class="fieldLabel">Duration:</label>
 						<select name="appointment_duration" id="appointment_duration">
-							<option value="01:30:00">1.5 Hours</option>
-							<option value="00:30:00">30 Minutes</option>
-							<option value="01:00:00">1 Hour</option>
-							<option value="02:00:00">2 Hours</option>
+							<option value="90.0">1.5 Hours</option>
+							<option value="30.0">30 Minutes</option>
+							<option value="60.0">1 Hour</option>
+							<option value="120.0">2 Hours</option>
 						</select>
 						<label for="select_location" class="fieldLabel">Location:</label>
 			            <select name="select_location" id="select_location" onchange='populateAddress(this.form.select_location);'>
@@ -110,6 +117,14 @@
 						  $.get('/app/Opportunity/popup', { flag: flag, title: title, field_key: field_key });
 						  return false;
 						}
+						
+						function getApptStartDateParams(){
+							return document.getElementById("appointment_date").value + ", " + document.getElementById("appointment_time").value
+						}
+						
+						function getCallStartDateParams(){
+							return document.getElementById("callback_date").value + ", " + document.getElementById("callback_time").value
+						}
 
 						  </script>
 
@@ -124,7 +139,70 @@
 					<%= udpate_status_link(@opportunity, disposition) %>
 				</li> 
 			<% end %>
-			<li><a href="status_update_lost.html" data-transition="slide">Other</a></li>
+			<li><a href="javascript:toggle('other');" data-transition="slide">Other</a></li>
+				<div id="other" class="ui-body ui-body-d" style="display: none">
+					<form name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status %>">
+						<input type="hidden" name="phone_call[disposition]" value="Lost" />
+						<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
+						<label for="phone_call[cssi_dispositiondetail]" class="fieldLabel">Lost Reason (Required):</label>
+						<select name="appointment_duration" id="appointment_duration">
+							<option></option>
+							<option value="Covered By Competitor">Covered By Competitor</option>
+							<option value="Wrong Number">Wrong Number</option>
+							<option value="No Answer">No Answer</option>
+							<option value="Disconnected Phone">Disconnected Phone</option>
+							<option value="Deceased">Deceased</option>
+							<option value="Cost">Cost</option>
+							<option value="Insufficient Coverage">Insufficient Coverage</option>
+							<option value="Other">Other</option>
+							<option value="Insurance Not Desired">Insurance Not Desired</option>
+							<option value="Uninsurable">Uninsurable</option>
+							<option value="Group Insurance">Group Insurance</option>
+							<option value="Under Age">Under Age</option>
+							<option value="Over Age">Over Age</option>
+							<option value="Medicaid">Medicaid</option>
+							<option value="Never Inquired">Never Inquired</option>
+							<option value="Does Not Speak English">Does Not Speak English</option>
+							<option value="Working With Agent">Working With Agent</option>
+							<option value="Covered By Spouse">Covered By Spouse</option>
+						</select>
+						
+						<!-- TODO: Make this list dynamic -->
+						<label for="phone_call[competitor]" class="fieldLabel">Competitor (Optional):</label>
+						<select name="phone_call[competitorid]" id="appointment_duration">
+							<option></option>
+							<option value="Aetna">Aetna</option>
+							<option value="AIG">AIG</option>
+							<option value="Allianz">Allianz</option>
+							<option value="Assurant">Assurant</option>
+							<option value="Berkshire Life">Berkshire Life</option>
+							<option value="Blue Cross / Blue Shield">Blue Cross / Blue Shield</option>
+							<option value="Cigna">Cigna</option>
+							<option value="Genworth">Genworth</option>
+							<option value="Golden Rule">Golden Rule</option>
+							<option value="Guardian">Guardian</option>
+							<option value="Humana">Humana</option>
+							<option value="Kaiser">Kaiser</option>
+							<option value="Lafayette Life">Lafayette Life</option>
+							<option value="Lincoln">Lincoln</option>
+							<option value="MassMutual">MassMutual</option>
+							<option value="Met Life">Met Life</option>
+							<option value="National Health">National Health</option>
+							<option value="NewYork Life">NewYork Life</option>
+							<option value="Principle">Principle</option>
+							<option value="Prudential">Prudential</option>
+							<option value="The Hartford">The Hartford</option>
+							<option value="Transamerica">Transamerica</option>
+							<option value="United Health Care">United Health Care</option>
+							<option value="Unknown">Unknown</option>
+							<option value="Unum">Unum</option>
+							<option value="VantisLife">VantisLife</option>
+						</select>
+						
+						<input type="submit" class="standardButton" value="Update"/>
+					</form>
+				</div>
+			
 			<li data-role="list-divider">Won</li> 
 			<li>
 				<%= update_opportunity_statecode_link(@opportunity, 'Won')%>
