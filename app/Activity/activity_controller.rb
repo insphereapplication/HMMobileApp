@@ -19,8 +19,8 @@ class ActivityController < Rho::RhoController
       :parent_id => opportunity.opportunityid 
     }
     
-    if !opportunity.phone_calls.blank?
-      phone_call = opportunity.most_recent_phone_call
+    if !opportunity.open_phone_calls.blank?
+      phone_call = opportunity.most_recent_open_phone_call
       phone_call.update_attributes(phone_call_attrs.merge(parent_attrs))
     elsif @params['appointment'].blank?
       phone_call = PhoneCall.create(

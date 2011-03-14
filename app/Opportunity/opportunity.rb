@@ -81,6 +81,10 @@ class Opportunity
     CLOSED_STATECODES.include?(statecode)
   end
   
+  def open?
+    !closed?
+  end
+  
   def has_activities?
     activities && activities.size > 0
   end
@@ -114,7 +118,7 @@ class Opportunity
   end
   
   def most_recent_phone_call
-    phone_calls.first
+    open_phone_calls.first
   end
   
   def open_phone_calls
