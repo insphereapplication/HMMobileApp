@@ -129,6 +129,10 @@ class Opportunity
     activities.first if activities
   end
   
+  def created_on_formatted
+    Time.parse(createdon).to_formatted_string if createdon
+  end
+  
   def create_or_find_earliest_phone_call(attributes)
     if phone_calls.size > 0
       return phone_calls.compact.date_sort(:scheduledstart).first

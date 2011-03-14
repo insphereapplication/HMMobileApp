@@ -22,6 +22,6 @@ class AppApplication < Rho::RhoApplication
     # Uncomment to set sync notification callback to /app/Settings/sync_notify.
     # SyncEngine.set_notification(-1, "/app/Settings/sync_notify", '')
     #     System.set_push_notification("/app/Settings/push_notify", '')
-    SyncEngine.sync
+    SyncEngine.dosync
   end
 end
