@@ -6,14 +6,14 @@ class ActivityController < Rho::RhoController
   include BrowserHelper
   
   def update_status
-    phone_call_attrs = @params['phone_call'].merge({'cssi_disposition detail' => ''})
+    phone_call_attrs = @params['phone_call']
     opportunity = Opportunity.find(@params['opportunity_id'])
     
     #If this is a callback requested status, convert the call start date, time and duration to correct format
-    if @params['call_duration']
+    if @params['callback_date']
       puts "I have a call duration" + @params['call_duration']
-      phone_call_attrs.merge({:scheduledstart => date_build(@params['callback_date'], @params['callback_time'])})
-      phone_call_attrs.merge({:scheduledend => end_date_time(@params['callback_date'], @params['callback_time'], @params['call_duration'])})
+      phone_call_attrs.merge!({:scheduledstart => date_build(@params['callback_date'], @params['callback_time'])})
+      phone_call_attrs.merge!({:scheduledend => end_date_time(@params['callback_date'], @params['callback_time'], @params['call_duration'])})
     end
     
     parent_attrs = { 

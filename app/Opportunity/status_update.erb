@@ -31,7 +31,7 @@
 
 				<form name="call_back_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status %>">
 					<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
-					<input type="hidden" name="phone_call[cssi_disposition detail]" value="" />
+					<input type="hidden" name="phone_call[cssi_disposition]" value="Call back requested" />
 					<div data-role="fieldcontain">
 			            <label for="callback_date">Call Back Date:</label>
 						<input type="date" name="callback_date" id="callback_date" value=""  />
