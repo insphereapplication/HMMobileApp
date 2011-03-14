@@ -14,8 +14,6 @@ class ActivityController < Rho::RhoController
       puts "I have a call duration" + @params['call_duration']
       phone_call_attrs.merge({:scheduledstart => date_build(@params['callback_date'], @params['callback_time'])})
       phone_call_attrs.merge({:scheduledend => end_date_time(@params['callback_date'], @params['callback_time'], @params['call_duration'])})
-      #puts "Call scheduled start set to:" + date_build(@params['callback_date'], @params['callback_time'])
-      #puts "Call end set to:" + end_date_time(@params['callback_date'], @params['callback_time'], @params['call_duration'])
     end
     
     parent_attrs = { 
@@ -43,7 +41,7 @@ class ActivityController < Rho::RhoController
     end
     
     Activity.sync
-    redirect :controller => :Opportunity, :action => :index_follow_up
+    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object
   end
 
 
