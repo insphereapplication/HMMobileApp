@@ -1,0 +1,59 @@
+	<div id="appointment_detail" class="ui-body ui-body-d" style="display: none">
+		<form name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status %>">
+			<input type="hidden" name="opportunity_id" value="<%= opportunity.object %>" />
+			<input type="hidden" name="phone_call[disposition]" value="Other" />
+			<input type="hidden" name="appointment[statecode]" value="Scheduled" />
+			<input type="hidden" name="appointment[statuscode]" value="Busy" />
+			<input type="hidden" name="firstname" value="<%= opportunity.contact.firstname %>" />
+			<input type="hidden" name="lastname" value="<%= opportunity.contact.lastname %>" />
+			<input type="hidden" name="createdon" value="<%= opportunity.createdon %>" />
+			
+			
+			<div data-role="fieldcontain">
+	            <label for="appointment_date">Appointment Date:</label>
+				<input type="date" name="appointment_date" id="appointment_date" value=""  />
+				<label for="appointment_time" class="fieldLabel">Time:</label>
+				<input id="appointment_time" type="text" name="appointment_time" readonly value="<%= $choosed['2'] %>"  onClick="popupDateTimeAJPicker('2', 'Choose Time', 'appointment_time');"></input>
+				<label for="appointment_duration" class="fieldLabel">Duration:</label>
+				<select name="appointment_duration" id="appointment_duration">
+					<option value="90.0">1.5 Hours</option>
+					<option value="30.0">30 Minutes</option>
+					<option value="60.0">1 Hour</option>
+					<option value="120.0">2 Hours</option>
+				</select>
+				<label for="select_location" class="fieldLabel">Location:</label>
+	            <select name="select_location" id="select_location" onchange='populateAddress(this.form.select_location);'>
+					<% opportunity.contact.addresses.each do |type, address| %>
+						<option value="<%= address %>"><%= type %></option>
+					<% end %>
+						<option value="&nbsp;">Ad-Hoc</option>
+				</select><br />
+				<label for="[appointment]location" class="fieldLabel">Address:</label>
+	            <input type="text" id="[appointment]location" name="[appointment]location" value="<%= opportunity.contact.default_address %>" /><br />
+				<input type="submit" class="standardButton" value="Update"/>
+				    <% if not $saved.nil? %>
+				      Saved date/time values:<br/>
+				      <% $choosed.each do |k,v| %>
+				        <b>Format (<%=k%>): <%= v %></b><br/>
+				      <% end %>
+				    <% end %>
+
+				<% unless System::get_property('platform') == 'Blackberry'%>
+
+				  <script type="text/javascript">
+
+				function setFieldValue(field, value) {
+				  document.getElementById(field).value=value;
+				}
+
+				function popupDateTimeAJPicker(flag, title, field_key) {
+				  $.get('/app/Opportunity/popup', { flag: flag, title: title, field_key: field_key });
+				  return false;
+				}
+				  </script>
+
+				<%end%>
+				
+			</div>
+		</form>
+	</div>
