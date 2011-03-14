@@ -127,7 +127,7 @@
 				</form>
 			</div>
 			<li data-role="list-divider">Lost</li> 
-			<% [['Not Interested', 'Insurance Not Desired'], ['Wrong Number', 'Wrong Number'], ['Disconnected', 'Disconnected']].each do |text, disposition_detail| %>
+			<% [['Not Interested', 'Insurance Not Desired'], ['Wrong Number', 'Wrong Number'], ['Disconnected', 'Disconnected Phone']].each do |text, disposition_detail| %>
 				<li>
 					<%= udpate_status_link(@opportunity, 'Lost', text, disposition_detail) %>
 				</li> 
@@ -138,30 +138,31 @@
 						<input type="hidden" name="phone_call[disposition]" value="Lost" />
 						<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
 						<label for="phone_call[cssi_dispositiondetail]" class="fieldLabel">Lost Reason (Required):</label>
-						<select name="phone_call[cssi_dispositiondetail]" id="phone_call[cssi_dispositiondetail]">
-							<option></option>
-							<option value="Covered By Competitor">Covered By Competitor</option>
-							<option value="Wrong Number">Wrong Number</option>
-							<option value="No Answer">No Answer</option>
-							<option value="Disconnected Phone">Disconnected Phone</option>
-							<option value="Deceased">Deceased</option>
-							<option value="Cost">Cost</option>
-							<option value="Insufficient Coverage">Insufficient Coverage</option>
-							<option value="Other">Other</option>
-							<option value="Insurance Not Desired">Insurance Not Desired</option>
-							<option value="Uninsurable">Uninsurable</option>
-							<option value="Group Insurance">Group Insurance</option>
-							<option value="Under Age">Under Age</option>
-							<option value="Over Age">Over Age</option>
-							<option value="Medicaid">Medicaid</option>
-							<option value="Never Inquired">Never Inquired</option>
-							<option value="Does Not Speak English">Does Not Speak English</option>
-							<option value="Working With Agent">Working With Agent</option>
-							<option value="Covered By Spouse">Covered By Spouse</option>
-						</select>
+							<select name="phone_call[cssi_dispositiondetail]" id="appointment_duration">
+								<option></option>
+								<option value="Covered By Competitor">Covered By Competitor</option>
+								<option value="Wrong Number">Wrong Number</option>
+								<option value="No Answer">No Answer</option>
+								<option value="Disconnected Phone">Disconnected Phone</option>
+								<option value="Deceased">Deceased</option>
+								<option value="Cost">Cost</option>
+								<option value="Insufficient Coverage">Insufficient Coverage</option>
+								<option value="Other">Other</option>
+								<option value="Insurance Not Desired">Insurance Not Desired</option>
+								<option value="Uninsurable">Uninsurable</option>
+								<option value="Group Insurance">Group Insurance</option>
+								<option value="Under Age">Under Age</option>
+								<option value="Over Age">Over Age</option>
+								<option value="Medicaid">Medicaid</option>
+								<option value="Never Inquired">Never Inquired</option>
+								<option value="Does Not Speak English">Does Not Speak English</option>
+								<option value="Working With Agent">Working With Agent</option>
+								<option value="Covered By Spouse">Covered By Spouse</option>
+							</select>
+						
 						
 						<!-- TODO: Make this list dynamic -->
-						<label for="phone_call[competitor]" class="fieldLabel">Competitor (Optional):</label>
+						<label for="phone_call[competitorid]" class="fieldLabel">Competitor (Optional):</label>
 						<select name="phone_call[competitorid]" id="appointment_duration">
 							<option></option>
 							<option value="Aetna">Aetna</option>
