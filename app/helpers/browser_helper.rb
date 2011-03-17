@@ -4,7 +4,7 @@ module BrowserHelper
 
   def udpate_status_link(opportunity, disposition, text, disposition_detail='')
     %Q{
-      <a href="#{ url_for(:controller => :Activity, :action => :update_status, 
+      <a onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :update_status, 
 				:query => {
 				  :opportunity_id => opportunity.object,
 			    'phone_call[cssi_disposition]' => disposition,
@@ -21,7 +21,7 @@ module BrowserHelper
   
   def update_opportunity_statecode_link(opportunity, statecode)
      %Q{
-        <a href="#{ url_for(:controller => :Opportunity, :action => :update, :id => opportunity.object, 
+        <a onClick="showSpin()" href="#{ url_for(:controller => :Opportunity, :action => :update, :id => opportunity.object, 
   				:query => {
   				  'opportunity[statecode]' => statecode
   			    })

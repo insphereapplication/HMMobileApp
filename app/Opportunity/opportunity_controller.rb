@@ -100,6 +100,16 @@ class OpportunityController < Rho::RhoController
     end
   end
   
+  def lost_other
+    @opportunity = Opportunity.find(@params['id'])
+    if @opportunity
+      render :action => :lost_other,
+              :layout => 'layout_jquerymobile'
+    else
+      redirect :action => :index
+    end
+  end
+  
   # GET /Opportunity/{1}/activity_summary
   def activity_summary
     @opportunity = Opportunity.find(@params['id'])

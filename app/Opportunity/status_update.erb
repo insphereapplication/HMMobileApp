@@ -27,10 +27,19 @@
 				<% [['Not Interested', 'Insurance Not Desired'], ['Wrong Number/Disconnected', 'Wrong Number']].each do |text, disposition_detail| %>
 			<li><%= udpate_status_link(@opportunity, 'Lost', text, disposition_detail) %></li> 
 			<% end %>
-			<li><a href="javascript:toggle('other');" data-transition="slide">Other</a></li>
-			<%= render :partial =>"lost_other", :locals => { :opportunity => @opportunity } %>
+			<li><a href="<%= url_for(:action => :lost_other, :id => @opportunity.object)%>" data-transition="slide">Other</a></li>
 			<li data-role="list-divider">Won</li> 
 			<li><%= update_opportunity_statecode_link(@opportunity, 'Won')%></li> 
 		</ul>
+		<script>
+			function showSpin(){
+				$.mobile.pageSaving();
+				setTimeout("hideSpin()",5000);
+			}
+			function hideSpin(){
+				$.mobile.pageSaving(true);
+				return true;
+			}
+		</script>
 	</div>
 </div>
