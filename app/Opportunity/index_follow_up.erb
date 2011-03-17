@@ -22,11 +22,11 @@
 			[@last_activities, 
 				"By Last Activity", 
 				"yellow", 
-				lambda {|opportunity| "Last Act: #{opportunity.last_activity_date.time_formatted_string}" unless opportunity.last_activity_date.blank?}],
+				lambda {|opportunity| "Last Act: #{to_date(opportunity.last_activity_date)}" unless opportunity.last_activity_date.blank?}],
 			[@future_follow_ups, 
 				"Future", 
 				"green", 
-				lambda {|opportunity| "Due: #{opportunity.next_activity_due_date.time_formatted_string}" unless opportunity.next_activity_due_date.blank?}]].each do |follow_ups, label, color, date_proc| %>
+				lambda {|opportunity| "Due: #{to_date(opportunity.next_activity_due_date)}" unless opportunity.next_activity_due_date.blank?}]].each do |follow_ups, label, color, date_proc| %>
 			
 				<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-<%=color%> ui-btn-up-undefined"><%= label %></li> 
 				<% follow_ups.each do |item| %>

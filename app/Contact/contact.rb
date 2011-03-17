@@ -89,6 +89,10 @@ class Contact
     {'Home' => telephone2, 'Mobile' => mobilephone, 'Business' => telephone1, 'Alternate' => telephone3 }.reject{|type, number| number.blank? }
   end
   
+  def phone_numbers_full
+    {"Home: #{telephone2}" => telephone2, "Mobile: #{mobilephone}" => mobilephone, "Business: #{telephone1} #{cssi_businessphoneext}" => telephone1, "Alternate: #{telephone3}" => telephone3 }.reject{|type, number| number.blank? }
+  end
+  
   def addresses
     {'Home' => "#{address1_line1} #{address1_line2} #{address1_city}, #{cssi_state1id} #{address1_postalcode}", 'Business' => "#{address2_line1} #{address2_line2} #{address2_city}, #{cssi_state2id} #{address2_postalcode}" }.reject{|type, address| address.blank? }
   end
@@ -98,6 +102,15 @@ class Contact
       return address
     end
   end
+  
+  def default_number
+    phone_numbers.each do |type, number|
+      if type = cssi_preferredphone
+        return number
+      end
+    end
+  end
+  
   
   def opportunities
     Opportunity.find(

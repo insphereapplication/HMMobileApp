@@ -1,3 +1,5 @@
+require 'date'
+require 'time'
 module BrowserHelper
 
   def udpate_status_link(opportunity, disposition, text, disposition_detail='')
@@ -11,7 +13,7 @@ module BrowserHelper
 		      'phone_call[statecode]' => 'Completed'
 			    })
 				}" 
-				rel="external" data-transition="fade">
+				data-transition="fade">
 				#{text}
 			</a>
     }
@@ -71,10 +73,11 @@ module BrowserHelper
   
   def to_date(input)
     begin
-      date = Date.parse(input)
-      date.strftime("%m/%d/%Y")
+      date = (Date.strptime(input, '%m/%d/%Y'))
+      result = date.strftime('%m/%d/%Y')
+      result
     rescue
-      puts "Could not parse date value: #{}"
+      puts "Could not parse date value: #{input}"
     end
   end
 end

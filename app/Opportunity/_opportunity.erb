@@ -7,13 +7,13 @@
 			<h3 class="ui-li-heading"><a href="<%= url_for(:action => :show, :id => opportunity.object) %>" class="ui-link-inherit ui-block-a"><%= contact.full_name %></a></h3>
 			<p class="ui-li-desc"></p>
 			<div class="ui-grid-a ui-li-desc">
-				<div class="ui-block-a"><%= contact.age_sex_loc %></div>
+				<div class="ui-block-a">&nbsp;<%= contact.age_sex_loc %></div>
 				<div align="right" class="ui-block-b"><%= bottom_right_text %></div>
 			</div>
 		</div>
 	</div>
 	<!-- <div class="ui-li-count ui-btn-up-e ui-btn-corner-all" style="top:70%;right:45%">Call Ct</div> -->
-	<a href="javascript:toggle('<%= contact.contactid %>');" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
+	<a href="<%= url_for :action => :phone_dialog, :id => opportunity.object%>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
 		<span class="ui-btn-inner"><span class="ui-btn-text"></span>
 		<span title="" data-theme="b" class="ui-btn ui-btn-up-b ui-btn-icon-notext ui-btn-corner-all ui-shadow">
 			<span class="ui-btn-inner ui-btn-corner-all">

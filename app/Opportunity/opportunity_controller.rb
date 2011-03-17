@@ -4,6 +4,7 @@ require 'helpers/application_helper'
 require 'date'
 require 'time'
 
+
 class OpportunityController < Rho::RhoController
   include BrowserHelper
   $saved = nil
@@ -79,6 +80,26 @@ class OpportunityController < Rho::RhoController
     end
   end 
   
+  def callback_request
+    @opportunity = Opportunity.find(@params['id'])
+    if @opportunity
+      render :action => :callback_request,
+              :layout => 'layout_jquerymobile'
+    else
+      redirect :action => :index
+    end
+  end
+  
+  def appointment
+    @opportunity = Opportunity.find(@params['id'])
+    if @opportunity
+      render :action => :appointment,
+              :layout => 'layout_jquerymobile'
+    else
+      redirect :action => :index
+    end
+  end
+  
   # GET /Opportunity/{1}/activity_summary
   def activity_summary
     @opportunity = Opportunity.find(@params['id'])
@@ -109,9 +130,29 @@ class OpportunityController < Rho::RhoController
     redirect :action => :index
   end
   
+  def phone_dialog
+    @opportunity = Opportunity.find(@params['id'])
+    render :action => :phone_dialog,
+            :layout => 'layout_JQM_Lite'
+  end
+  
   def save
       $saved = 1
       redirect :action => :index
+    end
+    
+    def call_number
+      puts "Calling number " + @params['phone_number']
+      telephone = @params['phone_number']
+      puts "phone number is " + @params['phone_number']
+      telephone.gsub!(/[^0-9]/, "")
+      if @params['opportunity']
+        redirect :action => :show,
+                  :id => @params['opportunity']
+      else
+      redirect :action => :index
+    end
+      System.open_url('tel:' + telephone)
     end
 
     def popup
@@ -121,7 +162,7 @@ class OpportunityController < Rho::RhoController
         if ttt.nil?
           preset_time = Time.new
         else
-          preset_time = Time.parse(ttt)
+          preset_time = Time.strptime(ttt, '%m/%d/%Y %I:%M %p')
         end
 
         DateTimePicker.choose url_for(:action => :callback), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
@@ -133,11 +174,12 @@ class OpportunityController < Rho::RhoController
        $saved = nil
        datetime_vars = Marshal.load(@params['opaque'])
         format = case datetime_vars[:flag]
-          when "0" then '%F %T'
+          when "0" then '%m/%d/%Y %I:%M %p'
           when "1" then '%F'
           when "2" then '%T'
           else '%F %T'
         end
+        # formatted_result = Time.at(@params['result'].to_i).strftime('%m/%d/%Y %I:%M %p')
         formatted_result = Time.at(@params['result'].to_i).strftime(format)
         $choosed[datetime_vars[:flag]] = formatted_result
         WebView.execute_js('setFieldValue("'+datetime_vars[:field_key]+'","'+formatted_result+'");')

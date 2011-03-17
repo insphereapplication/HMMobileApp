@@ -10,8 +10,10 @@ class ActivityController < Rho::RhoController
     opportunity = Opportunity.find(@params['opportunity_id'])
     
     #If this is a callback requested status, convert the call start date, time and duration to correct format
-    if @params['callback_date']
-      phone_call_attrs.merge!({:cssi_followupcall => date_build(@params['callback_date'], @params['callback_time'])})
+    if @params['callback_datetime']
+      callback_formatted = date_build(@params['callback_datetime'])
+      phone_call_attrs.merge!({:cssi_followupcall => (callback_formatted)})
+      puts "~~~ CALL BACK TIME IS ~~~: #{callback_formatted}"
     end
     
     parent_attrs = { 
@@ -32,8 +34,8 @@ class ActivityController < Rho::RhoController
       Appointment.create(@params['appointment'].merge(parent_attrs).merge({
           :statecode => "Scheduled",
           :statuscode => "Busy",
-          :scheduledstart => date_build(@params['appointment_date'], @params['appointment_time']),
-          :scheduledend => end_date_time(@params['appointment_date'], @params['appointment_time'], @params['appointment_duration']),
+          :scheduledstart => date_build(@params['appointment_datetime']),
+          :scheduledend => end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
           :subject => "#{@params['firstname']}, #{@params['lastname']} - #{@params['createdon']}"
         }))
     end
@@ -42,18 +44,16 @@ class ActivityController < Rho::RhoController
     redirect :controller => :Opportunity, :action => :show, :id => opportunity.object
   end
 
-
-  def date_build(date_string, time_value)
-    date = (Date.strptime(date_string, '%m/%d/%Y'))
-    result = date.strftime('%Y/%m/%d')
-    result += " " + time_value[0,5]
+  def date_build(date_string)
+    date = (DateTime.strptime(date_string, '%m/%d/%Y %I:%M %p'))
+    result = date.strftime('%Y/%m/%d %H:%M')
     result
   end
   
-  def end_date_time(date_value, time_value, duration)
-    date = (DateTime.strptime(date_value + " " + time_value, '%m/%d/%Y %H:%M:%S'))
+  def end_date_time(date_string, duration)
+    date = (DateTime.strptime(date_string, '%m/%d/%Y %I:%M %p'))
     end_date = date + ((duration.to_f)/60/24)
-    end_date.strftime('%m/%d/%Y %H:%M:%S')
+    end_date.strftime('%m/%d/%Y %H:%M')
   end
   
   

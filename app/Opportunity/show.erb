@@ -9,7 +9,7 @@
 	</div>
 		<div data-role="content"> 
 			<div class="ui-grid-a"> 
-						<div class="ui-block-a"><a href="tel:" data-role="button">~Call</a></div> 
+						<div class="ui-block-a"><a href="<%= url_for :action => :phone_dialog, :id => @opportunity.object%>" rel="external" data-role="button">Call</a></div> 
 						<div class="ui-block-b"><a href="<%= url_for(:action => :status_update, :id => @opportunity.object)%>" rel="external" data-transition="none" data-role="button" data-icon="plus">Update</a></div> 
 			</div> 
 			<ul data-role="listview" data-theme="d" data-inset="true" > 
