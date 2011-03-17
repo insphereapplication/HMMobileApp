@@ -100,7 +100,8 @@
 		}
 	
   /* loading screen */
-  div.ui-loader {border:none!important; background:none!important;} 
+  div.ui-loader {border:none!important; background:none!important;}
+
   
   /* loading icon */
   .ui-icon-loading {

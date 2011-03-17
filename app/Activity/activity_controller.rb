@@ -61,27 +61,26 @@ class ActivityController < Rho::RhoController
       record_phone_call_made(opp)
     end
     
-    Appointment.create(@params['appointment'].merge(parent_attrs).merge({
-        :statecode => "Scheduled",
-        :statuscode => "Busy",
-        :scheduledstart => date_build(@params['appointment_date'], @params['appointment_time']),
-        :scheduledend => end_date_time(@params['appointment_date'], @params['appointment_time'], @params['appointment_duration']),
-        :subject => "#{@params['firstname']}, #{@params['lastname']} - #{@params['createdon']}"
-      }))
+     Appointment.create(@params['appointment'].merge(parent_attrs).merge({
+          :statecode => "Scheduled",
+          :statuscode => "Busy",
+          :scheduledstart => date_build(@params['appointment_datetime']),
+          :scheduledend => end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
+          :subject => "#{@params['firstname']}, #{@params['lastname']} - #{@params['createdon']}"
+        }))
     finished_update_status(opp)
   end
 
-  def date_build(date_string, time_value)
-    date = (Date.strptime(date_string, '%m/%d/%Y'))
-    result = date.strftime('%Y/%m/%d')
-    result += " " + time_value[0,5]
+  def date_build(date_string)
+    date = (DateTime.strptime(date_string, '%m/%d/%Y %I:%M %p'))
+    result = date.strftime('%Y/%m/%d %H:%M')
     result
   end
   
-  def end_date_time(date_value, time_value, duration)
-    date = (DateTime.strptime(date_value + " " + time_value, '%m/%d/%Y %H:%M:%S'))
+  def end_date_time(date_string, duration)
+    date = (DateTime.strptime(date_string, '%m/%d/%Y %I:%M %p'))
     end_date = date + ((duration.to_f)/60/24)
-    end_date.strftime('%m/%d/%Y %H:%M:%S')
+    end_date.strftime('%m/%d/%Y %H:%M')
   end
   
   

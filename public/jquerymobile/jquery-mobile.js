@@ -1152,6 +1152,10 @@ $.each({
     //if false, message will not appear, but loading classes will still be toggled on html el
     loadingMessage: " ",
 
+    //show loading message during SAVE
+    //if false, message will not appear, but loading classes will still be toggled on html el
+    savingMessage: "Status Saved",
+
     //configure meta viewport tag's content attr:
     metaViewportContent: "width=device-width, minimum-scale=1, maximum-scale=1",
 
@@ -1218,9 +1222,18 @@ $.each({
     //loading div which appears during Ajax requests
     //will not appear if $.mobile.loadingMessage is false
     $loader = $.mobile.loadingMessage ?
-      $('<div class="ui-loader ui-body-a ui-corner-all">'+
+      $('<div class="ui-loader ui-body-e ui-corner-all">'+
             '<span class="ui-icon ui-icon-loading spin"></span>'+
             '<h1>'+ $.mobile.loadingMessage +'</h1>'+
+          '</div>')
+      : undefined;
+
+    //loading div which appears during SAVE
+    //will not appear if $.mobile.savingMessage is false
+    $saver = $.mobile.savingMessage ?
+      $('<div class="ui-loader ui-body-e ui-corner-all">'+
+            '<span class="ui-icon ui-icon-loading spin"></span>'+
+            '<div style="background: white;"><h1>'+ $.mobile.savingMessage +'</h1></div>'+
           '</div>')
       : undefined;
 
@@ -1243,6 +1256,17 @@ $.each({
       } else {
         if( $.mobile.loadingMessage ){
           $loader.appendTo($.mobile.pageContainer).css({top: $(window).scrollTop() + 75});
+        }
+        $html.addClass( "ui-loading" );
+      }
+    },
+
+    pageSaving: function ( done ) {
+      if ( done ) {
+        $html.removeClass( "ui-loading" );
+      } else {
+        if( $.mobile.savingMessage ){
+          $saver.appendTo($.mobile.pageContainer).css({top: $(window).scrollTop() + 75});
         }
         $html.addClass( "ui-loading" );
       }

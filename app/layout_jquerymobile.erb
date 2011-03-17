@@ -52,6 +52,16 @@
 		$( document ).bind( "mobileinit", function(){
 			$.mobile.page.prototype.options.degradeInputs.date = true;
 		});
+
+		function setFieldValue(field, value) {
+		  document.getElementById(field).value=value;
+		}
+
+		function popupDateTimeAJPicker(flag, title, field_key) {
+		  $.get('/app/Opportunity/popup', { flag: flag, title: title, field_key: field_key });
+		  return false;
+		}
+		
 		</script>
 
 </head>

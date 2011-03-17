@@ -1,8 +1,10 @@
+require 'date'
+require 'time'
 module BrowserHelper
 
   def udpate_status_link(opportunity, disposition, text, disposition_detail='')
     %Q{
-      <a href="#{ url_for(:controller => :Activity, :action => :update_status, 
+      <a onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :update_status, 
 				:query => {
 				  :opportunity_id => opportunity.object,
 			    'phone_call[cssi_disposition]' => disposition,
@@ -11,7 +13,7 @@ module BrowserHelper
 		      'phone_call[statecode]' => 'Completed'
 			    })
 				}" 
-				rel="external" data-transition="fade">
+				data-transition="fade">
 				#{text}
 			</a>
     }
@@ -19,7 +21,7 @@ module BrowserHelper
   
   def update_opportunity_statecode_link(opportunity, statecode)
      %Q{
-        <a href="#{ url_for(:controller => :Opportunity, :action => :update, :id => opportunity.object, 
+        <a onClick="showSpin()" href="#{ url_for(:controller => :Opportunity, :action => :update, :id => opportunity.object, 
   				:query => {
   				  'opportunity[statecode]' => statecode
   			    })
@@ -71,10 +73,11 @@ module BrowserHelper
   
   def to_date(input)
     begin
-      date = Date.parse(input)
-      date.strftime("%m/%d/%Y")
+      date = (Date.strptime(input, '%m/%d/%Y'))
+      result = date.strftime('%m/%d/%Y')
+      result
     rescue
-      puts "Could not parse date value: #{}"
+      puts "Could not parse date value: #{input}"
     end
   end
 end
