@@ -8,6 +8,9 @@ class ContactController < Rho::RhoController
 
   #GET /Contact
   def index
+    # if SyncEngine::logged_in == 0
+    #   redirect :controller => :Settings, :action => :login
+    # end
     @contacts = Contact.find(:all)
     @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.chars.first}
     render :action => :index,

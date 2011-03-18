@@ -1,15 +1,11 @@
-<div data-role="page">
-	<div class="pageTitle">
-	  <h1>Settings</h1>
+<div data-role="page" data-theme="b" data-cache="never">
+	<div data-role="header" data-nobackbtn="true">
+		<h1>Settings</h1>
 	</div>
-
-
-	<div class="toolbar">
-	</div>
-
-	<div class="content">
-	  <ul>
-	    <% if @msg %>
+	
+	<div id="contentDiv" data-role="content">
+	 <ul data-role="listview" data-inset="true">
+		<% if @msg %>
 	        <li style="color: red; text-align: center"><%= @msg %></li>
 	    <% end %>
 	   <li>
@@ -20,14 +16,33 @@
 	        <span class="clientID"><%= Rhom::Rhom::client_id %></span>
 	      </div>
 	    </li>
-		<li><a href="Contact/seed_db_150"><span class="title">Seed Database (150 Contacts)</span></a></li>
+		<li>
+			<img src="/public/images/login-key.png" class="ui-li-icon" style="margin-top:8px">
+			<% if SyncEngine::logged_in > 0 %>
+			<h3><a href="<%= url_for :action => :logout %>">Logout</a></h3>
+	   		<% else %>
+			<h3><a href="<%= url_for :action => :logout %>">Logout</a></h3>
+			<% end %>
+		</li>
+		<li>
+			<img src="/public/images/faq_small.png" class="ui-li-icon" style="margin-top:8px">
+			<h3><a href="#">FAQ</a></h3>
+		</li>
+		<li>
+			<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
+			<h3><a href="#">About</a></h3>
+		</li>
+		<li>
+			<img src="/public/images/phone_small.png" class="ui-li-icon" style="margin-top:8px">
+			<h3><a href="tel:2147774757">Call Support</a></h3>
+		</li> 
+		<li>
+			<img src="/public/images/email_icon.jpeg" class="ui-li-icon" style="margin-top:8px">
+			<h3><a href="mailto:kyle.norton@parivedasolutions.com">Email Support</a></h3>
+		</li>
 	    <li><a href="<%= url_for :action => :reset %>">Reset Database</a></li>
 	    <li><a href="<%= url_for :action => :do_sync %>">Perform Sync</a></li>
-	    <% if SyncEngine::logged_in > 0 %>
-	        <li><a href="<%= url_for :action => :logout %>">Logout</a></li>
-	    <% else %>
-	        <li><a href="<%= url_for :action => :login %>">Login</a></li>
-	    <% end %>
+
 	  </ul>
 	</div>
 </div>

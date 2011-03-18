@@ -12,13 +12,7 @@ class ActivityController < Rho::RhoController
       :statecode => 'Won', 
       :actual_end => Time.now.to_s
     })
-    finished_update_status(opportunity)
-  end
-  
-<<<<<<< HEAD
-  def finished_update_status(opportunity, origin)
-    SyncEngine.dosync
-    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
+    finished_update_status(opportunity, @params['origin'])
   end
 
   def udpate_lost_status
@@ -89,7 +83,7 @@ class ActivityController < Rho::RhoController
         :subject => "#{contact.firstname}, #{contact.lastname} - #{opp.createdon}"
       }
     )
-    finished_update_status(opp, @params['opportunity'])
+    finished_update_status(opp, @params['origin'])
   end
   
   #GET /Activity
@@ -146,8 +140,8 @@ class ActivityController < Rho::RhoController
   
   private
   
-  def finished_update_status(opportunity)
+  def finished_update_status(opportunity, origin)
     SyncEngine.dosync
-    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object
+    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
   end
 end
