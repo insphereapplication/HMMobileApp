@@ -39,12 +39,12 @@ module Rhom
         
         # set child type on new instances
         def create(*args)
-          args[0].merge!({'type' => @sti_name})
+          (args[0] ||= {}).merge!({'type' => @sti_name})
           super(*args)
         end
         
         def new(*args)
-          args[0].merge!({'type' => @sti_name})
+          (args[0] ||= {}).merge!({'type' => @sti_name})
           super(*args)
         end
       

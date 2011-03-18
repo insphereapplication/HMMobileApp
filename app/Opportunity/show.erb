@@ -23,7 +23,7 @@
 					
 				</li> 
 				<li><p><strong> Status Reason:	</strong> <%= @opportunity.statuscode %> </p></li> 
-				<li><p><strong> Status Detail:	</strong> <%= @opportunity.statusdetail %> </p></li> 
+				<li><p><strong> Status Detail:	</strong> <%= @opportunity.cssi_statusdetail %> </p></li> 
 				<li><p><strong> Source: 		</strong> <%= @opportunity.cssi_leadsourceid %> </li> 
 				<li><p><strong> LOB: 			</strong> <%= @opportunity.cssi_lineofbusiness %></li>
 				<li><p><strong> Lead Cost: 		</strong> <%= format_currency(@opportunity.cssi_leadcost.to_f, {}) %></li>  

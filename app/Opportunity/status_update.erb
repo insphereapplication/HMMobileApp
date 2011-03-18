@@ -16,20 +16,20 @@
 		</div> 		
 		<ul data-role="listview" data-inset="true"> 
 			<li data-role="list-divider">Follow-Up</li> 
-			<% [['Left Message','Left Message'], ['No Answer','No Answer']].each do |text, disposition| %>
+			<% ['Left Message','No Answer'].each do |status_detail| %>
 				<li>
-					<%= udpate_status_link(@opportunity, text, disposition) %>
+					<%= udpate_status_no_contact_link(@opportunity, status_detail) %>
 				</li> 
 			<% end %>
 			<li><a href="<%= url_for(:action => :callback_request, :id => @opportunity.object)%>" data-transition="slide">Call Back Requested...</a></li>	
 			<li><a href="<%= url_for(:action => :appointment, :id => @opportunity.object)%>" data-transition="slide">Set Appointment...</a></li>
 			<li data-role="list-divider">Lost</li> 
-				<% [['Not Interested', 'Insurance Not Desired'], ['Wrong Number/Disconnected', 'Wrong Number']].each do |text, disposition_detail| %>
-			<li><%= udpate_status_link(@opportunity, 'Lost', text, disposition_detail) %></li> 
+			<% [['Not Interested', 'Insurance Not Desired'], ['Wrong Number/Disconnected', 'Wrong Number']].each do |text, disposition_detail| %>
+				
 			<% end %>
 			<li><a href="<%= url_for(:action => :lost_other, :id => @opportunity.object)%>" data-transition="slide">Other</a></li>
 			<li data-role="list-divider">Won</li> 
-			<li><%= update_opportunity_statecode_link(@opportunity, 'Won')%></li> 
+			
 		</ul>
 		<script>
 			function showSpin(){

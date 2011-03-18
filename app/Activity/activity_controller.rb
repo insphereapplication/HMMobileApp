@@ -9,7 +9,7 @@ class ActivityController < Rho::RhoController
     phone_call = opportunity.most_recent_open_or_create_new_phone_call
     phone_call.update_attributes({
       :scheduledend => Time.now.to_s, 
-      :subject => "Phone Call - #{opp.contact.full_name}",
+      :subject => "Phone Call - #{opportunity.contact.full_name}",
       :statecode => 'Completed', 
       :parent_type => 'Opportunity', 
       :parent_id => opportunity.object
@@ -33,25 +33,31 @@ class ActivityController < Rho::RhoController
   end
   
   def update_status_call_back_requested
-    opp = Opportunity.find(@params['opportunity_id'])
+    opportunity = Opportunity.find(@params['opportunity_id'])
     opp_attrs = {:cssi_statusdetail => 'Call Back Requested'}
-    if opp.is_new? || opp.statuscode == 'No Contact Made'
-      opp.statuscode = 'Contact Made'
+    
+    if opportunity.is_new? || opportunity.statuscode == 'No Contact Made'
+      opp_attrs.merge!({:statuscode => 'Contact Made'})
     end
     
-    record_phone_call_made(opp) 
+    opportunity.update_attributes(opp_attrs)
+    
+    record_phone_call_made(opportunity) 
     
     PhoneCall.create({
-      :scheduledend => Time.now.to_s, 
-      :subject => "Phone Call - #{opp.contact.full_name}",
+      :scheduledstart => date_build(@params['callback_datetime']), 
+      :subject => "Phone Call - #{opportunity.contact.full_name}",
+      :phone_number => @params['phone_number'],
       :parent_type => 'Opportunity', 
       :parent_id => opportunity.object
     })
-    finished_update_status(opp)
+    finished_update_status(opportunity)
   end
   
   def update_status_appointment_set
     opp = Opportunity.find(@params['opportunity_id'])
+    contact = opp.contact
+    
     opp_attrs = {:cssi_statusdetail => 'Appointment Set'}
     if opp.is_new? || ['No Contact Made', 'Contact Made'].include?(opp.statuscode)
       opp.statuscode = 'Appointment Set'
@@ -61,13 +67,20 @@ class ActivityController < Rho::RhoController
       record_phone_call_made(opp)
     end
     
-     Appointment.create(@params['appointment'].merge(parent_attrs).merge({
-          :statecode => "Scheduled",
-          :statuscode => "Busy",
-          :scheduledstart => date_build(@params['appointment_datetime']),
-          :scheduledend => end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
-          :subject => "#{@params['firstname']}, #{@params['lastname']} - #{@params['createdon']}"
-        }))
+    opp.update_attributes(opp_attrs)
+    
+    Appointment.create({
+        :parent_type => 'opportunity',
+        :parent_id => opp.object,
+        :statecode => "Scheduled",
+        :statuscode => "Busy",
+        :scheduledstart => date_build(@params['appointment_datetime']),
+        :scheduledend => end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
+        :location => @params['location'],
+        :subject => "#{contact.firstname}, #{contact.lastname} - #{opp.createdon}"
+      }
+    )
+      
     finished_update_status(opp)
   end
 
