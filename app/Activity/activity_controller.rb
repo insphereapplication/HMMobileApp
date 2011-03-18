@@ -14,8 +14,7 @@ class ActivityController < Rho::RhoController
     })
     finished_update_status(opportunity)
   end
-  
-<<<<<<< HEAD
+
   def finished_update_status(opportunity, origin)
     SyncEngine.dosync
     redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
