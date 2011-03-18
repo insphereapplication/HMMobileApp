@@ -15,8 +15,8 @@
 					
 				<select name="status_code" id="status_code">
 					<option></option>
-					<% @options.each do |option| %>
-						<option value="<%=option%>"><%=option%></option>
+					<% @lost_reasons.each do |reason| %>
+						<option value="<%=reason%>"><%=reason%></option>
 					<% end %>
 				</select>
 
