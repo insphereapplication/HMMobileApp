@@ -104,6 +104,9 @@ class OpportunityController < Rho::RhoController
   end
   
   def lost_other
+    @options = Constants::OTHER_LOST_REASONS
+    @competitors = Constants::COMPETITORS
+    
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
       render :action => :lost_other,

@@ -15,6 +15,11 @@ class ActivityController < Rho::RhoController
     finished_update_status(opportunity, @params['origin'])
   end
 
+  def finished_update_status(opportunity, origin)
+    SyncEngine.dosync
+    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
+  end
+
   def udpate_lost_status
     opportunity = Opportunity.find(@params['opportunity_id'])
     opportunity.complete_open_call
