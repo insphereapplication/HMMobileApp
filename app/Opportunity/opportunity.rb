@@ -81,10 +81,6 @@ class Opportunity
     CLOSED_STATECODES.include?(statecode)
   end
   
-  def open?
-    !closed?
-  end
-  
   def has_activities?
     activities && activities.size > 0
   end
@@ -99,6 +95,10 @@ class Opportunity
   
   def last_activity_date
     last_activity.scheduledend if last_activity && last_activity.scheduledend 
+  end
+  
+  def most_recent_open_or_create_new_phone_call
+    most_recent_open_phone_call || PhoneCall.new
   end
   
   def is_new?
@@ -118,11 +118,15 @@ class Opportunity
   end
   
   def most_recent_phone_call
-    open_phone_calls.first
+    phone_calls.first
+  end
+  
+  def most_recent_open_phone_call
+    open_phone_calls.first if open_phone_calls
   end
   
   def open_phone_calls
-    phone_calls.select{|pc| pc.statuscode == "Open"} 
+    phone_calls.select{|pc| pc.statuscode == "Open"} if phone_calls
   end
   
   def rollup_status

@@ -2,19 +2,17 @@ require 'date'
 require 'time'
 module BrowserHelper
 
-  def udpate_status_link(opportunity, disposition, text, disposition_detail='')
+  def udpate_status_no_contact_link(opportunity, status_detail)
     %Q{
-      <a onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :update_status, 
-				:query => {
-				  :opportunity_id => opportunity.object,
-			    'phone_call[cssi_disposition]' => disposition,
-			    'phone_call[cssi_dispositiondetail]' => disposition_detail,
-		      'phone_call[scheduledend]' => Date.today.to_s,
-		      'phone_call[statecode]' => 'Completed'
-			    })
-				}" 
-				data-transition="fade">
-				#{text}
+      <a onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :update_status_no_contact, 
+  				:query => {
+  				  :opportunity_id => opportunity.object,
+  			    :status_detail => status_detail
+  			    }
+  			  )
+  			}" 
+  			data-transition="fade">
+  			#{status_detail}
 			</a>
     }
   end
