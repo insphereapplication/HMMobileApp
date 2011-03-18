@@ -4,14 +4,18 @@
 	<div class="ui-btn-inner" onclick="window.open('<%= url_for(:action => :show, :id => opportunity.object) %>')">
 		<div class="ui-btn-text">
 			<p class="ui-li-aside ui-li-desc"><strong><%= top_right_text %></strong></p>
-			<h3 class="ui-li-heading"><a href="<%= url_for(:action => :show, :id => opportunity.object) %>" class="ui-link-inherit ui-block-a"><%= contact.full_name %></a></h3>
+			<h3 class="ui-li-heading">
+				<a href="<%= url_for(:action => :show, :id => opportunity.object) %>" class="ui-link-inherit ui-block-a"><%= contact.full_name %></a>
+			</h3>
 			<p class="ui-li-desc"></p>
 			<div class="ui-grid-a ui-li-desc">
-				<div class="ui-block-a">&nbsp;<%= contact.age_sex_loc %></div>
-				<div align="right" class="ui-block-b">
+				<div class="ui-block-a">&nbsp;
+					<%= contact.age_sex_loc %> 
 					<% if opportunity.phone_calls.size > 0 %>
 						<div class="ui-li-count ui-btn-up-e ui-btn-corner-all" style="top:70%;right:45%"><%= opportunity.phone_calls.size %></div>
 					<% end %>
+				</div>
+				<div align="right" class="ui-block-b">
 					<%= bottom_right_text %>
 				</div>
 			</div>
