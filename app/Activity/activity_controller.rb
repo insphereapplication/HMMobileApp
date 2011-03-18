@@ -12,12 +12,7 @@ class ActivityController < Rho::RhoController
       :statecode => 'Won', 
       :actual_end => Time.now.to_s
     })
-    finished_update_status(opportunity)
-  end
-
-  def finished_update_status(opportunity, origin)
-    SyncEngine.dosync
-    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
+    finished_update_status(opportunity, @params['origin'])
   end
 
   def udpate_lost_status
@@ -88,65 +83,14 @@ class ActivityController < Rho::RhoController
         :subject => "#{contact.firstname}, #{contact.lastname} - #{opp.createdon}"
       }
     )
-    finished_update_status(opp, @params['opportunity'])
-  end
-  
-  #GET /Activity
-  def index
-    @activities = Activity.find(:all)
-    render
-  end
-
-  # GET /Activity/{1}
-  def show
-    @activity = Activity.find(@params['id'])
-    if @activity
-      render :action => :show
-    else
-      redirect :action => :index
-    end
-  end
-
-  # GET /Activity/new
-  def new
-    @activity = Activity.new
-    render :action => :new
-  end
-
-  # GET /Activity/{1}/edit
-  def edit
-    @activity = Activity.find(@params['id'])
-    if @activity
-      render :action => :edit
-    else
-      redirect :action => :index
-    end
-  end
-
-  # POST /Activity/create
-  def create
-    @activity = Activity.create(@params['activity'])
-    redirect :action => :index
-  end
-
-  # POST /Activity/{1}/update
-  def update
-    @activity = Activity.find(@params['id'])
-    @activity.update_attributes(@params['activity']) if @activity
-    redirect :action => :index
-  end
-
-  # POST /Activity/{1}/delete
-  def delete
-    @activity = Activity.find(@params['id'])
-    @activity.destroy if @activity
-    redirect :action => :index
+    finished_update_status(opp, @params['origin'])
   end
   
   private
   
-  def finished_update_status(opportunity)
+  def finished_update_status(opportunity, origin)
     SyncEngine.dosync
-    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object
+    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
   end
+
 end

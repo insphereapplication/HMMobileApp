@@ -3,7 +3,6 @@ require 'rho/rhotabbar'
 require 'initializers/extensions'
 require 'utils/util'
 
-# Dir[File.join(File.dirname(__FILE__),'initializers','**','*.rb')].each { |file| require file }
 
 class AppApplication < Rho::RhoApplication
   def initialize
@@ -19,10 +18,19 @@ class AppApplication < Rho::RhoApplication
         ]
     # Important to call super _after_ you define @tabs!
     super
-
-    # Uncomment to set sync notification callback to /app/Settings/sync_notify.
-    # SyncEngine.set_notification(-1, "/app/Settings/sync_notify", '')
-    #     System.set_push_notification("/app/Settings/push_notify", '')
-    SyncEngine.dosync
+    
+    if SyncEngine::logged_in == 1
+      render :action => :index
+      SyncEngine.dosync
+    else
+      render :action => :login
+    end
   end
+  
+  # wipe the database and force a resync if a different user logs in
+  def on_sync_user_changed
+    super
+    Rhom::Rhom.database_local_reset
+  end
+  
 end

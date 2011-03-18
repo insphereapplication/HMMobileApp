@@ -4,7 +4,6 @@ require 'helpers/application_helper'
 require 'date'
 require 'time'
 
-
 class OpportunityController < Rho::RhoController
   include BrowserHelper
   $saved = nil
@@ -101,7 +100,7 @@ class OpportunityController < Rho::RhoController
   end
   
   def lost_other
-    @options = Constants::OTHER_LOST_REASONS
+    @lost_reasons = Constants::OTHER_LOST_REASONS
     @competitors = Constants::COMPETITORS
     
     @opportunity = Opportunity.find(@params['id'])
