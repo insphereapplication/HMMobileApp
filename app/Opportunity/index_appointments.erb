@@ -16,15 +16,18 @@
 				[@future_appointments, "Future", "green"]].each do |appointments, label, color| %>
 					<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-<%=color%> ui-btn-up-undefined"><%=label%></li> 
 					<% appointments.each do |appointment| %>
-					<% contact = appointment.parent.contact %>
-					<% opportunity = appointment.parent %>
+						<% contact = appointment.parent.contact %>
+						<% opportunity = appointment.parent %>
 					
-					<%= render :partial =>"opportunity", :locals => { 
-						:opportunity => opportunity	, 
-						:color => color, 
-						:bottom_right_text => "Created #{opportunity.days_ago}",
-						:top_right_text => appointment.scheduledstart
-					} %>
+						<%= render :partial =>"opportunity", :locals => { 
+							:opportunity => opportunity	, 
+							:color => color, 
+							:bottom_right_text => "Created #{opportunity.days_ago}",
+							:top_right_text => to_datetime_noyear(appointment.scheduledstart)
+						} %>
+				<% end %>
+				<% if appointments.count == 0 %>
+					<li> (No Opportunities in this Category) </li>
 				<% end %>
 			<% end %>
 		</ul>

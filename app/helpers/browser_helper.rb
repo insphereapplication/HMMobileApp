@@ -80,4 +80,50 @@ module BrowserHelper
       puts "Could not parse date value: #{input}"
     end
   end
+  
+  def to_date_noyear(input)
+    begin
+      date = (Date.strptime(input, '%m/%d/%Y'))
+      result = date.strftime('%m/%d')
+      result
+    rescue
+      puts "Could not parse date value: #{input}"
+    end
+  end
+
+
+  def to_datetime(input)
+    begin
+      date = (DateTime.strptime(input, '%m/%d/%Y %I:%M:%S %p'))
+      result = date.strftime('%m/%d/%Y %I:%M %p')
+      result
+    rescue
+      puts "Could not parse date value: #{input}"
+    end
+  end
+  
+  def to_datetime_noyear(input)
+    begin
+      date = (DateTime.strptime(input, '%m/%d/%Y %I:%M:%S %p'))
+      result = date.strftime('%m/%d %I:%M %p')
+      result
+    rescue
+      puts "Could not parse date value: #{input}"
+    end
+  end
+  
+  def days_ago_formatted(input)
+    begin
+      date = (DateTime.strptime(input, '%m/%d/%Y %I:%M:%S %p'))
+      result = (Date.today - date).to_i
+      if result == 0 
+        return "Today"
+      else
+        result + "d"
+      end
+    rescue
+      puts "Could not parse date value: #{input}, Today is: #{Date.today.to_s}"
+    end
+  end
+
 end

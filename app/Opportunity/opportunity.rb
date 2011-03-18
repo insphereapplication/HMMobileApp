@@ -155,10 +155,44 @@ class Opportunity
   end
 end
 
+def days_old
+  formatted_days
+  begin
+    if Date.today == DateTime.strptime(createdon, "%m/%d/%Y")
+      return "Today"
+    else
+      formatted_days = (Date.today - Date.strptime(createdon, "%m/%d/%Y %I:%M:%S %p")).to_i
+      return formatted_days + "d"
+    end
+  rescue
+    puts "Unable to parse date: #{}; no age returned"
+  end
+end
+
 module DateUtil
   def self.days_ago(past_date)
     begin
       (Date.today - Date.strptime(past_date, "%m/%d/%Y")).to_i
+    rescue
+      puts "Unable to parse date: #{}; no age returned"
+    end
+  end
+  
+  def self.days_from_now(future_date)
+    begin
+      (Date.strptime(future_date, "%m/%d/%Y") - Date.today).to_i
+    rescue
+      puts "Unable to parse date: #{}; no age returned"
+    end
+  end
+  
+  def self.days_ago_formatted(past_date)
+    begin
+      if (Date.today - Date.strptime(past_date, "%m/%d/%Y")).to_i == 0
+        return "Today"
+      else
+        return (Date.today - Date.strptime(past_date, "%m/%d/%Y")).to_i + "d"
+      end
     rescue
       puts "Unable to parse date: #{}; no age returned"
     end
