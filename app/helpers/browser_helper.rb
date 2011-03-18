@@ -22,7 +22,8 @@ module BrowserHelper
     %Q{
       <a onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :update_won_status, 
   				:query => {
-  				  :opportunity_id => opportunity.object
+  				  :opportunity_id => opportunity.object,
+  				  :origin => @params['origin']
   			    }
   			  )
   			}" 
@@ -37,7 +38,8 @@ module BrowserHelper
       <a onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :udpate_lost_status, 
   				:query => {
   				  :opportunity_id => opportunity.object,
-  			    :status_code => status_code
+  			    :status_code => status_code,
+  			    :origin => @params['origin']
   			    }
   			  )
   			}" 
@@ -63,14 +65,14 @@ module BrowserHelper
   def opp_detail_backbutton(origin)
       case origin
         when "followup"
-          %Q{<a href="/app/Opportunity/index_follow_up" data-direction="reverse" rel="external" data-icon="back">Back</a>}
+          %Q{<a href="/app/Opportunity/index_follow_up" data-direction="reverse" rel="external" data-icon="back">Opps</a>}
         when "appointments"
-          %Q{<a href="/app/Opportunity/index_appointments" data-direction="reverse" rel="external" data-icon="back">Back</a>}
+          %Q{<a href="/app/Opportunity/index_appointments" data-direction="reverse" rel="external" data-icon="back">Opps</a>}
         else
-          %Q{<a href="/app/Opportunity/index" data-direction="reverse" rel="external" data-icon="back">Back</a>}
+          %Q{<a href="/app/Opportunity/index" data-direction="reverse" rel="external" data-icon="back">Opps</a>}
       end
   end
-  
+
   def placeholder(label=nil)
     "placeholder='#{label}'" if platform == 'apple'
   end

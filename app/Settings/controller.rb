@@ -9,7 +9,7 @@ class SettingsController < Rho::RhoController
   
   def index
     @msg = @params['msg']
-    render :controller => :Setting, :action => :index
+    render :controller => :Setting, :action => :index, :layout => 'layout_jquerymobile'
   end
 
   def login
@@ -22,7 +22,8 @@ class SettingsController < Rho::RhoController
     errCode = @params['error_code'].to_i
     if errCode == 0
       SyncEngine.dosync
-      WebView.navigate ( url_for :controller => :Contact, :action => :index )
+      Rho::NativeTabbar.switch_tab(0) 
+      WebView.navigate ( url_for :controller => :Opportunity, :action => :index )
     else
       if errCode == Rho::RhoError::ERR_CUSTOMSYNCSERVER
         @msg = @params['error_message']

@@ -11,6 +11,9 @@ class OpportunityController < Rho::RhoController
 
   #GET /Opportunity
   def index
+    # if SyncEngine::logged_in == 0
+    #   redirect :controller => :Settings, :action => :login
+    # end
     @todays_new_leads = Opportunity.todays_new_leads
     @previous_days_leads = Opportunity.previous_days_leads
     Opportunity.clear_cache

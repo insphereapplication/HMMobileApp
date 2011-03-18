@@ -10,11 +10,11 @@ class AppApplication < Rho::RhoApplication
     # Super must be called *after* settings @tabs!
     @tabs = [
           { :label => "Opps", :action => '/app/Opportunity', 
-            :icon => "/public/images/iphone/tabs/pib_tab_icon.png", :reload => true, :web_bkg_color => 0x7F7F7F }, 
+            :icon => "/public/images/iphone/tabs/pib_tab_icon.png", :web_bkg_color => 0x7F7F7F }, 
           { :label => "Contacts",  :action => '/app/Contact',  
             :icon => "/public/images/iphone/tabs/activities_tab_icon.png" },
           { :label => "Settings",  :action => '/app/Settings',  
-            :icon => "/public/images/iphone/tabs/settings_tab_icon.png" },
+            :icon => "/public/images/iphone/tabs/settings_tab_icon.png", :reload => true },
         ]
     # Important to call super _after_ you define @tabs!
     super

@@ -1,6 +1,10 @@
 <div data-role="page" data-theme="b" data-cache="never">
 	<div data-role="header" data-backbtn="false">
-				<a href="<%=url_for(:action=>:index)%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
+				<% if @params['opportunity']%>
+					<a href="<%=url_for(:controller=>:Opportunity, :action=>:show, :id => @params['opportunity'])%>" data-direction="reverse" rel="external" data-icon="back">Opp</a>
+				<% else %>
+					<a href="<%=url_for(:action => :index)%>" data-direction="reverse" rel="external" data-icon="back">Contacts</a>
+				<% end %>
 				<h1>Contact Detail</h1>
 				<a href="<%=url_for(:action=>:edit, :id => @contact.object)%>" data-direction="forward" data-icon="gear"> Edit </a>
 	</div>

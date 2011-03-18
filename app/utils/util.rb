@@ -30,13 +30,13 @@ module DateUtil
   
     def days_ago_formatted(past_date)
       begin
-        if (Date.today - Date.strptime(past_date, "%m/%d/%Y")).to_i == 0
+        if  (Date.today - Date.strptime(past_date, "%m/%d/%Y")).to_i == 0
           return "Today"
         else
-          return (Date.today - Date.strptime(past_date, "%m/%d/%Y")).to_i + "d"
+          ((Date.today - Date.strptime(past_date, "%m/%d/%Y")).to_i + "d")
         end
       rescue
-        puts "Unable to parse date: #{}; no age returned"
+        puts "Unable to parse date: #{past_date}; no age returned"
       end
     end
   end
