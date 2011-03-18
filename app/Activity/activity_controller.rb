@@ -16,9 +16,9 @@ class ActivityController < Rho::RhoController
     })
   end
   
-  def finished_update_status(opportunity)
+  def finished_update_status(opportunity, origin)
     SyncEngine.dosync
-    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object
+    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
   end
   
   def update_status_no_contact
@@ -29,7 +29,7 @@ class ActivityController < Rho::RhoController
     end
     opp.update_attributes(opp_attrs)
     record_phone_call_made(opp) 
-    finished_update_status(opp)
+    finished_update_status(opp, @params['origin'])
   end
   
   def update_status_call_back_requested
