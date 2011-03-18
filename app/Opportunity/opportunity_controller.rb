@@ -9,6 +9,56 @@ class OpportunityController < Rho::RhoController
   include BrowserHelper
   $saved = nil
   $choosed = {}
+  
+  OTHER_LOST_REASONS = [
+    "Covered By Competitor",
+    "Wrong Number",
+    "No Answer",
+    "Disconnected Phone",
+    "Deceased",
+    "Cost",
+    "Insufficient Coverage",
+    "Other",
+    "Insurance Not Desired",
+    "Uninsurable",
+    "Group Insurance",
+    "Under Age",
+    "Over Age",
+    "Medicaid",
+    "Never Inquired",
+    "Does Not Speak English",
+    "Working With Agent",
+    "Covered By Spouse"
+  ]
+  
+  COMPETITORS = [
+    "Aetna",
+    "AIG",
+    "Allianz",
+    "Assurant",
+    "Berkshire Life",
+    "Blue Cross / Blue Shield",
+    "Cigna",
+    "Genworth",
+    "Golden Rule",
+    "Guardian",
+    "Humana",
+    "Kaiser",
+    "Lafayette Life",
+    "Lincoln",
+    "MassMutual",
+    "Met Life",
+    "National Health",
+    "NewYork Life",
+    "Principle",
+    "Prudential",
+    "The Hartford",
+    "Transamerica",
+    "United Health Care",
+    "Unknown",
+    "Unum",
+    "VantisLife"
+  ]
 
   #GET /Opportunity
   def index
@@ -101,6 +151,9 @@ class OpportunityController < Rho::RhoController
   end
   
   def lost_other
+    @options = OTHER_LOST_REASONS
+    @competitors = COMPETITORS
+    
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
       render :action => :lost_other,
