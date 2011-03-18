@@ -1,6 +1,7 @@
 require 'rho/rhoapplication'
 require 'rho/rhotabbar'
 require 'initializers/extensions'
+require 'utils/util'
 
 # Dir[File.join(File.dirname(__FILE__),'initializers','**','*.rb')].each { |file| require file }
 

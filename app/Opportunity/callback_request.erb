@@ -9,9 +9,8 @@
 	</div>
 	<div id="contentDiv" data-role="content">
 		<div class="ui-body ui-body-d">
-			<form name="call_back_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status %>">
+			<form name="call_back_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_call_back_requested %>">
 				<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
-				<input type="hidden" name="phone_call[cssi_disposition]" value="Call back requested" />
 				<div data-role="fieldcontain">
 		            <label for="callback_datetime">Call Back Date and Time:</label>
 					<input id="callback_datetime" type="text" name="callback_datetime" readonly value="<%= $choosed['0'] %>"  onClick="popupDateTimeAJPicker('0', 'Choose Date and Time', 'callback_datetime');"></input>
@@ -29,8 +28,8 @@
 						<% end %>
 							<option value="&nbsp;">Ad-Hoc</option>
 					</select>
-					<label for="phone_call[phonenumber]" class="fieldLabel">Phone Number:</label>
-		            <input type="tel" id="phoneNumber" name="phoneNumber" value="<%= @opportunity.contact.default_number %>" /><br />
+					<label for="phone_number" class="fieldLabel">Phone Number:</label>
+		            <input type="tel" id="phoneNumber" name="phone_number" value="<%= @opportunity.contact.default_number %>" /><br />
 					<input type="submit" class="standardButton" value="Create Call Back"/>
 				</div>
 				<% unless System::get_property('platform') == 'Blackberry'%>

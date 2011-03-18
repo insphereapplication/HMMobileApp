@@ -24,12 +24,12 @@
 			<li><a href="<%= url_for(:action => :callback_request, :id => @opportunity.object)%>" data-transition="slide">Call Back Requested...</a></li>	
 			<li><a href="<%= url_for(:action => :appointment, :id => @opportunity.object)%>" data-transition="slide">Set Appointment...</a></li>
 			<li data-role="list-divider">Lost</li> 
-			<% [['Not Interested', 'Insurance Not Desired'], ['Wrong Number/Disconnected', 'Wrong Number']].each do |text, disposition_detail| %>
-				
+			<% [['Not Interested', 'Insurance Not Desired'], ['Wrong Number/Disconnected', 'Wrong Number']].each do |text, status_code| %>
+				<li><%= udpate_status_lost_link(@opportunity, text, status_code) %></li> 
 			<% end %>
 			<li><a href="<%= url_for(:action => :lost_other, :id => @opportunity.object)%>" data-transition="slide">Other</a></li>
 			<li data-role="list-divider">Won</li> 
-			
+			<li><%= udpate_status_won_link(@opportunity)%></li> 
 		</ul>
 		<script>
 			function showSpin(){
