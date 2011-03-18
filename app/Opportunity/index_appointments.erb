@@ -23,7 +23,8 @@
 							:opportunity => opportunity	, 
 							:color => color, 
 							:bottom_right_text => "Created #{opportunity.days_ago}",
-							:top_right_text => to_datetime_noyear(appointment.scheduledstart)
+							:top_right_text => to_datetime_noyear(appointment.scheduledstart),
+							:origin => "appointments"
 						} %>
 				<% end %>
 				<% if appointments.count == 0 %>

@@ -9,7 +9,7 @@
 	</div>
 	<div id="contentDiv" data-role="content">
 		<div class="ui-body ui-body-d">
-			<form name="lost_opportunity_other_form" method="POST" action="<%= url_for :controller => :Activity, :action => :udpate_lost_status %>">
+			<form name="lost_opportunity_other_form" method="POST" action="<%= url_for :controller => :Activity, :action => :udpate_lost_status, :query => {:origin => @params['origin']} %>">
 				<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
 				<label for="status_code" class="fieldLabel">Lost Reason (Required):</label>
 					

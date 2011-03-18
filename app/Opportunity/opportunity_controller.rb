@@ -211,7 +211,8 @@ class OpportunityController < Rho::RhoController
       telephone.gsub!(/[^0-9]/, "")
       if @params['opportunity']
         redirect :action => :show,
-                  :id => @params['opportunity']
+                  :id => @params['opportunity'],
+                  :query =>{:origin => @params['origin']}
       else
       redirect :action => :index
     end

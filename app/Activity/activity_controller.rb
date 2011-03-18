@@ -15,6 +15,12 @@ class ActivityController < Rho::RhoController
     finished_update_status(opportunity)
   end
   
+<<<<<<< HEAD
+  def finished_update_status(opportunity, origin)
+    SyncEngine.dosync
+    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
+  end
+
   def udpate_lost_status
     opportunity = Opportunity.find(@params['opportunity_id'])
     opportunity.complete_open_call
@@ -23,7 +29,7 @@ class ActivityController < Rho::RhoController
       :statuscode => @params['status_code'],
       :competitorid => @params['competitorid'] || ""
     })
-    finished_update_status(opportunity)
+    finished_update_status(opportunity, @params['origin'])
   end
   
   def update_status_no_contact
@@ -34,7 +40,7 @@ class ActivityController < Rho::RhoController
     end
     opportunity.update_attributes(opp_attrs)
     opportunity.record_phone_call_made
-    finished_update_status(opportunity)
+    finished_update_status(opportunity, @params['origin'])
   end
   
   def update_status_call_back_requested
@@ -56,7 +62,7 @@ class ActivityController < Rho::RhoController
       :parent_type => 'Opportunity', 
       :parent_id => opportunity.object
     })
-    finished_update_status(opportunity)
+    finished_update_status(opportunity, @params['origin'])
   end
   
   def update_status_appointment_set
@@ -83,7 +89,7 @@ class ActivityController < Rho::RhoController
         :subject => "#{contact.firstname}, #{contact.lastname} - #{opp.createdon}"
       }
     )
-    finished_update_status(opp)
+    finished_update_status(opp, @params['opportunity'])
   end
   
   #GET /Activity

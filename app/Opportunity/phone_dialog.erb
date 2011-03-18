@@ -13,7 +13,7 @@
 		<div data-role="content" data-theme="c" class="ui-content ui-body-c ui-corner-bottom ui-overlay-shadow" role="main">
 			<p>Choose a number to dial:</p>
 			<% @opportunity.contact.phone_numbers_full.each do |type, number| %>
-				<a href="<%= url_for(:action => :call_number, :query => {:phone_number => number, :opportunity => @opportunity.object}) %>" data-role="button"  data-rel="back" data-theme="c" style="white-space:normal" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-c">
+				<a href="<%= url_for(:action => :call_number, :query => {:phone_number => number, :opportunity => @opportunity.object}, :origin => @params['origin']) %>" data-role="button"  data-rel="back" data-theme="c" style="white-space:normal" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-c">
 					<span class="ui-btn-inner ui-btn-corner-all" style="white-space:normal">
 						<span class="ui-btn-text" style="white-space:normal"><Cancel><%= type %></span>
 					</span></a> 

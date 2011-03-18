@@ -7,7 +7,8 @@ module BrowserHelper
       <a onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :update_status_no_contact, 
   				:query => {
   				  :opportunity_id => opportunity.object,
-  			    :status_detail => status_detail
+  			    :status_detail => status_detail,
+  			    :origin => @params['origin']
   			    }
   			  )
   			}" 
@@ -57,6 +58,17 @@ module BrowserHelper
   				#{statecode}
   			</a>
       }
+  end
+  
+  def opp_detail_backbutton(origin)
+      case origin
+        when "followup"
+          %Q{<a href="/app/Opportunity/index_follow_up" data-direction="reverse" rel="external" data-icon="back">Back</a>}
+        when "appointments"
+          %Q{<a href="/app/Opportunity/index_appointments" data-direction="reverse" rel="external" data-icon="back">Back</a>}
+        else
+          %Q{<a href="/app/Opportunity/index" data-direction="reverse" rel="external" data-icon="back">Back</a>}
+      end
   end
   
   def placeholder(label=nil)
