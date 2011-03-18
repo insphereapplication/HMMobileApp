@@ -5,31 +5,42 @@ require 'date'
 class ActivityController < Rho::RhoController
   include BrowserHelper
   
-  def record_phone_call_made(opportunity)
-    phone_call = opportunity.most_recent_open_or_create_new_phone_call
-    phone_call.update_attributes({
-      :scheduledend => Time.now.to_s, 
-      :subject => "Phone Call - #{opportunity.contact.full_name}",
-      :statecode => 'Completed', 
-      :parent_type => 'Opportunity', 
-      :parent_id => opportunity.object
+  def update_won_status
+    opportunity = Opportunity.find(@params['opportunity_id'])
+    opportunity.complete_open_call
+    opportunity.update_attributes({
+      :statecode => 'Won', 
+      :actual_end => Time.now.to_s
     })
+    finished_update_status(opportunity)
   end
   
+<<<<<<< HEAD
   def finished_update_status(opportunity, origin)
     SyncEngine.dosync
     redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
   end
+
+  def udpate_lost_status
+    opportunity = Opportunity.find(@params['opportunity_id'])
+    opportunity.complete_open_call
+    opportunity.update_attributes({
+      :statecode => 'Lost',
+      :statuscode => @params['status_code'],
+      :competitorid => @params['competitorid'] || ""
+    })
+    finished_update_status(opportunity, @params['origin'])
+  end
   
   def update_status_no_contact
-    opp = Opportunity.find(@params['opportunity_id'])
+    opportunity = Opportunity.find(@params['opportunity_id'])
     opp_attrs = {:cssi_statusdetail => @params['status_detail']}
-    if opp.is_new?
-      opp_attrs.merge!({:statuscode => 'No Contact Made'})
+    if opportunity.is_new?
+      opportunity.merge!({:statuscode => 'No Contact Made'})
     end
-    opp.update_attributes(opp_attrs)
-    record_phone_call_made(opp) 
-    finished_update_status(opp, @params['origin'])
+    opportunity.update_attributes(opp_attrs)
+    opportunity.record_phone_call_made
+    finished_update_status(opportunity, @params['origin'])
   end
   
   def update_status_call_back_requested
@@ -41,17 +52,17 @@ class ActivityController < Rho::RhoController
     end
     
     opportunity.update_attributes(opp_attrs)
+    opportunity.record_phone_call_made
     
-    record_phone_call_made(opportunity) 
-    
+    # create the requeseted callback
     PhoneCall.create({
-      :scheduledstart => date_build(@params['callback_datetime']), 
+      :scheduledstart => DateUtil.date_build(@params['callback_datetime']), 
       :subject => "Phone Call - #{opportunity.contact.full_name}",
       :phone_number => @params['phone_number'],
       :parent_type => 'Opportunity', 
       :parent_id => opportunity.object
     })
-    finished_update_status(opportunity)
+    finished_update_status(opportunity, @params['origin'])
   end
   
   def update_status_appointment_set
@@ -60,42 +71,26 @@ class ActivityController < Rho::RhoController
     
     opp_attrs = {:cssi_statusdetail => 'Appointment Set'}
     if opp.is_new? || ['No Contact Made', 'Contact Made'].include?(opp.statuscode)
-      opp.statuscode = 'Appointment Set'
+      opp_attrs.merge!({:statuscode => 'Appointment Set'})
     end
     
-    if opp.most_recent_open_phone_call
-      record_phone_call_made(opp)
-    end
-    
+    opp.complete_open_call 
     opp.update_attributes(opp_attrs)
     
+    # create the requested appointment
     Appointment.create({
         :parent_type => 'opportunity',
         :parent_id => opp.object,
         :statecode => "Scheduled",
         :statuscode => "Busy",
-        :scheduledstart => date_build(@params['appointment_datetime']),
-        :scheduledend => end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
+        :scheduledstart => DateUtil.date_build(@params['appointment_datetime']),
+        :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
         :location => @params['location'],
         :subject => "#{contact.firstname}, #{contact.lastname} - #{opp.createdon}"
       }
     )
-      
-    finished_update_status(opp)
+    finished_update_status(opp, @params['opportunity'])
   end
-
-  def date_build(date_string)
-    date = (DateTime.strptime(date_string, '%m/%d/%Y %I:%M %p'))
-    result = date.strftime('%Y/%m/%d %H:%M')
-    result
-  end
-  
-  def end_date_time(date_string, duration)
-    date = (DateTime.strptime(date_string, '%m/%d/%Y %I:%M %p'))
-    end_date = date + ((duration.to_f)/60/24)
-    end_date.strftime('%m/%d/%Y %H:%M')
-  end
-  
   
   #GET /Activity
   def index
@@ -147,5 +142,12 @@ class ActivityController < Rho::RhoController
     @activity = Activity.find(@params['id'])
     @activity.destroy if @activity
     redirect :action => :index
+  end
+  
+  private
+  
+  def finished_update_status(opportunity)
+    SyncEngine.dosync
+    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object
   end
 end

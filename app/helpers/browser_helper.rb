@@ -18,6 +18,35 @@ module BrowserHelper
     }
   end
   
+  def udpate_status_won_link(opportunity)
+    %Q{
+      <a onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :update_won_status, 
+  				:query => {
+  				  :opportunity_id => opportunity.object
+  			    }
+  			  )
+  			}" 
+  			data-transition="fade">
+  			Won
+			</a>
+    }
+  end
+  
+  def udpate_status_lost_link(opportunity, text, status_code)
+    %Q{
+      <a onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :udpate_lost_status, 
+  				:query => {
+  				  :opportunity_id => opportunity.object,
+  			    :status_code => status_code
+  			    }
+  			  )
+  			}" 
+  			data-transition="fade">
+  			#{text}
+			</a>
+    }
+  end
+  
   def update_opportunity_statecode_link(opportunity, statecode)
      %Q{
         <a onClick="showSpin()" href="#{ url_for(:controller => :Opportunity, :action => :update, :id => opportunity.object, 

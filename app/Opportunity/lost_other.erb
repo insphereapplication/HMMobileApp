@@ -9,11 +9,10 @@
 	</div>
 	<div id="contentDiv" data-role="content">
 		<div class="ui-body ui-body-d">
-			<form name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status %>">
-				<input type="hidden" name="phone_call[disposition]" value="Lost" />
+			<form name="lost_opportunity_other_form" method="POST" action="<%= url_for :controller => :Activity, :action => :udpate_lost_status, :query => {:origin => @params['origin']} %>">
 				<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
-				<label for="phone_call[cssi_dispositiondetail]" class="fieldLabel">Lost Reason (Required):</label>
-					<select name="phone_call[cssi_dispositiondetail]" id="appointment_duration">
+				<label for="status_code" class="fieldLabel">Lost Reason (Required):</label>
+					<select name="status_code" id="status_code">
 						<option></option>
 						<option value="Covered By Competitor">Covered By Competitor</option>
 						<option value="Wrong Number">Wrong Number</option>
@@ -37,8 +36,8 @@
 
 
 				<!-- TODO: Make this list dynamic -->
-				<label for="phone_call[competitorid]" class="fieldLabel">Competitor (Optional):</label>
-				<select name="phone_call[competitorid]" id="appointment_duration">
+				<label for="competitorid" class="fieldLabel">Competitor (Optional):</label>
+				<select name="competitorid" id="competitorid">
 					<option></option>
 					<option value="Aetna">Aetna</option>
 					<option value="AIG">AIG</option>

@@ -77,6 +77,23 @@ class Opportunity
     find(:all).select {|opp| opp.has_activities? && !opp.has_open_activities? }
   end
   
+  def record_phone_call_made
+    phone_call = most_recent_open_or_create_new_phone_call
+    phone_call.update_attributes({
+      :scheduledend => Time.now.to_s, 
+      :subject => "Phone Call - #{self.contact.full_name}",
+      :statecode => 'Completed', 
+      :parent_type => 'Opportunity', 
+      :parent_id => self.object
+    })
+  end
+  
+  def complete_open_call
+    if most_recent_open_phone_call
+      record_phone_call_made
+    end
+  end
+  
   def closed?
     CLOSED_STATECODES.include?(statecode)
   end
@@ -170,35 +187,5 @@ def days_old
     end
   rescue
     puts "Unable to parse date: #{}; no age returned"
-  end
-end
-
-module DateUtil
-  def self.days_ago(past_date)
-    begin
-      (Date.today - Date.strptime(past_date, "%m/%d/%Y")).to_i
-    rescue
-      puts "Unable to parse date: #{}; no age returned"
-    end
-  end
-  
-  def self.days_from_now(future_date)
-    begin
-      (Date.strptime(future_date, "%m/%d/%Y") - Date.today).to_i
-    rescue
-      puts "Unable to parse date: #{}; no age returned"
-    end
-  end
-  
-  def self.days_ago_formatted(past_date)
-    begin
-      if (Date.today - Date.strptime(past_date, "%m/%d/%Y")).to_i == 0
-        return "Today"
-      else
-        return (Date.today - Date.strptime(past_date, "%m/%d/%Y")).to_i + "d"
-      end
-    rescue
-      puts "Unable to parse date: #{}; no age returned"
-    end
   end
 end
