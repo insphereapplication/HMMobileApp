@@ -15,7 +15,7 @@ class SettingsController < Rho::RhoController
   def login
     @msg = @params['msg']
     # if the user has stored successful login credentials, attempt to auto-login with them
-    if !Settings.login.blank? && !Settings.password.blank?
+    if Settings.has_persisted_credentials?
       SyncEngine.login(Settings.login, Settings.password,  "/app/Settings/login_callback")
       @working = true
     end
@@ -25,7 +25,6 @@ class SettingsController < Rho::RhoController
   def login_callback
     errCode = @params['error_code'].to_i
     if errCode == 0
-      
       SyncEngine.set_notification(
         -1, url_for(:controller => :Opportunity, :action => :init_notify), 
         "sync_complete=true"
@@ -36,6 +35,7 @@ class SettingsController < Rho::RhoController
       # WebView.navigate ( url_for :controller => :Opportunity, :action => :index )
     else
       Settings.clear_credentials
+
       if errCode == Rho::RhoError::ERR_CUSTOMSYNCSERVER
         @msg = @params['error_message']
       end

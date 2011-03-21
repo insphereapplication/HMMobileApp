@@ -8,9 +8,14 @@ class Settings
       [login,password]
     end
     
+    def has_persisted_credentials?
+      !instance.login.blank? && !instance.password.blank?
+    end
+    
     def clear_credentials
-      login=nil
-      password=nil
+      instance.login=nil
+      instance.password=nil
+      instance.save
     end
     
     def login
