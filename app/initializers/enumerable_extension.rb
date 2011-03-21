@@ -1,4 +1,5 @@
 require 'date'
+require 'utils/util'
 
 #
 # Convenience extension methods to Enumerable (Array and Hash) to avoid a lot of duplicate date sorting and selecting and parsing, etc.
@@ -6,7 +7,7 @@ require 'date'
 module Enumerable
   
   # this is necessary because apparently on Rhodes, the default date format is %d/%m/%Y, so we have to explicitly set the normal format
-  DEFAULT_PARSE_FORMAT = "%m/%d/%Y"
+  DEFAULT_PARSE_FORMAT = DateUtil::DEFAULT_TIME_FORMAT
   
   def select_all_before_today(date_method, format=DEFAULT_PARSE_FORMAT)
     select do |item| 

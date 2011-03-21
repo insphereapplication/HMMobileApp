@@ -56,12 +56,13 @@ class ActivityController < Rho::RhoController
     
     # create the requested callback
     PhoneCall.create({
-      :scheduledstart => DateUtil.date_build(@params['callback_datetime']), 
+      :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
       :subject => "Phone Call - #{opportunity.contact.full_name}",
-      :phone_number => @params['phone_number'],
+      :phonenumber => @params['phone_number'],
       :parent_type => 'Opportunity', 
       :parent_id => opportunity.object,
-      :statuscode => 'Open'
+      :statuscode => 'Open',
+      :statecode => 'Open'
     })
     finished_update_status(opportunity, @params['origin'])
   end

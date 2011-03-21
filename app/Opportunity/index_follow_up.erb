@@ -34,7 +34,7 @@
 					<%= render :partial =>"opportunity", :locals => { 
 							:opportunity => opportunity, 
 							:color => color, 
-							:top_right_text => opportunity.rollup_status,
+							:top_right_text => opportunity.cssi_statusdetail,
 							:bottom_right_text => date_proc.call(opportunity),
 							:origin => "followup"
 						 } 

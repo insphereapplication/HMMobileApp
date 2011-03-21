@@ -114,7 +114,7 @@ module BrowserHelper
   
   def to_date(input)
     begin
-      date = (Date.strptime(input, '%m/%d/%Y'))
+      date = (Date.strptime(input, DateUtil::DEFAULT_TIME_FORMAT))
       result = date.strftime('%m/%d/%Y')
       result
     rescue
@@ -124,7 +124,7 @@ module BrowserHelper
   
   def to_date_noyear(input)
     begin
-      date = (Date.strptime(input, '%m/%d/%Y'))
+      date = (Date.strptime(input, DateUtil::DEFAULT_TIME_FORMAT))
       result = date.strftime('%m/%d')
       result
     rescue
@@ -132,10 +132,9 @@ module BrowserHelper
     end
   end
 
-
   def to_datetime(input)
     begin
-      date = (DateTime.strptime(input, '%m/%d/%Y %I:%M:%S %p'))
+      date = (DateTime.strptime(input, DateUtil::DEFAULT_TIME_FORMAT))
       result = date.strftime('%m/%d/%Y %I:%M %p')
       result
     rescue
@@ -145,7 +144,7 @@ module BrowserHelper
   
   def to_endtime(input)
     begin
-      date = (DateTime.strptime(input, '%m/%d/%Y %I:%M:%S %p'))
+      date = (DateTime.strptime(input, DateUtil::DEFAULT_TIME_FORMAT))
       result = date.strftime('%I:%M %p')
       result
     rescue
@@ -155,7 +154,7 @@ module BrowserHelper
   
   def to_datetime_noyear(input)
     begin
-      date = (DateTime.strptime(input, '%m/%d/%Y %I:%M:%S %p'))
+      date = (DateTime.strptime(input, DateUtil::DEFAULT_TIME_FORMAT))
       result = date.strftime('%m/%d %I:%M %p')
       result
     rescue
@@ -165,7 +164,7 @@ module BrowserHelper
   
   def days_ago_formatted(input)
     begin
-      date = (DateTime.strptime(input, '%m/%d/%Y %I:%M:%S %p'))
+      date = (DateTime.strptime(input, DateUtil::DEFAULT_TIME_FORMAT))
       result = (Date.today - date).to_i
       if result == 0 
         return "Today"

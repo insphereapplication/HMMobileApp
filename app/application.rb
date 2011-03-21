@@ -18,14 +18,6 @@ class AppApplication < Rho::RhoApplication
                     ]
     # Important to call super _after_ you define @tabs!
     super
-
-    
-    if SyncEngine::logged_in == 1
-      render :action => :index
-      SyncEngine.dosync
-    else
-      render :action => :login
-    end
     
     System.set_push_notification("/app/Settings/push_notify", '')
 

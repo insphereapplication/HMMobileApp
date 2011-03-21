@@ -29,6 +29,20 @@ class Opportunity
   CACHED = [@new_leads, @phone_calls]
   CLOSED_STATECODES = ['Won', 'Lost']
   
+  def opportunity_conditions
+     { 
+      { 
+        :func => 'LOWER', 
+        :name => 'parent_type', 
+        :op => '='
+      } => 'opportunity',
+      {
+        :name => 'parent_id',
+        :op => '='
+      } => self.opportunityid
+    }
+  end
+  
   # clear out all class-level cache objects
   def self.clear_cache
     CACHED.each {|cache| cache = nil }
@@ -39,11 +53,11 @@ class Opportunity
   end
   
   def self.new_leads
-    find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities? || opp.closed?}.compact#.date_sort(:createdon)
+    find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities? || opp.closed?}.compact.date_sort(:createdon)
   end 
 
   def self.follow_up_phone_calls
-    find(:all).map{|opportunity| opportunity.open_phone_calls.first }.compact#.date_sort(:scheduledend)
+    find(:all).map { |opportunity| opportunity.scheduled_phone_calls.first }.compact.date_sort(:scheduledend) 
   end
   
   def self.todays_follow_ups
@@ -67,12 +81,11 @@ class Opportunity
   end
   
   def self.follow_up_activities
-    opportunities = find(:all)
-    opportunities.map{|opp| opp.open_phone_calls.first }.compact#.date_sort(:scheduledend)
+    find(:all).map{|opp| opp.open_phone_calls.first }.compact.date_sort(:scheduledend)
   end
   
   def self.last_activities
-    find(:all).select {|opp| opp.has_activities? && !opp.has_open_activities? }
+    find(:all).select {|opp| opp.has_activities? && !opp.has_scheduled_activities? }
   end
   
   def record_phone_call_made_now
@@ -102,10 +115,6 @@ class Opportunity
     CLOSED_STATECODES.include?(statecode)
   end
   
-  def has_activities?
-    activities && activities.size > 0
-  end
-  
   def days_past_due
     DateUtil.days_ago(next_activity_due_date) 
   end
@@ -130,16 +139,28 @@ class Opportunity
     activities && activities.any?{|a| a.open? }
   end
   
-  def activities
-    Activity.find(:all, :conditions => {"parent_type" => "opportunity", "parent_id" => self.opportunityid })
+  def has_activities?
+    activities && activities.size > 0
   end
   
-  def phone_calls
-    PhoneCall.find(:all, :conditions => {"parent_type" => "opportunity", "parent_id" => self.opportunityid })
+  def has_scheduled_activities?
+    activities && activities.any?{|a| a.open? && !a.scheduledend.blank? }
+  end
+  
+  def scheduled_activities
+    activities.select{|activity| activity.open? && !activity.scheduledend.blank? } if activities
   end
   
   def appointments
-    Activity.find(:all, :conditions => {"type" => "Appointment", "parent_type" => "opportunity", "parent_id" => self.opportunityid})
+    Appointment.find(:all, :conditions => opportunity_conditions, :op => 'and')
+  end
+  
+  def activities
+    Activity.find( :all, :conditions => opportunity_conditions, :op => 'and')
+  end
+  
+  def phone_calls
+    PhoneCall.find(:all, :conditions => opportunity_conditions, :op => 'and')
   end
   
   def most_recent_phone_call
@@ -151,11 +172,11 @@ class Opportunity
   end
   
   def open_phone_calls
-    phone_calls.select{|pc| pc.statuscode == "Open"} if phone_calls
+    phone_calls.select{|phone_call| phone_call.open? } if phone_calls
   end
   
-  def rollup_status
-    last_activity && !last_activity.cssi_disposition.blank? ? last_activity.cssi_disposition : "Callback"
+  def scheduled_phone_calls
+    phone_calls.select{|phone_call| !phone_call.scheduledend.blank? && phone_call.open? }.date_sort(:scheduledend) if phone_calls
   end
   
   def last_activity
