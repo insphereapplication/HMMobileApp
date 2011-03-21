@@ -7,13 +7,25 @@
 		</div>
 	</div>
 	<div id="contentDiv" data-role="content">
+		<form>
+		<% if @opportunity.appointments.size > 0 %>
 		<div data-role="fieldcontain"> 
 		 	<fieldset data-role="controlgroup"> 
-				<legend>Did you complete any appointments?</legend>  
-				<input type="checkbox" name="checkbox-2a" id="checkbox-2a" /> 
-				<label for="checkbox-2a">List Appts Here...</label> 
+				<legend>Did you complete any appointments?</legend> 
+				<% @opportunity.appointments.each do |appointment| %>
+					<li> 
+						<input type="checkbox" name="<%= appointment.activityid %>" id="<%= appointment.activityid %>" /> 
+						<label for="<%= appointment.activityid %>">
+							<%= "Appt #{to_datetime(appointment.scheduledstart)}" %>
+						</label>
+					</li> 
+				<% end %> 
+
 		    </fieldset> 
-		</div> 		
+		</div> 	
+		<% end %> 
+		</form>
+	
 		<ul data-role="listview" data-inset="true"> 
 			<li data-role="list-divider">Follow-Up</li> 
 			<% ['Left Message','No Answer'].each do |status_detail| %>

@@ -143,6 +143,16 @@ module BrowserHelper
     end
   end
   
+  def to_endtime(input)
+    begin
+      date = (DateTime.strptime(input, '%m/%d/%Y %I:%M:%S %p'))
+      result = date.strftime('%I:%M %p')
+      result
+    rescue
+      puts "Could not parse  value: #{input}"
+    end
+  end
+  
   def to_datetime_noyear(input)
     begin
       date = (DateTime.strptime(input, '%m/%d/%Y %I:%M:%S %p'))

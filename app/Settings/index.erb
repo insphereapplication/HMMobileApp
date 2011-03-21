@@ -21,7 +21,7 @@
 			<% if SyncEngine::logged_in > 0 %>
 			<h3><a href="<%= url_for :action => :logout %>">Logout</a></h3>
 	   		<% else %>
-			<h3><a href="<%= url_for :action => :logout %>">Logout</a></h3>
+			<h3><a href="<%= url_for :action => :login %>">Login</a></h3>
 			<% end %>
 		</li>
 		<li>
