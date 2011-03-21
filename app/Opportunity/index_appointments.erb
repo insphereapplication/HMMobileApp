@@ -19,13 +19,15 @@
 						<% contact = appointment.parent.contact %>
 						<% opportunity = appointment.parent %>
 					
-						<%= render :partial =>"opportunity", :locals => { 
-							:opportunity => opportunity	, 
-							:color => color, 
-							:bottom_right_text => "Created #{opportunity.days_ago}",
-							:top_right_text => to_datetime_noyear(appointment.scheduledstart),
-							:origin => "appointments"
-						} %>
+						<%= render :partial =>"opportunity", 
+							:locals => { 
+								:opportunity => opportunity	, 
+								:color => color, 
+								:bottom_right_text => "Created #{opportunity.days_ago}",
+								:top_right_text => to_datetime_noyear(appointment.scheduledstart),
+								:origin => "appointments"
+							} 
+						%>
 				<% end %>
 				<% if appointments.count == 0 %>
 					<li><div style="text-align:center"><i> (No Opportunities in this Category) </i></div></li>

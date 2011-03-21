@@ -1,11 +1,11 @@
 <div data-role="page" data-theme="b" data-cache="never">
 	<div data-role="header" data-backbtn="false">
-				<%= opp_detail_backbutton(@params['origin']) %>
-				<h3>Opportunity</h3>
-				<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right" style="margin-top:-1px;">
-		        	<a href="<%= url_for(:action=>:show, :id=>@prev_id) %>"  data-icon="arrow-u" data-iconpos="left" data-role="button">&nbsp;</a>
-			       	<a href="<%= url_for(:action=>:show, :id=>@next_id) %>"  data-icon="arrow-d" data-iconpos="right" data-role="button">&nbsp;</a>
-		      </div>
+		<%= opp_detail_backbutton(@params['origin']) %>
+		<h3>Opportunity</h3>
+		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right" style="margin-top:-1px;">
+	       	<a href="<%= url_for(:action=>:show, :id=>@prev_id) %>"  data-icon="arrow-u" data-iconpos="left" data-role="button">&nbsp;</a>
+	       	<a href="<%= url_for(:action=>:show, :id=>@next_id) %>"  data-icon="arrow-d" data-iconpos="right" data-role="button">&nbsp;</a>
+      </div>
 	</div>
 		<div data-role="content"> 
 			<div class="ui-grid-a"> 

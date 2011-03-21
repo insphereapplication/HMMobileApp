@@ -8,13 +8,9 @@ class ContactController < Rho::RhoController
 
   #GET /Contact
   def index
-    # if SyncEngine::logged_in == 0
-    #   redirect :controller => :Settings, :action => :login
-    # end
     @contacts = Contact.find(:all)
     @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.chars.first}
-    render :action => :index,
-            :layout => 'layout_JQM_Lite'
+    render :action => :index, :layout => 'layout_JQM_Lite'
   end
 
   # GET /Contact/{1}
@@ -23,8 +19,7 @@ class ContactController < Rho::RhoController
     if @contact
       @next_id = (@contact.object.to_i + 1).to_s
       @prev_id = (@contact.object.to_i - 1).to_s
-      render :action => :show,
-              :layout => 'layout_jquerymobile'     
+      render :action => :show, :layout => 'layout_jquerymobile'     
     else
       redirect :action => :index
     end
@@ -36,11 +31,6 @@ class ContactController < Rho::RhoController
     else
       "false"
     end
-  end
-  
-  def seed_db_150
-    Contact.seed_db(150)
-    WebView.navigate('/app/Settings?msg=Seeded%20Database%20with%20150%20contacts')
   end
   
   def age(dob)
@@ -102,8 +92,5 @@ class ContactController < Rho::RhoController
         System.open_url('http://maps.google.com/?q=' + address)
       end
   end
-    
-    def map_show_home
-    end
-
+  
 end

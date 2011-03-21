@@ -3,34 +3,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <title>InsiteMobile</title>
-    <meta name="viewport" content="width=device-width; height=device-height; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
-        <link type="text/css" rel="stylesheet" href="/public/jquerymobile/default.css" />
-        <link type="text/css" rel="stylesheet" href="/public/jquerymobile/insphere.css" />
-        <!-- <script src="/public/jquerymobile/jquery-1.4.4.min.js" type="text/javascript"></script>
-        <script src="/public/jquerymobile/jquery-mobile.js" type="text/javascript"></script> -->
-		<style>
-		ul li a {
-			  display: block;
-			  padding: 1px 5px;
-			  text-decoration: none;
-			}
-		</style>
-		<script language="javascript"> 
-		function toggle(showHideDiv) {
-			var ele = document.getElementById(showHideDiv);
-			if(ele.style.display == "block") {
-		    		ele.style.display = "none";
-		  	}
-			else {
-				ele.style.display = "block";
-			}
-		} 
-		</script>
-		
+	<title>InsiteMobile</title>
+	<meta name="viewport" content="width=device-width; height=device-height; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+	<link type="text/css" rel="stylesheet" href="/public/jquerymobile/default.css" />
+	<link type="text/css" rel="stylesheet" href="/public/jquerymobile/insphere.css" />
+	<script src="/public/js/application.js"/>
 </head>
 
-<body>
+<body 
+	<% if @working %>
+		onLoad="showSpin(null)"
+	<% end %>		
+>
     <%= @content %>
 </body>
 
