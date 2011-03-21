@@ -2,8 +2,6 @@ require 'time'
 require 'date'
 
 class Opportunity
-
-  
   include Rhom::PropertyBag
 
   enable :sync
