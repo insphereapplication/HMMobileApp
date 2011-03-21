@@ -34,9 +34,15 @@
 
 			<ul data-role="listview" data-filter="false" data-inset="true"> 
 				<li data-role="list-divider">Appointments</li> 
-				<li> 
-					~Appointments Roll-up
-				</li> 
+				<% @opportunity.appointments.each do |appointment| %>
+					<li> 
+						<strong> <%= "#{to_datetime(appointment.scheduledstart)} - #{to_endtime(appointment.scheduledend)}" %> </strong>
+								 <%= appointment.location %>
+					</li> 
+				<% end %>
+				<% if @opportunity.appointments.size == 0 %>
+					<li><div style="text-align:center"><i> (No Appointments) </i></div></li>
+				<% end %>
 			</ul>			
 			<a href="<%= url_for(:action => :activity_summary, :id => @opportunity.object) %>" data-role="button" data-icon="arrow-r" rel="external" data-iconpos="right">Activity Summary</a> 
 		</div>

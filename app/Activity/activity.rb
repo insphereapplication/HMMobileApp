@@ -83,4 +83,5 @@ class Appointment < Activity
   def self.todays_appointments
     open_appointments.select_all_occurring_today(:scheduledend)
   end
+  
 end

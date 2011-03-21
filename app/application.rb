@@ -18,10 +18,20 @@ class AppApplication < Rho::RhoApplication
                     ]
     # Important to call super _after_ you define @tabs!
     super
+
+    
+    if SyncEngine::logged_in == 1
+      render :action => :index
+      SyncEngine.dosync
+    else
+      render :action => :login
+    end
+    
     System.set_push_notification("/app/Settings/push_notify", '')
+
   end
   
-  # wipe the database and force a resync if a different user logs in
+  #wipe the database and force a resync if a different user logs in
   def on_sync_user_changed
     super
     Rhom::Rhom.database_local_reset

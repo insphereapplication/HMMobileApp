@@ -1,0 +1,48 @@
+<div data-role="page" data-theme="b" data-cache="never">
+	<div data-role="header" data-nobackbtn="true">
+		<h1>Settings</h1>
+	</div>
+	
+	<div id="contentDiv" data-role="content">
+	 <ul data-role="listview" data-inset="true">
+		<% if @msg %>
+	        <li style="color: red; text-align: center"><%= @msg %></li>
+	    <% end %>
+	   <li>
+	      <div class="itemLabel">
+	        <span class="title">Client ID:</span>
+	      </div>
+	      <div class="itemValue">
+	        <span class="clientID"><%= Rhom::Rhom::client_id %></span>
+	      </div>
+	    </li>
+		<li>
+			<img src="/public/images/login-key.png" class="ui-li-icon" style="margin-top:8px">
+			<% if SyncEngine::logged_in > 0 %>
+			<h3><a href="<%= url_for :action => :logout %>">Logout</a></h3>
+	   		<% else %>
+			<h3><a href="<%= url_for :action => :login %>">Login</a></h3>
+			<% end %>
+		</li>
+		<li>
+			<img src="/public/images/faq_small.png" class="ui-li-icon" style="margin-top:8px">
+			<h3><a href="#">FAQ</a></h3>
+		</li>
+		<li>
+			<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
+			<h3><a href="#">About</a></h3>
+		</li>
+		<li>
+			<img src="/public/images/phone_small.png" class="ui-li-icon" style="margin-top:8px">
+			<h3><a href="tel:2147774757">Call Support</a></h3>
+		</li> 
+		<li>
+			<img src="/public/images/email_icon.jpeg" class="ui-li-icon" style="margin-top:8px">
+			<h3><a href="mailto:kyle.norton@parivedasolutions.com">Email Support</a></h3>
+		</li>
+	    <li><a href="<%= url_for :action => :reset %>">Reset Database</a></li>
+	    <li><a href="<%= url_for :action => :do_sync %>">Perform Sync</a></li>
+
+	  </ul>
+	</div>
+</div>

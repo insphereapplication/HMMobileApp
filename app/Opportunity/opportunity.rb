@@ -138,6 +138,10 @@ class Opportunity
     PhoneCall.find(:all, :conditions => {"parent_type" => "opportunity", "parent_id" => self.opportunityid })
   end
   
+  def appointments
+    Activity.find(:all, :conditions => {"type" => "Appointment", "parent_type" => "opportunity", "parent_id" => self.opportunityid})
+  end
+  
   def most_recent_phone_call
     phone_calls.first
   end
