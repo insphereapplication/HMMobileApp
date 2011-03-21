@@ -20,26 +20,26 @@ class AppApplication < Rho::RhoApplication
     super
 
     
-    # if SyncEngine::logged_in == 1
-    #   render :action => :index
-    #   SyncEngine.dosync
-    # else
-    #   render :action => :login
-    # end
-    # 
-    # System.set_push_notification("/app/Settings/push_notify", '')
+    if SyncEngine::logged_in == 1
+      render :action => :index
+      SyncEngine.dosync
+    else
+      render :action => :login
+    end
+    
+    System.set_push_notification("/app/Settings/push_notify", '')
 
   end
   
-  # #wipe the database and force a resync if a different user logs in
-  # def on_sync_user_changed
-  #   super
-  #   Rhom::Rhom.database_local_reset
-  # end
-  # 
-  # def on_activate_app
-  #   SyncEngine.logout
-  # end 
+  #wipe the database and force a resync if a different user logs in
+  def on_sync_user_changed
+    super
+    Rhom::Rhom.database_local_reset
+  end
+  
+  def on_activate_app
+    SyncEngine.logout
+  end 
   
   
 end
