@@ -54,7 +54,7 @@ class ActivityController < Rho::RhoController
     opportunity.update_attributes(opp_attrs)
     opportunity.record_phone_call_made
     
-    # create the requeseted callback
+    # create the requested callback
     PhoneCall.create({
       :scheduledstart => DateUtil.date_build(@params['callback_datetime']), 
       :subject => "Phone Call - #{opportunity.contact.full_name}",
