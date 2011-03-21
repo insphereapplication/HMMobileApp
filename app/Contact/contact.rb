@@ -4,6 +4,7 @@ class Contact
   include Rhom::PropertyBag
 
   enable :sync
+  set :sync_priority, 2
   #Note: These property names are derived from the field names in Microsoft Dynamics CRM--to prevent mapping issues
   property :firstname, :string
   property :lastname, :string

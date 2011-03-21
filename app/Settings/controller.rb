@@ -17,7 +17,7 @@ class SettingsController < Rho::RhoController
     # if the user has stored successful login credentials, attempt to auto-login with them
     if Settings.has_persisted_credentials?
       SyncEngine.login(Settings.login, Settings.password,  "/app/Settings/login_callback")
-      @working = true
+      @working = true # if @working is true, page will show spinner
     end
     render :action => :login, :back => '/app', :layout => 'layout_jquerymobile'
   end
@@ -25,8 +25,9 @@ class SettingsController < Rho::RhoController
   def login_callback
     errCode = @params['error_code'].to_i
     if errCode == 0
-      SyncEngine.set_notification(
-        -1, url_for(:controller => :Opportunity, :action => :init_notify), 
+      
+      Opportunity.set_notification(
+        url_for(:controller => :Opportunity, :action => :init_notify),
         "sync_complete=true"
       )
    

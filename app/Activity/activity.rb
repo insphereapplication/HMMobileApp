@@ -23,6 +23,7 @@ class Activity
   #   :type=>"PhoneCall"}>
 
   enable :sync
+  set :sync_priority, 1
   
   OPEN_STATE_CODES = ['Open', 'Scheduled']
   
