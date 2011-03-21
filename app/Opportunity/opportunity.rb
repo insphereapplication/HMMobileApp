@@ -77,18 +77,24 @@ class Opportunity
     find(:all).select {|opp| opp.has_activities? && !opp.has_open_activities? }
   end
   
-  def record_phone_call_made
-    phone_call = most_recent_open_or_create_new_phone_call
-    phone_call.update_attributes({
+  def record_phone_call_made_now
+    phone_call_attrs = {
       :scheduledend => Time.now.to_s, 
       :subject => "Phone Call - #{self.contact.full_name}",
       :statecode => 'Completed', 
       :parent_type => 'Opportunity', 
       :parent_id => self.object
-    })
+    }
+    
+    if phone_call = most_recent_open_phone_call   
+      phone_call.update_attributes(phone_call_attrs)
+    else
+      phone_call = PhoneCall.create(phone_call_attrs)
+    end
+    
   end
   
-  def complete_open_call
+  def complete_most_recent_open_call
     if most_recent_open_phone_call
       record_phone_call_made
     end
@@ -131,7 +137,7 @@ class Opportunity
   end
   
   def phone_calls
-    Activity.find(:all, :conditions => {"type" => "PhoneCall", "parent_type" => "opportunity", "parent_id" => self.opportunityid })
+    PhoneCall.find(:all, :conditions => {"parent_type" => "opportunity", "parent_id" => self.opportunityid })
   end
   
   def most_recent_phone_call
@@ -168,7 +174,7 @@ class Opportunity
   end
   
   def is_high_cost
-    if(cssi_leadcost != nil && cssi_leadcost != "")
+    unless cssi_leadcost.blank?
       if Rho::RhoConfig.exists?('lead_cost_threshold')
         cssi_leadcost.to_f > Rho::RhoConfig.lead_cost_threshold
       end

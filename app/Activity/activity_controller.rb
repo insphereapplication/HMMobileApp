@@ -60,7 +60,8 @@ class ActivityController < Rho::RhoController
       :subject => "Phone Call - #{opportunity.contact.full_name}",
       :phone_number => @params['phone_number'],
       :parent_type => 'Opportunity', 
-      :parent_id => opportunity.object
+      :parent_id => opportunity.object,
+      :statuscode => 'Open'
     })
     finished_update_status(opportunity, @params['origin'])
   end

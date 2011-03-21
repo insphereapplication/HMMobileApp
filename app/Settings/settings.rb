@@ -14,11 +14,11 @@ class Settings
     end
     
     def login
-      instance.login
+      instance.login || ''
     end
     
     def password
-      instance.password
+      instance.password || ''
     end
     
     def login=(login)

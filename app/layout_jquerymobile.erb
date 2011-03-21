@@ -8,65 +8,19 @@
         <link type="text/css" rel="stylesheet" href="/public/jquerymobile/default.css" />
         <link type="text/css" rel="stylesheet" href="/public/jquerymobile/insphere.css" />
 		<link rel="stylesheet" href="/public/jquerymobile/jquery.ui.datepicker.mobile.css" /> 
-        <script src="/public/jquerymobile/jquery-1.4.4.min.js" type="text/javascript"></script>
-        <script src="/public/jquerymobile/jquery-mobile.js" type="text/javascript"></script>
-		<script src="/public/jquerymobile/jQuery.ui.datepicker.js"></script>
-		<script src="/public/jquerymobile/jquery.ui.datepicker.mobile.js"></script>
-		<script language="javascript"> 
-		function toggle(showHideDiv) {
-			var ele = document.getElementById(showHideDiv);
-			if(ele.style.display == "block") {
-		    		ele.style.display = "none";
-		  	}
-			else {
-				ele.style.display = "block";
-			}
-		} 
-		
-		//dynamically populate phone numbers from dropdowns
-		function populatePhone(dropdown)
-		{
-		    for (var i=0; i<dropdown.options.length; i++){
-		      if (dropdown.options[i].selected==true){
-		        selected = dropdown.options[i].value;
-		        break;
-		      }
-		    }
-			document.getElementById("phoneNumber").value=selected;
-		    return true;
-		}
-		
-		function populateAddress(dropdown)
-		{
-		    for (var i=0; i<dropdown.options.length; i++){
-		      if (dropdown.options[i].selected==true){
-		        selected = dropdown.options[i].value;
-		        break;
-		      }
-		    }
-			document.getElementById("[appointment]location").value=selected;
-		    return true;
-		}
-		
-		//reset type=date inputs to text
-		$( document ).bind( "mobileinit", function(){
-			$.mobile.page.prototype.options.degradeInputs.date = true;
-		});
-
-		function setFieldValue(field, value) {
-		  document.getElementById(field).value=value;
-		}
-
-		function popupDateTimeAJPicker(flag, title, field_key) {
-		  $.get('/app/Opportunity/popup', { flag: flag, title: title, field_key: field_key });
-		  return false;
-		}
-		
-		</script>
+        <script src="/public/jquerymobile/jquery-1.4.4.min.js" type="text/javascript"/>
+        <script src="/public/jquerymobile/jquery-mobile.js" type="text/javascript"/>
+		<script src="/public/jquerymobile/jQuery.ui.datepicker.js"/>
+		<script src="/public/jquerymobile/jquery.ui.datepicker.mobile.js"/>
+		<script src="/public/js/application.js"/>
 
 </head>
 
-<body>
+<body 
+	<% if @working %>
+		onLoad="showSpin(null)"
+	<% end %>		
+>
     <%= @content %>
 </body>
 

@@ -31,15 +31,5 @@
 			<li data-role="list-divider">Won</li> 
 			<li><%= udpate_status_won_link(@opportunity)%></li> 
 		</ul>
-		<script>
-			function showSpin(){
-				$.mobile.pageSaving();
-				setTimeout("hideSpin()",5000);
-			}
-			function hideSpin(){
-				$.mobile.pageSaving(true);
-				return true;
-			}
-		</script>
 	</div>
 </div>

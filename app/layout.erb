@@ -44,9 +44,14 @@
             type="text/css" rel="stylesheet"/>
     <% end %>
 -->
+
 </head>
 
-<body>
+<body 
+	<% if @working %>
+		onLoad="showSpin(null)"
+	<% end %>		
+>
     <%= @content %>
 </body>
 

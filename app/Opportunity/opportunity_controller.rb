@@ -9,15 +9,20 @@ class OpportunityController < Rho::RhoController
   $saved = nil
   $choosed = {}
 
+  def init_notify
+    WebView.navigate ( url_for :controller => :Opportunity, :action => :index )
+  end
+  
   #GET /Opportunity
   def index
-    # if SyncEngine::logged_in == 0
-    #   redirect :controller => :Settings, :action => :login
-    # end
-    @todays_new_leads = Opportunity.todays_new_leads
-    @previous_days_leads = Opportunity.previous_days_leads
-    Opportunity.clear_cache
-    render :action => :index, :layout => 'layout_JQM_Lite'
+    if SyncEngine::logged_in == 1
+      @todays_new_leads = Opportunity.todays_new_leads
+      @previous_days_leads = Opportunity.previous_days_leads
+      Opportunity.clear_cache
+      render :action => :index, :layout => 'layout_JQM_Lite'
+    else
+      redirect :controller => Settings, :action => :login, :layout => 'layout_JQM_Lite'
+    end
   end
   
   def index_follow_up
@@ -25,7 +30,7 @@ class OpportunityController < Rho::RhoController
     @past_due_follow_ups = Opportunity.past_due_follow_ups
     @future_follow_ups = Opportunity.future_follow_ups
     @last_activities = Opportunity.last_activities
-    #all_opps = [@todays_follow_ups | @past_due_follow_ups].map{|opp| opp.object }
+    
     Opportunity.clear_cache
     render :action => :index_follow_up, :layout => 'layout_JQM_Lite'
   end
