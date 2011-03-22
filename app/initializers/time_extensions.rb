@@ -1,6 +1,6 @@
 
 class Time
   def to_formatted_string
-    strftime("%m/%d/%y %I:%M %p")
+    strftime(DateUtil::DEFAULT_TIME_FORMAT)
   end
 end

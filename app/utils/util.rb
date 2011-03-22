@@ -6,8 +6,8 @@ module DateUtil
     def days_ago(past_date)
       begin
         (Date.today - Date.strptime(past_date, DEFAULT_TIME_FORMAT)).to_i
-      rescue
-        puts "Unable to parse date: #{past_date}; no age returned"
+      rescue Exception => e
+        puts "Unable to parse days_ago: #{past_date}: #{e}"
       end
     end
     
@@ -25,8 +25,8 @@ module DateUtil
     def days_from_now(future_date)
       begin
         (Date.strptime(future_date, DEFAULT_TIME_FORMAT) - Date.today).to_i
-      rescue
-        puts "Unable to parse date: #{}; no age returned"
+      rescue Exception => e
+        puts "Unable to process days_from_now: #{future_date}: #{e}"
       end
     end
   
@@ -35,10 +35,10 @@ module DateUtil
         if  (Date.today - Date.strptime(past_date, DEFAULT_TIME_FORMAT)).to_i == 0
           return "Today"
         else
-          ((Date.today - Date.strptime(past_date, DEFAULT_TIME_FORMAT)).to_i + "d")
+          "#{(Date.today - Date.strptime(past_date, DEFAULT_TIME_FORMAT)).to_i} d"
         end
-      rescue
-        puts "Unable to parse date: #{past_date}; no age returned"
+      rescue Exception => e
+        puts "Unable to parse days_ago_formatted: #{past_date}: #{e}"
       end
     end
   end
