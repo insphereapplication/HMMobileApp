@@ -39,7 +39,7 @@ class ActivityController < Rho::RhoController
       opportunity.merge!({:statuscode => 'No Contact Made'})
     end
     opportunity.update_attributes(opp_attrs)
-    opportunity.record_phone_call_made
+    opportunity.record_phone_call_made_now
     finished_update_status(opportunity, @params['origin'])
   end
   
@@ -52,7 +52,7 @@ class ActivityController < Rho::RhoController
     end
     
     opportunity.update_attributes(opp_attrs)
-    opportunity.record_phone_call_made
+    opportunity.record_phone_call_made_now
     
     # create the requested callback
     PhoneCall.create({
