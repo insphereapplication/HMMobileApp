@@ -23,6 +23,7 @@ class OpportunityController < Rho::RhoController
     if SyncEngine::logged_in == 1
       @todays_new_leads = Opportunity.todays_new_leads
       @previous_days_leads = Opportunity.previous_days_leads
+      $opportunity_nav_context = [@todays_new_leads,@previous_days_leads].flatten.map{|opportunity| opportunity.object }
       Opportunity.clear_cache
       render :action => :index, :layout => 'layout_JQM_Lite'
     else
@@ -36,6 +37,14 @@ class OpportunityController < Rho::RhoController
     @future_follow_ups = Opportunity.future_follow_ups
     @last_activities = Opportunity.last_activities
     
+    $opportunity_nav_context = [
+      @todays_follow_ups, 
+      @past_due_follow_ups, 
+      @future_follow_ups
+    ].flatten.map{|phone_call| phone_call.opportunity.object }
+    
+    $opportunity_nav_context.concat(@last_activities.map{|opp| opp.object})
+    
     Opportunity.clear_cache
     render :action => :index_follow_up, :layout => 'layout_JQM_Lite'
   end
@@ -44,6 +53,12 @@ class OpportunityController < Rho::RhoController
     @past_due_appointments = Appointment.past_due_appointments
     @todays_appointments = Appointment.todays_appointments
     @future_appointments = Appointment.future_appointments
+    
+    $opportunity_nav_context = [
+      @past_due_appointments,
+      @todays_appointments,
+      @future_appointments].flatten.map{|appointment| appointment.opportunity.object }
+    
     Appointment.clear_cache
     render :action => :index_appointments, :layout => 'layout_JQM_Lite'
   end
@@ -53,13 +68,32 @@ class OpportunityController < Rho::RhoController
     @notes = 3.times.map { Note.create({:createdon => "3/22/2011", :notetext => "this is a test note!"})}
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
-      @next_id = (@opportunity.object.to_i + 1).to_s
-      @prev_id = (@opportunity.object.to_i - 1).to_s
       @contact = @opportunity.contact
-      render :action => :show,
-              :layout => 'layout_jquerymobile'
+      render :action => :show, :layout => 'layout_jquerymobile'
     else
       redirect :action => :index
+    end
+  end
+  
+  def show_previous
+    show_opportunity_from_nav('previous!')
+  end
+  
+  def show_next
+    show_opportunity_from_nav('next!')
+  end
+  
+  def show_opportunity_from_nav(direction)
+    if $opportunity_nav_context.blank?
+      opp_id = @params['id']
+    else
+      opp_id = $opportunity_nav_context.send(direction)
+    end
+    
+    @opportunity = Opportunity.find(opp_id)
+    if @opportunity
+      @contact = @opportunity.contact
+      render :action => :show, :layout => 'layout_jquerymobile', :origin => @params['origin']
     end
   end
   

@@ -20,6 +20,9 @@ class AppApplication < Rho::RhoApplication
     # Important to call super _after_ you define @tabs!
     super
     System.set_push_notification("/app/Settings/push_notify", '')
+
+    $opportunity_nav_context = []
+
   end
   
   #wipe the database and force a resync if a different user logs in

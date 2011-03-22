@@ -75,7 +75,7 @@ class ActivityController < Rho::RhoController
       opp_attrs.merge!({:statuscode => 'Appointment Set'})
     end
     
-    opp.complete_open_call 
+    opp.complete_most_recent_open_call 
     opp.update_attributes(opp_attrs)
     
     # create the requested appointment
