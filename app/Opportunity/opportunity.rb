@@ -43,6 +43,19 @@ class Opportunity
     }
   end
   
+  # TODO: fix this and use for better performance
+  def self.open_conditions
+    [{
+      :conditions => { 
+        {
+          :name => 'statecode', 
+          :op => '!='
+        } => 'Won'
+      }   
+    }]
+    
+  end
+  
   # clear out all class-level cache objects
   def self.clear_cache
     CACHED.each {|cache| cache = nil }
@@ -53,11 +66,15 @@ class Opportunity
   end
   
   def self.new_leads
-    find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities? || opp.closed?}.compact.date_sort(:createdon)
+    find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities?}.compact.date_sort(:createdon)
   end 
+  
+  def self.open_opportunities
+    find(:all).reject{|opp| opp.closed? }
+  end
 
   def self.follow_up_phone_calls
-    find(:all).map { |opportunity| opportunity.scheduled_phone_calls.first }.compact.date_sort(:scheduledend) 
+    open_opportunities.map { |opportunity| opp = opportunity.scheduled_phone_calls.first }.compact.date_sort(:scheduledend) 
   end
   
   def self.todays_follow_ups
@@ -85,29 +102,31 @@ class Opportunity
   end
   
   def self.last_activities
-    find(:all).select {|opp| opp.has_activities? && !opp.has_scheduled_activities? }
+    open_opportunities.select {|opp| opp.has_activities? && !opp.has_scheduled_activities? }
   end
   
   def record_phone_call_made_now
     phone_call_attrs = {
-      :scheduledend => Time.now.to_s, 
+      :scheduledend => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT), 
       :subject => "Phone Call - #{self.contact.full_name}",
-      :statecode => 'Completed', 
-      :parent_type => 'Opportunity', 
-      :parent_id => self.object
+      :statecode => 'Completed'
     }
     
     if phone_call = most_recent_open_phone_call   
       phone_call.update_attributes(phone_call_attrs)
     else
-      phone_call = PhoneCall.create(phone_call_attrs)
+      phone_call = PhoneCall.create(phone_call_attrs.merge({
+        :parent_type => 'Opportunity', 
+        :parent_id => self.object
+        })
+      )
     end
     
   end
   
   def complete_most_recent_open_call
     if most_recent_open_phone_call
-      record_phone_call_made
+      record_phone_call_made_now
     end
   end
   
