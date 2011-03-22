@@ -21,6 +21,7 @@ class AppApplication < Rho::RhoApplication
     super
     
     System.set_push_notification("/app/Settings/push_notify", '')
+    $opportunity_nav_context = []
 
   end
   
