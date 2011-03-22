@@ -37,7 +37,7 @@ class Opportunity
   def contact
     Contact.find(self.contact_id)
   end
-  
+
   def self.new_leads
     find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities? || opp.closed?}.compact#.date_sort(:createdon)
   end 

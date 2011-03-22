@@ -13,7 +13,7 @@
 					<li>
 							<h3><%= @contact.full_name %></h3>
 							<p><%= @contact.gendercode %>, Age <%= (@contact.age).to_s %> </p>
-							<p>DOB: <%= @contact.birthdate %></p>	
+							<p>DOB: <%= to_date(@contact.birthdate) %></p>	
 					</li> 
 					<li data-icon="<%= check_preferred("Mobile", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.mobilephone.to_s %>"> Mobile: <%= @contact.mobilephone %></a></li>
 					<li data-icon="<%= check_preferred("Business", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone1.to_s %>">Bus: <%= @contact.telephone1 %></a>
@@ -23,43 +23,37 @@
 					</li>
 					<li data-icon="<%= check_preferred("Home", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone2.to_s %>">Home: <%= @contact.telephone2 %></a></li>
 					<li data-icon="<%= check_preferred("Alternate", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone3.to_s %>">Alternate: <%= @contact.telephone3 %></a></li>
-					<li data-icon="false"><a href="mailto:<%= @contact.emailaddress1.to_s %>"><%= @contact.emailaddress1.to_s %></a></li>
-					<li data-role="list-divider">Business Address</li>
-					<li data-icon="false">
-						<a rel="external" href="<%= url_for(:action => :map_show_business, :id => @contact.object)%>">
-							<%= @contact.address2_line1 %> <br/>
-							<%= @contact.address2_line2 %><br/>
-							<%= "#{@contact.address2_city}, #{@contact.cssi_state2id} #{@contact.address2_postalcode}" %><br/>
-						</a>
-					</li>
+					<li data-icon="false"><a href="mailto:<%= @contact.emailaddress1.to_s %>"><%= "Email: #{@contact.emailaddress1.to_s}" %></a></li>
+					
 					<li data-role="list-divider">Home Address</li>
 					<li data-icon="false">
-						<a href="http://maps.google.com?q= <%= @contact.address1_line1 %> 	<%= @contact.address1_line2 %>  <%= @contact.address1_city %>, <%= @contact.cssi_state1id %>  <%= @contact.address1_postalcode %> ">
+						<a href="<%= url_for(:action => :map, :query => {:address => @contact.home_map}) %>">
 								<%= @contact.address1_line1 %> <br/>
 								<%= @contact.address1_line2 %><br/>
-								<%= "#{@contact.address1_city},  #{@contact.cssi_state1id} #{@contact.address1_postalcode}" %><br/>
+								<%= @contact.home_city %><br/>
+						</a>
+					</li>
+					<li data-role="list-divider">Business Address</li>
+					<li data-icon="false">
+						<a href="<%= url_for(:action => :map, :query => {:address => @contact.business_map})%>" onclick="hideSpin()">
+							<%= @contact.address2_line1 %> <br/>
+							<%= @contact.address2_line2 %><br/>
+							<%= @contact.business_city %><br/>
 						</a>
 					</li>
 				</ul>
 				
-				
-			<!--	<ul data-role="listview" data-filter="false" data-inset="true">
-								<li data-role="list-divider">Notes</li>
-								<li>
-									<p><strong>01/02/2011</strong> - Has 2 kids.  Family needs insurance.</p>
-								</li>
-								<li>
-									<p><strong>01/07/2011</strong> - Likes to be called in the evenings.</p>
-								</li>
-							</ul>
-					 <ul data-role="listview" data-filter="false" data-inset="true">
-									<li data-role="list-divider">Opportunities</li>
-									<li>
-										<h3><a href="opportunity_detail_v2.html"></a></h3>
-										<p><strong>1/15/2011</strong> - Follow-up</p>
-									</li>
-							</ul>
-							<a href="activity_summary.html" data-role="button" data-icon="arrow-r" data-iconpos="right">Activity Summary</a> -->
+				 <ul data-role="listview" data-filter="false" data-inset="true">
+					<li data-role="list-divider">Opportunities</li>
+					<% @contact.opportunities.each do |opportunity| %>
+					<li>
+						<a href="<%= url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {"origin" => "contact"}) %>"> 
+							<strong><%= to_date(opportunity.createdon) %></strong> <TEST> <%= opportunity.rollup_status %>
+						</a>
+					</li>
+					<% end %>
+				 </ul>
+				<a href="activity_summary.html" data-role="button" data-icon="arrow-r" data-iconpos="right">Activity Summary</a> 
 			</div>
 			
 </div>

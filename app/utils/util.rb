@@ -8,6 +8,14 @@ module DateUtil
       end
     end
     
+    def seconds_until_hour(input_time)
+      begin
+        (60 - input_time.min)*60
+      rescue
+        puts "unable to calculate seconds until hour for time #{input_time}"
+      end
+    end
+    
     def date_build(date_string)
       date = (DateTime.strptime(date_string, '%m/%d/%Y %I:%M %p'))
       result = date.strftime('%Y/%m/%d %H:%M')

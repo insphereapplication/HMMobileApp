@@ -75,6 +75,18 @@ class Contact
     end
   end
   
+  def home_city
+    if address1_city
+    "#{address1_city}, #{cssi_state1id} #{address1_postalcode}"
+    end
+  end
+
+  def business_city
+    if address2_city
+      "#{address2_city}, #{cssi_state2id} #{address2_postalcode}"
+    end
+  end
+  
   def age
     begin
       birthday = Date.strptime(birthdate, "%m/%d/%Y")
@@ -112,27 +124,30 @@ class Contact
     end
   end
   
-  
   def opportunities
-    Opportunity.find(
-     :all, 
-     :conditions => [ 
-       "contact_id = #{self.contactid}", 
-       query, 
-       query
-     ], 
-     :select => ['title','description'] 
-    )
+    Opportunity.find(:all, :conditions => {"contact_id" => self.object})
   end
   
   def business_map
     begin
-    result = ""
-    if address2_line1 && address2_city && cssi_state2id
-      result += address2_line1 << "+" << address2_city << "+" << cssi_state2id
-    end
-    rescue
-      puts "Could not generate business map string; Value is #{}"
+      result = ""
+      if address2_line1 && address2_city && cssi_state2id
+        result += address2_line1 << "+" << address2_city << "+" << cssi_state2id
+      end
+      rescue
+        puts "Could not generate business map string; Value is #{}"
     end
   end
+  
+  def home_map
+    begin
+      result = ""
+      if address1_line1 && address1_city && cssi_state1id
+        result += "#{address2_line1}+#{address2_city}+#{cssi_state2id}"
+      end
+      rescue
+        puts "Could not generate business map string; Value is #{}"
+    end
+  end
+  
 end

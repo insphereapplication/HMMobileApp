@@ -20,13 +20,6 @@ class AppApplication < Rho::RhoApplication
     super
 
     
-    if SyncEngine::logged_in == 1
-      render :action => :index
-      SyncEngine.dosync
-    else
-      render :action => :login
-    end
-    
     System.set_push_notification("/app/Settings/push_notify", '')
 
   end

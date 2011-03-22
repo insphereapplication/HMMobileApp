@@ -145,9 +145,9 @@ class OpportunityController < Rho::RhoController
     if ['0', '1', '2'].include?(flag)
       ttt = $choosed[flag]
       if ttt.nil?
-        preset_time = Time.new
+        preset_time = Time.new + 86400 + DateUtil.seconds_until_hour(Time.new)
       else
-        preset_time = Time.strptime(ttt, '%m/%d/%Y %I:%M %p')
+        preset_time = (Time.strptime(ttt, '%m/%d/%Y %I:%M %p')) + 1 
       end
 
       DateTimePicker.choose url_for(:action => :callback), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
