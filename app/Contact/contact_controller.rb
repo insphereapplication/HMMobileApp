@@ -84,11 +84,16 @@ class ContactController < Rho::RhoController
   end
 
   def map
+    WebView.refresh
       if System::get_property('platform') == 'APPLE'
         System.open_url("maps:q=#{@params['address']}")
       else
         System.open_url('http://maps.google.com/?q=' + @params['address'])
       end
+  end
+  
+  def maptest
+      System.open_url("maps:q=5918_capella_park_dr+houston+tx")
   end
   
 end

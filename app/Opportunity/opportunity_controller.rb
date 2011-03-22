@@ -50,6 +50,7 @@ class OpportunityController < Rho::RhoController
   
   # GET /Opportunity/{1}
   def show
+    @notes = 3.times.map { Note.create({:createdon => "3/22/2011", :notetext => "this is a test note!"})}
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
       @next_id = (@opportunity.object.to_i + 1).to_s

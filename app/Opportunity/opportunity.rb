@@ -163,6 +163,10 @@ class Opportunity
     PhoneCall.find(:all, :conditions => opportunity_conditions, :op => 'and')
   end
   
+  def notes
+    Note.find(:all)
+  end
+  
   def most_recent_phone_call
     phone_calls.first
   end

@@ -13,7 +13,8 @@
 					<li>
 							<h3><%= @contact.full_name %></h3>
 							<p><%= @contact.gendercode %>, Age <%= (@contact.age).to_s %> </p>
-							<p>DOB: <%= to_date(@contact.birthdate) %></p>	
+							<p>DOB: <%= to_date(@contact.birthdate) %></p>
+							
 					</li> 
 					<li data-icon="<%= check_preferred("Mobile", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.mobilephone.to_s %>"> Mobile: <%= @contact.mobilephone %></a></li>
 					<li data-icon="<%= check_preferred("Business", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone1.to_s %>">Bus: <%= @contact.telephone1 %></a>
@@ -27,8 +28,8 @@
 					
 					<li data-role="list-divider">Home Address</li>
 					<li data-icon="false">
-						<a href="<%= url_for(:action => :map, :query => {:address => @contact.home_map}) %>">
-								<%= @contact.address1_line1 %> <br/>
+						<a rel="external" href="<%= url_for(:action => :map, :query => {:address => @contact.home_map}) %>">
+								<%= @contact.address1_line1 %>
 								<%= @contact.address1_line2 %><br/>
 								<%= @contact.home_city %><br/>
 						</a>
@@ -36,7 +37,7 @@
 					<li data-role="list-divider">Business Address</li>
 					<li data-icon="false">
 						<a href="<%= url_for(:action => :map, :query => {:address => @contact.business_map})%>" onclick="hideSpin()">
-							<%= @contact.address2_line1 %> <br/>
+							<%= @contact.address2_line1 %>
 							<%= @contact.address2_line2 %><br/>
 							<%= @contact.business_city %><br/>
 						</a>
