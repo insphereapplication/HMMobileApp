@@ -6,7 +6,7 @@ require 'date'
 module Enumerable
   
   # this is necessary because apparently on Rhodes, the default date format is %d/%m/%Y, so we have to explicitly set the normal format
-  DEFAULT_PARSE_FORMAT = "%m/%d/%Y"
+  DEFAULT_PARSE_FORMAT = DateUtil::DEFAULT_TIME_FORMAT
   
   def select_all_before_today(date_method, format=DEFAULT_PARSE_FORMAT)
     select do |item| 
@@ -27,9 +27,7 @@ module Enumerable
   end
   
   def date_sort(date_method, format=DEFAULT_PARSE_FORMAT)
-    sort do |item1, item2| 
-      get_date(item1.send(date_method), format) <=> get_date(item2.send(date_method), format)
-    end
+    sort_by{|item| get_date(item.send(date_method), format)} 
   end
   
   def date_compare(item, date_method, format)

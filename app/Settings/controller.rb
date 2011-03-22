@@ -5,7 +5,6 @@ require 'helpers/browser_helper'
 
 class SettingsController < Rho::RhoController
   include BrowserHelper
-  #layout :layout_jquerymobile
   
   def index
     @msg = @params['msg']
@@ -71,8 +70,7 @@ class SettingsController < Rho::RhoController
     SyncEngine.logout
     Settings.clear_credentials
     @msg = "You have been logged out."
-    render :action => :login,
-            :layout => 'layout_jquerymobile'
+    render :action => :login, :layout => 'layout_jquerymobile'
   end
   
   def reset
@@ -99,9 +97,7 @@ class SettingsController < Rho::RhoController
   def sync_notify
     status = @params['status'] ? @params['status'] : ""
    
-    if status == "complete" or status == "ok"
-       WebView.navigate ( url_for :controller => :Opportunity, :action => :index )
-    elsif status == "error"
+   if status == "error"
       if @params['server_errors'] && @params['server_errors']['create-error']
           SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'].keys(), :delete)
       end

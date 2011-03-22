@@ -15,7 +15,7 @@
 			<ul data-role="listview" data-theme="d" data-inset="true"> 
 				<li>
 					</br>
-					<p class="ui-li-aside"><strong><%= @opportunity.rollup_status %></strong></br></p> 
+					<p class="ui-li-aside"><strong><%= @opportunity.cssi_statusdetail %></strong></br></p> 
 				</li>
 				<li>
 					<h3><a href="<%= url_for(:controller => :Contact, :action => :show, :id => @contact.object, :query =>{:opportunity => @opportunity.object}) %>"><%= @contact.full_name %></a></h3> 

@@ -50,7 +50,7 @@ class Activity
   end
   
   def open?
-    OPEN_STATE_CODES.include?(statecode)
+    OPEN_STATE_CODES.include?(self.statecode)
   end
   
 end
