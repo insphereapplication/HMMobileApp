@@ -15,7 +15,11 @@
 	<script src="/public/js/application.js"/>
 </head>
 
-<body> 		
+-<body 
+-    <% if @working %>
+-        onLoad="showSpin(null)"
+-    <% end %>
+>		
     <%= @content %>
 </body>
 

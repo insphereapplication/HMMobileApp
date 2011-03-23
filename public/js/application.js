@@ -8,11 +8,6 @@ function toggle(showHideDiv) {
 	}
 } 
 
-function showSpin(message){
-	$.mobile.savingMessage = message;
-	$.mobile.pageSaving();
-	setTimeout("hideSpin()",5000);
-}
 function hideSpin(){
 	$.mobile.pageSaving(true);
 	return true;

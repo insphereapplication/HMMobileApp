@@ -25,6 +25,7 @@ class SettingsController < Rho::RhoController
     errCode = @params['error_code'].to_i
     if errCode == 0
       
+      # set initial sync notification for OpportunityController#init_notify, which will redirect WebView to OpportunityController#index
       Opportunity.set_notification(
         url_for(:controller => :Opportunity, :action => :init_notify),
         "sync_complete=true"
@@ -32,7 +33,6 @@ class SettingsController < Rho::RhoController
    
       SyncEngine.dosync
       Rho::NativeTabbar.switch_tab(0) 
-      # WebView.navigate ( url_for :controller => :Opportunity, :action => :index )
     else
       Settings.clear_credentials
 
