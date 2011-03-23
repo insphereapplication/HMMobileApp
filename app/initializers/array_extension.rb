@@ -20,8 +20,9 @@ class Array
     counter_rotate!.first
   end
   
-  def orient(value)
-    while next! != value; end
+  # rotate the list until the first item matches the value
+  def orient!(value)
+    while next! != value; end if include?(value)
   end
 
 end
