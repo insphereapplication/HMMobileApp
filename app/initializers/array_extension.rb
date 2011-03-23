@@ -25,6 +25,7 @@ class Array
   # rotate the list until the first item matches the given value, if that item is in the list
   def orient!(value)
     while next! != value; end if include?(value)
+    self
   end
 
 end
