@@ -13,12 +13,12 @@ class OpportunityController < Rho::RhoController
     WebView.refresh
   end
   
-  # this callback is set once in the login_callback method of the Settings controller
+  # this callback is set once, in the login_callback method of the Settings controller
   def init_notify
     WebView.navigate ( url_for :controller => :Opportunity, :action => :index )
   end
   
-  # since this is the default entry point on startup, check here for login
+  # since this is the default entry point on startup (because we set the native tab control), check here for login
   def index
     if SyncEngine::logged_in == 1
       @todays_new_leads = Opportunity.todays_new_leads
@@ -63,9 +63,9 @@ class OpportunityController < Rho::RhoController
     render :action => :index_appointments, :layout => 'layout_JQM_Lite'
   end
   
-  # GET /Opportunity/{1}
   def show
     @opportunity = Opportunity.find(@params['id'])
+    
     if @opportunity
       @contact = @opportunity.contact
       render :action => :show, :layout => 'layout_jquerymobile'
@@ -139,7 +139,6 @@ class OpportunityController < Rho::RhoController
     end
   end
   
-  # GET /Opportunity/{1}/activity_summary
   def activity_summary
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
