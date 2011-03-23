@@ -13,12 +13,12 @@ class OpportunityController < Rho::RhoController
     WebView.refresh
   end
   
-  # this callback is set once, in the login_callback method of the Settings controller
+  # this callback is set once in the login_callback method of the Settings controller
   def init_notify
     WebView.navigate ( url_for :controller => :Opportunity, :action => :index )
   end
   
-  # since this is the default entry point on startup (because we set the native tab control), check here for login
+  # since this is the default entry point on startup, check here for login
   def index
     if SyncEngine::logged_in == 1
       @todays_new_leads = Opportunity.todays_new_leads
@@ -63,12 +63,11 @@ class OpportunityController < Rho::RhoController
     render :action => :index_appointments, :layout => 'layout_JQM_Lite'
   end
   
+  # GET /Opportunity/{1}
   def show
     @notes = 3.times.map { Note.create({:createdon => "3/22/2011", :notetext => "this is a test note!"})}
     @opportunity = Opportunity.find(@params['id'])
-    
     if @opportunity
-      $opportunity_nav_context.orient!(@opportunity.object)
       @contact = @opportunity.contact
       render :action => :show, :layout => 'layout_jquerymobile'
     else
@@ -85,7 +84,6 @@ class OpportunityController < Rho::RhoController
   end
   
   def show_opportunity_from_nav(direction)
-    @notes = 3.times.map { Note.create({:createdon => "3/22/2011", :notetext => "this is a test note!"})}
     if $opportunity_nav_context.blank?
       opp_id = @params['id']
     else
@@ -94,7 +92,6 @@ class OpportunityController < Rho::RhoController
     
     @opportunity = Opportunity.find(opp_id)
     if @opportunity
-      $opportunity_nav_context.orient!(@opportunity.object)
       @contact = @opportunity.contact
       render :action => :show, :layout => 'layout_jquerymobile', :origin => @params['origin']
     end
@@ -143,8 +140,10 @@ class OpportunityController < Rho::RhoController
     end
   end
   
+  # GET /Opportunity/{1}/activity_summary
   def activity_summary
     @opportunity = Opportunity.find(@params['id'])
+    @activities = @opportunity.activities
     if @opportunity
       render :action => :activity_summary,
               :layout => 'layout_jquerymobile'
