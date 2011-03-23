@@ -2,6 +2,7 @@ require '../../utils/util'
 require '../../initializers/enumerable_extension'
 require 'ap'
 
+# an example class with a method that returns a date string
 class TestDate
   attr_accessor :date_string
   def initialize(date_string)

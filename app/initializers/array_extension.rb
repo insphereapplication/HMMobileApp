@@ -4,12 +4,14 @@ class Array
   
   def rotate! 
     a = reverse!.pop
-    replace reverse.push a
+    replace reverse.push a if a
+    self
   end
   
   def counter_rotate!
      a = pop
-     replace reverse.push(a).reverse
+     replace reverse.push(a).reverse if a
+     self
   end
   
   # rotates the list once and returns the first item 

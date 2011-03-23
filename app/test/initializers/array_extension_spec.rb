@@ -25,4 +25,18 @@ describe Array do
   it "should rotate and return the previous element" do
     @ary.previous!.should == 5
   end
+  
+  it "should handle single object arrays" do
+    [1].rotate!.should == [1]
+    [1].counter_rotate!.should == [1]
+    [1].next!.should == 1
+    [1].previous!.should == 1
+  end
+  
+  it "should handle empty arrays" do
+    [].rotate!.should == []
+    [].counter_rotate!.should == []
+    [].next!.should == nil
+    [].previous!.should == nil
+  end
 end
