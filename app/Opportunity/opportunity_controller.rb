@@ -84,6 +84,7 @@ class OpportunityController < Rho::RhoController
   end
   
   def show_opportunity_from_nav(direction)
+    @notes = 3.times.map { Note.create({:createdon => "3/22/2011", :notetext => "this is a test note!"})}
     if $opportunity_nav_context.blank?
       opp_id = @params['id']
     else
