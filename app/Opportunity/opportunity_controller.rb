@@ -68,6 +68,7 @@ class OpportunityController < Rho::RhoController
     @opportunity = Opportunity.find(@params['id'])
     
     if @opportunity
+      $opportunity_nav_context.orient(@opportunity.object)
       @contact = @opportunity.contact
       render :action => :show, :layout => 'layout_jquerymobile'
     else
@@ -93,6 +94,7 @@ class OpportunityController < Rho::RhoController
     
     @opportunity = Opportunity.find(opp_id)
     if @opportunity
+      $opportunity_nav_context.orient(@opportunity.object)
       @contact = @opportunity.contact
       render :action => :show, :layout => 'layout_jquerymobile', :origin => @params['origin']
     end
