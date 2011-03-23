@@ -8,6 +8,7 @@
 	</div>
 	<div id="contentDiv" data-role="content">
 		<ul data-role="listview" data-filter="false" data-inset="false">
+			<!-- NOTE: May have to make this markup conditional to show appointment status(statuscode) correctly -->
 			<% @activities.each do |activity|%>
 				<li>
 					<h3> <%= activity.type activity.cssi_statusdetail %></h3>
