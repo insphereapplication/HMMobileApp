@@ -8,7 +8,7 @@ class Note
   property :createdon, :string
   property :notetext, :string
   
-  # enable :sync
+  enable :sync
   # set :sync_priority, 2
   
   def parent

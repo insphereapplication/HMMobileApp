@@ -64,10 +64,10 @@ class OpportunityController < Rho::RhoController
   end
   
   def show
-    @notes = 3.times.map { Note.create({:createdon => "3/22/2011", :notetext => "this is a test note!"})}
     @opportunity = Opportunity.find(@params['id'])
     
     if @opportunity
+      @notes = @opportunity.notes
       $opportunity_nav_context.orient!(@opportunity.object)
       @contact = @opportunity.contact
       render :action => :show, :layout => 'layout_jquerymobile'
@@ -85,7 +85,6 @@ class OpportunityController < Rho::RhoController
   end
   
   def show_opportunity_from_nav(direction)
-    @notes = 3.times.map { Note.create({:createdon => "3/22/2011", :notetext => "this is a test note!"})}
     if $opportunity_nav_context.blank?
       opp_id = @params['id']
     else
@@ -94,6 +93,7 @@ class OpportunityController < Rho::RhoController
     
     @opportunity = Opportunity.find(opp_id)
     if @opportunity
+      @notes = @opportunity.notes
       $opportunity_nav_context.orient!(@opportunity.object)
       @contact = @opportunity.contact
       render :action => :show, :layout => 'layout_jquerymobile', :origin => @params['origin']
