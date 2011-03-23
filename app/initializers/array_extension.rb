@@ -1,3 +1,5 @@
+
+# turns an Array into a rotating list. 
 class Array
   
   def rotate! 
@@ -16,6 +18,11 @@ class Array
   
   def previous!
     counter_rotate!.first
+  end
+  
+  # rotate the list until the first item matches the value
+  def orient!(value)
+    while next! != value; end if include?(value)
   end
 
 end

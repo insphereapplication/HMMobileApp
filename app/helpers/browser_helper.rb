@@ -157,8 +157,7 @@ module BrowserHelper
   def to_datetime_noyear(input)
     begin
       date = (DateTime.strptime(input, DateUtil::DEFAULT_TIME_FORMAT))
-      result = date.strftime('%m/%d %I:%M %p')
-      result
+      date.strftime(DateUtil::NO_YEAR_FORMAT).sub(/\A0+/, '')
     rescue
       puts "Could not parse date value: #{input}"
     end

@@ -18,7 +18,8 @@
 			[@todays_follow_ups, 
 				"Today", 
 				"orange", 
-				lambda {|opportunity| "Today: #{to_endtime(opportunity.next_activity_due_date)}" unless opportunity.next_activity_due_date.blank?}],
+				lambda {|opportunity| "Today #{opportunity.next_activity_due_date.hour_string }" unless opportunity.next_activity_due_date.blank?}],
+
 			[@last_activities, 
 				"By Last Activity", 
 				"yellow", 
