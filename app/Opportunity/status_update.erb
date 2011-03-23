@@ -9,17 +9,25 @@
 	<div id="contentDiv" data-role="content">
 		<form>
 		<% if @opportunity.appointments.size > 0 %>
+		<div data-role="fieldcontain"> 
+		 	<fieldset data-role="controlgroup">
 			<legend>Did you complete any appointments?</legend> 
 			<% @opportunity.appointments.each do |appointment| %>
-		<div data-role="fieldcontain"> 
-		 	<fieldset data-role="controlgroup"> 
-						<input type="checkbox" name="appointment.activityid" id="appointment.activityid" class="custom"> </input>
-						<label for="appointment.activityid"> Appt <%= to_datetime(appointment.scheduledstart) %> </label>
-		    </fieldset> 
-		</div> 
-			<% end %> 	
+						<input type="checkbox" name="<%= appointment.object %>" id="<%= appointment.object %>" />
+						<label for="<%= appointment.object %>"> Appt <%= to_datetime(appointment.scheduledstart) %> </label> 
+			<% end %>
+			</fieldset> 
+		</div> 	
 		<% end %> 
+		<input type="textbox" name="appointmentfield" id="appointmentfield" />
 		</form>
+		<script>
+			$("input[type=checkbox][checked]").each( 
+			    function() { 
+			       document.getElementById('appointmentfield').value = "Hello";
+			    } 
+			);
+		</script>
 	<div>
 		<ul data-role="listview" data-inset="true"> 
 			<li data-role="list-divider">Follow-Up</li> 
