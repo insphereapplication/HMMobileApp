@@ -37,6 +37,13 @@ class Contact
       "#{lastname}, #{firstname}"
   end
   
+  def home_street
+    "#{address1_line1}"
+  end
+  
+  def business_street
+    "#{address2_line1}"
+  end  
 #RETURNS A DESCRIPTIVE SUMMARY FOR THE CONTACT
   def age_sex_loc
     asl = ""
@@ -72,6 +79,18 @@ class Contact
       " #{address1_city}, #{cssi_state1id}, #{address1_postalcode}"
     elsif address2_city
       " #{address2_city}, #{cssi_state2id}, #{address2_postalcode}"
+    end
+  end
+  
+  def home_city
+    if address1_city
+    "#{address1_city}, #{cssi_state1id} #{address1_postalcode}"
+    end
+  end
+
+  def business_city
+    if address2_city
+      "#{address2_city}, #{cssi_state2id} #{address2_postalcode}"
     end
   end
   
@@ -112,27 +131,24 @@ class Contact
     end
   end
   
-  
   def opportunities
-    Opportunity.find(
-     :all, 
-     :conditions => [ 
-       "contact_id = #{self.contactid}", 
-       query, 
-       query
-     ], 
-     :select => ['title','description'] 
-    )
+    Opportunity.find(:all, :conditions => {"contact_id" => self.object})
   end
   
   def business_map
     begin
-    result = ""
-    if address2_line1 && address2_city && cssi_state2id
-      result += address2_line1 << "+" << address2_city << "+" << cssi_state2id
-    end
+        return ("#{address2_line1}+#{address2_city}+#{cssi_state2id}").gsub!(" ","_")
     rescue
-      puts "Could not generate business map string; Value is #{}"
+        puts "Could not generate business map string; Value is #{}"
     end
   end
+  
+  def home_map
+    begin
+        return ("#{address1_line1}+#{address1_city}+#{cssi_state1id}").gsub!(" ","_")
+    rescue
+        puts "Could not generate home_map map string; Value is #{}"
+    end
+  end
+  
 end

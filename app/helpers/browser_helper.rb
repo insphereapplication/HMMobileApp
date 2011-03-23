@@ -4,7 +4,7 @@ module BrowserHelper
 
   def udpate_status_no_contact_link(opportunity, status_detail)
     %Q{
-      <a onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :update_status_no_contact, 
+      <a onClick="showSpin('Status Updated')" href="#{ url_for(:controller => :Activity, :action => :update_status_no_contact, 
   				:query => {
   				  :opportunity_id => opportunity.object,
   			    :status_detail => status_detail,
@@ -68,6 +68,8 @@ module BrowserHelper
           %Q{<a href="/app/Opportunity/index_follow_up" data-direction="reverse" rel="external" data-icon="back">Opps</a>}
         when "appointments"
           %Q{<a href="/app/Opportunity/index_appointments" data-direction="reverse" rel="external" data-icon="back">Opps</a>}
+        when "contact"
+           %Q{<a href="/app/Contact" data-direction="reverse" rel="external" data-icon="back">Contacts</a>}
         else
           %Q{<a href="/app/Opportunity/index" data-direction="reverse" rel="external" data-icon="back">Opps</a>}
       end

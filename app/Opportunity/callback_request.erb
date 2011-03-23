@@ -13,7 +13,7 @@
 				<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
 				<div data-role="fieldcontain">
 		            <label for="callback_datetime">Call Back Date and Time:</label>
-					<input id="callback_datetime" type="text" name="callback_datetime" readonly value="<%= $choosed['0'] %>"  onClick="popupDateTimeAJPicker('0', 'Choose Date and Time', 'callback_datetime');"></input>
+					<input id="callback_datetime" type="text" name="callback_datetime" readonly value="<%= $choosed['0'] %>"  onClick="popupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime');"></input>
 				    <label for="phonelist">Phone Type:</label>            
 					<select name="phoneList" id="phoneList" onchange='populatePhone(this.form.phoneList);'>
 						<% @opportunity.contact.phone_numbers.each do |type, number| %>

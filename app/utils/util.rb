@@ -13,6 +13,14 @@ module DateUtil
       end
     end
     
+    def seconds_until_hour(input_time)
+      begin
+        (60 - input_time.min)*60
+      rescue
+        puts "unable to calculate seconds until hour for time #{input_time}"
+      end
+    end
+    
     def date_build(date_string)
       date = (DateTime.strptime(date_string, DATE_PICKER_TIME_FORMAT))
       date.strftime(DEFAULT_TIME_FORMAT)

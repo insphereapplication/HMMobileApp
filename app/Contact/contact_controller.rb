@@ -83,14 +83,17 @@ class ContactController < Rho::RhoController
     redirect :action => :index
   end
 
-  def map_show_business
-      puts "SHOW MAP: #{@params.inspect}"
-      @contact = Contact.find(@params['id'])
+  def map
+    WebView.refresh
       if System::get_property('platform') == 'APPLE'
-        System.open_url("maps:q=#{@contact.address2_line1}+#{@contact.address2_city}+#{@contact.cssi_state2id}")
+        System.open_url("maps:q=#{@params['address']}")
       else
-        System.open_url('http://maps.google.com/?q=' + address)
+        System.open_url('http://maps.google.com/?q=' + @params['address'])
       end
+  end
+  
+  def maptest
+      System.open_url("maps:q=5918_capella_park_dr+houston+tx")
   end
   
 end

@@ -64,7 +64,7 @@ class Opportunity
   def contact
     Contact.find(self.contact_id)
   end
-  
+
   def self.new_leads
     find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities?}.compact.date_sort(:createdon)
   end 
@@ -180,6 +180,10 @@ class Opportunity
   
   def phone_calls
     PhoneCall.find(:all, :conditions => opportunity_conditions, :op => 'and')
+  end
+  
+  def notes
+    Note.find(:all)
   end
   
   def most_recent_phone_call
