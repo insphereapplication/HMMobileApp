@@ -183,7 +183,7 @@ class Opportunity
   end
   
   def notes
-    Note.find(:all)
+    Note.find(:all, :conditions => {"parent_type" => "opportunity", "parent_id" => self.object})
   end
   
   def most_recent_phone_call

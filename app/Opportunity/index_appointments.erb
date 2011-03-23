@@ -25,7 +25,10 @@
 								:color => color, 
 								:bottom_right_text => "Created #{opportunity.days_ago}",
 								:top_right_text => to_datetime_noyear(appointment.scheduledstart),
-								:origin => "appointments"
+								:origin => "appointments",
+								:launcher => :map,
+								:icon => "mapopp",
+								:location => appointment.location
 							} 
 						%>
 				<% end %>

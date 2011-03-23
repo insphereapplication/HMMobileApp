@@ -37,7 +37,10 @@
 							:color => color, 
 							:top_right_text => opportunity.cssi_statusdetail,
 							:bottom_right_text => date_proc.call(opportunity),
-							:origin => "followup"
+							:origin => "followup",
+							:launcher => :phone_dialog,
+							:icon => "phoneopp",
+							:location => "blank"
 						 } 
 					%>
 				<% end %>
