@@ -218,4 +218,13 @@ class OpportunityController < Rho::RhoController
     end_date = date + ((duration.to_f)/60/24)
     end_date 
   end
+  
+  def map
+    WebView.refresh
+      if System::get_property('platform') == 'APPLE'
+        System.open_url("maps:q=#{@params['location']}")
+      else
+        System.open_url('http://maps.google.com/?q=' + @params['address'])
+      end
+  end
 end

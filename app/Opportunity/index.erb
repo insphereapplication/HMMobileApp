@@ -22,7 +22,10 @@
 							:color => color, 
 							:bottom_right_text => "Created #{DateUtil.days_ago_formatted(opportunity.createdon)}",
 							:top_right_text => to_datetime_noyear(opportunity.createdon),
-							:origin => "newleads"
+							:origin => "newleads",
+							:launcher => :phone_dialog,
+							:icon => "phoneopp",
+							:location => "blank"
 						} %>
 					
 					<% end %>
