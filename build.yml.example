@@ -1,0 +1,21 @@
+sdk: "/Library/InsiteRhoMobile/rhodes"
+sdkversion: 2.3.0
+name: InSite 
+version: 1.0
+vendor: rhomobile
+build: debug
+bbver: 4.6
+wmsdk: "Windows Mobile 6 Professional SDK (ARMV4I)"
+applog: rholog.txt
+iphone:
+  configuration: Debug
+  sdk: iphonesimulator4.0
+  #configuration: release
+  #sdk: iphoneos4.2
+  provisionprofile: 40AD3B33-1A3B-4724-9A92-7CA13E07A715
+  codesignidentity: "iPhone Developer: Kyle Norton (6YC5XZZ7BM)"
+  entitlements:
+  BundleIdentifier: com.insphere.insight
+  BundleURLScheme: insight
+
+extensions: ["json", "another-extension", "fileutils", "mspec"]
