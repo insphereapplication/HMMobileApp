@@ -26,6 +26,7 @@ class ActivityController < Rho::RhoController
     opportunity.update_attributes({
       :statecode => 'Lost',
       :statuscode => @params['status_code'],
+      :cssi_statusdetail => 'Lost',
       :competitorid => @params['competitorid'] || ""
     })
     finished_update_status(opportunity, @params['origin'])
@@ -35,7 +36,7 @@ class ActivityController < Rho::RhoController
     opportunity = Opportunity.find(@params['opportunity_id'])
     opp_attrs = {:cssi_statusdetail => @params['status_detail']}
     if opportunity.is_new?
-      opportunity.merge!({:statuscode => 'No Contact Made'})
+      opp_attrs.merge!({:statuscode => 'No Contact Made'})
     end
     opportunity.update_attributes(opp_attrs)
     opportunity.record_phone_call_made_now
