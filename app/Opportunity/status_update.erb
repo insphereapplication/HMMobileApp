@@ -13,21 +13,14 @@
 		 	<fieldset data-role="controlgroup">
 			<legend>Did you complete any appointments?</legend> 
 			<% @opportunity.appointments.each do |appointment| %>
-						<input type="checkbox" name="<%= appointment.object %>" id="<%= appointment.object %>" />
-						<label for="<%= appointment.object %>"> Appt <%= to_datetime(appointment.scheduledstart) %> </label> 
+				<input type="checkbox" name="<%= appointment.object %>" class="custom" id="<%= appointment.object %>" value="<%= appointment.object %>" />
+				<label for="<%= appointment.object %>"> Appt <%= to_datetime(appointment.scheduledstart) %> </label> 
 			<% end %>
 			</fieldset> 
 		</div> 	
 		<% end %> 
 		<input type="textbox" name="appointmentfield" id="appointmentfield" />
 		</form>
-		<script>
-			$("input[type=checkbox][checked]").each( 
-			    function() { 
-			       document.getElementById('appointmentfield').value = "Hello";
-			    } 
-			);
-		</script>
 	<div>
 		<ul data-role="listview" data-inset="true"> 
 			<li data-role="list-divider">Follow-Up</li> 

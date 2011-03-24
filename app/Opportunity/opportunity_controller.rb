@@ -167,15 +167,18 @@ class OpportunityController < Rho::RhoController
   def call_number
     puts "Calling number " + @params['phone_number']
     telephone = @params['phone_number']
-    puts "phone number is " + @params['phone_number']
     telephone.gsub!(/[^0-9]/, "")
-    if @params['opportunity']
-      redirect :action => :show,
-                :id => @params['opportunity'],
-                :query =>{:origin => @params['origin']}
-    else
-    redirect :action => :index
-  end
+    #redirect to opportunity detail page before launching call
+  #   if @params['opportunity']
+  #     redirect :action => :show,
+  #               :id => @params['opportunity'],
+  #               :query =>{:origin => @params['origin']}
+  #   else
+  #   redirect :action => :index
+  # end
+  redirect :action => :phone_dialog,
+            :id => @params['opportunity'],
+            :query =>{:origin => @params['origin']}
     System.open_url('tel:' + telephone)
   end
 
@@ -183,12 +186,7 @@ class OpportunityController < Rho::RhoController
     flag = @params['flag']
     if ['0', '1', '2'].include?(flag)
       ttt = $choosed[flag]
-      if ttt.nil?
         preset_time = Time.new + 86400 + DateUtil.seconds_until_hour(Time.new)
-      else
-        preset_time = (Time.strptime(ttt, '%m/%d/%Y %I:%M %p')) + 1 
-      end
-
       DateTimePicker.choose url_for(:action => :callback), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
     end
   end

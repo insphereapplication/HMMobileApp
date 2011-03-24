@@ -1,9 +1,16 @@
 $(document).ready(function() {
    	$('.UpdateStatus').click(function() {
-   	  	var values = $('input:checkbox:checked.custom').reduce(function(sum, appointment){
-			sum['appointments[]'] = appointment.value;
+
+   	  	var apptids = $('input:checkbox:checked.custom').map(function(){
+			return this.value
 		});
-		
-	  $.get($(this).href, values);
+		appts = {};
+		for ( var i=0, len=apptids.length; i<len; ++i ){
+		  appts['appointments[]'] = apptids[i]
+		}
+		// for (var id in apptids){
+		// 	appts['blerg[]'] = id;
+		// }
+	  $.get($(this).href, {'appointments[]' : ["0","1"]});
 	});
  });

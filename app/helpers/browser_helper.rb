@@ -4,11 +4,12 @@ module BrowserHelper
 
   def udpate_status_no_contact_link(opportunity, status_detail)
     %Q{
-      <a onClick="showSpin('Status Updated')" href="#{ url_for(:controller => :Activity, :action => :update_status_no_contact, 
+      <a class="UpdateStatus" onClick="showSpin('Status Updated')" href="#{ url_for(:controller => :Activity, :action => :update_status_no_contact, 
   				:query => {
   				  :opportunity_id => opportunity.object,
   			    :status_detail => status_detail,
-  			    :origin => @params['origin']
+  			    :origin => @params['origin'],
+  			    :appointments => @params['appointments[0]']
   			    }
   			  )
   			}" 
@@ -20,7 +21,7 @@ module BrowserHelper
   
   def udpate_status_won_link(opportunity)
     %Q{
-      <a onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :update_won_status, 
+      <a class="UpdateStatus" onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :update_won_status, 
   				:query => {
   				  :opportunity_id => opportunity.object,
   				  :origin => @params['origin']
@@ -35,7 +36,7 @@ module BrowserHelper
   
   def udpate_status_lost_link(opportunity, text, status_code)
     %Q{
-      <a onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :udpate_lost_status, 
+      <a class="UpdateStatus" onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :udpate_lost_status, 
   				:query => {
   				  :opportunity_id => opportunity.object,
   			    :status_code => status_code,

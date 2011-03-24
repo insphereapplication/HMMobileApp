@@ -47,11 +47,7 @@
 
 </head>
 
-<body 
-	<% if @working %>
-		onLoad="showSpin(null)"
-	<% end %>		
->
+<body <% if @working %> onLoad="showSpin(null)" <% end %>>
     <%= @content %>
 </body>
 
