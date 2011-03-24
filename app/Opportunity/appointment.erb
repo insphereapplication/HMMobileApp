@@ -32,7 +32,7 @@
 						<label for="location" class="fieldLabel">Address:</label>
 			            <input type="text" id="location" name="location" value="<%= @opportunity.contact.default_address %>" /><br />
 						<label for="notetext">Notes:</label>
-						<textarea cols="40" rows="8" name="textarea" id="notetext"></textarea>
+						<textarea cols="40" rows="8" name="notetext" id="notetext"></textarea>
 						<input type="submit" class="standardButton" value="Create Appointment"/>
 						    <% if not $saved.nil? %>
 						      Saved date/time values:<br/>

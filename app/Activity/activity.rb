@@ -27,13 +27,6 @@ class Activity
   
   OPEN_STATE_CODES = ['Open', 'Scheduled']
   
-  # def self.follow_up_activities
-  #     Opportunity.find(:all)
-  #       .map{|opp| opp.open_phone_calls.first }
-  #       .compact
-  #       .sort{|c1, c2| Date.parse(c1.scheduledend) <=> Date.parse(c2.scheduledend) }
-  #   end
-  
   def parent
     if self.parent_type && self.parent_id
       parent = Object.const_get(self.parent_type.capitalize) 

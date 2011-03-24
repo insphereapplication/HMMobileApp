@@ -97,12 +97,8 @@ class Opportunity
     new_leads.select_all_before_today(:createdon).date_sort(:createdon).reverse # reverse to get most recent created at top
   end
   
-  # def self.follow_up_activities
-  #     find(:all).map{|opp| opp.open_phone_calls.first }.compact.date_sort(:scheduledend)
-  #   end
-  
-  def self.last_activities
-    open_opportunities.select {|opp| opp.has_activities? && !opp.has_scheduled_activities? }.date_sort(:last_activity_date)
+  def self.with_unscheduled_activities
+    open_opportunities.select {|opp| puts "$"*80; puts opp.inspect; opp.has_activities? && !opp.has_scheduled_activities? }.date_sort(:cssi_lastactivitydate)
   end
   
   def record_phone_call_made_now
@@ -142,9 +138,10 @@ class Opportunity
     most_recent_phone_call.scheduledend if most_recent_phone_call && most_recent_phone_call.scheduledend 
   end
   
-  def last_activity_date
-    last_activity.scheduledend if last_activity && last_activity.scheduledend 
-  end
+  # def last_activity_date
+  #     # self.cssi_lastactivitydate.blank? ? last_activity.createdon : self.cssi_lastactivitydate
+  #     last_activity.createdon
+  #   end
   
   def most_recent_open_or_create_new_phone_call
     most_recent_open_phone_call || PhoneCall.new

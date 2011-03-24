@@ -26,7 +26,11 @@ module Enumerable
   end
   
   def date_sort(date_method, format=DateUtil::DEFAULT_TIME_FORMAT)
-    sort_by{|item| get_date_time(item.send(date_method), format)} 
+    sort_by{|item| get_date(item.send(date_method), format) } 
+  end
+  
+  def time_sort(date_method, format=DateUtil::DEFAULT_TIME_FORMAT)
+    sort_by{|item| get_date_time( item.send(date_method), format) } 
   end
   
   def date_compare(item, date_method, format)
