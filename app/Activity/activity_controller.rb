@@ -68,6 +68,16 @@ class ActivityController < Rho::RhoController
       :statecode => 'Open',
       :notetext => @params['note']
     })
+    
+    unless @params['notetext'].blank?
+      Note.create({
+        :notetext => @params['notetext'], 
+        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
+        :parent_id => phone_call.object,
+        :parent_type => 'PhoneCall' 
+      })
+    end
+    
     finished_update_status(opportunity, @params['origin'])
   end
   
