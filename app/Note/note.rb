@@ -9,6 +9,10 @@ class Note
   property :notetext, :string
   
   enable :sync
+  
+  belongs_to :parent_id, ['Activity', 'Opportunity']
+  
+  
   # set :sync_priority, 2
   
   def parent
@@ -20,6 +24,10 @@ class Note
   
   def opportunity
     parent if parent && parent_type.downcase == "opportunity"
+  end
+  
+  def phone_call
+    parent if parent && parent_type.downcase == "phonecall"
   end
 
 end
