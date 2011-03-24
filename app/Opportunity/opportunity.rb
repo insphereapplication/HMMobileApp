@@ -74,27 +74,27 @@ class Opportunity
   end
 
   def self.follow_up_phone_calls
-    open_opportunities.map { |opportunity| opp = opportunity.scheduled_phone_calls.first }.compact
+    open_opportunities.map { |opportunity| opportunity.scheduled_phone_calls.first }.compact
   end
   
   def self.todays_follow_ups
-    follow_up_phone_calls.select_all_occurring_today(:scheduledend)
+    follow_up_phone_calls.select_all_occurring_today(:scheduledend).date_sort(:scheduledend)
   end
   
   def self.past_due_follow_ups
-    follow_up_phone_calls.select_all_before_today(:scheduledend)
+    follow_up_phone_calls.select_all_before_today(:scheduledend).date_sort(:scheduledend)
   end
   
   def self.future_follow_ups
-    follow_up_phone_calls.select_all_after_today(:scheduledend)
+    follow_up_phone_calls.select_all_after_today(:scheduledend).date_sort(:scheduledend)
   end
   
   def self.todays_new_leads
-    new_leads.select_all_occurring_today(:createdon).reverse # reverse to get most recent created at top
+    new_leads.select_all_occurring_today(:createdon).date_sort(:createdon).reverse # reverse to get most recent created at top
   end
   
   def self.previous_days_leads
-    new_leads.select_all_before_today(:createdon).reverse # reverse to get most recent created at top
+    new_leads.select_all_before_today(:createdon).date_sort(:createdon).reverse # reverse to get most recent created at top
   end
   
   # def self.follow_up_activities
@@ -102,7 +102,7 @@ class Opportunity
   #   end
   
   def self.last_activities
-    open_opportunities.select {|opp| opp.has_activities? && !opp.has_scheduled_activities? }
+    open_opportunities.select {|opp| opp.has_activities? && !opp.has_scheduled_activities? }.date_sort(:last_activity_date)
   end
   
   def record_phone_call_made_now

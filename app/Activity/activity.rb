@@ -53,6 +53,10 @@ class Activity
     OPEN_STATE_CODES.include?(self.statecode)
   end
   
+  def days_past_due
+    DateUtil.days_ago(self.scheduledend) 
+  end
+  
 end
 
 class PhoneCall < Activity
