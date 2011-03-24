@@ -66,7 +66,7 @@ class Opportunity
   end
 
   def self.new_leads
-    find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities?}.compact.date_sort(:createdon)
+    find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities?}.compact
   end 
   
   def self.open_opportunities
@@ -74,7 +74,7 @@ class Opportunity
   end
 
   def self.follow_up_phone_calls
-    open_opportunities.map { |opportunity| opp = opportunity.scheduled_phone_calls.first }.compact.date_sort(:scheduledend) 
+    open_opportunities.map { |opportunity| opp = opportunity.scheduled_phone_calls.first }.compact
   end
   
   def self.todays_follow_ups
@@ -90,16 +90,16 @@ class Opportunity
   end
   
   def self.todays_new_leads
-    new_leads.select_all_occurring_today(:createdon)
+    new_leads.select_all_occurring_today(:createdon).reverse # reverse to get most recent created at top
   end
   
   def self.previous_days_leads
-    new_leads.select_all_before_today(:createdon)
+    new_leads.select_all_before_today(:createdon).reverse # reverse to get most recent created at top
   end
   
-  def self.follow_up_activities
-    find(:all).map{|opp| opp.open_phone_calls.first }.compact.date_sort(:scheduledend)
-  end
+  # def self.follow_up_activities
+  #     find(:all).map{|opp| opp.open_phone_calls.first }.compact.date_sort(:scheduledend)
+  #   end
   
   def self.last_activities
     open_opportunities.select {|opp| opp.has_activities? && !opp.has_scheduled_activities? }

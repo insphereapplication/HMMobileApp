@@ -10,19 +10,19 @@ module Enumerable
   def select_all_before_today(date_method, format=DateUtil::DEFAULT_TIME_FORMAT)
     select do |item| 
       date_compare(item, date_method, format) { |date| Date.today > date }
-    end
+    end.date_sort(date_method)
   end
   
   def select_all_after_today(date_method, format=DateUtil::DEFAULT_TIME_FORMAT)
     select do |item| 
       date_compare(item, date_method, format) { |date| Date.today < date }
-    end
+    end.date_sort(date_method)
   end
   
   def select_all_occurring_today(date_method, format=DateUtil::DEFAULT_TIME_FORMAT)
     select do |item| 
       date_compare(item, date_method, format) { |date| Date.today == date }
-    end
+    end.date_sort(date_method)
   end
   
   def date_sort(date_method, format=DateUtil::DEFAULT_TIME_FORMAT)
