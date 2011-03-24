@@ -12,7 +12,7 @@ class String
   private
   
   def format_time_string(format_method)
-    self.blank? ? '' : Time.strptime(self, DateUtil::DEFAULT_TIME_FORMAT).hour_string
+    self.blank? ? '' : Time.strptime(self, DateUtil::DEFAULT_TIME_FORMAT).send(format_method)
   rescue 
     self
   end

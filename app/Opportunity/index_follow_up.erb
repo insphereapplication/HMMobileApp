@@ -14,20 +14,21 @@
 		<% [[@past_due_follow_ups, 
 				"Past Due", 
 				"red", 
-				lambda {|opportunity| "Due: -#{opportunity.days_past_due} d" unless opportunity.days_past_due.blank?}],
+				lambda {|phone_call| "Due: -#{phone_call.days_past_due} d" unless phone_call.days_past_due.blank?}],
 			[@todays_follow_ups, 
 				"Today", 
 				"orange", 
-				lambda {|opportunity| "Today #{opportunity.next_activity_due_date.hour_string }" unless opportunity.next_activity_due_date.blank?}],
+				lambda {|phone_call| "Today #{phone_call.scheduledend.hour_string }"}],
 
 			[@last_activities, 
 				"By Last Activity", 
 				"yellow", 
 				lambda {|opportunity| "Last Act: -#{DateUtil.days_ago(opportunity.last_activity_date)}d" unless opportunity.last_activity_date.blank?}],
+				
 			[@future_follow_ups, 
 				"Future", 
 				"green", 
-				lambda {|opportunity| "Due: #{DateUtil.days_from_now(opportunity.next_activity_due_date)}d" unless opportunity.next_activity_due_date.blank?}]].each do |follow_ups, label, color, date_proc| %>
+				lambda {|phone_call| "Due: #{DateUtil.days_from_now(phone_call.scheduledend)}d" }]].each do |follow_ups, label, color, date_proc| %>
 			
 				<li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-<%=color%> ui-btn-up-undefined"><%= label %></li> 
 				<% follow_ups.each do |item| %>
@@ -36,7 +37,7 @@
 							:opportunity => opportunity, 
 							:color => color, 
 							:top_right_text => opportunity.cssi_statusdetail,
-							:bottom_right_text => date_proc.call(opportunity),
+							:bottom_right_text => date_proc.call(item),
 							:origin => "followup",
 							:launcher => :phone_dialog,
 							:icon => "phoneopp",

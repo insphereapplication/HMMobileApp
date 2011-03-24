@@ -23,16 +23,16 @@ class Activity
   #   :type=>"PhoneCall"}>
 
   enable :sync
-  set :sync_priority, 1
+  set :sync_priority, 1 # this needs to be loaded first so that opportunities can know their context
   
   OPEN_STATE_CODES = ['Open', 'Scheduled']
   
-  def self.follow_up_activities
-    Opportunity.find(:all)
-      .map{|opp| opp.open_phone_calls.first }
-      .compact
-      .sort{|c1, c2| Date.parse(c1.scheduledend) <=> Date.parse(c2.scheduledend) }
-  end
+  # def self.follow_up_activities
+  #     Opportunity.find(:all)
+  #       .map{|opp| opp.open_phone_calls.first }
+  #       .compact
+  #       .sort{|c1, c2| Date.parse(c1.scheduledend) <=> Date.parse(c2.scheduledend) }
+  #   end
   
   def parent
     if self.parent_type && self.parent_id
@@ -51,6 +51,10 @@ class Activity
   
   def open?
     OPEN_STATE_CODES.include?(self.statecode)
+  end
+  
+  def days_past_due
+    DateUtil.days_ago(self.scheduledend) 
   end
   
 end

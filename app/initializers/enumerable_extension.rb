@@ -6,28 +6,27 @@ require 'date'
 module Enumerable
   
   # this is necessary because apparently on Rhodes, the default date format is %d/%m/%Y, so we have to explicitly set the normal format
-  DEFAULT_PARSE_FORMAT = DateUtil::DEFAULT_TIME_FORMAT
   
-  def select_all_before_today(date_method, format=DEFAULT_PARSE_FORMAT)
+  def select_all_before_today(date_method, format=DateUtil::DEFAULT_TIME_FORMAT)
     select do |item| 
       date_compare(item, date_method, format) { |date| Date.today > date }
     end
   end
   
-  def select_all_after_today(date_method, format=DEFAULT_PARSE_FORMAT)
+  def select_all_after_today(date_method, format=DateUtil::DEFAULT_TIME_FORMAT)
     select do |item| 
       date_compare(item, date_method, format) { |date| Date.today < date }
     end
   end
   
-  def select_all_occurring_today(date_method, format=DEFAULT_PARSE_FORMAT)
+  def select_all_occurring_today(date_method, format=DateUtil::DEFAULT_TIME_FORMAT)
     select do |item| 
       date_compare(item, date_method, format) { |date| Date.today == date }
     end
   end
   
-  def date_sort(date_method, format=DEFAULT_PARSE_FORMAT)
-    sort_by{|item| get_date(item.send(date_method), format)} 
+  def date_sort(date_method, format=DateUtil::DEFAULT_TIME_FORMAT)
+    sort_by{|item| get_date_time(item.send(date_method), format)} 
   end
   
   def date_compare(item, date_method, format)
@@ -43,6 +42,15 @@ module Enumerable
     return date_value if date_value.kind_of?(Date)
     begin
       Date.strptime(date_value, format)
+    rescue Exception => ex
+      puts "Error parsing Date: #{ex.inspect}"
+    end
+  end
+  
+  def get_date_time(date_value, format)
+    return date_value if date_value.kind_of?(DateTime)
+    begin
+      DateTime.strptime(date_value, format)
     rescue Exception => ex
       puts "Error parsing Date: #{ex.inspect}"
     end
