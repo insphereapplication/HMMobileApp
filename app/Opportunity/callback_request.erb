@@ -29,7 +29,9 @@
 							<option value="&nbsp;">Ad-Hoc</option>
 					</select>
 					<label for="phone_number" class="fieldLabel">Phone Number:</label>
-		            <input type="tel" id="phoneNumber" name="phone_number" value="<%= @opportunity.contact.default_number %>" /><br />
+		            <input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" id="phoneNumber" name="phone_number" value="<%= @opportunity.contact.default_number %>" /><br />
+					<label for="notetext">Notes:</label>
+					<textarea cols="40" rows="8" name="textarea" id="notetext"></textarea>
 					<input type="submit" class="standardButton" value="Create Call Back"/>
 				</div>
 				<% unless System::get_property('platform') == 'Blackberry'%>

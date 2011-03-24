@@ -33,6 +33,9 @@ class ActivityController < Rho::RhoController
   end
   
   def update_status_no_contact
+    puts "$"*80
+    puts @params.inspect
+    puts @params['appointments'].inspect
     opportunity = Opportunity.find(@params['opportunity_id'])
     opp_attrs = {:cssi_statusdetail => @params['status_detail']}
     if opportunity.is_new?
@@ -62,7 +65,8 @@ class ActivityController < Rho::RhoController
       :parent_type => 'Opportunity', 
       :parent_id => opportunity.object,
       :statuscode => 'Open',
-      :statecode => 'Open'
+      :statecode => 'Open',
+      :notetext => @params['note']
     })
     finished_update_status(opportunity, @params['origin'])
   end
@@ -88,7 +92,8 @@ class ActivityController < Rho::RhoController
         :scheduledstart => DateUtil.date_build(@params['appointment_datetime']),
         :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
         :location => @params['location'],
-        :subject => "#{contact.firstname}, #{contact.lastname} - #{opp.createdon}"
+        :subject => "#{contact.firstname}, #{contact.lastname} - #{opp.createdon}",
+        :notetext => @params['notetext']
       }
     )
     finished_update_status(opp, @params['origin'])
