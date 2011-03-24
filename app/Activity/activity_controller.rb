@@ -55,7 +55,7 @@ class ActivityController < Rho::RhoController
     opportunity.record_phone_call_made_now
     
     # create the requested callback
-    PhoneCall.create({
+    phone_call = PhoneCall.create({
       :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
       :subject => "Phone Call - #{opportunity.contact.full_name}",
       :phonenumber => @params['phone_number'],
