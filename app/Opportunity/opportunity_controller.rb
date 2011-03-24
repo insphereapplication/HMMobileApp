@@ -35,7 +35,7 @@ class OpportunityController < Rho::RhoController
     @todays_follow_ups = Opportunity.todays_follow_ups
     @past_due_follow_ups = Opportunity.past_due_follow_ups
     @future_follow_ups = Opportunity.future_follow_ups
-    @last_activities = Opportunity.last_activities
+    @last_activities = Opportunity.with_unscheduled_activities
     
     $opportunity_nav_context = [
       @todays_follow_ups, 

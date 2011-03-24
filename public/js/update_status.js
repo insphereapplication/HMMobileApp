@@ -6,11 +6,9 @@ $(document).ready(function() {
 		});
 		appts = {};
 		for ( var i=0, len=apptids.length; i<len; ++i ){
-		  appts['appointments[]'] = apptids[i]
+		  appts['appointments[' + i + ']'] = apptids[i];
 		}
-		// for (var id in apptids){
-		// 	appts['blerg[]'] = id;
-		// }
-	  $.get($(this).href, {'appointments[]' : ["0","1"]});
+
+	  $.get($(this).href, appts);
 	});
  });
