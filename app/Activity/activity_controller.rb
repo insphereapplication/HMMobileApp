@@ -103,8 +103,7 @@ class ActivityController < Rho::RhoController
         :scheduledstart => DateUtil.date_build(@params['appointment_datetime']),
         :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
         :location => @params['location'],
-        :subject => "#{contact.firstname}, #{contact.lastname} - #{opportunity.createdon}",
-        :notetext => @params['notetext']
+        :subject => "#{contact.firstname}, #{contact.lastname} - #{opportunity.createdon}"
       }
     )
   

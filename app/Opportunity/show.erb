@@ -9,8 +9,8 @@
 		<%= opp_detail_backbutton(@params['origin']) %>
 		<h3>Opportunity</h3>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right" style="margin-top:-1px;">
-	       	<a href="<%= url_for(:action=>:show_previous, :id => @opportunity.object, :query =>{:origin => @params['origin']}) %>"  data-icon="arrow-u" data-transition="slidedown" data-iconpos="left" data-role="button">&nbsp;</a>
-	       	<a href="<%= url_for(:action=>:show_next, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>"  data-icon="arrow-d" data-transition="slideup" data-iconpos="right" data-role="button">&nbsp;</a>
+	       	<a href="<%= url_for(:action=>:show_previous, :id => @opportunity.object, :query =>{:origin => @params['origin']}) %>"  data-icon="arrow-l" data-iconpos="left" data-role="button">&nbsp;</a>
+	       	<a href="<%= url_for(:action=>:show_next, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>"  data-icon="arrow-r" data-iconpos="right" data-role="button">&nbsp;</a>
       </div>
 	</div>
 	<% end %>
@@ -61,8 +61,10 @@
 				<li data-role="list-divider">Appointments</li> 
 				<% @opportunity.appointments.each do |appointment| %>
 					<li> 
-						<strong> <%= "#{to_datetime(appointment.scheduledstart)} - #{to_endtime(appointment.scheduledend)}" %> </strong>
-								 <%= appointment.location %>
+						<a href="<%= url_for(:controller => :Contact, :action => :map, :query => {:address => appointment.location})%>" onclick="hideSpin()">
+						<p> <%= "#{to_datetime(appointment.scheduledstart)} - #{to_endtime(appointment.scheduledend)}" %> </p>
+								 <p><%= appointment.location %></p>
+						</a>
 					</li> 
 				<% end %>
 				<% if @opportunity.appointments.size == 0 %>
