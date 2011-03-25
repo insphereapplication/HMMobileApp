@@ -35,7 +35,7 @@
 			<% [['Not Interested', 'Insurance Not Desired'], ['Wrong Number/Disconnected', 'Wrong Number']].each do |text, status_code| %>
 				<li><%= udpate_status_lost_link(@opportunity, text, status_code) %></li> 
 			<% end %>
-			<li><a href="<%= url_for(:action => :lost_other, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-transition="slide">Other</a></li>
+			<li><a class="UpdateStatus" href="<%= url_for(:action => :lost_other, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-transition="slide">Other</a></li>
 			<li data-role="list-divider">Won</li> 
 			<li><%= udpate_status_won_link(@opportunity)%></li> 
 		</ul>
