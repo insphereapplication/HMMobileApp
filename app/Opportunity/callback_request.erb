@@ -9,7 +9,7 @@
 	</div>
 	<div id="contentDiv" data-role="content">
 		<div class="ui-body ui-body-d">
-			<form name="call_back_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_call_back_requested, :query => {:origin => @params['origin']} %>">
+			<form name="call_back_form" onSubmit="javascript:return validate(this);" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_call_back_requested, :query => {:origin => @params['origin']} %>">
 				<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
 				<input type="hidden" name="appointments[]" value="<%= @params['appointments'].join(',') %>" />
 				<div data-role="fieldcontain">
@@ -40,5 +40,14 @@
 			</form>
 		</div>
 	</div>
+	<script>
+	function validate(form){
 
+		if ((form.elements["callback_datetime"].value.length==0) ||form.elements["callback_datetime"].value==null)) {
+	      	alert('Please choose a callback date and time.')
+			return false;
+	   }
+	   else { return true; }	
+	}
+	</script>
 </div>

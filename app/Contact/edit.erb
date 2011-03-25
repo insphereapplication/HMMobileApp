@@ -1,11 +1,11 @@
 <div data-role="page" data-theme="b">
-	  <form method="post" action="<%= url_for :action => :update %>" name="contact_edit" onsubmit="javascript:return ValidateForm(this)">
+	  <form method="post" id="contact_edit" action="<%= url_for :action => :update %>" name="contact_edit" onSubmit="javascript:return checkEmail(this);">
 	<div data-inline="true">	
 		<div data-role="header" data-backbtn="false" data-theme="b" >
 		
 			<a href="<%=url_for(:action=>:show, :id => @contact.object)%>" data-direction="reverse" data-icon="back">Cancel</a>
 			<h1>Edit</h1>
-			<a href="JAVASCRIPT:contact_edit.submit()" data-direction="reverse" data-icon="gear">Update</a>	
+			<a onClick="checkEmail(contact_edit);" data-direction="reverse" data-icon="gear">Update</a>	
 		</div>
 		
 	<div class="toolbar">
@@ -73,19 +73,19 @@
 				  <div data-role="fieldcontain">
 					<div class="ui-body ui-body-d">
 		            <label for="contact[address1_line1]" class="fieldLabel">Address Line 1:</label>
-		            <input type="text" name="contact[address1_line1]" value="<%= @contact.address1_line1 %>" <%= placeholder( "Home Address Line 1" ) %> />
+		            <input maxlength="200" type="text" name="contact[address1_line1]" value="<%= @contact.address1_line1 %>" <%= placeholder( "Home Address Line 1" ) %> />
 						</div>
 					</div>
 					<div data-role="fieldcontain">
 						<div class="ui-body ui-body-d">
 		            <label for="contact[address1_line2]" class="fieldLabel">Address Line 2:</label>
-		            <input type="text" name="contact[address1_line2]" value="<%= @contact.address1_line2 %>" <%= placeholder( "Home Address Line 2" ) %> />
+		            <input maxlength="255" type="text" name="contact[address1_line2]" value="<%= @contact.address1_line2 %>" <%= placeholder( "Home Address Line 2" ) %> />
 						</div>
 					</div>
 					<div data-role="fieldcontain">
 						<div class="ui-body ui-body-d">
 		            <label for="contact[address1_city]" class="fieldLabel">City:</label>
-		            <input type="text" name="contact[address1_city]" value="<%= @contact.address1_city %>" <%= placeholder( "Home City" ) %> />
+		            <input maxlength="50" type="text" name="contact[address1_city]" value="<%= @contact.address1_city %>" <%= placeholder( "Home City" ) %> />
 						</div>
 					</div>
 					<div data-role="fieldcontain">
@@ -102,7 +102,7 @@
 					<div data-role="fieldcontain">
 						<div class="ui-body ui-body-d">
 		            <label for="contact[address1_postalcode]" class="fieldLabel">ZIP:</label>
-		            <input type="number" name="contact[address1_postalcode]" value="<%= @contact.address1_postalcode %>" <%= placeholder( "Home ZIP" ) %> />
+		            <input maxlength="20"type="number" name="contact[address1_postalcode]" value="<%= @contact.address1_postalcode %>" <%= placeholder( "Home ZIP" ) %> />
 						</div>
 					</div>
 				
@@ -110,19 +110,19 @@
 			  <div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 	            <label for="contact[address2_line1]" class="fieldLabel">Address Line 1:</label> <br/>
-	            <input type="text" name="contact[address2_line1]" value="<%= @contact.address2_line1 %>" <%= placeholder( "Business Address Line 1" ) %>/>
+	            <input maxlength="200" type="text" name="contact[address2_line1]" value="<%= @contact.address2_line1 %>" <%= placeholder( "Business Address Line 1" ) %>/>
 				</div>
 			</div>
 				<div data-role="fieldcontain">
 					<div class="ui-body ui-body-d">
 	            <label for="contact[address2_line2]" class="fieldLabel">Address Line 2:</label>
-	            <input type="text" name="contact[address2_line2]" value="<%= @contact.address2_line1 %>" <%= placeholder( "Business Address Line 2" ) %> />
+	            <input maxlength="200" type="text" name="contact[address2_line2]" value="<%= @contact.address2_line1 %>" <%= placeholder( "Business Address Line 2" ) %> />
 					</div>
 				</div>
 				<div data-role="fieldcontain">
 					<div class="ui-body ui-body-d">
 	            <label for="contact[address2_city]" class="fieldLabel">City:</label>
-	            <input type="text" name="contact[address2_city]" value="<%= @contact.address2_city %>" <%= placeholder( "Business City" ) %> />
+	            <input maxlength="50" type="text" name="contact[address2_city]" value="<%= @contact.address2_city %>" <%= placeholder( "Business City" ) %> />
 					</div>
 				</div>
 				<div data-role="fieldcontain">
@@ -140,15 +140,11 @@
 				<div data-role="fieldcontain">
 					<div class="ui-body ui-body-d">
 	            <label for="contact[address2_postalcode]" class="fieldLabel">ZIP:</label>
-	            <input type="number" name="contact[address2_postalcode]" value="<%= @contact.address2_postalcode %>" <%= placeholder( "Business ZIP" ) %> />
+	            <input maxlength="20" type="number" name="contact[address2_postalcode]" value="<%= @contact.address2_postalcode %>" <%= placeholder( "Business ZIP" ) %> />
 	          		</div>
 				</div>
-			
-
-	  
 	</div>
+	<input type="submit" class="standardButton" value="Update"/>
 </form>
-<script>
 
-</script>
 </div>
