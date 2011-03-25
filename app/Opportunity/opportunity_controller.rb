@@ -3,6 +3,7 @@ require 'helpers/browser_helper'
 require 'helpers/application_helper'
 require 'date'
 require 'time'
+require 'rho/rhotabbar'
 
 class OpportunityController < Rho::RhoController
   include BrowserHelper
@@ -25,10 +26,26 @@ class OpportunityController < Rho::RhoController
       @previous_days_leads = Opportunity.previous_days_leads
       $opportunity_nav_context = [@todays_new_leads,@previous_days_leads].flatten.map{|opportunity| opportunity.object }
       Opportunity.clear_cache
+      #set_tabbar
       render :action => :index, :layout => 'layout_JQM_Lite'
     else
       redirect :controller => Settings, :action => :login, :layout => 'layout_JQM_Lite'
     end
+  end
+  
+  def set_tabbar
+    tabbar = [
+      { :label => "Opps", :action => '/app/Opportunity', 
+        :icon => "/public/images/iphone/tabs/pib_tab_icon.png", :web_bkg_color => 0x7F7F7F }, 
+      { :label => "Contacts",  :action => '/app/Contact',  
+        :icon => "/public/images/iphone/tabs/activities_tab_icon.png" },
+      { :label => "Settings",  :action => '/app/Settings',  
+        :icon => "/public/images/iphone/tabs/settings_tab_icon.png", :reload => true },
+    ]
+    Rho::NativeTabbar.create(tabbar)
+    Rho::NativeTabbar.set_tab_badge( 1, '12')
+    $tabbar_active = true
+    Rho::NativeTabbar.switch_tab(0)
   end
   
   def index_follow_up

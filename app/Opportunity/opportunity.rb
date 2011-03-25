@@ -1,5 +1,6 @@
 require 'time'
 require 'date'
+require 'rho/rhotabbar'
 
 class Opportunity
   include Rhom::PropertyBag

@@ -2,6 +2,7 @@ require 'rho'
 require 'rho/rhocontroller'
 require 'rho/rhoerror'
 require 'helpers/browser_helper'
+require 'rho/rhotabbar'
 
 class SettingsController < Rho::RhoController
   include BrowserHelper
@@ -18,8 +19,10 @@ class SettingsController < Rho::RhoController
       SyncEngine.login(Settings.login, Settings.password,  "/app/Settings/login_callback")
       @working = true # if @working is true, page will show spinner
     end
+    Rho::NativeTabbar.remove
     render :action => :login, :back => '/app', :layout => 'layout_jquerymobile'
   end
+
 
   def login_callback
     errCode = @params['error_code'].to_i
@@ -32,7 +35,8 @@ class SettingsController < Rho::RhoController
       )
    
       SyncEngine.dosync
-      Rho::NativeTabbar.switch_tab(0) 
+      #create tabbar
+      set_tabbar 
     else
       Settings.clear_credentials
 
@@ -43,6 +47,21 @@ class SettingsController < Rho::RhoController
       @msg ||= "The user name or password you entered is not valid"    
       WebView.navigate ( url_for :action => :login, :query => {:msg => @msg} )
     end  
+  end
+  
+  
+  def set_tabbar
+    tabbar = [
+      { :label => "Opps", :action => '/app/Opportunity', 
+        :icon => "/public/images/iphone/tabs/pib_tab_icon.png", :web_bkg_color => 0x7F7F7F }, 
+      { :label => "Contacts",  :action => '/app/Contact',  
+        :icon => "/public/images/iphone/tabs/activities_tab_icon.png" },
+      { :label => "Settings",  :action => '/app/Settings',  
+        :icon => "/public/images/iphone/tabs/settings_tab_icon.png", :reload => true },
+    ]
+    Rho::NativeTabbar.create(tabbar)
+    $tabbar_active = true
+    Rho::NativeTabbar.switch_tab(0)
   end
 
   def do_login
