@@ -19,7 +19,7 @@ class AppApplication < Rho::RhoApplication
               ]
     # Important to call super _after_ you define @tabs!
     super
-    
+
     $opportunity_nav_context = []
 
   end

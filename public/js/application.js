@@ -1,3 +1,12 @@
+
+//status update validate datetime
+function validate(form){
+	if ((form.elements["callback_datetime"].value.length==0) ||form.elements["callback_datetime"].value==null) {
+      	alert('Please choose a callback date and time.');
+		return false;
+   }
+   else { return true; }	
+}
 //phone number formatting
 var zChar = new Array(' ', '(', ')', '-', '.');
 var maxphonelength = 14;

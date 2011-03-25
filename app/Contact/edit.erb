@@ -1,11 +1,13 @@
 <div data-role="page" data-theme="b">
-	  <form method="post" id="contact_edit" action="<%= url_for :action => :update %>" name="contact_edit" onSubmit="javascript:return checkEmail(this);">
+	  <form method="post" id="contact_edit" action="<%= url_for :action => :update %>" name="contact_edit" onSubmit="javascript:return checkEdit(this);">
 	<div data-inline="true">	
 		<div data-role="header" data-backbtn="false" data-theme="b" >
 		
 			<a href="<%=url_for(:action=>:show, :id => @contact.object)%>" data-direction="reverse" data-icon="back">Cancel</a>
 			<h1>Edit</h1>
-			<a onClick="checkEmail(contact_edit);" data-direction="reverse" data-icon="gear">Update</a>	
+			<span class="ui-btn-right">
+			<input type="submit" href="javascript:contact_edit.submit()" onClick="return checkEdit(contact_edit);" data-theme="b" data-direction="reverse" data-icon="gear" value="Update"/>	
+			</span>
 		</div>
 		
 	<div class="toolbar">
@@ -144,7 +146,7 @@
 	          		</div>
 				</div>
 	</div>
-	<input type="submit" class="standardButton" value="Update"/>
+	
 </form>
 
 </div>
