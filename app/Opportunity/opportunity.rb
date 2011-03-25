@@ -6,6 +6,8 @@ class Opportunity
   # include Rhom::FixedSchema
   include Rhom::PropertyBag
   enable :sync
+  
+  set :sync_priority, 1000
 
   property :opportunityid, :string
   property :statecode, :string
