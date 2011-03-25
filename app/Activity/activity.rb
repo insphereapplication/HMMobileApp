@@ -50,6 +50,14 @@ class Activity
     DateUtil.days_ago(self.scheduledend) 
   end
   
+  def activity_type
+    if type == "PhoneCall"
+      "Phone Call"
+    else
+      type
+  end
+end
+  
 end
 
 class PhoneCall < Activity
