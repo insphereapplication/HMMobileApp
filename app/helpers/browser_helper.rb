@@ -8,8 +8,7 @@ module BrowserHelper
   				:query => {
   				  :opportunity_id => opportunity.object,
   			    :status_detail => status_detail,
-  			    :origin => @params['origin'],
-  			    :appointments => @params['appointments[0]']
+  			    :origin => @params['origin']
   			    }
   			  )
   			}" 

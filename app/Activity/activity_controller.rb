@@ -15,11 +15,6 @@ class ActivityController < Rho::RhoController
     finished_update_status(opportunity, @params['origin'])
   end
 
-  def finished_update_status(opportunity, origin)
-    SyncEngine.dosync
-    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
-  end
-
   def udpate_lost_status
     opportunity = Opportunity.find(@params['opportunity_id'])
     opportunity.complete_open_call
@@ -29,10 +24,11 @@ class ActivityController < Rho::RhoController
       :cssi_statusdetail => 'Lost',
       :competitorid => @params['competitorid'] || ""
     })
-    finished_update_status(opportunity, @params['origin'])
+    finished_update_status(opportunity, @params['origin'], @params['appointments'])
   end
   
   def update_status_no_contact
+
     opportunity = Opportunity.find(@params['opportunity_id'])
     
     opp_attrs = {
@@ -43,12 +39,15 @@ class ActivityController < Rho::RhoController
     if opportunity.is_new?
       opp_attrs.merge!({:statuscode => 'No Contact Made'})
     end
+    
     opportunity.update_attributes(opp_attrs)
     opportunity.record_phone_call_made_now
-    finished_update_status(opportunity, @params['origin'])
+    finished_update_status(opportunity, @params['origin'], @params['appointments'])
   end
   
   def update_status_call_back_requested
+    puts "CALLBACK REQUESTED:"
+    puts @params.inspect
     opportunity = Opportunity.find(@params['opportunity_id'])
     opp_attrs = {
       :cssi_statusdetail => 'Call Back Requested',
@@ -61,6 +60,7 @@ class ActivityController < Rho::RhoController
     
     opportunity.update_attributes(opp_attrs)
     opportunity.record_phone_call_made_now
+    opportunity.create_note(@params['notetext'])
     
     # create the requested callback
     phone_call = PhoneCall.create({
@@ -74,9 +74,7 @@ class ActivityController < Rho::RhoController
       :notetext => @params['note']
     })
     
-    create_note(@params['notetext'], opportunity)
-    
-    finished_update_status(opportunity, @params['origin'])
+    finished_update_status(opportunity, @params['origin'], @params['appointments'])
   end
   
   def update_status_appointment_set
@@ -94,6 +92,7 @@ class ActivityController < Rho::RhoController
     
     opportunity.complete_most_recent_open_call 
     opportunity.update_attributes(opp_attrs)
+    opportunity.create_note(@params['notetext'])
     
     # create the requested appointment
     Appointment.create({
@@ -108,28 +107,25 @@ class ActivityController < Rho::RhoController
         :notetext => @params['notetext']
       }
     )
-    
-    create_note(@params['notetext'], opportunity)
-    
-    finished_update_status(opportunity, @params['origin'])
+  
+    finished_update_status(opportunity, @params['origin'], @params['appointments'])
   end
   
   private
   
-  def create_note(note_text, opportunity)
-    unless note_text.blank?
-      Note.create({
-        :notetext => @params['notetext'], 
-        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
-        :parent_id => opportunity.object,
-        :parent_type => 'opportunity' 
-      })
-    end
-  end
-  
-  def finished_update_status(opportunity, origin)
+  def finished_update_status(opportunity, origin, appointmentids=nil)
+    complete_appointments(appointmentids)
     SyncEngine.dosync
     redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
+  end
+  
+  def complete_appointments(appointmentids)
+    if appointmentids
+      appointmentids.each do |id|
+        appointment = Appointment.find(id)
+        appointment.complete if appointment
+      end
+    end
   end
 
 end

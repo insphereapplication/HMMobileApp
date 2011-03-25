@@ -98,7 +98,18 @@ class Opportunity
   end
   
   def self.with_unscheduled_activities
-    open_opportunities.select {|opp| puts "$"*80; puts opp.inspect; opp.has_activities? && !opp.has_scheduled_activities? }.date_sort(:cssi_lastactivitydate)
+    open_opportunities.select {|opp| opp.has_activities? && !opp.has_scheduled_activities? }.date_sort(:cssi_lastactivitydate)
+  end
+  
+  def create_note(note_text)
+    unless note_text.blank?
+      Note.create({
+        :notetext => note_text, 
+        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
+        :parent_id => self.object,
+        :parent_type => 'opportunity' 
+      })
+    end
   end
   
   def record_phone_call_made_now

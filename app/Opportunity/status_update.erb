@@ -9,15 +9,15 @@
 	<div id="contentDiv" data-role="content">
 		<form>
 		<% if @opportunity.appointments.size > 0 %>
-		<div data-role="fieldcontain"> 
-		 	<fieldset data-role="controlgroup">
-			<legend>Did you complete any appointments?</legend> 
-			<% @opportunity.appointments.each do |appointment| %>
-				<input type="checkbox" name="<%= appointment.object %>" class="custom" id="<%= appointment.object %>" value="<%= appointment.object %>" />
-				<label for="<%= appointment.object %>"> Appt <%= to_datetime(appointment.scheduledstart) %> </label> 
-			<% end %>
-			</fieldset> 
-		</div> 	
+			<div data-role="fieldcontain"> 
+			 	<fieldset data-role="controlgroup">
+				<legend>Did you complete any appointments?</legend> 
+				<% @opportunity.appointments.each do |appointment| %>
+					<input type="checkbox" name="<%= appointment.object %>" class="custom" id="<%= appointment.object %>" value="<%= appointment.object %>" />
+					<label for="<%= appointment.object %>"> Appt <%= to_datetime(appointment.scheduledstart) %> </label> 
+				<% end %>
+				</fieldset> 
+			</div> 	
 		<% end %> 
 		<input type="textbox" name="appointmentfield" id="appointmentfield" />
 		</form>
@@ -29,8 +29,8 @@
 					<%= udpate_status_no_contact_link(@opportunity, status_detail) %>
 				</li> 
 			<% end %>
-			<li><a href="<%= url_for(:action => :callback_request, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-transition="slide">Call Back Requested...</a></li>	
-			<li><a href="<%= url_for(:action => :appointment, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-transition="slide">Set Appointment...</a></li>
+			<li><a class="UpdateStatus" href="<%= url_for(:action => :callback_request, :id => @opportunity.object, :query =>{:test => "test", :origin => @params['origin']})%>" data-transition="slide">Call Back Requested...</a></li>	
+			<li><a class="UpdateStatus" href="<%= url_for(:action => :appointment, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-transition="slide">Set Appointment...</a></li>
 			<li data-role="list-divider">Lost</li> 
 			<% [['Not Interested', 'Insurance Not Desired'], ['Wrong Number/Disconnected', 'Wrong Number']].each do |text, status_code| %>
 				<li><%= udpate_status_lost_link(@opportunity, text, status_code) %></li> 
