@@ -5,7 +5,8 @@ require 'date'
 #
 module Enumerable
   
-  # this is necessary because apparently on Rhodes, the default date format is %d/%m/%Y, so we have to explicitly set the normal format
+  # settings a default time formate is necessary because apparently on Rhodes, 
+  # the default date format is %d/%m/%Y, so we have to explicitly set the normal format
   
   def select_all_before_today(date_method, format=DateUtil::DEFAULT_TIME_FORMAT)
     select do |item| 

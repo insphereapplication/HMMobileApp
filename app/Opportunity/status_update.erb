@@ -8,11 +8,11 @@
 	</div>
 	<div id="contentDiv" data-role="content">
 		<form>
-		<% if @opportunity.appointments.size > 0 %>
+		<% if @opportunity.incomplete_appointments.size > 0 %>
 			<div data-role="fieldcontain"> 
 			 	<fieldset data-role="controlgroup">
 				<legend>Did you complete any appointments?</legend> 
-				<% @opportunity.appointments.each do |appointment| %>
+				<% @opportunity.incomplete_appointments.each do |appointment| %>
 					<input type="checkbox" name="<%= appointment.object %>" class="custom" id="<%= appointment.object %>" value="<%= appointment.object %>" />
 					<label for="<%= appointment.object %>"> Appt <%= to_datetime(appointment.scheduledstart) %> </label> 
 				<% end %>
@@ -35,7 +35,7 @@
 			<% [['Not Interested', 'Insurance Not Desired'], ['Wrong Number/Disconnected', 'Wrong Number']].each do |text, status_code| %>
 				<li><%= udpate_status_lost_link(@opportunity, text, status_code) %></li> 
 			<% end %>
-			<li><a href="<%= url_for(:action => :lost_other, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-transition="slide">Other</a></li>
+			<li><a class="UpdateStatus" href="<%= url_for(:action => :lost_other, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-transition="slide">Other</a></li>
 			<li data-role="list-divider">Won</li> 
 			<li><%= udpate_status_won_link(@opportunity)%></li> 
 		</ul>

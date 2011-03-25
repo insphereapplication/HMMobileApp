@@ -21,7 +21,7 @@ class ActivityController < Rho::RhoController
     opportunity.update_attributes({
       :statecode => 'Lost',
       :statuscode => @params['status_code'],
-      :cssi_statusdetail => 'Lost',
+      :cssi_statusdetail => "",
       :competitorid => @params['competitorid'] || ""
     })
     finished_update_status(opportunity, @params['origin'], @params['appointments'])

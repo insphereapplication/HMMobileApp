@@ -117,7 +117,7 @@ class SettingsController < Rho::RhoController
     status = @params['status'] ? @params['status'] : ""
     
     if status == "complete" or status == "ok"
-      WebView.refresh
+      # WebView.refresh
     elsif status == "error"
       if @params['server_errors'] && @params['server_errors']['create-error']
           SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'].keys(), :delete)
