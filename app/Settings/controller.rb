@@ -34,9 +34,9 @@ class SettingsController < Rho::RhoController
         "sync_complete=true"
       )
    
+      set_tabbar 
       SyncEngine.dosync
       #create tabbar
-      set_tabbar 
     else
       Settings.clear_credentials
 
@@ -61,7 +61,7 @@ class SettingsController < Rho::RhoController
     ]
     Rho::NativeTabbar.create(tabbar)
     $tabbar_active = true
-    Rho::NativeTabbar.switch_tab(0)
+    # Rho::NativeTabbar.switch_tab(0)
   end
 
   def do_login

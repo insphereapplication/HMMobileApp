@@ -41,7 +41,7 @@ class ActivityController < Rho::RhoController
     end
     
     opportunity.update_attributes(opp_attrs)
-    opportunity.record_phone_call_made_now
+    opportunity.record_phone_call_made_now(@params['status_detail'])
     finished_update_status(opportunity, @params['origin'], @params['appointments'])
   end
   
@@ -59,7 +59,7 @@ class ActivityController < Rho::RhoController
     end
     
     opportunity.update_attributes(opp_attrs)
-    opportunity.record_phone_call_made_now
+    opportunity.record_phone_call_made_now('Call Back Requested')
     opportunity.create_note(@params['notetext'])
     
     # create the requested callback
@@ -90,7 +90,7 @@ class ActivityController < Rho::RhoController
       opp_attrs.merge!({:statuscode => 'Appointment Set'})
     end
     
-    opportunity.complete_most_recent_open_call 
+    opportunity.complete_most_recent_open_call('Appointment Set') 
     opportunity.update_attributes(opp_attrs)
     opportunity.create_note(@params['notetext'])
     

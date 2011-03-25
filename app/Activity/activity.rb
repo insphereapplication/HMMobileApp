@@ -23,7 +23,7 @@ class Activity
   #   :type=>"PhoneCall"}>
 
   enable :sync
-  set :sync_priority, 1 # this needs to be loaded first so that opportunities can know their context
+  set :sync_priority, 2 # this needs to be loaded first so that opportunities can know their context
   
   OPEN_STATE_CODES = ['Open', 'Scheduled']
   

@@ -4,7 +4,7 @@ class Contact
   include Rhom::PropertyBag
 
   enable :sync
-  set :sync_priority, 2
+  set :sync_priority, 1
   #Note: These property names are derived from the field names in Microsoft Dynamics CRM--to prevent mapping issues
   property :firstname, :string
   property :lastname, :string
@@ -53,10 +53,10 @@ class Contact
     if(age != nil)
       asl += " " + age
     end
-    if(address1_city != nil)
+    if(address1_city && cssi_state1id)
       asl += " " + address1_city + ", " + cssi_state1id
     else
-      if(address2_city != nil)
+      if(address2_city && cssi_state2id)
         asl += " " + address2_city + ", " + cssi_state2id
       end
     end
