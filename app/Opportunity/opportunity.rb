@@ -115,7 +115,11 @@ class Opportunity
   end
   
   def self.with_unscheduled_activities
-    open_opportunities.select {|opp| opp.has_activities? && !opp.has_scheduled_activities? }.date_sort(:cssi_lastactivitydate)
+    open_opportunities.select {|opp| opp.has_unscheduled_activities? }.date_sort(:cssi_lastactivitydate).reverse
+  end
+  
+  def has_unscheduled_activities?
+    has_activities? && !has_scheduled_activities?
   end
   
   def create_note(note_text)

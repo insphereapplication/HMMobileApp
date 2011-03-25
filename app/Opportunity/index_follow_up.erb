@@ -23,7 +23,7 @@
 			[@last_activities, 
 				"By Last Activity", 
 				"yellow", 
-				lambda {|opportunity| "Last Act: -#{DateUtil.days_ago(opportunity.cssi_lastactivitydate)}d" unless opportunity.last_activity_date.blank?}],
+				lambda {|opportunity| "Last Act: -#{DateUtil.days_ago(opportunity.cssi_lastactivitydate)}d" unless opportunity.cssi_lastactivitydate.blank?}],
 				
 			[@future_follow_ups, 
 				"Future", 
