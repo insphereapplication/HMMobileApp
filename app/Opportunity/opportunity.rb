@@ -2,19 +2,19 @@ require 'time'
 require 'date'
 
 class Opportunity
+  # include Rhom::FixedSchema
   include Rhom::PropertyBag
-
   enable :sync
 
   property :opportunityid, :string
-  property :ownerid, :string
-  property :cssi_assignedagentid, :string
   property :statecode, :string
+  property :cssi_leadtypeid, :string
+  property :cssi_leadvendorid, :string
+  property :cssi_inputsource, :string
+  property :cssi_leadsourceid, :string
+  property :cssi_assignedagentid, :string
   property :statuscode, :string
   property :cssi_statusdetail, :string
-  property :cssi_leadsourceid, :string
-  property :cssi_leadvendorid, :string
-  property :cssi_leadtypeid, :string
   property :createdon, :string
   property :cssi_leadcost, :string
   property :modifiedon, :string
@@ -22,6 +22,23 @@ class Opportunity
   property :cssi_callcounter, :string
   property :contact_id, :string
   property :cssi_lineofbusiness, :string
+  
+  index :opportunity_pk_index, :opportunityid
+  index :contact_index, :contact_id
+
+  # "modifiedon" => "03/24/2011 01:09:39 PM",
+  #                    "statecode" => "Open",
+  # 
+  #            "cssi_leadvendorid" => "Humana",
+  #             "cssi_inputsource" => "Manual",
+  #        "cssi_lastactivitydate" => "03/24/2011 01:09:38 PM",
+  #                   "contact_id" => "b525d359-7b4e-e011-93bf-0050569c7cfe",
+  #            "cssi_leadsourceid" => "Internet",
+  #         "cssi_assignedagentid" => {
+  #            "name" => "James Burkett",
+  #              "id" => "b0b67403-0902-df11-a6f1-0050568d2fb2",
+  #            "type" => "systemuser"
+  #        }
   
   belongs_to :contact_id, 'Contact'
   
@@ -176,6 +193,10 @@ class Opportunity
   
   def scheduled_activities
     activities.select{|activity| activity.open? && !activity.scheduledend.blank? } if activities
+  end
+  
+  def incomplete_appointments
+    appointments.reject{|appointment| appointment.statecode == 'Completed' }
   end
   
   def appointments

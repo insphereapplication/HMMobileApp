@@ -8,11 +8,11 @@
 	</div>
 	<div id="contentDiv" data-role="content">
 		<form>
-		<% if @opportunity.appointments.size > 0 %>
+		<% if @opportunity.incomplete_appointments.size > 0 %>
 			<div data-role="fieldcontain"> 
 			 	<fieldset data-role="controlgroup">
 				<legend>Did you complete any appointments?</legend> 
-				<% @opportunity.appointments.each do |appointment| %>
+				<% @opportunity.incomplete_appointments.each do |appointment| %>
 					<input type="checkbox" name="<%= appointment.object %>" class="custom" id="<%= appointment.object %>" value="<%= appointment.object %>" />
 					<label for="<%= appointment.object %>"> Appt <%= to_datetime(appointment.scheduledstart) %> </label> 
 				<% end %>

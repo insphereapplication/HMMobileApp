@@ -15,6 +15,13 @@ class OpportunityController < Rho::RhoController
   
   # this callback is set once in the login_callback method of the Settings controller
   def init_notify
+    System.set_push_notification("/app/Settings/push_notify", '')
+    
+    SyncEngine.set_notification(
+      -1, "/app/Settings/sync_notify", 
+      "sync_complete=true"
+    )
+    
     WebView.navigate ( url_for :controller => :Opportunity, :action => :index )
   end
   
