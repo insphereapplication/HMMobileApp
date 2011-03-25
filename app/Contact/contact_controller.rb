@@ -2,6 +2,7 @@ require 'rho/rhocontroller'
 require 'helpers/browser_helper'
 require 'date'
 require 'time'
+require 'rho/rhotabbar'
 
 class ContactController < Rho::RhoController
   include BrowserHelper

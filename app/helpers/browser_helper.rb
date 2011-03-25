@@ -19,8 +19,9 @@ module BrowserHelper
   end
   
   def udpate_status_won_link(opportunity)
+    #launch dialog to confirm won
     %Q{
-      <a class="UpdateStatus" onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :update_won_status, 
+      <a class="UpdateStatusWon" href="#{ url_for(:controller => :Activity, :action => :update_won_status, 
   				:query => {
   				  :opportunity_id => opportunity.object,
   				  :origin => @params['origin']
@@ -34,8 +35,9 @@ module BrowserHelper
   end
   
   def udpate_status_lost_link(opportunity, text, status_code)
+    #launch dialog to confirm lost
     %Q{
-      <a class="UpdateStatus" onClick="showSpin()" href="#{ url_for(:controller => :Activity, :action => :udpate_lost_status, 
+      <a class="UpdateStatusLost" href="#{ url_for(:controller => :Activity, :action => :udpate_lost_status, 
   				:query => {
   				  :opportunity_id => opportunity.object,
   			    :status_code => status_code,
@@ -51,7 +53,7 @@ module BrowserHelper
   
   def update_opportunity_statecode_link(opportunity, statecode)
      %Q{
-        <a onClick="showSpin()" href="#{ url_for(:controller => :Opportunity, :action => :update, :id => opportunity.object, 
+        <a href="#{ url_for(:controller => :Opportunity, :action => :update, :id => opportunity.object, 
   				:query => {
   				  'opportunity[statecode]' => statecode
   			    })

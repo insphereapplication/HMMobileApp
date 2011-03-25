@@ -3,8 +3,6 @@ require 'rho/rhotabbar'
 require 'utils/util'
 require 'initializers/extensions'
 
-
-
 class AppApplication < Rho::RhoApplication
   def initialize
     # Tab items are loaded left->right, @tabs[0] is leftmost tab in the tab-bar

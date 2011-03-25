@@ -265,6 +265,8 @@ function showSpin(message){
 	$.mobile.pageSaving();
 	setTimeout("hideSpin()",5000);
 }
+
+
 function hideSpin(){
 	$.mobile.pageSaving(true);
 	return true;

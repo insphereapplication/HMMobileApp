@@ -28,7 +28,7 @@ class ActivityController < Rho::RhoController
   end
   
   def update_status_no_contact
-
+    puts @params.inspect
     opportunity = Opportunity.find(@params['opportunity_id'])
     
     opp_attrs = {

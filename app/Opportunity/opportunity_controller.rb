@@ -3,6 +3,7 @@ require 'helpers/browser_helper'
 require 'helpers/application_helper'
 require 'date'
 require 'time'
+require 'rho/rhotabbar'
 
 class OpportunityController < Rho::RhoController
   include BrowserHelper
@@ -154,6 +155,7 @@ class OpportunityController < Rho::RhoController
   def activity_summary
     @opportunity = Opportunity.find(@params['id'])
     @activities = @opportunity.activities
+    puts @activities.inspect
     if @opportunity
       render :action => :activity_summary,
               :layout => 'layout_jquerymobile'
