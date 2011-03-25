@@ -66,7 +66,7 @@ class Appointment < Activity
   end
   
   def self.open_appointments
-    find(:all, :conditions => {'statecode' => 'Scheduled'}).reject{|appointment| puts appointment.inspect; appointment.parent.closed? }
+    find(:all, :conditions => {'statecode' => 'Scheduled'}).reject{|appointment| appointment.parent.closed? }
   end
   
   def self.past_due_appointments
@@ -79,6 +79,13 @@ class Appointment < Activity
   
   def self.todays_appointments
     open_appointments.select_all_occurring_today(:scheduledend)
+  end
+  
+  def complete
+    update_attributes({
+      :statuscode => 'Completed',
+      :statecode => 'Completed'
+    })
   end
   
 end
