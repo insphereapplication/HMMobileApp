@@ -33,13 +33,13 @@ class SettingsController < Rho::RhoController
         url_for(:controller => :Opportunity, :action => :init_notify),
         "sync_complete=true"
       )
-      
-      # when sync is done, OpportunityController#init_notify will redirect from login to OpportunityController#index
+
+      SyncEngine.set_pollinterval(15)
       SyncEngine.dosync
 
     else
       Settings.clear_credentials
-
+      SyncEngine.set_pollinterval(0)
       if errCode == Rho::RhoError::ERR_CUSTOMSYNCSERVER
         @msg = @params['error_message']
       end
