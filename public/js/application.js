@@ -241,7 +241,7 @@ function populateAddress(dropdown)
         break;
       }
     }
-	document.getElementById("[appointment]location").value=selected;
+	document.getElementById("location").value=selected;
     return true;
 }
 

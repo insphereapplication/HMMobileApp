@@ -11,7 +11,7 @@ $(document).ready(function() {
 	});
 	$('.UpdateStatusWon').click(function() {
 
-		if(confirm('Note: You will not be able to make changes to this opportunity on your device after marking it as won. Proceed?')){			
+		if(confirm('Click OK to Confirm this Opportunity as Won')){			
 			var apptids = $('input:checkbox:checked.custom').map(function(){
 				return this.value
 			});
@@ -26,7 +26,7 @@ $(document).ready(function() {
 	});
 	$('.UpdateStatusLost').click(function() {
 
-		if(confirm('Note: You will not be able to make changes to this opportunity on your device after marking it as lost. Proceed?')){			
+		if(confirm('Click OK to Confirm this Opportunity as Lost')){			
 			var apptids = $('input:checkbox:checked.custom').map(function(){
 				return this.value
 			});
