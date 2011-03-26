@@ -34,8 +34,8 @@
 						</select><br />
 						<label for="location" class="fieldLabel">Address:</label>
 			            <input maxlength="200" type="text" id="location" name="location" value="<%= @opportunity.contact.default_address %>" /><br />
-						<label for="notetext">Notes:</label>
-						<textarea cols="40" rows="8" name="notetext" id="notetext"></textarea>
+						<label for="description">Description:</label>
+						<textarea cols="40" rows="8" name="description" id="notetext"></textarea>
 						<input type="submit" class="standardButton" value="Create Appointment"/>
 						    <% if not $saved.nil? %>
 						      Saved date/time values:<br/>

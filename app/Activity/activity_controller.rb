@@ -60,7 +60,6 @@ class ActivityController < Rho::RhoController
     
     opportunity.update_attributes(opp_attrs)
     opportunity.record_phone_call_made_now('Call Back Requested')
-    opportunity.create_note(@params['notetext'])
     
     # create the requested callback
     phone_call = PhoneCall.create({
@@ -73,6 +72,8 @@ class ActivityController < Rho::RhoController
       :statecode => 'Open',
       :notetext => @params['note']
     })
+    
+    phone_call.create_note(@params['notetext'])
     
     finished_update_status(opportunity, @params['origin'], @params['appointments'])
   end
@@ -92,7 +93,6 @@ class ActivityController < Rho::RhoController
     
     opportunity.complete_most_recent_open_call('Appointment Set') 
     opportunity.update_attributes(opp_attrs)
-    opportunity.create_note(@params['notetext'])
     
     # create the requested appointment
     Appointment.create({
@@ -103,7 +103,8 @@ class ActivityController < Rho::RhoController
         :scheduledstart => DateUtil.date_build(@params['appointment_datetime']),
         :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
         :location => @params['location'],
-        :subject => "#{contact.firstname}, #{contact.lastname} - #{opportunity.createdon}"
+        :subject => "#{contact.firstname}, #{contact.lastname} - #{opportunity.createdon}",
+        :description => @params['description']
       }
     )
   

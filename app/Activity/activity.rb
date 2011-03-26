@@ -61,6 +61,16 @@ end
 end
 
 class PhoneCall < Activity
+  def create_note(note_text)
+    unless note_text.blank?
+      Note.create({
+        :notetext => note_text, 
+        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
+        :parent_id => self.object,
+        :parent_type => 'phonecall' 
+      })
+    end
+  end
 end
 
 class Appointment < Activity
