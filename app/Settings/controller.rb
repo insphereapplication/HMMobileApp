@@ -138,4 +138,9 @@ class SettingsController < Rho::RhoController
       end    
     end
   end
+  
+  def show_log
+    Rho::RhoConfig.show_log
+  end
+  
 end
