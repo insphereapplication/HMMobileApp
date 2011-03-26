@@ -1,14 +1,16 @@
-<div data-role="page" data-theme="a"> 
+<div data-role="page" data-theme="b"> 
   <div data-role="header" data-backbtn="false"> 
     <h1>Error</h1>
   </div>
   
 <div data-role="content">
   <ul data-role="listview">
-			<li>
-			<%= Rho::RHO.current_exception.message() %>
-			</li>
-			<li><%= Rho::RHO.current_exception.backtrace() %></li>
+                        <li data-role="list-divider">Message</li> 
+                        <li><%= @params[:msg] %></li> 
+                        <li data-role="list-divider">Exception</li> 
+                        <li><%= Rho::RHO.current_exception.message() if Rho::RHO.current_exception %></li>
+                        <li data-role="list-divider">Stack Trace</li> 
+			<li><%= Rho::RHO.current_exception.backtrace() if Rho::RHO.current_exception %></li>
   </ul>
 </div>
 </div>
