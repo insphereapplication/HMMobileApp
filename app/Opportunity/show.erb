@@ -61,12 +61,10 @@
 				<li data-role="list-divider">Appointments</li> 
 				<% @opportunity.appointments.each do |appointment| %>
 					<li> 
-						<span>
 							<a href="<%= url_for(:controller => :Contact, :action => :map, :query => {:address => appointment.location})%>">
-							<p> <%= "#{to_datetime(appointment.scheduledstart)} - #{to_endtime(appointment.scheduledend)}" %> </p>
+							<strong> <%= "#{to_datetime(appointment.scheduledstart)} - #{to_endtime(appointment.scheduledend)}" %> </strong>
 									 <p><%= appointment.location %></p>
 							</a>
-						</span>
 					</li> 
 				<% end %>
 				<% if @opportunity.appointments.size == 0 %>
