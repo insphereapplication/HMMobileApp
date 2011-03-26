@@ -25,10 +25,6 @@
 			<% end %> 
 			<ul data-role="listview" data-theme="d" data-inset="true"> 
 				<li>
-					</br>
-					<p class="ui-li-aside"><strong><%= @opportunity.cssi_statusdetail %></strong></br></p> 
-				</li>
-				<li>
 					<% if @params['origin'] == "contact" %>
 					<h3><%= @contact.full_name %></h3>
 					<% else %>
@@ -37,6 +33,7 @@
 					<p><%= @contact.age_sex %></p> 
 					<p><%= @contact.city_summary %></p> 
 				</li> 
+				<li><p><strong> Status:	</strong> <%= @opportunity.statecode %> </p></li> 
 				<li><p><strong> Status Reason:	</strong> <%= @opportunity.statuscode %> </p></li> 
 				<li><p><strong> Status Detail:	</strong> <%= @opportunity.cssi_statusdetail %> </p></li> 
 				<li><p><strong> Source: 		</strong> <%= @opportunity.cssi_leadsourceid %> </li> 
