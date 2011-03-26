@@ -46,9 +46,9 @@ class ActivityController < Rho::RhoController
   end
   
   def update_status_call_back_requested
-    puts "CALLBACK REQUESTED:"
-    puts @params.inspect
+
     opportunity = Opportunity.find(@params['opportunity_id'])
+    
     opp_attrs = {
       :cssi_statusdetail => 'Call Back Requested',
       :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)

@@ -78,15 +78,15 @@ class Appointment < Activity
   end
   
   def self.past_due_appointments
-    open_appointments.select_all_before_today(:scheduledend) 
+    open_appointments.select_all_before_today(:scheduledstart).time_sort(:scheduledstart)
   end
   
   def self.future_appointments
-    open_appointments.select_all_after_today(:scheduledend)
+    open_appointments.select_all_after_today(:scheduledstart).time_sort(:scheduledstart)
   end
   
   def self.todays_appointments
-    open_appointments.select_all_occurring_today(:scheduledend)
+    open_appointments.select_all_occurring_today(:scheduledstart).time_sort(:scheduledstart)
   end
   
   def complete

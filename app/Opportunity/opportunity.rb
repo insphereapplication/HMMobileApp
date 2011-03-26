@@ -98,27 +98,27 @@ class Opportunity
   end
   
   def self.todays_follow_ups
-    follow_up_phone_calls.select_all_occurring_today(:scheduledend).date_sort(:scheduledend)
+    follow_up_phone_calls.select_all_occurring_today(:scheduledend).time_sort(:scheduledend)
   end
   
   def self.past_due_follow_ups
-    follow_up_phone_calls.select_all_before_today(:scheduledend).date_sort(:scheduledend)
+    follow_up_phone_calls.select_all_before_today(:scheduledend).time_sort(:scheduledend)
   end
   
   def self.future_follow_ups
-    follow_up_phone_calls.select_all_after_today(:scheduledend).date_sort(:scheduledend)
+    follow_up_phone_calls.select_all_after_today(:scheduledend).time_sort(:scheduledend)
   end
   
   def self.todays_new_leads
-    new_leads.select_all_occurring_today(:createdon).date_sort(:createdon).reverse # reverse to get most recent created at top
+    new_leads.select_all_occurring_today(:createdon).time_sort(:createdon).reverse # reverse to get most recent created at top
   end
   
   def self.previous_days_leads
-    new_leads.select_all_before_today(:createdon).date_sort(:createdon).reverse # reverse to get most recent created at top
+    new_leads.select_all_before_today(:createdon).time_sort(:createdon).reverse # reverse to get most recent created at top
   end
   
   def self.with_unscheduled_activities
-    open_opportunities.select {|opp| opp.has_unscheduled_activities? }.date_sort(:cssi_lastactivitydate).reverse
+    open_opportunities.select {|opp| opp.has_unscheduled_activities? }.time_sort(:cssi_lastactivitydate).reverse
   end
   
   def has_unscheduled_activities?
@@ -236,7 +236,7 @@ class Opportunity
   end
   
   def scheduled_phone_calls
-    phone_calls.select{|phone_call| !phone_call.scheduledend.blank? && phone_call.open? }.date_sort(:scheduledend) if phone_calls
+    phone_calls.select{|phone_call| !phone_call.scheduledend.blank? && phone_call.open? }.time_sort(:scheduledend) if phone_calls
   end
   
   def last_activity
@@ -249,7 +249,7 @@ class Opportunity
   
   def create_or_find_earliest_phone_call(attributes)
     if phone_calls.size > 0
-      return phone_calls.compact.date_sort(:scheduledstart).first
+      return phone_calls.compact.time_sort(:scheduledstart).first
     else
       phone_call = Activity.create('type' => 'PhoneCall', 'disposition' => params['cssi_disposition'], 'parent_id' => opportunityid, 'parent_type' => 'opportunity')
       return phone_call

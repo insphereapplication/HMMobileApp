@@ -19,10 +19,10 @@ class SettingsController < Rho::RhoController
       SyncEngine.login(Settings.login, Settings.password,  "/app/Settings/login_callback")
       @working = true # if @working is true, page will show spinner
     end
+    
     Rho::NativeTabbar.remove
     render :action => :login, :back => '/app', :layout => 'layout_jquerymobile'
   end
-
 
   def login_callback
     errCode = @params['error_code'].to_i
@@ -33,10 +33,10 @@ class SettingsController < Rho::RhoController
         url_for(:controller => :Opportunity, :action => :init_notify),
         "sync_complete=true"
       )
-   
-      set_tabbar 
+      
+      # when sync is done, OpportunityController#init_notify will redirect from login to OpportunityController#index
       SyncEngine.dosync
-      #create tabbar
+
     else
       Settings.clear_credentials
 
@@ -60,8 +60,6 @@ class SettingsController < Rho::RhoController
         :icon => "/public/images/iphone/tabs/settings_tab_icon.png", :reload => true },
     ]
     Rho::NativeTabbar.create(tabbar)
-    $tabbar_active = true
-    # Rho::NativeTabbar.switch_tab(0)
   end
 
   def do_login
@@ -88,6 +86,7 @@ class SettingsController < Rho::RhoController
   def logout
     SyncEngine.logout
     Settings.clear_credentials
+    Rho::NativeTabbar.remove
     @msg = "You have been logged out."
     render :action => :login, :layout => 'layout_jquerymobile'
   end
@@ -110,7 +109,7 @@ class SettingsController < Rho::RhoController
   end
   
   def push_notify
-    SyncEngine.sync
+    SyncEngine.dosync
   end
    
   def sync_notify
