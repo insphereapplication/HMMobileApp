@@ -23,9 +23,21 @@ class OpportunityController < Rho::RhoController
       "sync_complete=true"
     )
     
-    $opportunity_nav_context = []
-    WebView.navigate ( url_for :controller => :Opportunity, :action => :index )
+    tabbar = [
+      { :label => "Opps", :action => '/app/Opportunity', 
+        :icon => "/public/images/iphone/tabs/pib_tab_icon.png", :web_bkg_color => 0x7F7F7F }, 
+      { :label => "Contacts",  :action => '/app/Contact',  
+        :icon => "/public/images/iphone/tabs/activities_tab_icon.png" },
+      { :label => "Settings",  :action => '/app/Settings',  
+        :icon => "/public/images/iphone/tabs/settings_tab_icon.png", :reload => true },
+    ]
+    Rho::NativeTabbar.create(tabbar)
     Rho::NativeTabbar.switch_tab(0)
+    
+    $opportunity_nav_context = []
+    
+    SyncEngine.set_pollinterval(15)
+    
   end
   
   # since this is the default entry point on startup, check here for login

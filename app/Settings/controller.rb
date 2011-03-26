@@ -34,7 +34,6 @@ class SettingsController < Rho::RhoController
         "sync_complete=true"
       )
 
-      SyncEngine.set_pollinterval(15)
       SyncEngine.dosync
 
     else
@@ -47,19 +46,6 @@ class SettingsController < Rho::RhoController
       @msg ||= "The user name or password you entered is not valid"    
       WebView.navigate ( url_for :action => :login, :query => {:msg => @msg} )
     end  
-  end
-  
-  
-  def set_tabbar
-    tabbar = [
-      { :label => "Opps", :action => '/app/Opportunity', 
-        :icon => "/public/images/iphone/tabs/pib_tab_icon.png", :web_bkg_color => 0x7F7F7F }, 
-      { :label => "Contacts",  :action => '/app/Contact',  
-        :icon => "/public/images/iphone/tabs/activities_tab_icon.png" },
-      { :label => "Settings",  :action => '/app/Settings',  
-        :icon => "/public/images/iphone/tabs/settings_tab_icon.png", :reload => true },
-    ]
-    Rho::NativeTabbar.create(tabbar)
   end
 
   def do_login
