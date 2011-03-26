@@ -23,7 +23,8 @@ class OpportunityController < Rho::RhoController
       "sync_complete=true"
     )
     
-    WebView.navigate ( url_for :controller => :Opportunity, :action => :index )
+    # Rho::NativeTabbar.switch_tab(0)
+    # WebView.navigate ( url_for :controller => :Opportunity, :action => :index )
   end
   
   # since this is the default entry point on startup, check here for login

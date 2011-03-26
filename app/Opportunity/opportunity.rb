@@ -136,10 +136,11 @@ class Opportunity
     end
   end
   
-  def record_phone_call_made_now
+  def record_phone_call_made_now(disposition="")
     phone_call_attrs = {
       :scheduledend => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT), 
       :subject => "Phone Call - #{self.contact.full_name}",
+      :cssi_disposition => disposition,
       :statecode => 'Completed'
     }
     
@@ -155,9 +156,9 @@ class Opportunity
     
   end
   
-  def complete_most_recent_open_call
+  def complete_most_recent_open_call(disposition="")
     if most_recent_open_phone_call
-      record_phone_call_made_now
+      record_phone_call_made_now(disposition)
     end
   end
   

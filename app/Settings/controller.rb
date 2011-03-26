@@ -33,10 +33,12 @@ class SettingsController < Rho::RhoController
         url_for(:controller => :Opportunity, :action => :init_notify),
         "sync_complete=true"
       )
+
       SyncEngine.set_pollinterval(15)
+      set_tabbar 
+
       SyncEngine.dosync
       #create tabbar
-      set_tabbar 
     else
       Settings.clear_credentials
       SyncEngine.set_pollinterval(0)
@@ -61,7 +63,7 @@ class SettingsController < Rho::RhoController
     ]
     Rho::NativeTabbar.create(tabbar)
     $tabbar_active = true
-    Rho::NativeTabbar.switch_tab(0)
+    # Rho::NativeTabbar.switch_tab(0)
   end
 
   def do_login
