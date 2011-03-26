@@ -94,15 +94,24 @@ class SettingsController < Rho::RhoController
   end
   
   def push_notify
-    SyncEngine.dosync
+    WebView.navigate( 
+      url_for(
+        :controller => 'Opportunity',
+        :action => :index
+      )
+    )
   end
    
   def sync_notify
+    # RhoLog.info "Sync Notify called..."
+    
     status = @params['status'] ? @params['status'] : ""
     
     if status == "complete" or status == "ok"
       # WebView.refresh
     elsif status == "error"
+      # RhoLog.error "!!!!!!!!!!!! ERROR FROM SERVER IN SYNC NOTIFY: #{status} --#{@params['server_errors']} "
+      
       if @params['server_errors'] && @params['server_errors']['create-error']
           SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'].keys(), :delete)
       end
@@ -127,6 +136,8 @@ class SettingsController < Rho::RhoController
             :query => { :msg => "Server credentials expired!" } 
           )
         )                
+      elsif err_code == Rho::RhoError::ERR_NETWORK
+        
       else
         WebView.navigate( 
           url_for(
