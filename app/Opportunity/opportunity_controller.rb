@@ -10,8 +10,13 @@ class OpportunityController < Rho::RhoController
   $saved = nil
   $choosed = {}
 
-  def sync_object_notify
-    WebView.refresh
+  def sync_notify
+     WebView.navigate( 
+        url_for(
+          :controller => 'Opportunity',
+          :action => :index
+        )
+      )
   end
   
   # this callback is set once in the login_callback method of the Settings controller

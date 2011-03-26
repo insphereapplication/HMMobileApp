@@ -94,11 +94,9 @@ class SettingsController < Rho::RhoController
   end
   
   def push_notify
-    WebView.navigate( 
-      url_for(
-        :controller => 'Opportunity',
-        :action => :index
-      )
+    Opportunity.set_notification(
+      url_for(:controller => :Opportunity, :action => :sync_notify),
+      "sync_complete=true"
     )
     "rho_push"
   end
