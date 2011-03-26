@@ -135,6 +135,12 @@ class Contact
     Opportunity.find(:all, :conditions => {"contact_id" => self.object})
   end
   
+  def adhoc_numbers
+    # opportunities.each do |opportunity|
+    #   opportunity.phone_calls.each do |phone_call|
+    #     if  
+  end
+  
   def business_map
     begin
         return ("#{address2_line1}+#{address2_city}+#{cssi_state2id}").gsub!(" ","_")
