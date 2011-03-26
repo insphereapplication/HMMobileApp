@@ -56,7 +56,6 @@ class SettingsController < Rho::RhoController
     if Settings.login and Settings.password
       begin
         SyncEngine.login(Settings.login, Settings.password, (url_for :action => :login_callback) )
-        render :action => :wait
       rescue Rho::RhoError => e
         Settings.clear_credentials
         @msg = e.message
