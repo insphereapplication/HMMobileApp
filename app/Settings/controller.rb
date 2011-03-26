@@ -98,7 +98,7 @@ class SettingsController < Rho::RhoController
       url_for(:controller => :Opportunity, :action => :sync_notify),
       "sync_complete=true"
     )
-    # "rho_push"
+    "rho_push"
   end
    
   def sync_notify
