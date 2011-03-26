@@ -100,6 +100,7 @@ class SettingsController < Rho::RhoController
         :action => :index
       )
     )
+    "rho_push"
   end
    
   def sync_notify
