@@ -141,7 +141,7 @@ class SettingsController < Rho::RhoController
         WebView.navigate( 
           url_for(
             :action => :err_sync, 
-            :query => { :msg => @msg } 
+            :query => { :msg => @params.inspect } 
           )
         )
       end    
