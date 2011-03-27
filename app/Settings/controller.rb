@@ -93,12 +93,25 @@ class SettingsController < Rho::RhoController
     redirect :action => :index, :query => {:msg => @msg}
   end
   
+  def on_dismiss_notify_popup
+    id = @params[:button_id]
+
+    if id == 'View'
+      Opportunity.set_notification(
+        url_for(:controller => :Opportunity, :action => :sync_notify),
+        "sync_complete=true"
+      )
+      SyncEngine.dosync
+    end  
+  end
+  
   def push_notify
-    Opportunity.set_notification(
-      url_for(:controller => :Opportunity, :action => :sync_notify),
-      "sync_complete=true"
-    )
-    "rho_push"
+    Alert.show_popup {
+        :message => 'You have new Opportunities', 
+        :title => 'New Opportunities', 
+        :buttons => ["View", "Cancel"],
+        :callback => url_for(:action => :on_dissmiss_popup) 
+    }
   end
    
   def sync_notify
