@@ -71,6 +71,7 @@ class SettingsController < Rho::RhoController
   def logout
     SyncEngine.logout
     Settings.clear_credentials
+    SyncEngine.set_pollinterval(-1)
     Rho::NativeTabbar.remove
     @msg = "You have been logged out."
     render :action => :login, :layout => 'layout_jquerymobile'
@@ -87,7 +88,6 @@ class SettingsController < Rho::RhoController
   end
   
   def do_sync
-    
     SyncEngine.dosync
     @msg =  "Sync has been triggered."
     redirect :action => :index, :query => {:msg => @msg}
@@ -115,6 +115,20 @@ class SettingsController < Rho::RhoController
    end
    
   def sync_notify
+    
+    # ERR_NONE = 0
+    # ERR_NETWORK = 1
+    # ERR_REMOTESERVER = 2
+    # ERR_RUNTIME = 3
+    # ERR_UNEXPECTEDSERVERRESPONSE = 4
+    # ERR_DIFFDOMAINSINSYNCSRC = 5
+    # ERR_NOSERVERRESPONSE = 6
+    # ERR_CLIENTISNOTLOGGEDIN = 7
+    # ERR_CUSTOMSYNCSERVER = 8
+    # ERR_UNATHORIZED = 9
+    # ERR_CANCELBYUSER = 10
+    # ERR_SYNCVERSION = 11
+    # ERR_GEOLOCATION = 12
 
     status = @params['status'] ? @params['status'] : ""
     
@@ -123,7 +137,7 @@ class SettingsController < Rho::RhoController
     elsif status == "error"
       
       if @params['server_errors'] && @params['server_errors']['create-error']
-          SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'].keys(), :delete)
+        SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'].keys(), :delete)
       end
 
       err_code = @params['error_code'].to_i
@@ -139,22 +153,25 @@ class SettingsController < Rho::RhoController
         Rhom::Rhom.database_fullclient_reset_and_logout
         SyncEngine.dosync
 
-      elsif err_code == Rho::RhoError::ERR_UNATHORIZED
+      elsif err_code == Rho::RhoError::ERR_UNATHORIZED || Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN 
+        SyncEngine.set_pollinterval(-1)
+        Alert.show_popup({
+            :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
+            :title => "Server Session Lost", 
+            :buttons => ["OK"]
+          })
         WebView.navigate( 
           url_for(
             :action => :login, 
             :query => { :msg => "Server credentials expired!" } 
           )
-        )                
-      elsif err_code == Rho::RhoError::ERR_NETWORK
-        
+        )         
       else
-        WebView.navigate( 
-          url_for(
-            :action => :err_sync, 
-            :query => { :msg => @params.inspect } 
-          )
-        )
+         Alert.show_popup({
+            :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
+            :title => "Error Code: #{err_code}", 
+            :buttons => ["OK"]
+          })
       end    
     end
   end
