@@ -81,7 +81,7 @@ class SettingsController < Rho::RhoController
   end
   
   def do_reset
-    Rhom::Rhom.database_full_reset
+    Rhom::Rhom.database_fullclient_reset_and_logout
     SyncEngine.dosync
     @msg = "Database has been reset."
     redirect :action => :index, :query => {:msg => @msg}
@@ -138,7 +138,7 @@ class SettingsController < Rho::RhoController
       @msg = rho_error.message unless @msg and @msg.length > 0   
 
       if rho_error.unknown_client?(@params['error_message'])
-        Rhom::Rhom.database_client_reset
+        Rhom::Rhom.database_fullclient_reset_and_logout
         SyncEngine.dosync
 
       elsif err_code == Rho::RhoError::ERR_UNATHORIZED
