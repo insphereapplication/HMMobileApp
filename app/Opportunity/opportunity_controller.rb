@@ -11,6 +11,7 @@ class OpportunityController < Rho::RhoController
   $choosed = {}
 
   def sync_notify
+     Rho::NativeTabbar.switch_tab(0)
      WebView.navigate( 
         url_for(
           :controller => 'Opportunity',
