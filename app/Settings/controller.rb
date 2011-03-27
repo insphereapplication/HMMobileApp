@@ -105,12 +105,14 @@ class SettingsController < Rho::RhoController
   end
   
   def push_notify
-     Alert.show_popup({
+    Alert.vibrate(2000)
+    
+    Alert.show_popup({
       :message => "You have new Opportunities", 
       :title => 'New Opportunities', 
-      :buttons => ["View", "Cancel"],
+      :buttons => ["Cancel", "View"],
       :callback => url_for(:action => :on_dismiss_notify_popup) 
-     })
+    })
    end
    
   def sync_notify
