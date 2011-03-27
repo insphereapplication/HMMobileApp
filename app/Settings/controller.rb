@@ -82,7 +82,6 @@ class SettingsController < Rho::RhoController
   
   def do_reset
     Rhom::Rhom.database_fullclient_reset_and_logout
-    SyncEngine.dosync
     @msg = "Database has been reset."
     redirect :action => :index, :query => {:msg => @msg}
   end
