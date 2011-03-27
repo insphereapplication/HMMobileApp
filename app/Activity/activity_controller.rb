@@ -10,7 +10,9 @@ class ActivityController < Rho::RhoController
     opportunity.complete_open_call
     opportunity.update_attributes({
       :statecode => 'Won', 
-      :actual_end => Time.now.to_s
+      :statuscode => 'Sale',
+      :cssi_statusdetail => "",
+      :actual_end => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     })
     finished_update_status(opportunity, @params['origin'])
   end
