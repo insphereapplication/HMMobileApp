@@ -102,27 +102,25 @@ class SettingsController < Rho::RhoController
         "sync_complete=true"
       )
       SyncEngine.dosync
-    end  
+    end
   end
   
   def push_notify
-    Alert.show_popup {
-        :message => 'You have new Opportunities', 
-        :title => 'New Opportunities', 
-        :buttons => ["View", "Cancel"],
-        :callback => url_for(:action => :on_dissmiss_popup) 
-    }
-  end
+     Alert.show_popup({
+      :message => 'You have new Opportunities', 
+      :title => 'New Opportunities', 
+      :buttons => ["View", "Cancel"],
+      :callback => url_for(:action => :on_dissmiss_popup) 
+     })
+   end
    
   def sync_notify
-    # RhoLog.info "Sync Notify called..."
-    
+
     status = @params['status'] ? @params['status'] : ""
     
     if status == "complete" or status == "ok"
-      # WebView.refresh
+      # do nothing
     elsif status == "error"
-      # RhoLog.error "!!!!!!!!!!!! ERROR FROM SERVER IN SYNC NOTIFY: #{status} --#{@params['server_errors']} "
       
       if @params['server_errors'] && @params['server_errors']['create-error']
           SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'].keys(), :delete)
