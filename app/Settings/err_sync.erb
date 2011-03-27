@@ -5,12 +5,12 @@
   
 <div data-role="content">
   <ul data-role="listview">
-                        <li data-role="list-divider">Message</li> 
-                        <li><%= @params[:msg] %></li> 
-                        <li data-role="list-divider">Exception</li> 
-                        <li><%= Rho::RHO.current_exception.message() if Rho::RHO.current_exception %></li>
-                        <li data-role="list-divider">Stack Trace</li> 
-			<li><%= Rho::RHO.current_exception.backtrace() if Rho::RHO.current_exception %></li>
+	<li data-role="list-divider">Message</li> 
+	<li><%= @params[:msg] %></li> 
+	<li data-role="list-divider">Exception</li> 
+	<li><%= Rho::RHO.current_exception.message() if Rho::RHO.current_exception %></li>
+	<li data-role="list-divider">Stack Trace</li> 
+	<li><%= Rho::RHO.current_exception.backtrace() if Rho::RHO.current_exception %></li>
   </ul>
 </div>
 </div>
