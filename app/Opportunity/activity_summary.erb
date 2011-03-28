@@ -13,7 +13,11 @@
 			<% puts activity.inspect %>
 				<li>
 					<h3> <%= activity.activity_type %></h3>
-					<p class="ui-li-aside"><strong><%= to_datetime(activity.scheduledend) %></strong></p>
+					<% if activity.scheduledstart %>
+						<p class="ui-li-aside"><strong><%= to_datetime(activity.scheduledstart) %></strong></p>
+					<% elsif activity.scheduledend %>
+						<p class="ui-li-aside"><strong><%= to_datetime(activity.scheduledend) %></strong></p>
+					<% end %>
 					<p><%= activity.cssi_disposition %></p>
 				</li>
 			<% end %>
