@@ -115,7 +115,7 @@ class SettingsController < Rho::RhoController
    end
    
   def sync_notify
-    
+    # RhoLog.error("TEST", "TEST")
     # ERR_NONE = 0
     # ERR_NETWORK = 1
     # ERR_REMOTESERVER = 2
@@ -143,9 +143,9 @@ class SettingsController < Rho::RhoController
       err_code = @params['error_code'].to_i
       rho_error = Rho::RhoError.new(err_code)
 
-      if err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER
-        @msg = @params['error_message']
-      end
+      # if err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER
+      #        @msg = @params['error_message']
+      #      end
 
       @msg = rho_error.message unless @msg and @msg.length > 0   
 
@@ -153,27 +153,28 @@ class SettingsController < Rho::RhoController
         Rhom::Rhom.database_fullclient_reset_and_logout
         SyncEngine.dosync
       
-      elsif err_code == Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN 
+      else #if err_code == Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN 
+        puts "!!!!  EXCEPTION: #{Rho::RhoError.err_message(err_code)}"
         # for now, ignore. This appears to happen on simple connectivity lapses and then goes away
-      elsif err_code == Rho::RhoError::ERR_UNATHORIZED 
-        SyncEngine.set_pollinterval(-1)
-        Alert.show_popup({
-            :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
-            :title => "Server Session Lost", 
-            :buttons => ["OK"]
-          })
-        WebView.navigate( 
-          url_for(
-            :action => :login, 
-            :query => { :msg => "Server credentials expired!" } 
-          )
-        )         
-      else
-         Alert.show_popup({
-            :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
-            :title => "Error Code: #{err_code}", 
-            :buttons => ["OK"]
-          })
+      # elsif err_code == Rho::RhoError::ERR_UNATHORIZED 
+      #         SyncEngine.set_pollinterval(-1)
+      #         Alert.show_popup({
+      #             :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
+      #             :title => "Server Session Lost", 
+      #             :buttons => ["OK"]
+      #           })
+      #         WebView.navigate( 
+      #           url_for(
+      #             :action => :login, 
+      #             :query => { :msg => "Server credentials expired!" } 
+      #           )
+      #         )         
+      #       else
+      #          Alert.show_popup({
+      #             :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
+      #             :title => "Error Code: #{err_code}", 
+      #             :buttons => ["OK"]
+      #           })
       end    
     end
   end
