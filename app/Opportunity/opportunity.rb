@@ -219,6 +219,14 @@ class Opportunity
     PhoneCall.find(:all, :conditions => opportunity_conditions, :op => 'and')
   end
   
+  def adhoc_numbers
+   phone_calls.each do |phone_call|
+     if @phonenumber
+       phonenumber
+     end
+   end
+  end
+  
   def notes
     Note.find(:all, :conditions => {"parent_type" => "opportunity", "parent_id" => self.object})
   end

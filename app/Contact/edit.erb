@@ -54,7 +54,7 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 			<label for="contact[cssi_preferredphone]" class="select">Preferred Phone:</label>
-				<select name="contact[cssi_preferredphone]" id="select-choice-1">
+				<select name="contact[cssi_preferredphone]"  id="select-choice-1">
 					<option data-placeholder="true"> <%= @contact.cssi_preferredphone %> </option>
 					<option value="Mobile">Mobile</option>
 					<option value="Business">Business</option>
@@ -93,7 +93,7 @@
 					<div data-role="fieldcontain">
 						<div class="ui-body ui-body-d">
 		            <label for="contact[cssi_state1id]" class="fieldLabel">State:</label>
-		            <select name="contact[cssi_state1id]" id="select-choice-2">
+		            <select name="contact[cssi_state1id]" data-role="none" id="select-choice-2">
 						<option data-placeholder="true"> <%= @contact.cssi_state1id %> </option>
 						<% Constants::STATE_CODES.each do |state_code| %>
 							<option value="<%=state_code[0]%>"><%=state_code[1]%></option>
@@ -130,7 +130,7 @@
 				<div data-role="fieldcontain">
 					<div class="ui-body ui-body-d">
 	            <label for="contact[cssi_state2id]" class="fieldLabel">State:</label>
-	            <select name="contact[cssi_state2id]" id="select-choice-3">
+	            <select name="contact[cssi_state2id]" data-role="none" id="select-choice-3">
 					<option data-placeholder="true"> <%= @contact.cssi_state2id %> </option>
 					
 					<% Constants::STATE_CODES.each do |state_code| %>
