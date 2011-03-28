@@ -152,8 +152,10 @@ class SettingsController < Rho::RhoController
       if rho_error.unknown_client?(@params['error_message'])
         Rhom::Rhom.database_fullclient_reset_and_logout
         SyncEngine.dosync
-
-      elsif err_code == Rho::RhoError::ERR_UNATHORIZED || Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN 
+      
+      elsif err_code == Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN 
+        # for now, ignore. This appears to happen on simple connectivity lapses and then goes away
+      elsif err_code == Rho::RhoError::ERR_UNATHORIZED 
         SyncEngine.set_pollinterval(-1)
         Alert.show_popup({
             :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
