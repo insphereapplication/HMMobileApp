@@ -109,6 +109,15 @@ class Contact
     {'Home' => telephone2, 'Mobile' => mobilephone, 'Business' => telephone1, 'Alternate' => telephone3 }.reject{|type, number| number.blank? }
   end
   
+  def preferred_number
+      phone_numbers.each do |type, number|
+          if type == cssi_preferredphone
+            return number
+          end
+      end
+  end
+
+  
   def phone_numbers_full
     {"Home: #{telephone2}" => telephone2, "Mobile: #{mobilephone}" => mobilephone, "Business: #{telephone1} #{cssi_businessphoneext}" => telephone1, "Alternate: #{telephone3}" => telephone3 }.reject{|type, number| number.blank? }
   end

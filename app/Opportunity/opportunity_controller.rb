@@ -77,6 +77,14 @@ class OpportunityController < Rho::RhoController
     render :action => :index_follow_up, :layout => 'layout_JQM_Lite'
   end
   
+  def check_preferred(phone_type, preferred)
+    if phone_type == preferred
+      %Q{ <span class="ui-icon ui-icon-check ui-icon-shadow"></span> }
+    else
+      ""
+    end
+  end
+  
   def index_appointments
     @past_due_appointments = Appointment.past_due_appointments
     @todays_appointments = Appointment.todays_appointments
