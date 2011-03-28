@@ -23,7 +23,7 @@ class AppApplication < Rho::RhoApplication
   #wipe the database and force a resync if a different user logs in
   def on_sync_user_changed
     super
-    Rhom::Rhom.database_local_reset
+    Rhom::Rhom.database_full_reset
   end
   
   # always force a login at startup. Will be automatic if user has successfully logged in before (see: Settings/controller.login)
