@@ -49,8 +49,7 @@ class SettingsController < Rho::RhoController
   end
 
   def do_login
-    
-    Settings.login = @params['login'] unless @params['login'].blank?
+    Settings.login = @params['login'].downcase unless @params['login'].blank?
     Settings.password = @params['password'] unless @params['password'].blank?
     
     if Settings.login and Settings.password
@@ -68,8 +67,8 @@ class SettingsController < Rho::RhoController
     end
   end
   
-  def logout
-    SyncEngine.logout
+  def do_logout
+    Rhom::Rhom.database_full_reset_and_logout
     Settings.clear_credentials
     SyncEngine.set_pollinterval(-1)
     Rho::NativeTabbar.remove
@@ -83,6 +82,8 @@ class SettingsController < Rho::RhoController
   
   def do_reset
     Rhom::Rhom.database_fullclient_reset_and_logout
+    Settings.clear_credentials
+    SyncEngine.set_pollinterval(-1)
     @msg = "Database has been reset."
     redirect :action => :index, :query => {:msg => @msg}
   end
@@ -149,7 +150,15 @@ class SettingsController < Rho::RhoController
 
       @msg = rho_error.message unless @msg and @msg.length > 0   
 
-      if rho_error.unknown_client?(@params['error_message'])
+      if @params['error_message'].downcase == 'unknown client'
+        puts "Received unknown client, resetting!"
+        Alert.show_popup({
+            :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
+            :title => "Unknown client", 
+            :buttons => ["OK"]
+          })
+        Rhom::Rhom.database_fullclient_reset_and_logout
+      elsif rho_error.unknown_client?(@params['error_message'])
         Rhom::Rhom.database_fullclient_reset_and_logout
         SyncEngine.dosync
       
