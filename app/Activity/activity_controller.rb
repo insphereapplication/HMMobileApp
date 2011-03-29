@@ -7,7 +7,7 @@ class ActivityController < Rho::RhoController
   
   def update_won_status
     opportunity = Opportunity.find(@params['opportunity_id'])
-    opportunity.complete_open_call
+    opportunity.complete_most_recent_open_call
     opportunity.update_attributes({
       :statecode => 'Won', 
       :statuscode => 'Sale',
@@ -19,7 +19,7 @@ class ActivityController < Rho::RhoController
 
   def udpate_lost_status
     opportunity = Opportunity.find(@params['opportunity_id'])
-    opportunity.complete_open_call
+    opportunity.complete_most_recent_open_call
     opportunity.update_attributes({
       :statecode => 'Lost',
       :statuscode => @params['status_code'],

@@ -7,14 +7,14 @@ class AppApplication < Rho::RhoApplication
   def initialize
     # Tab items are loaded left->right, @tabs[0] is leftmost tab in the tab-bar
     # Super must be called *after* settings @tabs!
-      @tabs = [
-                { :label => "Opps", :action => '/app/Opportunity', 
-                  :icon => "/public/images/iphone/tabs/pib_tab_icon.png", :web_bkg_color => 0x7F7F7F }, 
-                { :label => "Contacts",  :action => '/app/Contact',  
-                  :icon => "/public/images/iphone/tabs/activities_tab_icon.png" },
-                { :label => "Settings",  :action => '/app/Settings',  
-                  :icon => "/public/images/iphone/tabs/settings_tab_icon.png", :reload => true },
-              ]
+      # @tabs = [
+      #               { :label => "Opps", :action => '/app/Opportunity', 
+      #                 :icon => "/public/images/iphone/tabs/pib_tab_icon.png", :web_bkg_color => 0x7F7F7F }, 
+      #               { :label => "Contacts",  :action => '/app/Contact',  
+      #                 :icon => "/public/images/iphone/tabs/activities_tab_icon.png" },
+      #               { :label => "Settings",  :action => '/app/Settings',  
+      #                 :icon => "/public/images/iphone/tabs/settings_tab_icon.png", :reload => true },
+      #             ]
     # Important to call super _after_ you define @tabs!
     super
 
