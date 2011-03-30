@@ -108,7 +108,7 @@ class Activity
         :notetext => note_text, 
         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
         :parent_id => self.object,
-        :parent_type => 'phonecall' 
+        :parent_type => 'PhoneCall' 
       })
     end
   end

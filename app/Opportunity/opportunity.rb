@@ -245,7 +245,13 @@ class Opportunity
   end
   
   def notes
-    Note.find(:all, :conditions => {"parent_type" => "Opportunity", "parent_id" => self.object})
+    Note.find_by_sql(%Q{
+        select n.* from Note n where parent_type='Opportunity' and parent_id='#{object}' or
+        (n.parent_type = 'PhoneCall' and n.parent_id in (
+          select pc.object from Activity pc where pc.type='PhoneCall' and 
+          pc.parent_type='Opportunity' and pc.parent_id='#{object}'
+        ))
+    })
   end
   
   def most_recent_phone_call

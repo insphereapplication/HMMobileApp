@@ -1,20 +1,18 @@
 class Note
-  include Rhom::PropertyBag
+  include Rhom::FixedSchema
 
-  
   property :annotationid, :string
   property :parent_id, :string
   property :parent_type, :string
   property :createdon, :string
   property :notetext, :string
+  property :modifiedon, :string
+  property :subject, :string
   
   enable :sync
   
   belongs_to :parent_id, ['Activity', 'Opportunity']
-  
-  
-  # set :sync_priority, 2
-  
+   
   def parent
     if self.parent_type && self.parent_id
       parent = Object.const_get(self.parent_type.capitalize) 
