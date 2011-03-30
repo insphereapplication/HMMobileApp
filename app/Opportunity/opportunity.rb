@@ -83,44 +83,44 @@ class Opportunity
 
   def self.follow_up_phone_calls
     Activity.find_by_sql(%Q{
-        select * from Activity a, Opportunity o 
+        select a.* from Opportunity o, Activity a
         where a.type='PhoneCall' and 
         a.parent_type='opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') 
-        order by datetime(scheduledend)
+        group by o.object order by datetime(a.scheduledend)
       }) 
   end
   
   def self.todays_follow_ups
     Activity.find_by_sql(%Q{
-        select * from Activity a, Opportunity o 
+        select a.* from Opportunity o, Activity a
         where a.type='PhoneCall' and 
         a.parent_type='opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') and
         (date(scheduledend) = date('now', 'localtime'))
-        order by datetime(scheduledend)
+        group by o.object order by datetime(a.scheduledend)
       })
   end
   
   def self.past_due_follow_ups
     Activity.find_by_sql(%Q{
-        select * from Activity a, Opportunity o 
+        select a.* from Opportunity o, Activity a 
         where a.type='PhoneCall' and 
         a.parent_type='opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') and
         (date(scheduledend) < date('now', 'localtime'))
-        order by datetime(scheduledend)
+        group by o.object order by datetime(a.scheduledend)
       })
   end
   
   def self.future_follow_ups
     Activity.find_by_sql(%Q{
-        select * from Activity a, Opportunity o 
+        select a.* from Opportunity o, Activity a
         where a.type='PhoneCall' and 
         a.parent_type='opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') and
         (date(scheduledend) > date('now', 'localtime'))
-        order by datetime(scheduledend)
+        group by o.object order by datetime(a.scheduledend)
       })
   end
   
@@ -147,7 +147,7 @@ class Opportunity
         where parent_type='opportunity' and 
         parent_id=o.object
       ) 
-      and (date(o.createdon) < date('now', 'localtime') )
+      and (date(o.createdon) < date('now', 'localtime'))
       order by date(o.createdon) desc
     })
   end
