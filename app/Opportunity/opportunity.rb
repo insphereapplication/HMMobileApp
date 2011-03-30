@@ -31,8 +31,7 @@ class Opportunity
   index :contact_index, [:contact_id]
   
   belongs_to :contact_id, 'Contact'
-  
-  # an array of class-level cache objects
+
   CLOSED_STATECODES = ['Won', 'Lost']
   
   def opportunity_conditions
@@ -98,7 +97,7 @@ class Opportunity
         where a.type='PhoneCall' and 
         a.parent_type='opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') and
-        (date(scheduledend) = date('now'), 'localtime')
+        (date(scheduledend) = date('now', 'localtime'))
         order by datetime(scheduledend)
       })
   end
