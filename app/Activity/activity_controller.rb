@@ -6,27 +6,39 @@ class ActivityController < Rho::RhoController
   include BrowserHelper
   
   def update_won_status
-    opportunity = Opportunity.find(@params['opportunity_id'])
-    opportunity.complete_most_recent_open_call
-    opportunity.update_attributes({
-      :statecode => 'Won', 
-      :statuscode => 'Sale',
-      :cssi_statusdetail => "",
-      :actual_end => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-    })
-    finished_update_status(opportunity, @params['origin'])
+    db = ::Rho::RHO.get_src_db('Opportunity')
+    db.start_transaction
+    begin
+      opportunity = Opportunity.find(@params['opportunity_id'])
+      opportunity.complete_most_recent_open_call
+      opportunity.update_attributes({
+        :statecode => 'Won', 
+        :statuscode => 'Sale',
+        :cssi_statusdetail => "",
+        :actual_end => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+      })
+      finished_update_status(opportunity, @params['origin']
+    rescue
+     db.rollback
+    end
   end
 
   def udpate_lost_status
-    opportunity = Opportunity.find(@params['opportunity_id'])
-    opportunity.complete_most_recent_open_call
-    opportunity.update_attributes({
-      :statecode => 'Lost',
-      :statuscode => @params['status_code'],
-      :cssi_statusdetail => "",
-      :competitorid => @params['competitorid'] || ""
-    })
-    finished_update_status(opportunity, @params['origin'], @params['appointments'])
+    db = ::Rho::RHO.get_src_db('Opportunity')
+    db.start_transaction
+    begin
+      opportunity = Opportunity.find(@params['opportunity_id'])
+      opportunity.complete_most_recent_open_call
+      opportunity.update_attributes({
+        :statecode => 'Lost',
+        :statuscode => @params['status_code'],
+        :cssi_statusdetail => "",
+        :competitorid => @params['competitorid'] || ""
+      })
+      finished_update_status(opportunity, @params['origin'], @params['appointments'])
+    rescue
+     db.rollback
+    end
   end
   
   def update_status_no_contact
@@ -42,9 +54,15 @@ class ActivityController < Rho::RhoController
       opp_attrs.merge!({:statuscode => 'No Contact Made'})
     end
     
-    opportunity.update_attributes(opp_attrs)
-    opportunity.record_phone_call_made_now(@params['status_detail'])
-    finished_update_status(opportunity, @params['origin'], @params['appointments'])
+    db = ::Rho::RHO.get_src_db('Opportunity')
+    db.start_transaction
+    begin
+      opportunity.update_attributes(opp_attrs)
+      opportunity.record_phone_call_made_now(@params['status_detail'])
+      finished_update_status(opportunity, @params['origin'], @params['appointments'])
+    rescue
+     db.rollback
+    end
   end
   
   def update_status_call_back_requested
@@ -60,24 +78,30 @@ class ActivityController < Rho::RhoController
       opp_attrs.merge!({:statuscode => 'Contact Made'})
     end
     
-    opportunity.update_attributes(opp_attrs)
-    opportunity.record_phone_call_made_now('Call Back Requested')
+    db = ::Rho::RHO.get_src_db('Opportunity')
+    db.start_transaction
+    begin
+      opportunity.update_attributes(opp_attrs)
+      opportunity.record_phone_call_made_now('Call Back Requested')
     
-    # create the requested callback
-    phone_call = Activity.create({
-      :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
-      :subject => "Phone Call - #{opportunity.contact.full_name}",
-      :phonenumber => @params['phone_number'],
-      :parent_type => 'Opportunity', 
-      :parent_id => opportunity.object,
-      :statuscode => 'Open',
-      :statecode => 'Open',
-      :type => 'PhoneCall'
-    })
+      # create the requested callback
+      phone_call = Activity.create({
+        :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
+        :subject => "Phone Call - #{opportunity.contact.full_name}",
+        :phonenumber => @params['phone_number'],
+        :parent_type => 'Opportunity', 
+        :parent_id => opportunity.object,
+        :statuscode => 'Open',
+        :statecode => 'Open',
+        :type => 'PhoneCall'
+      })
     
-    phone_call.create_note(@params['notetext'])
+      phone_call.create_note(@params['notetext'])
     
-    finished_update_status(opportunity, @params['origin'], @params['appointments'])
+      finished_update_status(opportunity, @params['origin'], @params['appointments'])
+    rescue
+     db.rollback
+    end
   end
   
   def update_status_appointment_set
@@ -93,25 +117,31 @@ class ActivityController < Rho::RhoController
       opp_attrs.merge!({:statuscode => 'Appointment Set'})
     end
     
-    opportunity.complete_most_recent_open_call('Appointment Set') 
-    opportunity.update_attributes(opp_attrs)
+    db = ::Rho::RHO.get_src_db('Opportunity')
+    db.start_transaction
+    begin
+      opportunity.complete_most_recent_open_call('Appointment Set') 
+      opportunity.update_attributes(opp_attrs)
     
-    # create the requested appointment
-    Activity.create({
-        :parent_type => 'Opportunity',
-        :parent_id => opportunity.object,
-        :statecode => "Scheduled",
-        :statuscode => "Busy",
-        :scheduledstart => DateUtil.date_build(@params['appointment_datetime']),
-        :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
-        :location => @params['location'],
-        :subject => "#{contact.firstname}, #{contact.lastname} - #{opportunity.createdon}",
-        :description => @params['description'],
-        :type => 'Appointment'
-      }
-    )
+      # create the requested appointment
+      Activity.create({
+          :parent_type => 'Opportunity',
+          :parent_id => opportunity.object,
+          :statecode => "Scheduled",
+          :statuscode => "Busy",
+          :scheduledstart => DateUtil.date_build(@params['appointment_datetime']),
+          :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
+          :location => @params['location'],
+          :subject => "#{contact.firstname}, #{contact.lastname} - #{opportunity.createdon}",
+          :description => @params['description'],
+          :type => 'Appointment'
+        }
+      )
   
-    finished_update_status(opportunity, @params['origin'], @params['appointments'])
+      finished_update_status(opportunity, @params['origin'], @params['appointments'])
+    rescue
+     db.rollback
+    end
   end
   
   private

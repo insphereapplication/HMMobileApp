@@ -200,17 +200,9 @@ class OpportunityController < Rho::RhoController
     puts "Calling number " + @params['phone_number']
     telephone = @params['phone_number']
     telephone.gsub!(/[^0-9]/, "")
-    #redirect to opportunity detail page before launching call
-  #   if @params['opportunity']
-  #     redirect :action => :show,
-  #               :id => @params['opportunity'],
-  #               :query =>{:origin => @params['origin']}
-  #   else
-  #   redirect :action => :index
-  # end
-  redirect :action => :phone_dialog,
-            :id => @params['opportunity'],
-            :query =>{:origin => @params['origin']}
+    redirect :action => :phone_dialog,
+              :id => @params['opportunity'],
+              :query =>{:origin => @params['origin']}
     System.open_url('tel:' + telephone)
   end
 

@@ -44,7 +44,7 @@ class Contact
   def business_street
     "#{address2_line1}"
   end  
-#RETURNS A DESCRIPTIVE SUMMARY FOR THE CONTACT
+
   def age_sex_loc
     asl = ""
     if gendercode != nil
