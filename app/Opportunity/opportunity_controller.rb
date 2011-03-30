@@ -42,8 +42,6 @@ class OpportunityController < Rho::RhoController
     
     $opportunity_nav_context = []
     
-    SyncEngine.set_pollinterval(15)
-    
   end
   
   # since this is the default entry point on startup, check here for login
@@ -59,9 +57,9 @@ class OpportunityController < Rho::RhoController
   end
   
   def index_follow_up
-    @todays_follow_ups = Opportunity.todays_follow_ups
-    @past_due_follow_ups = Opportunity.past_due_follow_ups
-    @future_follow_ups = Opportunity.future_follow_ups
+    @todays_follow_ups = Activity.todays_follow_ups
+    @past_due_follow_ups = Activity.past_due_follow_ups
+    @future_follow_ups = Activity.future_follow_ups
     @last_activities = Opportunity.with_unscheduled_activities
     
     $opportunity_nav_context = [

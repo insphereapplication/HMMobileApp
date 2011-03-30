@@ -4,6 +4,9 @@ require 'rho/rhoerror'
 require 'helpers/browser_helper'
 require 'rho/rhotabbar'
 
+#if user is logged in, poll interval in seconds
+$poll_interval = 60
+
 class SettingsController < Rho::RhoController
   include BrowserHelper
   
@@ -12,11 +15,11 @@ class SettingsController < Rho::RhoController
     render :controller => :Setting, :action => :index, :layout => 'layout_jquerymobile'
   end
 
-  def login
+  def login(callback="/app/Settings/login_callback")
     @msg = @params['msg']
     # if the user has stored successful login credentials, attempt to auto-login with them
     if Settings.has_persisted_credentials?
-      SyncEngine.login(Settings.login, Settings.password,  "/app/Settings/login_callback")
+      SyncEngine.login(Settings.login, Settings.password,  callback)
       @working = true # if @working is true, page will show spinner
     end
     
@@ -33,7 +36,7 @@ class SettingsController < Rho::RhoController
         url_for(:controller => :Opportunity, :action => :init_notify),
         "sync_complete=true"
       )
-
+      SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
 
     else
@@ -46,6 +49,23 @@ class SettingsController < Rho::RhoController
       @msg ||= "The user name or password you entered is not valid"    
       WebView.navigate ( url_for :action => :login, :query => {:msg => @msg} )
     end  
+  end
+  
+  def retry_login_callback
+    errCode = @params['error_code'].to_i
+    if errCode == 0
+      SyncEngine.set_pollinterval($poll_interval)
+      SyncEngine.dosync
+    else
+      Settings.clear_credentials
+      SyncEngine.set_pollinterval(0)
+      if errCode == Rho::RhoError::ERR_CUSTOMSYNCSERVER
+        @msg = @params['error_message']
+      end
+  
+      @msg ||= "The user name or password you entered is not valid"    
+      WebView.navigate ( url_for :action => :login, :query => {:msg => @msg} )
+    end
   end
 
   def do_login
@@ -129,15 +149,34 @@ class SettingsController < Rho::RhoController
 
       err_code = @params['error_code'].to_i
       rho_error = Rho::RhoError.new(err_code)
-      
+
+      # if err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER
+      #        @msg = @params['error_message']
+      #      end
+
       @msg = rho_error.message unless @msg and @msg.length > 0   
-     
-      Alert.show_popup({
-         :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
-         :title => "Error Code: #{err_code}", 
-         :buttons => ["OK"]
-       })
-       
+
+      if (@params['error_message'].downcase == 'unknown client') or rho_error.unknown_client?(@params['error_message'])
+        puts "Received unknown client, resetting!"
+        Alert.show_popup({
+            :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
+            :title => "Unknown client", 
+            :buttons => ["OK"]
+          })
+        Rhom::Rhom.database_fullclient_reset_and_logout
+        render :action => :login, :layout => 'layout_jquerymobile'
+      
+      #elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)
+      else
+        # Alert.show_popup({
+        #                           :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
+        #                           :title => "Error: #{err_code}", 
+        #                           :buttons => ["OK"]
+        #                         })
+        SyncEngine.set_pollinterval(-1)
+        SyncEngine.stop_sync
+        login("/app/Settings/retry_login_callback")    
+      end  
     end
   end
   
