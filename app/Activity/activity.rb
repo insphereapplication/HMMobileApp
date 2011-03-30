@@ -16,9 +16,13 @@ class Activity
   property :statuscode, :string
   property :location, :string
   property :cssi_location, :string
+  property :object, :string
   
   index :activity_pk_index, [:activityid]
   index :parent_index, [:parent_id, :parent_type]
+  index :statuscode_index, [:statuscode]
+  index :statecode_index, [:statecode]
+  index :object_index, [:object]
   
 
   enable :sync
