@@ -16,8 +16,11 @@ class Activity
   property :statuscode, :string
   property :location, :string
   property :cssi_location, :string
+  property :description, :string
   
   index :activity_pk_index, [:activityid]
+  unique_index :unique_activity, [:activityid] 
+  
   index :activity_parent_index, [:parent_id, :parent_type]
   index :activity_statuscode_index, [:statuscode]
   index :activity_statecode_index, [:statecode]
@@ -62,6 +65,43 @@ class Activity
 # end
 
 # class PhoneCall < Activity
+  
+  def self.todays_follow_ups
+    find_by_sql(%Q{
+        select a.* from Opportunity o, Activity a
+        where a.type='PhoneCall' and 
+        a.statecode in ('Open', 'Scheduled') and
+        a.parent_type='opportunity' and a.parent_id=o.object and 
+        o.statecode not in ('Won', 'Lost') and
+        (date(scheduledend) = date('now', 'localtime'))
+        group by o.object order by datetime(a.scheduledend)
+      })
+  end
+  
+  def self.past_due_follow_ups
+    find_by_sql(%Q{
+        select a.* from Opportunity o, Activity a 
+        where a.type='PhoneCall' and 
+        a.statecode in ('Open', 'Scheduled') and
+        a.parent_type='opportunity' and a.parent_id=o.object and 
+        o.statecode not in ('Won', 'Lost') and
+        (date(scheduledend) < date('now', 'localtime'))
+        group by o.object order by datetime(a.scheduledend)
+      })
+  end
+  
+  def self.future_follow_ups
+    find_by_sql(%Q{
+        select a.* from Opportunity o, Activity a
+        where a.type='PhoneCall' and 
+        a.statecode in ('Open', 'Scheduled') and
+        a.parent_type='opportunity' and a.parent_id=o.object and 
+        o.statecode not in ('Won', 'Lost') and
+        (date(scheduledend) > date('now', 'localtime'))
+        group by o.object order by datetime(a.scheduledend)
+      })
+  end
+  
   def create_note(note_text)
     unless note_text.blank?
       Note.create({

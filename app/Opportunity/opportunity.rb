@@ -26,8 +26,11 @@ class Opportunity
   property :contact_id, :string
   property :cssi_lineofbusiness, :string
   property :cssi_fromrhosync, :string
+  property :overriddencreatedon, :string
   
   index :opportunity_pk_index, [:opportunityid]
+  unique_index :unique_opp, [:opportunityid] 
+  
   index :object_index, [:object]
   index :opp_contact_index, [:contact_id]
   index :opp_statecode_index, [:statecode]
@@ -84,53 +87,6 @@ class Opportunity
   def self.open_opportunities
     find(:all, :conditions => "statecode not in ('Won', 'Lost')")
   end
-
-  def self.follow_up_phone_calls
-    Activity.find_by_sql(%Q{
-        select a.* from Opportunity o, Activity a
-        where a.type='PhoneCall' and 
-        a.statecode in ('Open', 'Scheduled') and
-        a.parent_type='opportunity' and a.parent_id=o.object and 
-        o.statecode not in ('Won', 'Lost') 
-        group by o.object order by datetime(a.scheduledend)
-      }) 
-  end
-  
-  def self.todays_follow_ups
-    Activity.find_by_sql(%Q{
-        select a.* from Opportunity o, Activity a
-        where a.type='PhoneCall' and 
-        a.statecode in ('Open', 'Scheduled') and
-        a.parent_type='opportunity' and a.parent_id=o.object and 
-        o.statecode not in ('Won', 'Lost') and
-        (date(scheduledend) = date('now', 'localtime'))
-        group by o.object order by datetime(a.scheduledend)
-      })
-  end
-  
-  def self.past_due_follow_ups
-    Activity.find_by_sql(%Q{
-        select a.* from Opportunity o, Activity a 
-        where a.type='PhoneCall' and 
-        a.statecode in ('Open', 'Scheduled') and
-        a.parent_type='opportunity' and a.parent_id=o.object and 
-        o.statecode not in ('Won', 'Lost') and
-        (date(scheduledend) < date('now', 'localtime'))
-        group by o.object order by datetime(a.scheduledend)
-      })
-  end
-  
-  def self.future_follow_ups
-    Activity.find_by_sql(%Q{
-        select a.* from Opportunity o, Activity a
-        where a.type='PhoneCall' and 
-        a.statecode in ('Open', 'Scheduled') and
-        a.parent_type='opportunity' and a.parent_id=o.object and 
-        o.statecode not in ('Won', 'Lost') and
-        (date(scheduledend) > date('now', 'localtime'))
-        group by o.object order by datetime(a.scheduledend)
-      })
-  end
   
   def self.todays_new_leads
     find_by_sql(%Q{
@@ -163,12 +119,18 @@ class Opportunity
   def self.with_unscheduled_activities
     find_by_sql(%Q{
       select * from Opportunity o where statecode not in ('Won', 'Lost') and 
-      exists (
-          select a.object from Activity a where 
-          a.parent_type='opportunity' and 
-          a.parent_id=o.object and 
-          a.statecode not in ('Open', 'Scheduled') or scheduledend = ''
-        ) 
+        exists (
+            select a1.object from Activity a1 where 
+            a1.parent_type='opportunity' and 
+            a1.parent_id=o.object and 
+            (a1.statecode not in ('Open', 'Scheduled') or a1.scheduledend = '' or a1.scheduledend is null)
+          ) and 
+        not exists (
+            select a2.object from Activity a2 where
+            a2.parent_type='opportunity' and 
+            a2.parent_id=o.object and
+            (a2.statecode in ('Open', 'Scheduled') and a2.scheduledend is not null and a2.scheduledend <> '')
+          )
       order by datetime(o.cssi_lastactivitydate) desc
     })
   end
