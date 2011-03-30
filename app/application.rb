@@ -25,5 +25,5 @@ class AppApplication < Rho::RhoApplication
     super
     Rhom::Rhom.database_full_reset
   end
-    
+
 end
