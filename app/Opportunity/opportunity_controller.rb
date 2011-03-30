@@ -42,8 +42,6 @@ class OpportunityController < Rho::RhoController
     
     $opportunity_nav_context = []
     
-    SyncEngine.set_pollinterval(15)
-    
   end
   
   # since this is the default entry point on startup, check here for login
