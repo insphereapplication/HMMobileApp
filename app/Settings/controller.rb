@@ -49,8 +49,7 @@ class SettingsController < Rho::RhoController
   end
 
   def do_login
-    
-    Settings.login = @params['login'] unless @params['login'].blank?
+    Settings.login = @params['login'].downcase unless @params['login'].blank?
     Settings.password = @params['password'] unless @params['password'].blank?
     
     if Settings.login and Settings.password
@@ -68,8 +67,8 @@ class SettingsController < Rho::RhoController
     end
   end
   
-  def logout
-    SyncEngine.logout
+  def do_logout
+    Rhom::Rhom.database_full_reset_and_logout
     Settings.clear_credentials
     SyncEngine.set_pollinterval(-1)
     Rho::NativeTabbar.remove
@@ -83,6 +82,8 @@ class SettingsController < Rho::RhoController
   
   def do_reset
     Rhom::Rhom.database_fullclient_reset_and_logout
+    Settings.clear_credentials
+    SyncEngine.set_pollinterval(-1)
     @msg = "Database has been reset."
     redirect :action => :index, :query => {:msg => @msg}
   end
@@ -107,7 +108,7 @@ class SettingsController < Rho::RhoController
     Alert.vibrate(2000)
     
     Alert.show_popup({
-      :message => "You have new Opportunities", 
+      :message => "You have new Opportunities: #{@params.inspect}", 
       :title => 'New Opportunities', 
       :buttons => ["Cancel", "View"],
       :callback => url_for(:action => :on_dismiss_notify_popup) 
@@ -115,21 +116,7 @@ class SettingsController < Rho::RhoController
    end
    
   def sync_notify
-    # RhoLog.error("TEST", "TEST")
-    # ERR_NONE = 0
-    # ERR_NETWORK = 1
-    # ERR_REMOTESERVER = 2
-    # ERR_RUNTIME = 3
-    # ERR_UNEXPECTEDSERVERRESPONSE = 4
-    # ERR_DIFFDOMAINSINSYNCSRC = 5
-    # ERR_NOSERVERRESPONSE = 6
-    # ERR_CLIENTISNOTLOGGEDIN = 7
-    # ERR_CUSTOMSYNCSERVER = 8
-    # ERR_UNATHORIZED = 9
-    # ERR_CANCELBYUSER = 10
-    # ERR_SYNCVERSION = 11
-    # ERR_GEOLOCATION = 12
-
+  
     status = @params['status'] ? @params['status'] : ""
     
     if status == "complete" or status == "ok"
@@ -142,40 +129,15 @@ class SettingsController < Rho::RhoController
 
       err_code = @params['error_code'].to_i
       rho_error = Rho::RhoError.new(err_code)
-
-      # if err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER
-      #        @msg = @params['error_message']
-      #      end
-
-      @msg = rho_error.message unless @msg and @msg.length > 0   
-
-      if rho_error.unknown_client?(@params['error_message'])
-        Rhom::Rhom.database_fullclient_reset_and_logout
-        SyncEngine.dosync
       
-      else #if err_code == Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN 
-        puts "!!!!  EXCEPTION: #{Rho::RhoError.err_message(err_code)}"
-        # for now, ignore. This appears to happen on simple connectivity lapses and then goes away
-      # elsif err_code == Rho::RhoError::ERR_UNATHORIZED 
-      #         SyncEngine.set_pollinterval(-1)
-      #         Alert.show_popup({
-      #             :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
-      #             :title => "Server Session Lost", 
-      #             :buttons => ["OK"]
-      #           })
-      #         WebView.navigate( 
-      #           url_for(
-      #             :action => :login, 
-      #             :query => { :msg => "Server credentials expired!" } 
-      #           )
-      #         )         
-      #       else
-      #          Alert.show_popup({
-      #             :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
-      #             :title => "Error Code: #{err_code}", 
-      #             :buttons => ["OK"]
-      #           })
-      end    
+      @msg = rho_error.message unless @msg and @msg.length > 0   
+     
+      Alert.show_popup({
+         :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
+         :title => "Error Code: #{err_code}", 
+         :buttons => ["OK"]
+       })
+       
     end
   end
   

@@ -1,26 +1,25 @@
 class Activity
-  include Rhom::PropertyBag
+  include Rhom::FixedSchema
   
-  #   {"statecode":"Open",
-  #    "activityid":"9b90b4bf-7d46-e011-837e-0050569c157c",
-  #    "scheduledend":"3/2/2011 6:00:00 AM",
-  #    "regardingobjectid":{"type":"opportunity","name":"Frankliny, Benjamin - 2/9/2011","id":"10b8f740-6e34-e011-a625-0050569c157c"},
-  #    "phonenumber":"(123) 456-7890",
-  #    "cssi_phonetype":"Home",
-  #    "subject":"Test","statuscode":"Open","type":"PhoneCall"}
+  property :statecode, :string
+  property :activityid, :string
+  property :phonenumber, :string
+  property :parent_type, :string
+  property :cssi_phonetype, :string
+  property :subject, :string
+  property :cssi_fromrhosync, :string
+  property :type, :string
+  property :parent_id, :string
+  property :scheduledstart, :string
+  property :scheduledend, :string
+  property :cssi_disposition, :string
+  property :statuscode, :string
+  property :location, :string
+  property :cssi_location, :string
   
-  #   :object=>"5b0635e7-f245-e011-837e-0050569c157c", 
-  #   :activityid=>"5b0635e7-f245-e011-837e-0050569c157c", 
-  #   :cssi_disposition=>"No Answer", 
-  #   :cssi_phonetype=>"Home", 
-  #   :parent_id=>"540ca70a-2d35-e011-a625-0050569c157c", 
-  #   :parent_type=>"opportunity", 
-  #   :phonenumber=>"(123) 456-7897", 
-  #   :scheduledend=>"3/2/2011 6:00:00 AM", 
-  #   :statecode=>"Open", 
-  #   :statuscode=>"Open", 
-  #   :subject=>"No Answer - LoggerTest 7, Test - 2/10/2011", 
-  #   :type=>"PhoneCall"}>
+  index :activity_pk_index, [:activityid]
+  index :parent_index, [:parent_id, :parent_type]
+  
 
   enable :sync
   set :sync_priority, 2 # this needs to be loaded first so that opportunities can know their context
@@ -30,6 +29,7 @@ class Activity
   def parent
     if self.parent_type && self.parent_id
       parent = Object.const_get(self.parent_type.capitalize) 
+      puts "PARENT TYPE: #{parent} -- ID: #{parent_id}"
       parent.find(:first, :conditions => {"#{self.parent_type.downcase}id" => self.parent_id})
     end
   end
@@ -55,12 +55,12 @@ class Activity
       "Phone Call"
     else
       type
+    end
   end
-end
   
-end
+# end
 
-class PhoneCall < Activity
+# class PhoneCall < Activity
   def create_note(note_text)
     unless note_text.blank?
       Note.create({
@@ -71,17 +71,9 @@ class PhoneCall < Activity
       })
     end
   end
-end
+# end
 
-class Appointment < Activity
-  
-  # an array of class-level cache objects
-  CACHED = [@open_appointments]
-  
-  # clear out all class-level cache objects
-  def self.clear_cache
-    CACHED.each {|cache| cache = nil }
-  end
+# class Appointment < Activity
   
   def self.open_appointments
     find(:all, :conditions => {'statecode' => 'Scheduled'}).reject{|appointment| appointment.parent.closed? }

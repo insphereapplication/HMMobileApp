@@ -3,11 +3,11 @@ require 'date'
 require 'rho/rhotabbar'
 
 class Opportunity
-  # include Rhom::FixedSchema
-  include Rhom::PropertyBag
+  include Rhom::FixedSchema
+  
   enable :sync
   
-  set :sync_priority, 1000
+  set :sync_priority, 100
 
   property :opportunityid, :string
   property :statecode, :string
@@ -25,28 +25,14 @@ class Opportunity
   property :cssi_callcounter, :string
   property :contact_id, :string
   property :cssi_lineofbusiness, :string
+  property :cssi_fromrhosync, :string
   
-  index :opportunity_pk_index, :opportunityid
-  index :contact_index, :contact_id
-
-  # "modifiedon" => "03/24/2011 01:09:39 PM",
-  #                    "statecode" => "Open",
-  # 
-  #            "cssi_leadvendorid" => "Humana",
-  #             "cssi_inputsource" => "Manual",
-  #        "cssi_lastactivitydate" => "03/24/2011 01:09:38 PM",
-  #                   "contact_id" => "b525d359-7b4e-e011-93bf-0050569c7cfe",
-  #            "cssi_leadsourceid" => "Internet",
-  #         "cssi_assignedagentid" => {
-  #            "name" => "James Burkett",
-  #              "id" => "b0b67403-0902-df11-a6f1-0050568d2fb2",
-  #            "type" => "systemuser"
-  #        }
+  index :opportunity_pk_index, [:opportunityid]
+  index :contact_index, [:contact_id]
   
   belongs_to :contact_id, 'Contact'
   
   # an array of class-level cache objects
-  CACHED = [@new_leads, @phone_calls]
   CLOSED_STATECODES = ['Won', 'Lost']
   
   def opportunity_conditions
@@ -75,50 +61,113 @@ class Opportunity
     }]
     
   end
-  
-  # clear out all class-level cache objects
-  def self.clear_cache
-    CACHED.each {|cache| cache = nil }
-  end
     
   def contact
     Contact.find(self.contact_id)
   end
 
   def self.new_leads
-    find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities?}.compact
+    # find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities?}.compact
+    find_by_sql(%Q{
+      select * from Opportunity o where 
+      statuscode='New Opportunity' and
+      not exists (
+        select a.object from Activity a 
+        where parent_type='opportunity' and 
+        parent_id=o.object
+      )
+    })
   end 
   
+  
   def self.open_opportunities
-    find(:all).reject{|opp| opp.closed? }
+    find(:all, :conditions => "statecode not in ('Won', 'Lost')")
   end
 
   def self.follow_up_phone_calls
-    open_opportunities.map { |opportunity| opportunity.scheduled_phone_calls.first }.compact
+    Activity.find_by_sql(%Q{
+        select * from Activity a, Opportunity o 
+        where a.type='PhoneCall' and 
+        a.parent_type='opportunity' and a.parent_id=o.object and 
+        o.statecode not in ('Won', 'Lost') 
+        order by datetime(scheduledend)
+      }) 
   end
   
   def self.todays_follow_ups
-    follow_up_phone_calls.select_all_occurring_today(:scheduledend).time_sort(:scheduledend)
+    Activity.find_by_sql(%Q{
+        select * from Activity a, Opportunity o 
+        where a.type='PhoneCall' and 
+        a.parent_type='opportunity' and a.parent_id=o.object and 
+        o.statecode not in ('Won', 'Lost') and
+        (date(scheduledend) = date('now') + #{DateUtil.offset})
+        order by datetime(scheduledend)
+      })
   end
   
   def self.past_due_follow_ups
-    follow_up_phone_calls.select_all_before_today(:scheduledend).time_sort(:scheduledend)
+    Activity.find_by_sql(%Q{
+        select * from Activity a, Opportunity o 
+        where a.type='PhoneCall' and 
+        a.parent_type='opportunity' and a.parent_id=o.object and 
+        o.statecode not in ('Won', 'Lost') and
+        (date(scheduledend) < date('now', 'localtime'))
+        order by datetime(scheduledend)
+      })
   end
   
   def self.future_follow_ups
-    follow_up_phone_calls.select_all_after_today(:scheduledend).time_sort(:scheduledend)
+    Activity.find_by_sql(%Q{
+        select * from Activity a, Opportunity o 
+        where a.type='PhoneCall' and 
+        a.parent_type='opportunity' and a.parent_id=o.object and 
+        o.statecode not in ('Won', 'Lost') and
+        (date(scheduledend) > date('now', 'localtime'))
+        order by datetime(scheduledend)
+      })
   end
   
   def self.todays_new_leads
-    new_leads.select_all_occurring_today(:createdon).time_sort(:createdon).reverse # reverse to get most recent created at top
+    # new_leads.select_all_occurring_today(:createdon).time_sort(:createdon).reverse # reverse to get most recent created at top
+    find_by_sql(%Q{
+      select * from Opportunity o where 
+      statuscode='New Opportunity' and
+      not exists (
+        select a.object from Activity a 
+        where parent_type='opportunity' and 
+        parent_id=o.object
+      ) 
+      and (date(o.createdon) = date('now', 'localtime'))
+      order by date(o.createdon) desc
+    })
   end
   
   def self.previous_days_leads
-    new_leads.select_all_before_today(:createdon).time_sort(:createdon).reverse # reverse to get most recent created at top
+    # new_leads.select_all_before_today(:createdon).time_sort(:createdon).reverse # reverse to get most recent created at top
+    find_by_sql(%Q{
+      select * from Opportunity o where 
+      statuscode='New Opportunity' and
+      not exists (
+        select a.object from Activity a 
+        where parent_type='opportunity' and 
+        parent_id=o.object
+      ) 
+      and (date(o.createdon) < date('now', 'localtime') )
+      order by date(o.createdon) desc
+    })
   end
   
   def self.with_unscheduled_activities
-    open_opportunities.select {|opp| opp.has_unscheduled_activities? }.time_sort(:cssi_lastactivitydate).reverse
+    find_by_sql(%Q{
+      select * from Opportunity o where statecode not in ('Won', 'Lost') and 
+      exists (
+          select a.object from Activity a where 
+          a.parent_type='opportunity' and 
+          a.parent_id=o.object and 
+          a.statecode not in ('Open', 'Scheduled') or scheduledend = ''
+        ) 
+      order by datetime(o.cssi_lastactivitydate) desc
+    })
   end
   
   def has_unscheduled_activities?
@@ -174,11 +223,6 @@ class Opportunity
     most_recent_phone_call.scheduledend if most_recent_phone_call && most_recent_phone_call.scheduledend 
   end
   
-  # def last_activity_date
-  #     # self.cssi_lastactivitydate.blank? ? last_activity.createdon : self.cssi_lastactivitydate
-  #     last_activity.createdon
-  #   end
-  
   def most_recent_open_or_create_new_phone_call
     most_recent_open_phone_call || PhoneCall.new
   end
@@ -208,7 +252,12 @@ class Opportunity
   end
   
   def appointments
-    Appointment.find(:all, :conditions => opportunity_conditions, :op => 'and')
+    Activity.find(:all, 
+                  :conditions => opportunity_conditions.merge({
+                                  :name => 'type',
+                                  :op => '='
+                                } => 'Appointments'), 
+                  :op => 'and')
   end
   
   def activities
@@ -216,7 +265,12 @@ class Opportunity
   end
   
   def phone_calls
-    PhoneCall.find(:all, :conditions => opportunity_conditions, :op => 'and')
+    Activity.find(:all, 
+                  :conditions => opportunity_conditions.merge({
+                                  :name => 'type',
+                                  :op => '='
+                                } => 'PhoneCall'), 
+                  :op => 'and')
   end
   
   def adhoc_numbers
