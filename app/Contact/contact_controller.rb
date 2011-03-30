@@ -9,7 +9,7 @@ class ContactController < Rho::RhoController
 
   #GET /Contact
   def index
-    @contacts = Contact.find(:all)
+    @contacts = Contact.all_open
     @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.chars.first}
     render :action => :index, :layout => 'layout_JQM_Lite'
   end

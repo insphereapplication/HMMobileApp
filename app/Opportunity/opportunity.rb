@@ -120,7 +120,7 @@ class Opportunity
   
   def self.with_unscheduled_activities
     find_by_sql(%Q{
-      select * from Opportunity o where statecode not in ('Won', 'Lost') and 
+      select * from Opportunity o where o.statecode not in ('Won', 'Lost') and 
         exists (
             select a1.object from Activity a1 where 
             a1.parent_type='Opportunity' and 

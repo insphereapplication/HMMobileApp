@@ -1,11 +1,12 @@
 require '/initializers/object_extension'
 
 class Contact
-  include Rhom::PropertyBag
+  include Rhom::FixedSchema
 
   enable :sync
   set :sync_priority, 1
-  #Note: These property names are derived from the field names in Microsoft Dynamics CRM--to prevent mapping issues
+  
+  # Note: These property names are derived from the field names in Microsoft Dynamics CRM--to prevent mapping issues
   property :firstname, :string
   property :lastname, :string
   property :gendercode, :string  
@@ -28,13 +29,23 @@ class Contact
   property :cssi_state2id, :string #business address state
   property :address2_postalcode, :string 
   property :contactid, :string
+  property :cssi_assignedagentid, :string
+  
+  index :contact_pk_index, [:contactid]
+  unique_index :unique_contact, [:contactid] 
+  
+  def self.all_open
+    Contact.find_by_sql(%Q{
+      select c.* from Contact c, Opportunity o where o.contact_id=c.contactid and o.statecode not in ('Won', 'Lost')
+    })
+  end
   
   def full_name
     "#{firstname} #{lastname}"
   end
   
   def last_first
-      "#{lastname}, #{firstname}"
+    "#{lastname}, #{firstname}"
   end
   
   def home_street

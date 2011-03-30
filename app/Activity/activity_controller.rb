@@ -17,9 +17,11 @@ class ActivityController < Rho::RhoController
         :cssi_statusdetail => "",
         :actual_end => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
       })
-      finished_update_status(opportunity, @params['origin']
-    rescue
-     db.rollback
+      finished_update_status(opportunity, @params['origin'])
+      db.commit
+    rescue Exception => e
+      puts "Exception in update won status: #{e.inspect}"
+      db.rollback
     end
   end
 
@@ -36,8 +38,10 @@ class ActivityController < Rho::RhoController
         :competitorid => @params['competitorid'] || ""
       })
       finished_update_status(opportunity, @params['origin'], @params['appointments'])
-    rescue
-     db.rollback
+      db.commit
+    rescue Exception => e
+      puts "Exception in update lost status: #{e.inspect}"
+      db.rollback
     end
   end
   
@@ -60,13 +64,14 @@ class ActivityController < Rho::RhoController
       opportunity.update_attributes(opp_attrs)
       opportunity.record_phone_call_made_now(@params['status_detail'])
       finished_update_status(opportunity, @params['origin'], @params['appointments'])
-    rescue
-     db.rollback
+      db.commit
+    rescue Exception => e
+      puts "Exception in update status no contact: #{e.inspect}"
+      db.rollback
     end
   end
   
   def update_status_call_back_requested
-
     opportunity = Opportunity.find(@params['opportunity_id'])
     
     opp_attrs = {
@@ -99,8 +104,10 @@ class ActivityController < Rho::RhoController
       phone_call.create_note(@params['notetext'])
     
       finished_update_status(opportunity, @params['origin'], @params['appointments'])
-    rescue
-     db.rollback
+      db.commit
+    rescue Exception => e
+      puts "Exception in update status call back requested: #{e.inspect}"
+      db.rollback
     end
   end
   
@@ -139,8 +146,10 @@ class ActivityController < Rho::RhoController
       )
   
       finished_update_status(opportunity, @params['origin'], @params['appointments'])
-    rescue
-     db.rollback
+      db.commit
+    rescue Exception => e
+      puts "Exception in update status appointment set: #{e.inspect}"
+      db.rollback
     end
   end
   
