@@ -28,11 +28,14 @@ class Opportunity
   property :cssi_fromrhosync, :string
   
   index :opportunity_pk_index, [:opportunityid]
-  index :contact_index, [:contact_id]
-  
+  index :object_index, [:object]
+  index :opp_contact_index, [:contact_id]
+  index :opp_statecode_index, [:statecode]
+  index :opp_statuscode_index, [:statuscode]
+  index :opp_createdon_index, [:createdon]
+
   belongs_to :contact_id, 'Contact'
-  
-  # an array of class-level cache objects
+
   CLOSED_STATECODES = ['Won', 'Lost']
   
   def opportunity_conditions
@@ -84,44 +87,48 @@ class Opportunity
 
   def self.follow_up_phone_calls
     Activity.find_by_sql(%Q{
-        select * from Activity a, Opportunity o 
+        select a.* from Opportunity o, Activity a
         where a.type='PhoneCall' and 
+        a.statecode in ('Open', 'Scheduled') and
         a.parent_type='opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') 
-        order by datetime(scheduledend)
+        group by o.object order by datetime(a.scheduledend)
       }) 
   end
   
   def self.todays_follow_ups
     Activity.find_by_sql(%Q{
-        select * from Activity a, Opportunity o 
+        select a.* from Opportunity o, Activity a
         where a.type='PhoneCall' and 
+        a.statecode in ('Open', 'Scheduled') and
         a.parent_type='opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') and
-        (date(scheduledend) = date('now'), 'localtime')
-        order by datetime(scheduledend)
+        (date(scheduledend) = date('now', 'localtime'))
+        group by o.object order by datetime(a.scheduledend)
       })
   end
   
   def self.past_due_follow_ups
     Activity.find_by_sql(%Q{
-        select * from Activity a, Opportunity o 
+        select a.* from Opportunity o, Activity a 
         where a.type='PhoneCall' and 
+        a.statecode in ('Open', 'Scheduled') and
         a.parent_type='opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') and
         (date(scheduledend) < date('now', 'localtime'))
-        order by datetime(scheduledend)
+        group by o.object order by datetime(a.scheduledend)
       })
   end
   
   def self.future_follow_ups
     Activity.find_by_sql(%Q{
-        select * from Activity a, Opportunity o 
+        select a.* from Opportunity o, Activity a
         where a.type='PhoneCall' and 
+        a.statecode in ('Open', 'Scheduled') and
         a.parent_type='opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') and
         (date(scheduledend) > date('now', 'localtime'))
-        order by datetime(scheduledend)
+        group by o.object order by datetime(a.scheduledend)
       })
   end
   
@@ -148,7 +155,7 @@ class Opportunity
         where parent_type='opportunity' and 
         parent_id=o.object
       ) 
-      and (date(o.createdon) < date('now', 'localtime') )
+      and (date(o.createdon) < date('now', 'localtime'))
       order by date(o.createdon) desc
     })
   end
