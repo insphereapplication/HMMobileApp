@@ -78,7 +78,6 @@ class Opportunity
     })
   end 
   
-  
   def self.open_opportunities
     find(:all, :conditions => "statecode not in ('Won', 'Lost')")
   end
@@ -167,10 +166,6 @@ class Opportunity
     })
   end
   
-  def has_unscheduled_activities?
-    has_activities? && !has_scheduled_activities?
-  end
-  
   def create_note(note_text)
     unless note_text.blank?
       Note.create({
@@ -193,9 +188,10 @@ class Opportunity
     if phone_call = most_recent_open_phone_call   
       phone_call.update_attributes(phone_call_attrs)
     else
-      phone_call = PhoneCall.create(phone_call_attrs.merge({
+      phone_call = Activity.create(phone_call_attrs.merge({
         :parent_type => 'Opportunity', 
-        :parent_id => self.object
+        :parent_id => self.object,
+        :type => 'PhoneCall'
         })
       )
     end
@@ -221,7 +217,7 @@ class Opportunity
   end
   
   def most_recent_open_or_create_new_phone_call
-    most_recent_open_phone_call || PhoneCall.new
+    most_recent_open_phone_call || Activity.new({:type => 'PhoneCall'})
   end
   
   def is_new?
@@ -294,25 +290,12 @@ class Opportunity
     phone_calls.select{|phone_call| phone_call.open? } if phone_calls
   end
   
-  def scheduled_phone_calls
-    phone_calls.select{|phone_call| !phone_call.scheduledend.blank? && phone_call.open? }.time_sort(:scheduledend) if phone_calls
-  end
-  
   def last_activity
     activities.first if activities
   end
   
   def created_on_formatted
     Time.parse(createdon).to_formatted_string if createdon
-  end
-  
-  def create_or_find_earliest_phone_call(attributes)
-    if phone_calls.size > 0
-      return phone_calls.compact.time_sort(:scheduledstart).first
-    else
-      phone_call = Activity.create('type' => 'PhoneCall', 'disposition' => params['cssi_disposition'], 'parent_id' => opportunityid, 'parent_type' => 'opportunity')
-      return phone_call
-    end
   end
   
   def is_high_cost
