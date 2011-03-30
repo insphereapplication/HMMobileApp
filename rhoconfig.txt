@@ -14,7 +14,7 @@ rhobundle_zip_pwd = nil
 # log level
 # 0-trace, 1-info(app level), 3-warnings, 4-errors
 # for production set to 3
-MinSeverity  = 3
+MinSeverity  = 1
 
 # enable copy log messages to standard output, useful for debugging
 LogToOutput = 1
@@ -47,8 +47,18 @@ LastVisitedPage = ''
 
 # sync server url, typically this will look like 'http://<hostname>:<port>/application'
 # for example: 'http://localhost:9292/application'
-syncserver = 'http://rhohub-insphere-c58af007.rhosync.com/application'
+#MODEL -- FOR USER ACCEPTANCE TESTING
+syncserver = 'http://rhohub-insphere-c58af007.rhosync.com/application' 
+
+#DEV
+#syncserver = 'http://rhohub-insphere-a06075d6.rhosync.com/application'
+
+#LOCAL
 # syncserver = 'http://localhost:9292/application'
+
+
+
+
 
 #sync_poll_interval=300
 
