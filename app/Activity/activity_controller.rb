@@ -20,7 +20,7 @@ class ActivityController < Rho::RhoController
       finished_update_status(opportunity, @params['origin'])
       db.commit
     rescue Exception => e
-      puts "Exception in update won status: #{e.inspect}"
+      puts "Exception in update won status, rolling back: #{e.inspect} -- #{@params.inspect}"
       db.rollback
     end
   end
@@ -40,7 +40,7 @@ class ActivityController < Rho::RhoController
       finished_update_status(opportunity, @params['origin'], @params['appointments'])
       db.commit
     rescue Exception => e
-      puts "Exception in update lost status: #{e.inspect}"
+      puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
       db.rollback
     end
   end
@@ -66,7 +66,7 @@ class ActivityController < Rho::RhoController
       finished_update_status(opportunity, @params['origin'], @params['appointments'])
       db.commit
     rescue Exception => e
-      puts "Exception in update status no contact: #{e.inspect}"
+      puts "Exception in update status no contact, rolling back: #{e.inspect} -- #{@params.inspect}"
       db.rollback
     end
   end
@@ -92,7 +92,7 @@ class ActivityController < Rho::RhoController
       # create the requested callback
       phone_call = Activity.create({
         :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
-        :subject => "Phone Call - #{opportunity.contact.full_name}",
+        :subject => "Phone Call - #{opportunity.contact.full_name} -- #{@params.inspect}",
         :phonenumber => @params['phone_number'],
         :parent_type => 'Opportunity', 
         :parent_id => opportunity.object,
@@ -106,7 +106,7 @@ class ActivityController < Rho::RhoController
       finished_update_status(opportunity, @params['origin'], @params['appointments'])
       db.commit
     rescue Exception => e
-      puts "Exception in update status call back requested: #{e.inspect}"
+      puts "Exception in update status call back requested, rolling back: #{e.inspect} -- #{@params.inspect}"
       db.rollback
     end
   end
@@ -148,7 +148,7 @@ class ActivityController < Rho::RhoController
       finished_update_status(opportunity, @params['origin'], @params['appointments'])
       db.commit
     rescue Exception => e
-      puts "Exception in update status appointment set: #{e.inspect}"
+      puts "Exception in update status appointment set, rolling back: #{e.inspect} -- #{@params.inspect}"
       db.rollback
     end
   end
