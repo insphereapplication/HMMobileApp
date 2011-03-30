@@ -7,7 +7,7 @@ class ActivityController < Rho::RhoController
   
   def update_won_status
     opportunity = Opportunity.find(@params['opportunity_id'])
-    opportunity.complete_open_call
+    opportunity.complete_most_recent_open_call
     opportunity.update_attributes({
       :statecode => 'Won', 
       :statuscode => 'Sale',
@@ -19,7 +19,7 @@ class ActivityController < Rho::RhoController
 
   def udpate_lost_status
     opportunity = Opportunity.find(@params['opportunity_id'])
-    opportunity.complete_open_call
+    opportunity.complete_most_recent_open_call
     opportunity.update_attributes({
       :statecode => 'Lost',
       :statuscode => @params['status_code'],
@@ -64,7 +64,7 @@ class ActivityController < Rho::RhoController
     opportunity.record_phone_call_made_now('Call Back Requested')
     
     # create the requested callback
-    phone_call = PhoneCall.create({
+    phone_call = Activity.create({
       :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
       :subject => "Phone Call - #{opportunity.contact.full_name}",
       :phonenumber => @params['phone_number'],
@@ -72,7 +72,8 @@ class ActivityController < Rho::RhoController
       :parent_id => opportunity.object,
       :statuscode => 'Open',
       :statecode => 'Open',
-      :notetext => @params['note']
+      :notetext => @params['note'],
+      :type => 'PhoneCall'
     })
     
     phone_call.create_note(@params['notetext'])
@@ -97,7 +98,7 @@ class ActivityController < Rho::RhoController
     opportunity.update_attributes(opp_attrs)
     
     # create the requested appointment
-    Appointment.create({
+    Activity.create({
         :parent_type => 'opportunity',
         :parent_id => opportunity.object,
         :statecode => "Scheduled",
@@ -106,7 +107,8 @@ class ActivityController < Rho::RhoController
         :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
         :location => @params['location'],
         :subject => "#{contact.firstname}, #{contact.lastname} - #{opportunity.createdon}",
-        :description => @params['description']
+        :description => @params['description'],
+        :type => 'Appointment'
       }
     )
   
@@ -124,7 +126,7 @@ class ActivityController < Rho::RhoController
   def complete_appointments(appointmentids)
     if appointmentids
       appointmentids.each do |id|
-        appointment = Appointment.find(id)
+        appointment = Activity.find(id, :conditions => {:type => 'Appointment'})
         appointment.complete if appointment
       end
     end

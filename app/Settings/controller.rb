@@ -128,7 +128,7 @@ class SettingsController < Rho::RhoController
     Alert.vibrate(2000)
     
     Alert.show_popup({
-      :message => "You have new Opportunities", 
+      :message => "You have new Opportunities: #{@params.inspect}", 
       :title => 'New Opportunities', 
       :buttons => ["Cancel", "View"],
       :callback => url_for(:action => :on_dismiss_notify_popup) 
@@ -136,21 +136,7 @@ class SettingsController < Rho::RhoController
    end
    
   def sync_notify
-    # RhoLog.error("TEST", "TEST")
-    # ERR_NONE = 0
-    # ERR_NETWORK = 1
-    # ERR_REMOTESERVER = 2
-    # ERR_RUNTIME = 3
-    # ERR_UNEXPECTEDSERVERRESPONSE = 4
-    # ERR_DIFFDOMAINSINSYNCSRC = 5
-    # ERR_NOSERVERRESPONSE = 6
-    # ERR_CLIENTISNOTLOGGEDIN = 7
-    # ERR_CUSTOMSYNCSERVER = 8
-    # ERR_UNATHORIZED = 9
-    # ERR_CANCELBYUSER = 10
-    # ERR_SYNCVERSION = 11
-    # ERR_GEOLOCATION = 12
-
+  
     status = @params['status'] ? @params['status'] : ""
     
     if status == "complete" or status == "ok"
