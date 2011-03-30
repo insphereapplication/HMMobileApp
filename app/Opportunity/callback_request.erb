@@ -9,7 +9,7 @@
 	</div>
 	<div id="contentDiv" data-role="content">
 		<div class="ui-body ui-body-d">
-			<form name="call_back_form" method="POST" onSubmit="return validate(this);" action="<%= url_for :controller => :Activity, :action => :update_status_call_back_requested, :query => {:origin => @params['origin']} %>">
+			<form name="call_back_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_call_back_requested, :query => {:origin => @params['origin']} %>">
 				<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
 				<input type="hidden" name="appointments[]" value="<%= @params['appointments'].join(',') %>" />
 				<div data-role="fieldcontain">
@@ -33,7 +33,7 @@
 		            <input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" id="phoneNumber" name="phone_number" value="<%= @opportunity.contact.default_number %>" /><br />
 					<label for="notetext">Notes:</label>
 					<textarea cols="40" rows="8" name="notetext" id="notetext"></textarea>
-					<input type="submit" class="standardButton" value="Create Call Back"/>
+					<input type="submit" class="standardButton" onclick="return validate();" value="Create Call Back"/>
 				</div>
 				<% unless System::get_property('platform') == 'Blackberry'%>
 				<%end%>

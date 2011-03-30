@@ -1,8 +1,24 @@
 
 //status update validate datetime
-function validate(form){
-	if ((form.elements["callback_datetime"].value.length==0) ||form.elements["callback_datetime"].value==null) {
+function validate(){
+	if ((document.getElementById('callback_datetime').value.length==0) || document.getElementById('callback_datetime').value==null) {
       	alert('Please choose a callback date and time.');
+		return false;
+   }
+   else { return true; }	
+}
+
+function validateAppt(){
+	if ((document.getElementById('appointment_datetime').value.length==0) || document.getElementById('appointment_datetime').value==null) {
+      	alert('Please choose an appointment date and time.');
+		return false;
+   }
+   else { return true; }	
+}
+
+function validateLost(){
+	if ((document.getElementById('status_code').value.length==0) ||document.getElementById('status_code').value==null) {
+      	alert('Please choose a lost reason.');
 		return false;
    }
    else { return true; }	

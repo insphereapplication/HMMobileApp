@@ -178,5 +178,8 @@ module BrowserHelper
       puts "Could not parse date value: #{input}, Today is: #{Date.today.to_s}"
     end
   end
+  
+  def format_for_mapping(location)
+  end
 
 end
