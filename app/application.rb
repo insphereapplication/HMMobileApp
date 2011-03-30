@@ -16,6 +16,7 @@ class AppApplication < Rho::RhoApplication
     #                 :icon => "/public/images/iphone/tabs/settings_tab_icon.png", :reload => true },
     #             ]
     # Important to call super _after_ you define @tabs!
+    @@toolbar = nil
     super
 
   end
