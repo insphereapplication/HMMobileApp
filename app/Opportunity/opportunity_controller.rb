@@ -52,7 +52,6 @@ class OpportunityController < Rho::RhoController
       @todays_new_leads = Opportunity.todays_new_leads
       @previous_days_leads = Opportunity.previous_days_leads
       $opportunity_nav_context = [@todays_new_leads,@previous_days_leads].flatten.map{|opportunity| opportunity.object }
-      Opportunity.clear_cache
       render :action => :index, :layout => 'layout_JQM_Lite'
     else
       redirect :controller => Settings, :action => :login, :layout => 'layout_JQM_Lite'
@@ -73,7 +72,6 @@ class OpportunityController < Rho::RhoController
     
     $opportunity_nav_context.concat(@last_activities.map{|opp| opp.object})
     
-    Opportunity.clear_cache
     render :action => :index_follow_up, :layout => 'layout_JQM_Lite'
   end
   
@@ -86,16 +84,15 @@ class OpportunityController < Rho::RhoController
   end
   
   def index_appointments
-    @past_due_appointments = Appointment.past_due_appointments
-    @todays_appointments = Appointment.todays_appointments
-    @future_appointments = Appointment.future_appointments
+    @past_due_appointments = Activity.past_due_appointments
+    @todays_appointments = Activity.todays_appointments
+    @future_appointments = Activity.future_appointments
     
     $opportunity_nav_context = [
       @past_due_appointments,
       @todays_appointments,
       @future_appointments].flatten.map{|appointment| appointment.opportunity.object }
     
-    Appointment.clear_cache
     render :action => :index_appointments, :layout => 'layout_JQM_Lite'
   end
   

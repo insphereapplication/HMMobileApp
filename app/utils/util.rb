@@ -1,10 +1,14 @@
 module DateUtil
-  DEFAULT_TIME_FORMAT = '%m/%d/%Y %I:%M:%S %p'
+  DEFAULT_TIME_FORMAT = '%Y-%m-%d %H:%M:%S' # YYYY-MM-DD HH:MM:SS
   DATE_PICKER_TIME_FORMAT = '%m/%d/%Y %I:%M %p'
   HOUR_FORMAT = '%I:%M %p'
   NO_YEAR_FORMAT = '%m/%d %I:%M %p'
   
   class << self    
+    def offset
+      Time.now.utc_offset
+    end
+    
     def days_ago(past_date)
       begin
         (Date.today - Date.strptime(past_date, DEFAULT_TIME_FORMAT)).to_i
