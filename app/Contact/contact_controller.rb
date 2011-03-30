@@ -74,7 +74,8 @@ class ContactController < Rho::RhoController
     @contact.update_attributes(@params['contact']) if @contact
     SyncEngine.dosync
     redirect :action => :show,
-              :id => @contact.object
+              :id => @contact.object,
+              :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
   end
 
   # POST /Contact/{1}/delete

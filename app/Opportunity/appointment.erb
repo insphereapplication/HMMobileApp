@@ -9,7 +9,7 @@
 		</div>
 		<div id="contentDiv" data-role="content">
 			<div class="ui-body ui-body-d">
-				<form name="appointment_form" method="POST" onSubmit="return validate(this);" action="<%= url_for :controller => :Activity, :action => :update_status_appointment_set, :query => {:origin => @params['origin']} %>">
+				<form name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_appointment_set, :query => {:origin => @params['origin']} %>">
 					<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
 					<input type="hidden" name="appointments[]" value="<%= @params['appointments'].join(',') %>" />
 					
@@ -36,13 +36,8 @@
 			            <input maxlength="200" type="text" id="location" name="location" value="<%= @opportunity.contact.default_address %>" /><br />
 						<label for="description">Description:</label>
 						<textarea cols="40" rows="8" name="description" id="notetext"></textarea>
-						<input type="submit" class="standardButton" value="Create Appointment"/>
-						    <% if not $saved.nil? %>
-						      Saved date/time values:<br/>
-						      <% $choosed.each do |k,v| %>
-						        <b>Format (<%=k%>): <%= v %></b><br/>
-						      <% end %>
-						    <% end %>
+						<input type="submit" class="standardButton" onclick="return validateAppt();" value="Create Appointment"/>
+
 					</div>
 				</form>
 			</div>

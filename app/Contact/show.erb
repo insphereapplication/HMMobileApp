@@ -1,12 +1,12 @@
 <div data-role="page" data-theme="b" data-cache="never">
 	<div data-role="header" data-backbtn="false">
 				<% if @params['opportunity']%>
-					<a href="<%=url_for(:controller=>:Opportunity, :action=>:show, :id => @params['opportunity'])%>" data-direction="reverse" rel="external" data-icon="back">Opp</a>
+					<a href="<%=url_for(:controller=>:Opportunity, :action=>:show, :id => @params['opportunity'], :query=>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Opp</a>
 				<% else %>
 					<a href="<%=url_for(:action => :index)%>" data-direction="reverse" rel="external" data-icon="back">Contacts</a>
 				<% end %>
 				<h1>Contact Detail</h1>
-				<a href="<%=url_for(:action=>:edit, :id => @contact.object)%>" data-direction="forward" data-icon="gear"> Edit </a>
+				<a href="<%=url_for(:action=>:edit, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-direction="forward" data-icon="gear"> Edit </a>
 	</div>
 			<div data-role="content">
 				<ul data-role="listview" data-theme="d" data-inset="true" > 
@@ -24,8 +24,11 @@
 					</li>
 					<li data-icon="<%= check_preferred("Home", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone2.to_s %>">Home: <%= @contact.telephone2 %></a></li>
 					<li data-icon="<%= check_preferred("Alternate", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone3.to_s %>">Alternate: <%= @contact.telephone3 %></a></li>
+					<% if @contact.emailaddress1 %>
 					<li data-icon="false"><a href="mailto:<%= @contact.emailaddress1.to_s %>"><%= "Email: #{@contact.emailaddress1.to_s}" %></a></li>
-					
+					<% else %>
+					<li data-icon="false"><a href="#">Email:</a></li>
+					<% end %>
 					<li data-role="list-divider">Home Address</li>
 					<li data-icon="false">
 						<a rel="external" href="<%= url_for(:action => :map, :query => {:address => @contact.home_map}) %>">
@@ -43,17 +46,19 @@
 						</a>
 					</li>
 				</ul>
-				
+				<% if @params['opportunity'] %>
 				 <ul data-role="listview" data-filter="false" data-inset="true">
 					<li data-role="list-divider">Opportunities</li>
-					<% @contact.opportunities.each do |opportunity| %>
-					<li>
-						<a href="<%= url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {"origin" => "contact"}) %>"> 
-							<strong><%= to_date(opportunity.createdon) %></strong> <TEST> <%= opportunity.rollup_status %>
-						</a>
-					</li>
-					<% end %>
+
+						<% @contact.opportunities.each do |opportunity| %>
+						<li>
+							<a href="<%= url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {"origin" => "contact"}) %>"> 
+								<strong><%= to_date(opportunity.createdon) %></strong> <TEST> <%= opportunity.rollup_status %>
+							</a>
+						</li>
+						<% end %>
 				 </ul>
+				<% end %>
 			</div>
 			
 </div>
