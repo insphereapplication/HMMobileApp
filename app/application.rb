@@ -28,7 +28,6 @@ class AppApplication < Rho::RhoApplication
   
   # always force a login at startup. Will be automatic if user has successfully logged in before (see: Settings/controller.login)
   def on_activate_app
-    SyncEngine.logout
   end 
   
   
