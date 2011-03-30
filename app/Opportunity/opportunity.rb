@@ -26,15 +26,14 @@ class Opportunity
   property :contact_id, :string
   property :cssi_lineofbusiness, :string
   property :cssi_fromrhosync, :string
-  property :object, :string
   
   index :opportunity_pk_index, [:opportunityid]
   index :object_index, [:object]
-  index :contact_index, [:contact_id]
-  index :statecode_index, [:statecode]
-  index :statuscode_index, [:statuscode]
+  index :opp_contact_index, [:contact_id]
+  index :opp_statecode_index, [:statecode]
+  index :opp_statuscode_index, [:statuscode]
+  index :opp_createdon_index, [:createdon]
 
-  
   belongs_to :contact_id, 'Contact'
 
   CLOSED_STATECODES = ['Won', 'Lost']
