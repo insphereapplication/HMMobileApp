@@ -67,7 +67,6 @@ class Opportunity
   end
 
   def self.new_leads
-    # find(:all, :conditions => {"statuscode" => "New Opportunity"}).reject{|opp| opp.has_activities?}.compact
     find_by_sql(%Q{
       select * from Opportunity o where 
       statuscode='New Opportunity' and
@@ -128,7 +127,6 @@ class Opportunity
   end
   
   def self.todays_new_leads
-    # new_leads.select_all_occurring_today(:createdon).time_sort(:createdon).reverse # reverse to get most recent created at top
     find_by_sql(%Q{
       select * from Opportunity o where 
       statuscode='New Opportunity' and
@@ -143,7 +141,6 @@ class Opportunity
   end
   
   def self.previous_days_leads
-    # new_leads.select_all_before_today(:createdon).time_sort(:createdon).reverse # reverse to get most recent created at top
     find_by_sql(%Q{
       select * from Opportunity o where 
       statuscode='New Opportunity' and
