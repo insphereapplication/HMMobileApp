@@ -85,6 +85,7 @@ class Opportunity
     Activity.find_by_sql(%Q{
         select a.* from Opportunity o, Activity a
         where a.type='PhoneCall' and 
+        a.statecode in ('Open', 'Scheduled') and
         a.parent_type='opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') 
         group by o.object order by datetime(a.scheduledend)
@@ -95,6 +96,7 @@ class Opportunity
     Activity.find_by_sql(%Q{
         select a.* from Opportunity o, Activity a
         where a.type='PhoneCall' and 
+        a.statecode in ('Open', 'Scheduled') and
         a.parent_type='opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') and
         (date(scheduledend) = date('now', 'localtime'))
@@ -106,6 +108,7 @@ class Opportunity
     Activity.find_by_sql(%Q{
         select a.* from Opportunity o, Activity a 
         where a.type='PhoneCall' and 
+        a.statecode in ('Open', 'Scheduled') and
         a.parent_type='opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') and
         (date(scheduledend) < date('now', 'localtime'))
@@ -117,6 +120,7 @@ class Opportunity
     Activity.find_by_sql(%Q{
         select a.* from Opportunity o, Activity a
         where a.type='PhoneCall' and 
+        a.statecode in ('Open', 'Scheduled') and
         a.parent_type='opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') and
         (date(scheduledend) > date('now', 'localtime'))
