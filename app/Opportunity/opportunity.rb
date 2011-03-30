@@ -100,7 +100,7 @@ class Opportunity
         parent_id=o.object
       ) 
       and (date(o.createdon) = date('now', 'localtime'))
-      order by date(o.createdon) desc
+      order by datetime(o.createdon) desc
     })
   end
   
@@ -114,7 +114,7 @@ class Opportunity
         parent_id=o.object
       ) 
       and (date(o.createdon) < date('now', 'localtime'))
-      order by date(o.createdon) desc
+      order by datetime(o.createdon) desc
     })
   end
   
