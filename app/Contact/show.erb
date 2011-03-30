@@ -13,17 +13,37 @@
 					<li>
 							<h3><%= @contact.full_name %></h3>
 							<p><%= @contact.gendercode %>, Age <%= (@contact.age).to_s %> </p>
-							<p>DOB: <%= to_date(@contact.birthdate) %></p>
-							
+							<p>DOB: <%= to_date(@contact.birthdate) %></p>		
 					</li> 
-					<li data-icon="<%= check_preferred("Mobile", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.mobilephone.to_s %>"> Mobile: <%= @contact.mobilephone %></a></li>
-					<li data-icon="<%= check_preferred("Business", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone1.to_s %>">Bus: <%= @contact.telephone1 %></a>
-						<% if (@contact.cssi_businessphoneext != nil || @contact.cssi_businessphoneext == "")%> 
-							<!-- <div align="center"><p> -->x<%= @contact.cssi_businessphoneext %><!-- </p></div> -->
-						<% end %>
-					</li>
-					<li data-icon="<%= check_preferred("Home", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone2.to_s %>">Home: <%= @contact.telephone2 %></a></li>
-					<li data-icon="<%= check_preferred("Alternate", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone3.to_s %>">Alternate: <%= @contact.telephone3 %></a></li>
+					
+					<% if @contact.mobilephone %>
+						<li data-icon="<%= check_preferred("Mobile", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.mobilephone.to_s %>"> Mobile: <%= @contact.mobilephone %></a></li>
+					<% else %>
+						<li data-icon="false"><a href="#">Mobile:</a></li>
+					<% end %>
+					
+					<% if @contact.telephone1 %>
+						<li data-icon="<%= check_preferred("Business", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone1.to_s %>">Bus: <%= @contact.telephone1 %></a>
+							<% if (@contact.cssi_businessphoneext != nil || @contact.cssi_businessphoneext == "")%> 
+								<!-- <div align="center"><p> -->x<%= @contact.cssi_businessphoneext %><!-- </p></div> -->
+							<% end %>
+						</li>
+					<% else %>
+						<li data-icon="false"><a href="#">Bus:</a></li>
+					<% end %>
+					
+					<% if @contact.telephone2 %>
+						<li data-icon="<%= check_preferred("Home", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone2.to_s %>">Home: <%= @contact.telephone2 %></a></li>
+					<% else %>
+						<li data-icon="false"><a href="#">Home:</a></li>
+					<% end %>
+					
+					<% if @contact.telephone3 %>
+						<li data-icon="<%= check_preferred("Alternate", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone3.to_s %>">Alternate: <%= @contact.telephone3 %></a></li>
+					<% else %>
+						<li data-icon="false"><a href="#">Alternate:</a></li>
+					<% end %>
+					
 					<% if @contact.emailaddress1 %>
 					<li data-icon="false"><a href="mailto:<%= @contact.emailaddress1.to_s %>"><%= "Email: #{@contact.emailaddress1.to_s}" %></a></li>
 					<% else %>

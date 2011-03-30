@@ -37,7 +37,12 @@
 						<label for="description">Description:</label>
 						<textarea cols="40" rows="8" name="description" id="notetext"></textarea>
 						<input type="submit" class="standardButton" onclick="return validateAppt();" value="Create Appointment"/>
-
+						    <% if not $saved.nil? %>
+						      Saved date/time values:<br/>
+						      <% $choosed.each do |k,v| %>
+						        <b>Format (<%=k%>): <%= v %></b><br/>
+						      <% end %>
+						    <% end %>
 					</div>
 				</form>
 			</div>
