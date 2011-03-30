@@ -71,7 +71,7 @@ class Activity
         select a.* from Opportunity o, Activity a
         where a.type='PhoneCall' and 
         a.statecode in ('Open', 'Scheduled') and
-        a.parent_type='opportunity' and a.parent_id=o.object and 
+        a.parent_type='Opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') and
         (date(scheduledend) = date('now', 'localtime'))
         group by o.object order by datetime(a.scheduledend)
@@ -83,7 +83,7 @@ class Activity
         select a.* from Opportunity o, Activity a 
         where a.type='PhoneCall' and 
         a.statecode in ('Open', 'Scheduled') and
-        a.parent_type='opportunity' and a.parent_id=o.object and 
+        a.parent_type='Opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') and
         (date(scheduledend) < date('now', 'localtime'))
         group by o.object order by datetime(a.scheduledend)
@@ -95,7 +95,7 @@ class Activity
         select a.* from Opportunity o, Activity a
         where a.type='PhoneCall' and 
         a.statecode in ('Open', 'Scheduled') and
-        a.parent_type='opportunity' and a.parent_id=o.object and 
+        a.parent_type = 'Opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') and
         (date(scheduledend) > date('now', 'localtime'))
         group by o.object order by datetime(a.scheduledend)

@@ -27,6 +27,8 @@ class Opportunity
   property :cssi_lineofbusiness, :string
   property :cssi_fromrhosync, :string
   property :overriddencreatedon, :string
+  property :competitorid, :string
+  property :actual_end, :string
   
   index :opportunity_pk_index, [:opportunityid]
   unique_index :unique_opp, [:opportunityid] 
@@ -94,7 +96,7 @@ class Opportunity
       statuscode='New Opportunity' and
       not exists (
         select a.object from Activity a 
-        where parent_type='opportunity' and 
+        where parent_type='Opportunity' and 
         parent_id=o.object
       ) 
       and (date(o.createdon) = date('now', 'localtime'))
@@ -108,7 +110,7 @@ class Opportunity
       statuscode='New Opportunity' and
       not exists (
         select a.object from Activity a 
-        where parent_type='opportunity' and 
+        where parent_type='Opportunity' and 
         parent_id=o.object
       ) 
       and (date(o.createdon) < date('now', 'localtime'))
@@ -121,13 +123,13 @@ class Opportunity
       select * from Opportunity o where statecode not in ('Won', 'Lost') and 
         exists (
             select a1.object from Activity a1 where 
-            a1.parent_type='opportunity' and 
+            a1.parent_type='Opportunity' and 
             a1.parent_id=o.object and 
             (a1.statecode not in ('Open', 'Scheduled') or a1.scheduledend = '' or a1.scheduledend is null)
           ) and 
         not exists (
             select a2.object from Activity a2 where
-            a2.parent_type='opportunity' and 
+            a2.parent_type='Opportunity' and 
             a2.parent_id=o.object and
             (a2.statecode in ('Open', 'Scheduled') and a2.scheduledend is not null and a2.scheduledend <> '')
           )
@@ -214,12 +216,11 @@ class Opportunity
   end
   
   def appointments
-    Activity.find(:all, 
-                  :conditions => opportunity_conditions.merge({
-                                  :name => 'type',
-                                  :op => '='
-                                } => 'Appointments'), 
-                  :op => 'and')
+    Activity.find_by_sql(%Q{
+        select * from Activity a where type='Appointment' and 
+        a.parent_type = 'Opportunity' and
+        a.parent_id = '#{object}'
+      })
   end
   
   def activities
@@ -244,7 +245,7 @@ class Opportunity
   end
   
   def notes
-    Note.find(:all, :conditions => {"parent_type" => "opportunity", "parent_id" => self.object})
+    Note.find(:all, :conditions => {"parent_type" => "Opportunity", "parent_id" => self.object})
   end
   
   def most_recent_phone_call

@@ -72,7 +72,6 @@ class ActivityController < Rho::RhoController
       :parent_id => opportunity.object,
       :statuscode => 'Open',
       :statecode => 'Open',
-      :notetext => @params['note'],
       :type => 'PhoneCall'
     })
     
@@ -99,7 +98,7 @@ class ActivityController < Rho::RhoController
     
     # create the requested appointment
     Activity.create({
-        :parent_type => 'opportunity',
+        :parent_type => 'Opportunity',
         :parent_id => opportunity.object,
         :statecode => "Scheduled",
         :statuscode => "Busy",
