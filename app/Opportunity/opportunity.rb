@@ -29,10 +29,10 @@ class Opportunity
   
   index :opportunity_pk_index, [:opportunityid]
   index :object_index, [:object]
-  index :contact_index, [:contact_id]
-  index :statecode_index, [:statecode]
-  index :statuscode_index, [:statuscode]
-  index :createdon_index, [:createdon]
+  index :opp_contact_index, [:contact_id]
+  index :opp_statecode_index, [:statecode]
+  index :opp_statuscode_index, [:statuscode]
+  index :opp_createdon_index, [:createdon]
 
   belongs_to :contact_id, 'Contact'
 
