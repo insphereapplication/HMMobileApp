@@ -98,7 +98,7 @@ class Opportunity
         where a.type='PhoneCall' and 
         a.parent_type='opportunity' and a.parent_id=o.object and 
         o.statecode not in ('Won', 'Lost') and
-        (date(scheduledend) = date('now') + #{DateUtil.offset})
+        (date(scheduledend) = date('now'), 'localtime')
         order by datetime(scheduledend)
       })
   end
