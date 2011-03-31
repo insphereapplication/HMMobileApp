@@ -4,6 +4,7 @@ require 'rho/rhotabbar'
 
 class Opportunity
   include Rhom::FixedSchema
+  include SQLHelper
   
   enable :sync
   
@@ -40,26 +41,6 @@ class Opportunity
   index :opp_createdon_index, [:createdon]
 
   belongs_to :contact_id, 'Contact'
-
-  CLOSED_STATECODES = ['Won', 'Lost']
-  
-  NO_ACTIVITIES_FOR_OPPORTUNITY_SQL =  %Q{
-     not exists (
-        select a.object from Activity a 
-        where parent_type='opportunity' and 
-        parent_id=o.object
-      )
-  } 
-  
-  CREATED_ON_SQL = "and (date(o.createdon)"
-  NOW_SQL = "date('now', 'localtime'))"
-  ORDER_BY_CREATED_ON_DESC_SQL = "order by datetime(o.createdon) desc"
-  NEW_OPPORTUNITY_SQL = "select * from Opportunity o where statuscode='New Opportunity' and"
-  
-  NEW_LEADS_SQL = %Q{
-    #{NEW_OPPORTUNITY_SQL}
-    #{NO_ACTIVITIES_FOR_OPPORTUNITY_SQL}
-  }
     
   def contact
     Contact.find(self.contact_id)
@@ -141,7 +122,7 @@ class Opportunity
   
   def notes
     Note.find_by_sql(%Q{
-        select n.* from Note n where parent_type='Opportunity' and parent_id='#{object}' or
+        select n.* from Note n where #{is_owned_by_this_opportunity_sql} or
         (n.parent_type = 'PhoneCall' and n.parent_id in (
           select pc.object from Activity pc where pc.type='PhoneCall' and 
           pc.parent_type='Opportunity' and pc.parent_id='#{object}'

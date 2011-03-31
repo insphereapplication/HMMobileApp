@@ -1,3 +1,25 @@
+module SQLHelper
+  CLOSED_STATECODES = ['Won', 'Lost']
+  
+  NO_ACTIVITIES_FOR_OPPORTUNITY_SQL =  %Q{
+     not exists (
+        select a.object from Activity a 
+        where parent_type='opportunity' and 
+        parent_id=o.object
+      )
+  } 
+  
+  CREATED_ON_SQL = "and (date(o.createdon)"
+  NOW_SQL = "date('now', 'localtime'))"
+  ORDER_BY_CREATED_ON_DESC_SQL = "order by datetime(o.createdon) desc"
+  NEW_OPPORTUNITY_SQL = "select * from Opportunity o where statuscode='New Opportunity' and"
+  
+  NEW_LEADS_SQL = %Q{
+    #{NEW_OPPORTUNITY_SQL}
+    #{NO_ACTIVITIES_FOR_OPPORTUNITY_SQL}
+  }
+end
+
 module DateUtil
   DEFAULT_TIME_FORMAT = '%Y-%m-%d %H:%M:%S' # YYYY-MM-DD HH:MM:SS
   DATE_PICKER_TIME_FORMAT = '%m/%d/%Y %I:%M %p'
