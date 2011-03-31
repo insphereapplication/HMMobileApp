@@ -122,6 +122,7 @@ module BrowserHelper
       result = date.strftime('%m/%d/%Y')
       result
     rescue
+      puts "DATE !~!~!~!~!~ DATE ISSUE !~!~!!~!~!~!~!~!~!!~!"
       puts "Could not parse date value: #{input}"
     end
   end

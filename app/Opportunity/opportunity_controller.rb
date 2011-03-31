@@ -11,7 +11,7 @@ class OpportunityController < Rho::RhoController
   $choosed = {}
 
   def sync_notify
-     Rho::NativeTabbar.switch_tab(0)
+     Rho::NativeTabbar.switch_tab(0) 
      WebView.navigate( 
         url_for(
           :controller => 'Opportunity',
@@ -142,6 +142,7 @@ class OpportunityController < Rho::RhoController
   end 
   
   def callback_request
+    $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
       render :action => :callback_request,
@@ -152,6 +153,7 @@ class OpportunityController < Rho::RhoController
   end
   
   def appointment
+    $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
       render :action => :appointment,
@@ -248,7 +250,12 @@ class OpportunityController < Rho::RhoController
   def map
     WebView.refresh
       if System::get_property('platform') == 'APPLE'
-        System.open_url("maps:q=#{@params['location'].gsub!(/ /,'+').strip!}")
+                puts "$"*80
+                # render :action => :show,
+                #        :id => @params['opportunity'],
+                #        :query => {:origin => @params['origin']}
+                puts "maps:q=#{@params['location'].strip.gsub(/ /,'+')}"
+                System.open_url("maps:q=#{@params['location'].strip.gsub(/ /,'+')}")
       else
         System.open_url('http://maps.google.com/?q=' + @params['address'])
       end

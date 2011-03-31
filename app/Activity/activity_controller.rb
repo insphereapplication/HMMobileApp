@@ -92,7 +92,7 @@ class ActivityController < Rho::RhoController
       # create the requested callback
       phone_call = Activity.create({
         :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
-        :subject => "Phone Call - #{opportunity.contact.full_name} -- #{@params.inspect}",
+        :subject => "Phone Call - #{opportunity.contact.full_name}",
         :phonenumber => @params['phone_number'],
         :parent_type => 'Opportunity', 
         :parent_id => opportunity.object,
