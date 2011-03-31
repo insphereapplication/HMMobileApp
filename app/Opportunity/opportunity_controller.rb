@@ -49,6 +49,16 @@ class OpportunityController < Rho::RhoController
     if SyncEngine::logged_in == 1
       @todays_new_leads = Opportunity.todays_new_leads
       @previous_days_leads = Opportunity.previous_days_leads
+      
+      @todays_follow_ups = Activity.todays_follow_ups
+      @past_due_follow_ups = Activity.past_due_follow_ups
+      @future_follow_ups = Activity.future_follow_ups
+      @last_activities = Opportunity.with_unscheduled_activities
+      
+      @past_due_appointments = Activity.past_due_appointments
+      @todays_appointments = Activity.todays_appointments
+      @future_appointments = Activity.future_appointments
+      
       $opportunity_nav_context = [@todays_new_leads,@previous_days_leads].flatten.map{|opportunity| opportunity.object }
       render :action => :index, :layout => 'layout_JQM_Lite'
     else
