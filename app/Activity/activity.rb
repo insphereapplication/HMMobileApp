@@ -17,7 +17,7 @@ class Activity
   property :location, :string
   property :cssi_location, :string
   property :description, :string
-  property :cssi_disposition_detail, :string
+  property :cssi_dispositiondetail, :string
   
   index :activity_pk_index, [:activityid]
   unique_index :unique_activity, [:activityid] 
