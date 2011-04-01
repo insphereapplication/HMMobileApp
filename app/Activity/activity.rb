@@ -1,5 +1,6 @@
 class Activity
   include Rhom::FixedSchema
+  include SQLHelper
   
   property :statecode, :string
   property :activityid, :string
