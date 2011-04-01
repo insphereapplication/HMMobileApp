@@ -140,7 +140,19 @@ class SettingsController < Rho::RhoController
   SESSION_ERROR_MSG = "undefined method `user_id' for nil:NilClass"
   
   def sync_notify
-  
+    #     ERR_NONE = 0
+    #     ERR_NETWORK = 1
+    #     ERR_REMOTESERVER = 2
+    #     ERR_RUNTIME = 3
+    #     ERR_UNEXPECTEDSERVERRESPONSE = 4
+    #     ERR_DIFFDOMAINSINSYNCSRC = 5
+    #     ERR_NOSERVERRESPONSE = 6
+    #     ERR_CLIENTISNOTLOGGEDIN = 7
+    #     ERR_CUSTOMSYNCSERVER = 8
+    #     ERR_UNATHORIZED = 9
+    #     ERR_CANCELBYUSER = 10
+    #     ERR_SYNCVERSION = 11
+    #     ERR_GEOLOCATION = 12
     status = @params['status'] ? @params['status'] : ""
     
     if status == "complete" or status == "ok"
@@ -165,7 +177,8 @@ class SettingsController < Rho::RhoController
           })
         Rhom::Rhom.database_fullclient_reset_and_logout
         render :action => :login, :layout => 'layout_jquerymobile'
-      
+      elsif err_code == Rho::RhoError::ERR_NETWORK
+        # do nothing for connectivity lapse
       elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)      
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
