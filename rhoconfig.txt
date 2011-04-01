@@ -1,3 +1,5 @@
+encrypt_database: 1
+
 # startup page for your application
 start_path = '/app/Settings/login'
 
