@@ -1,4 +1,6 @@
 module SQLHelper
+  # SQL snippets to avoid duplication. Use with caution.
+  
   OPEN_STATE_CODES = ['Open', 'Scheduled']
     
   SELECT_OPEN_PHONE_CALL_SQL = %Q{
@@ -23,8 +25,8 @@ module SQLHelper
   } 
   
   SCHEDULED_END_SQL = "date(scheduledend)"
-  CREATED_ON_SQL = "and (date(o.createdon)"
-  NOW_SQL = "date('now', 'localtime'))"
+  CREATED_ON_SQL = "and date(o.createdon)"
+  NOW_SQL = "date('now', 'localtime')"
   ORDER_BY_CREATED_ON_DESC_SQL = "order by datetime(o.createdon) desc"
   NEW_OPPORTUNITY_SQL = "select * from Opportunity o where statuscode='New Opportunity' and"
   
