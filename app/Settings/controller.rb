@@ -160,7 +160,7 @@ class SettingsController < Rho::RhoController
     elsif status == "error"
       
       if @params['server_errors'] && @params['server_errors']['create-error']
-        SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'].keys(), :delete)
+        SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'].keys(), :recreate)
       end
 
       err_code = @params['error_code'].to_i
@@ -186,6 +186,16 @@ class SettingsController < Rho::RhoController
       elsif err_code == Rho::RhoError::ERR_REMOTESERVER && @params['error_message'] == SESSION_ERROR_MSG
         # Rhodes is sending the server a token for a non-existent session. Time to start over.
         Rhom::Rhom.database_fullclient_reset_and_logout
+        SyncEngine.set_pollinterval(-1)
+        SyncEngine.stop_sync
+        login("/app/Settings/retry_login_callback")
+      elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/401 Unauthorized/].nil?
+        #proxy returned a 401, need to re-login
+        Alert.show_popup({
+          :message => "It appears the proxy has been restarted, trying to log you in again.", 
+          :title => "Proxy Restarted", 
+          :buttons => ["OK"]
+        })
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
         login("/app/Settings/retry_login_callback")
