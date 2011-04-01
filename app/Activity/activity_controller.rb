@@ -17,7 +17,7 @@ class ActivityController < Rho::RhoController
         :cssi_statusdetail => "",
         :actual_end => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
       })
-      finished_update_status(opportunity, @params['origin'])
+      finished_update_status(opportunity, @params['origin'], @params['appointments'])
       db.commit
     rescue Exception => e
       puts "Exception in update won status, rolling back: #{e.inspect} -- #{@params.inspect}"
@@ -92,7 +92,7 @@ class ActivityController < Rho::RhoController
       # create the requested callback
       phone_call = Activity.create({
         :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
-        :subject => "Phone Call - #{opportunity.contact.full_name} -- #{@params.inspect}",
+        :subject => "Phone Call - #{opportunity.contact.full_name}",
         :phonenumber => @params['phone_number'],
         :parent_type => 'Opportunity', 
         :parent_id => opportunity.object,
