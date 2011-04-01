@@ -53,8 +53,8 @@ module DateUtil
     end
 
     def end_date_time(date_string, duration)
-      date = (DateTime.strptime(date_string, DATE_PICKER_TIME_FORMAT))
-      end_date = date + ((duration.to_f)/60/24)
+      date = (Time.strptime(date_string, DATE_PICKER_TIME_FORMAT))
+      end_date = date + (((duration.to_f)*60))
       end_date.strftime(DEFAULT_TIME_FORMAT)
     end
   

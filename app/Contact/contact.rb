@@ -107,7 +107,7 @@ class Contact
   
   def age
     begin
-      birthday = Date.strptime(birthdate, "%m/%d/%Y")
+      birthday = Date.strptime(birthdate, DateUtil::DEFAULT_TIME_FORMAT)
        day_diff = Date.today - birthday.day
        month_diff = Date.today.month - birthday.month - (day_diff < 0 ? 1 : 0)
         (Date.today.year - birthday.year - (month_diff < 0 ? 1 : 0)).to_s
@@ -134,20 +134,19 @@ class Contact
   end
   
   def addresses
-    {'Home' => "#{address1_line1} #{address1_line2} #{address1_city}, #{cssi_state1id} #{address1_postalcode}", 'Business' => "#{address2_line1} #{address2_line2} #{address2_city}, #{cssi_state2id} #{address2_postalcode}" }.reject{|type, address| address.blank? }
+    {'Home' => "#{address1_line1} #{address1_line2} #{address1_city} #{cssi_state1id} #{address1_postalcode}".strip, 'Business' => "#{address2_line1} #{address2_line2} #{address2_city} #{cssi_state2id} #{address2_postalcode}".strip }.reject{|type, address| address.blank? }
   end
   
   def default_address
     addresses.each do |type, address|
       return address
     end
+    return ""
   end
   
   def default_number
     phone_numbers.each do |type, number|
-      if type = cssi_preferredphone
-        return number
-      end
+      return number
     end
   end
   
