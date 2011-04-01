@@ -126,15 +126,19 @@ class SettingsController < Rho::RhoController
   
   def push_notify
     Alert.vibrate(2000)
-    
+
     Alert.show_popup({
-      :message => "You have new Opportunities: #{@params.inspect}", 
+      :message => "You have new Opportunities", 
       :title => 'New Opportunities', 
       :buttons => ["Cancel", "View"],
       :callback => url_for(:action => :on_dismiss_notify_popup) 
     })
-   end
-   
+    ""
+  end
+  
+  # this is the message returned from RhoSync when Rhodes is sending a token for a session that no longer exists (like after a Redis reset) 
+  SESSION_ERROR_MSG = "undefined method `user_id' for nil:NilClass"
+  
   def sync_notify
   
     status = @params['status'] ? @params['status'] : ""
@@ -150,10 +154,6 @@ class SettingsController < Rho::RhoController
       err_code = @params['error_code'].to_i
       rho_error = Rho::RhoError.new(err_code)
 
-      # if err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER
-      #        @msg = @params['error_message']
-      #      end
-
       @msg = rho_error.message unless @msg and @msg.length > 0   
 
       if (@params['error_message'].downcase == 'unknown client') or rho_error.unknown_client?(@params['error_message'])
@@ -166,17 +166,23 @@ class SettingsController < Rho::RhoController
         Rhom::Rhom.database_fullclient_reset_and_logout
         render :action => :login, :layout => 'layout_jquerymobile'
       
-      #elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)
-      else
-        # Alert.show_popup({
-        #                           :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
-        #                           :title => "Error: #{err_code}", 
-        #                           :buttons => ["OK"]
-        #                         })
+      elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)      
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
         login("/app/Settings/retry_login_callback")    
-      end  
+      elsif err_code == Rho::RhoError::ERR_REMOTESERVER && @params['error_message'] == SESSION_ERROR_MSG
+        # Rhodes is sending the server a token for a non-existent session. Time to start over.
+        Rhom::Rhom.database_fullclient_reset_and_logout
+        SyncEngine.set_pollinterval(-1)
+        SyncEngine.stop_sync
+        login("/app/Settings/retry_login_callback")
+      else
+         Alert.show_popup({
+          :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
+          :title => "Error: #{err_code}", 
+          :buttons => ["OK"]
+        })
+      end
     end
   end
   
