@@ -108,7 +108,7 @@ class Opportunity
   
   def phone_calls
     Activity.find_by_sql(%Q{
-        select * from Activity  where type='PhoneCall' and #{is_owned_by_this_opportunity_sql}
+        select * from Activity where type='PhoneCall' and #{is_owned_by_this_opportunity_sql}
       })
   end
   

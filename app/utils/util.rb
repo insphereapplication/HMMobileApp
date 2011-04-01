@@ -1,4 +1,17 @@
 module SQLHelper
+  OPEN_STATE_CODES = ['Open', 'Scheduled']
+    
+  SELECT_OPEN_PHONE_CALL_SQL = %Q{
+    select a.* from Opportunity o, Activity a
+    where a.type='PhoneCall' and 
+    a.statecode in ('Open', 'Scheduled')
+  }
+  
+  OWNED_BY_OPEN_OPPORTUNITY_SQL = %Q{
+    a.parent_type='Opportunity' and a.parent_id=o.object and 
+    o.statecode not in ('Won', 'Lost')
+  }
+  
   CLOSED_STATECODES = ['Won', 'Lost']
   
   NO_ACTIVITIES_FOR_OPPORTUNITY_SQL =  %Q{
@@ -9,10 +22,13 @@ module SQLHelper
       )
   } 
   
+  SCHEDULED_END_SQL = "date(scheduledend)"
   CREATED_ON_SQL = "and (date(o.createdon)"
   NOW_SQL = "date('now', 'localtime'))"
   ORDER_BY_CREATED_ON_DESC_SQL = "order by datetime(o.createdon) desc"
   NEW_OPPORTUNITY_SQL = "select * from Opportunity o where statuscode='New Opportunity' and"
+  
+  SELECT_FIRST_PER_OPPORTUNITY_SQL = "group by o.object order by datetime(a.scheduledend)"
   
   NEW_LEADS_SQL = %Q{
     #{NEW_OPPORTUNITY_SQL}

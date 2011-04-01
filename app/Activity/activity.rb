@@ -27,7 +27,7 @@ class Activity
   index :activity_statecode_index, [:statecode]
   
   enable :sync
-  set :sync_priority, 2 # this needs to be loaded first so that opportunities can know their context
+  set :sync_priority, 2 # this needs to be loaded before opportunities so that opportunities can know their context
   
   OPEN_STATE_CODES = ['Open', 'Scheduled']
   
@@ -69,37 +69,28 @@ class Activity
   
   def self.todays_follow_ups
     find_by_sql(%Q{
-        select a.* from Opportunity o, Activity a
-        where a.type='PhoneCall' and 
-        a.statecode in ('Open', 'Scheduled') and
-        a.parent_type='Opportunity' and a.parent_id=o.object and 
-        o.statecode not in ('Won', 'Lost') and
-        (date(scheduledend) = date('now', 'localtime'))
-        group by o.object order by datetime(a.scheduledend)
+        #{SELECT_OPEN_PHONE_CALL_SQL} and
+        #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
+        #{SCHEDULED_END_SQL} = #{NOW_SQL}
+        #{SELECT_FIRST_PER_OPPORTUNITY_SQL}
       })
   end
   
   def self.past_due_follow_ups
     find_by_sql(%Q{
-        select a.* from Opportunity o, Activity a 
-        where a.type='PhoneCall' and 
-        a.statecode in ('Open', 'Scheduled') and
-        a.parent_type='Opportunity' and a.parent_id=o.object and 
-        o.statecode not in ('Won', 'Lost') and
-        (date(scheduledend) < date('now', 'localtime'))
-        group by o.object order by datetime(a.scheduledend)
+        #{SELECT_OPEN_PHONE_CALL_SQL} and
+        #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
+        #{SCHEDULED_END_SQL} < #{NOW_SQL}
+        #{SELECT_FIRST_PER_OPPORTUNITY_SQL}
       })
   end
   
   def self.future_follow_ups
     find_by_sql(%Q{
-        select a.* from Opportunity o, Activity a
-        where a.type='PhoneCall' and 
-        a.statecode in ('Open', 'Scheduled') and
-        a.parent_type = 'Opportunity' and a.parent_id=o.object and 
-        o.statecode not in ('Won', 'Lost') and
-        (date(scheduledend) > date('now', 'localtime'))
-        group by o.object order by datetime(a.scheduledend)
+        #{SELECT_OPEN_PHONE_CALL_SQL} and
+        #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
+        #{SCHEDULED_END_SQL} > #{NOW_SQL}
+        #{SELECT_FIRST_PER_OPPORTUNITY_SQL}
       })
   end
   
