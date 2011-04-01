@@ -4,6 +4,7 @@ require 'rho/rhotabbar'
 
 class Opportunity
   include Rhom::FixedSchema
+  include SQLHelper
   
   enable :sync
   
@@ -40,50 +41,13 @@ class Opportunity
   index :opp_createdon_index, [:createdon]
 
   belongs_to :contact_id, 'Contact'
-
-  CLOSED_STATECODES = ['Won', 'Lost']
-  
-  def opportunity_conditions
-     { 
-      { 
-        :func => 'LOWER', 
-        :name => 'parent_type', 
-        :op => '='
-      } => 'opportunity',
-      {
-        :name => 'parent_id',
-        :op => '='
-      } => self.opportunityid
-    }
-  end
-  
-  # TODO: fix this and use for better performance
-  def self.open_conditions
-    [{
-      :conditions => { 
-        {
-          :name => 'statecode', 
-          :op => '!='
-        } => 'Won'
-      }   
-    }]
-    
-  end
     
   def contact
     Contact.find(self.contact_id)
   end
 
   def self.new_leads
-    find_by_sql(%Q{
-      select * from Opportunity o where 
-      statuscode='New Opportunity' and
-      not exists (
-        select a.object from Activity a 
-        where parent_type='opportunity' and 
-        parent_id=o.object
-      )
-    })
+    find_by_sql(NEW_LEADS_SQL)
   end 
   
   def self.open_opportunities
@@ -92,32 +56,21 @@ class Opportunity
   
   def self.todays_new_leads
     find_by_sql(%Q{
-      select * from Opportunity o where 
-      statuscode='New Opportunity' and
-      not exists (
-        select a.object from Activity a 
-        where parent_type='Opportunity' and 
-        parent_id=o.object
-      ) 
-      and (date(o.createdon) = date('now', 'localtime'))
-      order by datetime(o.createdon) desc
+      #{NEW_LEADS_SQL}
+      #{CREATED_ON_SQL} = #{NOW_SQL}
+      #{ORDER_BY_CREATED_ON_DESC_SQL}
     })
   end
   
   def self.previous_days_leads
     find_by_sql(%Q{
-      select * from Opportunity o where 
-      statuscode='New Opportunity' and
-      not exists (
-        select a.object from Activity a 
-        where parent_type='Opportunity' and 
-        parent_id=o.object
-      ) 
-      and (date(o.createdon) < date('now', 'localtime'))
-      order by datetime(o.createdon) desc
+      #{NEW_LEADS_SQL}
+      #{CREATED_ON_SQL} < #{NOW_SQL}
+      #{ORDER_BY_CREATED_ON_DESC_SQL}
     })
   end
   
+  # TODO: not an optimal query. find a better one.
   def self.with_unscheduled_activities
     find_by_sql(%Q{
       select * from Opportunity o where o.statecode not in ('Won', 'Lost') and 
@@ -134,6 +87,46 @@ class Opportunity
             (a2.statecode in ('Open', 'Scheduled') and a2.scheduledend is not null and a2.scheduledend <> '')
           )
       order by datetime(o.cssi_lastactivitydate) desc
+    })
+  end
+  
+  def is_owned_by_this_opportunity_sql
+    "parent_type = 'Opportunity' and parent_id = '#{object}'"
+  end
+  
+  def appointments
+    Activity.find_by_sql(%Q{
+        select * from Activity where type='Appointment' and #{is_owned_by_this_opportunity_sql}
+      })
+  end
+  
+  def activities
+    Activity.find_by_sql(%Q{
+        select * from Activity where #{is_owned_by_this_opportunity_sql}
+      })
+  end
+  
+  def phone_calls
+    Activity.find_by_sql(%Q{
+        select * from Activity where type='PhoneCall' and #{is_owned_by_this_opportunity_sql}
+      })
+  end
+  
+  def adhoc_numbers
+   phone_calls.each do |phone_call|
+     if @phonenumber
+       phonenumber
+     end
+   end
+  end
+  
+  def notes
+    Note.find_by_sql(%Q{
+        select n.* from Note n where #{is_owned_by_this_opportunity_sql} or
+        (n.parent_type = 'PhoneCall' and n.parent_id in (
+          select pc.object from Activity pc where pc.type='PhoneCall' and 
+          pc.parent_type='Opportunity' and pc.parent_id='#{object}'
+        ))
     })
   end
   
@@ -213,45 +206,6 @@ class Opportunity
   
   def incomplete_appointments
     appointments.reject{|appointment| appointment.statecode == 'Completed' }
-  end
-  
-  def appointments
-    Activity.find_by_sql(%Q{
-        select * from Activity a where type='Appointment' and 
-        a.parent_type = 'Opportunity' and
-        a.parent_id = '#{object}'
-      })
-  end
-  
-  def activities
-    Activity.find( :all, :conditions => opportunity_conditions, :op => 'and')
-  end
-  
-  def phone_calls
-    Activity.find(:all, 
-                  :conditions => opportunity_conditions.merge({
-                                  :name => 'type',
-                                  :op => '='
-                                } => 'PhoneCall'), 
-                  :op => 'and')
-  end
-  
-  def adhoc_numbers
-   phone_calls.each do |phone_call|
-     if @phonenumber
-       phonenumber
-     end
-   end
-  end
-  
-  def notes
-    Note.find_by_sql(%Q{
-        select n.* from Note n where parent_type='Opportunity' and parent_id='#{object}' or
-        (n.parent_type = 'PhoneCall' and n.parent_id in (
-          select pc.object from Activity pc where pc.type='PhoneCall' and 
-          pc.parent_type='Opportunity' and pc.parent_id='#{object}'
-        ))
-    })
   end
   
   def most_recent_phone_call

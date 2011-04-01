@@ -126,17 +126,33 @@ class SettingsController < Rho::RhoController
   
   def push_notify
     Alert.vibrate(2000)
-    
+
     Alert.show_popup({
-      :message => "You have new Opportunities: #{@params.inspect}", 
+      :message => "You have new Opportunities", 
       :title => 'New Opportunities', 
       :buttons => ["Cancel", "View"],
       :callback => url_for(:action => :on_dismiss_notify_popup) 
     })
-   end
-   
-  def sync_notify
+    ""
+  end
   
+  # this is the message returned from RhoSync when Rhodes is sending a token for a session that no longer exists (like after a Redis reset) 
+  SESSION_ERROR_MSG = "undefined method `user_id' for nil:NilClass"
+  
+  def sync_notify
+    #     ERR_NONE = 0
+    #     ERR_NETWORK = 1
+    #     ERR_REMOTESERVER = 2
+    #     ERR_RUNTIME = 3
+    #     ERR_UNEXPECTEDSERVERRESPONSE = 4
+    #     ERR_DIFFDOMAINSINSYNCSRC = 5
+    #     ERR_NOSERVERRESPONSE = 6
+    #     ERR_CLIENTISNOTLOGGEDIN = 7
+    #     ERR_CUSTOMSYNCSERVER = 8
+    #     ERR_UNATHORIZED = 9
+    #     ERR_CANCELBYUSER = 10
+    #     ERR_SYNCVERSION = 11
+    #     ERR_GEOLOCATION = 12
     status = @params['status'] ? @params['status'] : ""
     
     if status == "complete" or status == "ok"
@@ -144,15 +160,11 @@ class SettingsController < Rho::RhoController
     elsif status == "error"
       
       if @params['server_errors'] && @params['server_errors']['create-error']
-        SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'].keys(), :delete)
+        SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'].keys(), :recreate)
       end
 
       err_code = @params['error_code'].to_i
       rho_error = Rho::RhoError.new(err_code)
-
-      # if err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER
-      #        @msg = @params['error_message']
-      #      end
 
       @msg = rho_error.message unless @msg and @msg.length > 0   
 
@@ -165,18 +177,35 @@ class SettingsController < Rho::RhoController
           })
         Rhom::Rhom.database_fullclient_reset_and_logout
         render :action => :login, :layout => 'layout_jquerymobile'
-      
-      #elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)
-      else
-        # Alert.show_popup({
-        #                           :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
-        #                           :title => "Error: #{err_code}", 
-        #                           :buttons => ["OK"]
-        #                         })
+      elsif err_code == Rho::RhoError::ERR_NETWORK
+        # do nothing for connectivity lapse
+      elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)      
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
         login("/app/Settings/retry_login_callback")    
-      end  
+      elsif err_code == Rho::RhoError::ERR_REMOTESERVER && @params['error_message'] == SESSION_ERROR_MSG
+        # Rhodes is sending the server a token for a non-existent session. Time to start over.
+        Rhom::Rhom.database_fullclient_reset_and_logout
+        SyncEngine.set_pollinterval(-1)
+        SyncEngine.stop_sync
+        login("/app/Settings/retry_login_callback")
+      elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/401 Unauthorized/].nil?
+        #proxy returned a 401, need to re-login
+        Alert.show_popup({
+          :message => "It appears the proxy has been restarted, trying to log you in again.", 
+          :title => "Proxy Restarted", 
+          :buttons => ["OK"]
+        })
+        SyncEngine.set_pollinterval(-1)
+        SyncEngine.stop_sync
+        login("/app/Settings/retry_login_callback")
+      else
+         Alert.show_popup({
+          :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
+          :title => "Error: #{err_code}", 
+          :buttons => ["OK"]
+        })
+      end
     end
   end
   

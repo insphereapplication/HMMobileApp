@@ -51,19 +51,27 @@
 					<% end %>
 					<li data-role="list-divider">Home Address</li>
 					<li data-icon="false">
-						<a rel="external" href="<%= url_for(:action => :map, :query => {:address => @contact.home_map}) %>">
-								<%= @contact.address1_line1 %>
-								<%= @contact.address1_line2 %><br/>
-								<%= @contact.home_city %><br/>
-						</a>
+						<% if @contact.home_city %>
+							<a rel="external" href="<%= url_for(:action => :map, :query => {:address => @contact.home_map}) %>">
+									<%= @contact.address1_line1 %>
+									<%= @contact.address1_line2 %><br/>
+									<%= @contact.home_city %><br/>
+							</a>
+						<% else %>
+							<a href="#"> (None) </a>
+						<% end %>
 					</li>
 					<li data-role="list-divider">Business Address</li>
 					<li data-icon="false">
-						<a href="<%= url_for(:action => :map, :query => {:address => @contact.business_map})%>" onclick="hideSpin()">
-							<%= @contact.address2_line1 %>
-							<%= @contact.address2_line2 %><br/>
-							<%= @contact.business_city %><br/>
-						</a>
+						<% if @contact.business_city %>
+							<a href="<%= url_for(:action => :map, :query => {:address => @contact.business_map})%>" onclick="hideSpin()">
+								<%= @contact.address2_line1 %>
+								<%= @contact.address2_line2 %><br/>
+								<%= @contact.business_city %><br/>
+							</a>
+						<% else %>
+							<a href="#"> (None) </a>
+						<% end %>
 					</li>
 				</ul>
 				<% if @params['opportunity'] %>
