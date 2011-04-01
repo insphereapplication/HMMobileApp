@@ -26,7 +26,7 @@
 							:launcher => :phone_dialog,
 							:icon => "phoneopp",
 							:location => "blank"
-						} %>
+						} if opportunity.contact %>
 					
 					<% end %>
 					<% if leads.count == 0 %>
