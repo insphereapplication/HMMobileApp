@@ -20,6 +20,33 @@ class OpportunityController < Rho::RhoController
       )
   end
   
+  def get_next_new_leads_page
+    @todays_new_leads_page = Opportunity.todays_new_leads(@params['page'])
+    
+    
+    # [[@todays_new_leads, "Today", "red"], 
+    #       [@previous_days_leads, "Previous Days", "orange"]].each do |leads, label, color|
+    #           <li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-<%=color%> ui-btn-up-undefined"><%= label %></li> 
+    #         <% leads.each do |opportunity| %>
+    #           <% contact = opportunity.contact %>
+    #           <%= render :partial =>"opportunity", :locals => { 
+    #             :opportunity => opportunity , 
+    #             :color => color, 
+    #             :bottom_right_text => "Created #{DateUtil.days_ago_formatted(opportunity.createdon)}",
+    #             :top_right_text => to_datetime_noyear(opportunity.createdon),
+    #             :origin => "newleads",
+    #             :launcher => :phone_dialog,
+    #             :icon => "phoneopp",
+    #             :location => "blank"
+    #           } if opportunity.contact %>
+    #         
+    #         <% end %>
+    #         <% if leads.count == 0 %>
+    #           <li><div style="text-align:center"><i> (No Opportunities in this Category) </i></div></li>
+    #         <% end %>
+    #     <% end %>
+  end
+  
   # this callback is set once in the login_callback method of the Settings controller
   def init_notify
     System.set_push_notification("/app/Settings/push_notify", '')

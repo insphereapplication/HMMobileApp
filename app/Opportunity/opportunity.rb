@@ -41,6 +41,8 @@ class Opportunity
   index :opp_createdon_index, [:createdon]
 
   belongs_to :contact_id, 'Contact'
+  
+  DEFAULT_PAGINATION = 5
     
   def contact
     Contact.find(self.contact_id)
@@ -54,11 +56,12 @@ class Opportunity
     find(:all, :conditions => "statecode not in ('Won', 'Lost')")
   end
   
-  def self.todays_new_leads
+  def self.todays_new_leads(page=nil, page_size=DEFAULT_PAGE_SIZE)
     find_by_sql(%Q{
       #{NEW_LEADS_SQL}
       #{CREATED_ON_SQL} = #{NOW_SQL}
       #{ORDER_BY_CREATED_ON_DESC_SQL}
+      #{get_pagination_sql(page, page_size)}
     })
   end
   

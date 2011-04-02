@@ -1,5 +1,15 @@
 module SQLHelper
   # SQL snippets to avoid duplication. Use with caution.
+  DEFAULT_PAGE_SIZE = 5
+  def self.included(model)
+    model.extend(ClassMethods)
+  end
+  
+  module ClassMethods
+    def get_pagination_sql(page, page_size=DEFAULT_PAGE_SIZE) 
+      "limit #{page_size} offset #{page * page_size}" if page
+    end
+  end
   
   OPEN_STATE_CODES = ['Open', 'Scheduled']
     
