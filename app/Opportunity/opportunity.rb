@@ -65,16 +65,17 @@ class Opportunity
     })
   end
   
-  def self.previous_days_leads
+  def self.previous_days_leads(page=nil, page_size=DEFAULT_PAGE_SIZE)
     find_by_sql(%Q{
       #{NEW_LEADS_SQL}
       #{CREATED_ON_SQL} < #{NOW_SQL}
       #{ORDER_BY_CREATED_ON_DESC_SQL}
+      #{get_pagination_sql(page, page_size)}
     })
   end
   
   # TODO: not an optimal query. find a better one.
-  def self.with_unscheduled_activities
+  def self.by_last_activities(page=nil, page_size=DEFAULT_PAGE_SIZE)
     find_by_sql(%Q{
       select * from Opportunity o where o.statecode not in ('Won', 'Lost') and 
         exists (
@@ -90,6 +91,7 @@ class Opportunity
             (a2.statecode in ('Open', 'Scheduled') and a2.scheduledend is not null and a2.scheduledend <> '')
           )
       order by datetime(o.cssi_lastactivitydate) desc
+      #{get_pagination_sql(page, page_size)}
     })
   end
   

@@ -19,34 +19,7 @@ class OpportunityController < Rho::RhoController
         )
       )
   end
-  
-  def get_next_new_leads_page
-    @todays_new_leads_page = Opportunity.todays_new_leads(@params['page'])
-    
-    
-    # [[@todays_new_leads, "Today", "red"], 
-    #       [@previous_days_leads, "Previous Days", "orange"]].each do |leads, label, color|
-    #           <li data-role="list-divider" role="heading" tabindex="0" class="ui-li ui-li-divider ui-btn ui-bar-<%=color%> ui-btn-up-undefined"><%= label %></li> 
-    #         <% leads.each do |opportunity| %>
-    #           <% contact = opportunity.contact %>
-    #           <%= render :partial =>"opportunity", :locals => { 
-    #             :opportunity => opportunity , 
-    #             :color => color, 
-    #             :bottom_right_text => "Created #{DateUtil.days_ago_formatted(opportunity.createdon)}",
-    #             :top_right_text => to_datetime_noyear(opportunity.createdon),
-    #             :origin => "newleads",
-    #             :launcher => :phone_dialog,
-    #             :icon => "phoneopp",
-    #             :location => "blank"
-    #           } if opportunity.contact %>
-    #         
-    #         <% end %>
-    #         <% if leads.count == 0 %>
-    #           <li><div style="text-align:center"><i> (No Opportunities in this Category) </i></div></li>
-    #         <% end %>
-    #     <% end %>
-  end
-  
+	  
   # this callback is set once in the login_callback method of the Settings controller
   def init_notify
     System.set_push_notification("/app/Settings/push_notify", '')
@@ -67,49 +40,111 @@ class OpportunityController < Rho::RhoController
     Rho::NativeTabbar.create(tabbar)
     Rho::NativeTabbar.switch_tab(0)
     
-    $opportunity_nav_context = []
+    $new_leads_nav_context = []
+    $follow_ups_nav_context = []
+    $appointments_nav_context = []
     
+  end
+  
+  def intialize_nav_contexts
+    $new_leads_nav_context = []
+    $follow_ups_nav_context = []
+    $appointments_nav_context = []
   end
   
   # since this is the default entry point on startup, check here for login
   def index
     if SyncEngine::logged_in == 1
-      @todays_new_leads = Opportunity.todays_new_leads
-      @previous_days_leads = Opportunity.previous_days_leads
-      
-      @todays_follow_ups = Activity.todays_follow_ups
-      @past_due_follow_ups = Activity.past_due_follow_ups
-      @future_follow_ups = Activity.future_follow_ups
-      @last_activities = Opportunity.with_unscheduled_activities
-      
-      @past_due_appointments = Activity.past_due_appointments
-      @todays_appointments = Activity.todays_appointments
-      @future_appointments = Activity.future_appointments
-      
-      $opportunity_nav_context = [@todays_new_leads,@previous_days_leads].flatten.map{|opportunity| opportunity.object }
+      intialize_nav_contexts
+      @params['selected_tab'] ||= 'new-leads'
+      set_opportunities_nav_context(@params['selected_tab']);    
       render :action => :index, :layout => 'layout_JQM_Lite'
     else
       redirect :controller => Settings, :action => :login, :layout => 'layout_JQM_Lite'
     end
   end
   
-  def index_follow_up
-    @todays_follow_ups = Activity.todays_follow_ups
-    @past_due_follow_ups = Activity.past_due_follow_ups
-    @future_follow_ups = Activity.future_follow_ups
-    @last_activities = Opportunity.with_unscheduled_activities
-    
-    $opportunity_nav_context = [
-      @todays_follow_ups, 
-      @past_due_follow_ups, 
-      @future_follow_ups
-    ].flatten.map{|phone_call| phone_call.opportunity.object }
-    
-    $opportunity_nav_context.concat(@last_activities.map{|opp| opp.object})
-    
-    render :action => :index_follow_up, :layout => 'layout_JQM_Lite'
+  def set_opportunities_nav_context(context=nil)
+    $current_nav_context = @params['context'] || context
   end
   
+  def current_nav_context
+    case $current_nav_context
+      when 'new-leads' then $new_leads_nav_context
+      when 'follow-ups' then $follow_ups_nav_context
+      when 'appointments' then $appointments_nav_context
+    end
+  end
+  
+  def get_new_leads(color, text, opportunities, page_number)
+    $new_leads_nav_context += opportunities.map{|opp| opp.opportunityid }
+    @color = color
+    @label = text
+    @page = opportunities
+    render :action => :opportunity_page, :layout => 'layout_JQM_Lite'
+  end
+  
+  def todays_new_leads
+    get_new_leads('red', 'Today', Opportunity.todays_new_leads(@params['page'].to_i), @params['page'])
+  end
+  
+  def previous_days_new_leads
+    get_new_leads('orange', 'Previous Days', Opportunity.previous_days_leads(@params['page'].to_i), @params['page'])
+  end
+  
+  def get_follow_ups(color, text, date_proc, opportunities)
+    $follow_ups_nav_context += opportunities.map{|opp| opp.opportunityid }
+    @color = color
+    @label = text
+    @date_proc = date_proc
+    @page = opportunities
+    render :action => :follow_ups_page, :layout => 'layout_JQM_Lite'
+  end
+
+  def by_last_activities
+    date_proc = lambda {|opportunity| "Last Act: -#{DateUtil.days_ago(opportunity.cssi_lastactivitydate)}d" unless opportunity.cssi_lastactivitydate.blank?}
+    opportunities = Opportunity.by_last_activities(@params['page'].to_i)
+    get_follow_ups('yellow', 'By Last Activity', date_proc, opportunities)
+  end
+
+  def todays_follow_ups
+    date_proc = lambda {|phone_call| "Today #{phone_call.scheduledend.hour_string }" if phone_call.scheduledend }
+    opportunities = Activity.todays_follow_ups(@params['page'].to_i).map{|activity| activity.opportunity }
+    get_follow_ups('orange', 'Today', date_proc, opportunities)
+  end
+
+  def future_follow_ups
+    date_proc = lambda {|opportunity| "Last Act: -#{DateUtil.days_ago(opportunity.cssi_lastactivitydate)}d" unless opportunity.cssi_lastactivitydate.blank?}
+    opportunities = Activity.future_follow_ups(@params['page'].to_i).map{|activity| activity.opportunity }
+    get_follow_ups('green', 'Future', date_proc, opportunities)
+  end
+
+  def past_due_follow_ups
+    date_proc = lambda {|phone_call| "Due: #{DateUtil.days_from_now(phone_call.scheduledend)}d" }
+    opportunities = Activity.past_due_follow_ups(@params['page'].to_i).map{|activity| activity.opportunity }
+    get_follow_ups('red', 'Past Due', date_proc, opportunities)
+  end
+
+  def get_appointments(color, text, appointments)
+    $appointments_nav_context += appointments.map{|app| app.opportunity.opportunityid }
+    @color = color
+    @label = text
+    @page = appointments
+    render :action => :appointments_page, :layout => 'layout_JQM_Lite'
+  end
+  
+  def future_appointments
+    get_appointments('green', 'Future', Activity.future_appointments(@params['page'].to_i))
+  end
+
+  def todays_appointments
+    get_appointments('orange', 'Today', Activity.todays_appointments(@params['page'].to_i))
+  end
+
+  def past_due_appointments
+    get_appointments('red', 'Past Due', Activity.past_due_appointments(@params['page'].to_i))
+  end
+
   def check_preferred(phone_type, preferred)
     if phone_type == preferred
       %Q{ <span class="ui-icon ui-icon-check ui-icon-shadow"></span> }
@@ -118,25 +153,12 @@ class OpportunityController < Rho::RhoController
     end
   end
   
-  def index_appointments
-    @past_due_appointments = Activity.past_due_appointments
-    @todays_appointments = Activity.todays_appointments
-    @future_appointments = Activity.future_appointments
-    
-    $opportunity_nav_context = [
-      @past_due_appointments,
-      @todays_appointments,
-      @future_appointments].flatten.map{|appointment| appointment.opportunity.object }
-    
-    render :action => :index_appointments, :layout => 'layout_JQM_Lite'
-  end
-  
   # GET /Opportunity/{1}
   def show
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
       @notes = @opportunity.notes
-      $opportunity_nav_context.orient!(@opportunity.object)
+      current_nav_context.orient!(@opportunity.object)
       @contact = @opportunity.contact
       render :action => :show, :layout => 'layout_jquerymobile'
     else
@@ -153,16 +175,17 @@ class OpportunityController < Rho::RhoController
   end
   
   def show_opportunity_from_nav(direction)
-    if $opportunity_nav_context.blank?
-      opp_id = @params['id']
+    if current_nav_context.blank?
+       opp_id = @params['id']
     else
-      opp_id = $opportunity_nav_context.send(direction)
+      opp_id = current_nav_context.send(direction)
     end
     
     @opportunity = Opportunity.find(opp_id)
+    
     if @opportunity
       @notes = @opportunity.notes
-      $opportunity_nav_context.orient!(@opportunity.object)
+      current_nav_context.orient!(@opportunity.object)
       @contact = @opportunity.contact
       render :action => :show, :layout => 'layout_jquerymobile', :origin => @params['origin']
     end
@@ -171,8 +194,7 @@ class OpportunityController < Rho::RhoController
   def status_update
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
-      render :action => :status_update,
-              :layout => 'layout_jquerymobile'
+      render :action => :status_update, :layout => 'layout_jquerymobile'
     else
       redirect :action => :index
     end
@@ -182,8 +204,7 @@ class OpportunityController < Rho::RhoController
     $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
-      render :action => :callback_request,
-              :layout => 'layout_jquerymobile'
+      render :action => :callback_request, :layout => 'layout_jquerymobile'
     else
       redirect :action => :index
     end
@@ -193,8 +214,7 @@ class OpportunityController < Rho::RhoController
     $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
-      render :action => :appointment,
-              :layout => 'layout_jquerymobile'
+      render :action => :appointment, :layout => 'layout_jquerymobile'
     else
       redirect :action => :index
     end
@@ -206,8 +226,7 @@ class OpportunityController < Rho::RhoController
     
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
-      render :action => :lost_other,
-              :layout => 'layout_jquerymobile'
+      render :action => :lost_other, :layout => 'layout_jquerymobile'
     else
       redirect :action => :index
     end
@@ -217,17 +236,14 @@ class OpportunityController < Rho::RhoController
   def activity_summary
     @opportunity = Opportunity.find(@params['id'])
     @activities = @opportunity.activities
-    puts @activities.inspect
     if @opportunity
-      render :action => :activity_summary,
-              :layout => 'layout_jquerymobile'
+      render :action => :activity_summary, :layout => 'layout_jquerymobile'
     end
   end
 
   def phone_dialog
     @opportunity = Opportunity.find(@params['id'])
-    render :action => :phone_dialog,
-            :layout => 'layout_JQM_Lite'
+    render :action => :phone_dialog, :layout => 'layout_JQM_Lite'
   end
   
   def save
@@ -287,12 +303,7 @@ class OpportunityController < Rho::RhoController
   def map
     WebView.refresh
       if System::get_property('platform') == 'APPLE'
-                puts "$"*80
-                # render :action => :show,
-                #        :id => @params['opportunity'],
-                #        :query => {:origin => @params['origin']}
-                puts "maps:q=#{@params['location'].strip.gsub(/ /,'+')}"
-                System.open_url("maps:q=#{@params['location'].strip.gsub(/ /,'+')}")
+        System.open_url("maps:q=#{@params['location'].strip.gsub(/ /,'+')}")
       else
         System.open_url('http://maps.google.com/?q=' + @params['address'])
       end
