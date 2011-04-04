@@ -1,5 +1,15 @@
 module SQLHelper
   # SQL snippets to avoid duplication. Use with caution.
+  DEFAULT_PAGE_SIZE = 5
+  def self.included(model)
+    model.extend(ClassMethods)
+  end
+  
+  module ClassMethods
+    def get_pagination_sql(page, page_size=DEFAULT_PAGE_SIZE) 
+      "limit #{page_size} offset #{page * page_size}" if page
+    end
+  end
   
   OPEN_STATE_CODES = ['Open', 'Scheduled']
     
@@ -24,12 +34,21 @@ module SQLHelper
       )
   } 
   
+  SELECT_APPOINTMENT_SQL = "select a.* from Activity a, Opportunity o where type='Appointment'"
+  
   SCHEDULED_END_SQL = "date(scheduledend)"
+  SCHEDULED_START_SQL = "date(scheduledstart)"
   CREATED_ON_SQL = "and date(o.createdon)"
   NOW_SQL = "date('now', 'localtime')"
   ORDER_BY_CREATED_ON_DESC_SQL = "order by datetime(o.createdon) desc"
   NEW_OPPORTUNITY_SQL = "select * from Opportunity o where statuscode='New Opportunity' and"
+  NEW_OPPORTUNITY_IDS_SQL = %Q{ 
+    select o.opportunityid from Opportunity o where statuscode = 'New Opportunity' and
+    #{NO_ACTIVITIES_FOR_OPPORTUNITY_SQL}
+  }
   
+  
+    
   SELECT_FIRST_PER_OPPORTUNITY_SQL = "group by o.object order by datetime(a.scheduledend)"
   
   NEW_LEADS_SQL = %Q{

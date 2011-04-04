@@ -66,14 +66,16 @@ module BrowserHelper
   
   def opp_detail_backbutton(origin)
       case origin
-        when "followup"
-          %Q{<a href="/app/Opportunity/index_follow_up" data-direction="reverse" rel="external" data-icon="back">Opps</a>}
+        when "new-leads"
+          '<a href="/app/Opportunity?selected_tab=new-leads" data-direction="reverse" rel="external" data-icon="back">Opps</a>'
+        when "follow-ups"
+          '<a href="/app/Opportunity?selected_tab=follow-ups" data-direction="reverse" rel="external" data-icon="back">Opps</a>'
         when "appointments"
-          %Q{<a href="/app/Opportunity/index_appointments" data-direction="reverse" rel="external" data-icon="back">Opps</a>}
+          '<a href="/app/Opportunity?selected_tab=appointments" data-direction="reverse" rel="external" data-icon="back">Opps</a>'
         when "contact"
-           %Q{<a href="/app/Contact" data-direction="reverse" rel="external" data-icon="back">Contacts</a>}
+           '<a href="/app/Contact" data-direction="reverse" rel="external" data-icon="back">Contacts</a>'
         else
-          %Q{<a href="/app/Opportunity/index" data-direction="reverse" rel="external" data-icon="back">Opps</a>}
+          '<a href="/app/Opportunity" data-direction="reverse" rel="external" data-icon="back">Opps</a>'
       end
   end
 

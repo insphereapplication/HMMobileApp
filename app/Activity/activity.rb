@@ -35,7 +35,6 @@ class Activity
   def parent
     if self.parent_type && self.parent_id
       parent = Object.const_get(self.parent_type.capitalize) 
-      puts "PARENT TYPE: #{parent} -- ID: #{parent_id}"
       parent.find(:first, :conditions => {"#{self.parent_type.downcase}id" => self.parent_id})
     end
   end
@@ -68,30 +67,33 @@ class Activity
 
 # class PhoneCall < Activity
   
-  def self.todays_follow_ups
+  def self.todays_follow_ups(page=nil, page_size=DEFAULT_PAGE_SIZE) 
     find_by_sql(%Q{
         #{SELECT_OPEN_PHONE_CALL_SQL} and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
         #{SCHEDULED_END_SQL} = #{NOW_SQL}
         #{SELECT_FIRST_PER_OPPORTUNITY_SQL}
+        #{get_pagination_sql(page, page_size)}
       })
   end
   
-  def self.past_due_follow_ups
+  def self.past_due_follow_ups(page=nil, page_size=DEFAULT_PAGE_SIZE)
     find_by_sql(%Q{
         #{SELECT_OPEN_PHONE_CALL_SQL} and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
         #{SCHEDULED_END_SQL} < #{NOW_SQL}
         #{SELECT_FIRST_PER_OPPORTUNITY_SQL}
+        #{get_pagination_sql(page, page_size)}
       })
   end
   
-  def self.future_follow_ups
+  def self.future_follow_ups(page=nil, page_size=DEFAULT_PAGE_SIZE)
     find_by_sql(%Q{
         #{SELECT_OPEN_PHONE_CALL_SQL} and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
         #{SCHEDULED_END_SQL} > #{NOW_SQL}
         #{SELECT_FIRST_PER_OPPORTUNITY_SQL}
+        #{get_pagination_sql(page, page_size)}
       })
   end
   
@@ -109,20 +111,39 @@ class Activity
 
 # class Appointment < Activity
   
-  def self.open_appointments
-    find(:all, :conditions => {'statecode' => 'Scheduled'}).reject{|appointment| appointment.parent.closed? }
+  def self.open_appointments(page=nil, page_size=DEFAULT_PAGE_SIZE)
+    find_by_sql(%Q{
+        select a.* from Activity a, Opportunity o where type='Appointment' and
+        #{OWNED_BY_OPEN_OPPORTUNITY_SQL}
+        #{get_pagination_sql(page, page_size)}
+      })
   end
   
-  def self.past_due_appointments
-    open_appointments.select_all_before_today(:scheduledstart).time_sort(:scheduledstart)
+  def self.past_due_appointments(page=nil, page_size=DEFAULT_PAGE_SIZE)
+    find_by_sql(%Q{
+        #{SELECT_APPOINTMENT_SQL} and
+        #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
+        #{SCHEDULED_START_SQL} > #{NOW_SQL}
+        #{get_pagination_sql(page, page_size)}
+      })
   end
   
-  def self.future_appointments
-    open_appointments.select_all_after_today(:scheduledstart).time_sort(:scheduledstart)
+  def self.future_appointments(page=nil, page_size=DEFAULT_PAGE_SIZE)
+    find_by_sql(%Q{
+        #{SELECT_APPOINTMENT_SQL} and
+        #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
+        #{SCHEDULED_START_SQL} < #{NOW_SQL}
+        #{get_pagination_sql(page, page_size)}
+      })
   end
   
-  def self.todays_appointments
-    open_appointments.select_all_occurring_today(:scheduledstart).time_sort(:scheduledstart)
+  def self.todays_appointments(page=nil, page_size=DEFAULT_PAGE_SIZE)
+    find_by_sql(%Q{
+        #{SELECT_APPOINTMENT_SQL} and
+        #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
+        #{SCHEDULED_START_SQL} = #{NOW_SQL}
+        #{get_pagination_sql(page, page_size)}
+      })
   end
   
   def complete
