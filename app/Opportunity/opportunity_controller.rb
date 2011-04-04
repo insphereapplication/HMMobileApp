@@ -237,7 +237,9 @@ class OpportunityController < Rho::RhoController
     @opportunity = Opportunity.find(@params['id'])
     @activities = @opportunity.activities
     if @opportunity
-      render :action => :activity_summary, :layout => 'layout_jquerymobile'
+      render :action => :activity_summary,
+              :layout => 'layout_jquerymobile',
+              :origin => @params['origin']
     end
   end
 
