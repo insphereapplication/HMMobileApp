@@ -183,7 +183,8 @@ class OpportunityController < Rho::RhoController
     puts @activities.inspect
     if @opportunity
       render :action => :activity_summary,
-              :layout => 'layout_jquerymobile'
+              :layout => 'layout_jquerymobile',
+              :origin => @params['origin']
     end
   end
 

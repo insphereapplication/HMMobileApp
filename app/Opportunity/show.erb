@@ -1,7 +1,7 @@
 <div data-role="page" data-theme="b" data-cache="never">
 	<% if @params['origin'] == "contact" %>
 	<div data-role="header" data-backbtn="false">
-		<a href="<%= url_for(:controller => :Contact, :action => :show, :id => @opportunity.contact.object) %>" data-direction="reverse" data-icon="back">Contact</a>
+		<a href="<%= url_for(:controller => :Contact, :action => :show, :id => @opportunity.contact.object, :query =>{:origin => @params['origin']}) %>" data-direction="reverse" data-icon="back">Contact</a>
 		<h3>Opportunity</h3>
 	</div>
 	<% else %>
@@ -73,6 +73,6 @@
 					<li><div style="text-align:center"><i> (No Appointments) </i></div></li>
 				<% end %>
 			</ul>			
-			<a href="<%= url_for(:action => :activity_summary, :id => @opportunity.object) %>" data-role="button" data-icon="arrow-r" rel="external" data-iconpos="right">Activity Summary</a> 
+			<a href="<%= url_for(:action => :activity_summary, :id => @opportunity.object, :query => {:origin => @params['origin']}) %>" data-role="button" data-icon="arrow-r" rel="external" data-iconpos="right">Activity Summary</a> 
 		</div>
 </div>

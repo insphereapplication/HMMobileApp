@@ -141,7 +141,8 @@ class ActivityController < Rho::RhoController
           :location => @params['location'],
           :subject => "#{contact.firstname}, #{contact.lastname} - #{opportunity.createdon}",
           :description => @params['description'],
-          :type => 'Appointment'
+          :type => 'Appointment',
+          :cssi_location => @params['cssi_location']
         }
       )
   

@@ -12,6 +12,7 @@
 				<form name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_appointment_set, :query => {:origin => @params['origin']} %>">
 					<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
 					<input type="hidden" name="appointments[]" value="<%= @params['appointments'].join(',') %>" />
+					<input type="hidden" id="cssi_location" name="cssi_location" />
 					
 					<div data-role="fieldcontain">
 						<label for="appointment_datetime" class="fieldLabel">Appointment Start:</label>
@@ -30,13 +31,13 @@
 							<% @opportunity.contact.addresses.each do |type, address| %>
 								<option value="<%= address %>"><%= type %></option>
 							<% end %>
-								<option value="&nbsp;">Ad-Hoc</option>
+								<option value="">Ad Hoc</option>
 						</select><br />
 						<label for="location" class="fieldLabel">Address:</label>
 			            <input maxlength="200" type="text" id="location" name="location" value="<%= @opportunity.contact.default_address %>" /><br />
 						<label for="description">Description:</label>
 						<textarea cols="40" rows="8" name="description" id="notetext"></textarea>
-						<input type="submit" class="standardButton" onclick="return validateAppt();" value="Create Appointment"/>
+						<input type="submit" class="standardButton" onclick="getLocationType(); return validateAppt();" value="Create Appointment"/>
 						    <% if not $saved.nil? %>
 						      Saved date/time values:<br/>
 						      <% $choosed.each do |k,v| %>

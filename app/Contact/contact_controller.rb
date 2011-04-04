@@ -20,7 +20,7 @@ class ContactController < Rho::RhoController
     if @contact
       @next_id = (@contact.object.to_i + 1).to_s
       @prev_id = (@contact.object.to_i - 1).to_s
-      render :action => :show, :layout => 'layout_jquerymobile'     
+      render :action => :show, :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']     
     else
       redirect :action => :index
     end

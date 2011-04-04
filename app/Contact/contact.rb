@@ -156,7 +156,7 @@ class Contact
   
   def business_map
     begin
-        return ("#{address2_line1}+#{address2_city}+#{cssi_state2id}").gsub!(" ","_")
+        return ("#{address2_line1}+#{address2_city}+#{cssi_state2id}").gsub!(" ","+")
     rescue
         puts "Could not generate business map string; Value is #{}"
     end
@@ -164,7 +164,7 @@ class Contact
   
   def home_map
     begin
-        return ("#{address1_line1}+#{address1_city}+#{cssi_state1id}").gsub!(" ","_")
+        return ("#{address1_line1}+#{address1_city}+#{cssi_state1id}").gsub!(" ","+")
     rescue
         puts "Could not generate home_map map string; Value is #{}"
     end

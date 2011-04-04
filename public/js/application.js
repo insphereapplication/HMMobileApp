@@ -261,6 +261,19 @@ function populateAddress(dropdown)
     return true;
 }
 
+function getLocationType()
+{
+	for (var i=0; i<document.getElementById("select_location").options.length; i++){
+      if (document.getElementById("select_location").options[i].selected==true){
+        selected = document.getElementById("select_location").options[i].text;
+        break;
+      }
+    }
+	document.getElementById('cssi_location').value=selected;
+	type = document.getElementById('cssi_location').value;
+	return true;
+}
+
 //reset type=date inputs to text
 $( document ).bind( "mobileinit", function(){
 	$.mobile.page.prototype.options.degradeInputs.date = true;
