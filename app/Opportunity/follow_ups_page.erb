@@ -1,0 +1,16 @@
+<% if @params['page']=='0'%>
+	<li id="todays-leads-header" data-role="list-divider" role="heading" tabindex="0" class="opportunity-item ui-li ui-li-divider ui-btn ui-bar-<%= @color %> ui-btn-up-undefined"><%= @label %></li>
+<% end %>
+<% @page.each do |opportunity| %>
+	<%= render :partial =>"opportunity", :locals => { 
+		   	:opportunity => opportunity, 
+		    :color => @color, 
+		    :top_right_text => opportunity.cssi_statusdetail,
+		    :bottom_right_text => @date_proc.call(opportunity),
+		    :origin => "follow-ups",
+		    :launcher => :phone_dialog,
+		    :icon => "phoneopp",
+		    :location => "blank"
+	   } if opportunity.contact 
+	%>
+<% end%>

@@ -1,0 +1,17 @@
+<% if @params['page']=='0'%>
+	<li id="todays-leads-header" data-role="list-divider" role="heading" tabindex="0" class="opportunity-item ui-li ui-li-divider ui-btn ui-bar-<%= @color %> ui-btn-up-undefined"><%= @label %></li>
+<% end %>
+<% @page.each do |appointment| %>
+	<%= render :partial =>"opportunity", :locals => { 
+              :opportunity => appointment.opportunity , 
+              :color => @color, 
+              :bottom_right_text => "Created #{appointment.opportunity.days_ago}",
+              :top_right_text => to_datetime_noyear(appointment.scheduledstart),
+              :origin => "appointments",
+              :launcher => :map,
+              :icon => "mapopp",
+              :location => appointment.location
+		} if appointment.opportunity 
+	 %>
+<% end%>
+
