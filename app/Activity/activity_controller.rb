@@ -37,6 +37,9 @@ class ActivityController < Rho::RhoController
         :cssi_statusdetail => "",
         :competitorid => @params['competitorid'] || ""
       })
+      
+      opportunity.record_phone_call_made_now
+      
       finished_update_status(opportunity, @params['origin'], @params['appointments'])
       db.commit
     rescue Exception => e
