@@ -161,7 +161,8 @@ class Opportunity
       phone_call = Activity.create(phone_call_attrs.merge({
         :parent_type => 'Opportunity', 
         :parent_id => self.object,
-        :type => 'PhoneCall'
+        :type => 'PhoneCall',
+        :parent_contact_id => self.contact_id
         })
       )
     end

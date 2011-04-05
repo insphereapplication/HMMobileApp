@@ -96,6 +96,7 @@ class ActivityController < Rho::RhoController
         :phonenumber => @params['phone_number'],
         :parent_type => 'Opportunity', 
         :parent_id => opportunity.object,
+        :parent_contact_id => opportunity.contact_id,
         :statuscode => 'Open',
         :statecode => 'Open',
         :type => 'PhoneCall'
@@ -142,7 +143,8 @@ class ActivityController < Rho::RhoController
           :subject => "#{contact.firstname}, #{contact.lastname} - #{opportunity.createdon}",
           :description => @params['description'],
           :type => 'Appointment',
-          :cssi_location => @params['cssi_location']
+          :cssi_location => @params['cssi_location'],
+          :parent_contact_id => opportunity.contact_id
         }
       )
   
@@ -164,7 +166,9 @@ class ActivityController < Rho::RhoController
   
   def complete_appointments(appointmentids)
     if appointmentids
+      puts "&$&$&$&$&$&$&$&$&$&$&$&$&$&$  SUBMITTING APPOINTMENTS FOR COMPLETION &$&$&$&$&$&$&$&$&$&$&$&$&$&$ "
       appointmentids.each do |id|
+        puts "My appointment id is #{id}"
         appointment = Activity.find(id, :conditions => {:type => 'Appointment'})
         appointment.complete if appointment
       end

@@ -163,6 +163,7 @@ class Contact
     phone_numbers.each do |type, number|
       return number
     end
+    return ""
   end
   
   def opportunities

@@ -13,12 +13,18 @@
 			<% puts activity.inspect %>
 				<li>
 					<h3> <%= activity.activity_type %></h3>
-					<% if activity.scheduledstart %>
+					<% if activity.type == "Appointment" %>
 						<p class="ui-li-aside"><strong><%= to_datetime(activity.scheduledstart) %></strong></p>
-					<% elsif activity.scheduledend %>
+					<% elsif activity.type == "PhoneCall" %>
 						<p class="ui-li-aside"><strong><%= to_datetime(activity.scheduledend) %></strong></p>
 					<% end %>
-					<p><%= activity.cssi_disposition %></p>
+					<% if activity.statuscode %>
+						<p><%= activity.statuscode%></p>
+					<% end %>
+					<% if activity.cssi_disposition %>
+						<p><%= activity.cssi_disposition %></p>
+					<% end %>
+
 				</li>
 			<% end %>
 		</ul>
