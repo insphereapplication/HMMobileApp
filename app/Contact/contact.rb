@@ -3,7 +3,8 @@ require '/initializers/object_extension'
 class Contact
   include Rhom::FixedSchema
   include ChangedFlag
-
+  include SQLHelper
+  
   enable :sync
   set :sync_priority, 1
   
@@ -35,9 +36,22 @@ class Contact
   index :contact_pk_index, [:contactid]
   unique_index :unique_contact, [:contactid] 
   
-  def self.all_open
+  def self.all_open(page=nil, page_size=DEFAULT_PAGE_SIZE)
+    puts "CONTACT SQL"
+    puts %Q{
+      select c.* from Contact c, Opportunity o 
+      where o.contact_id=c.contactid and 
+      o.statecode not in ('Won', 'Lost')
+      order by c.lastname
+      #{get_pagination_sql(page, page_size)}
+    }
+    
     Contact.find_by_sql(%Q{
-      select c.* from Contact c, Opportunity o where o.contact_id=c.contactid and o.statecode not in ('Won', 'Lost')
+      select c.* from Contact c, Opportunity o 
+      where o.contact_id=c.contactid and 
+      o.statecode not in ('Won', 'Lost')
+      order by c.lastname
+      #{get_pagination_sql(page, page_size)}
     })
   end
   

@@ -9,9 +9,14 @@ class ContactController < Rho::RhoController
 
   #GET /Contact
   def index
-    @contacts = Contact.all_open
-    @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.chars.first}
     render :action => :index, :layout => 'layout_JQM_Lite'
+  end
+  
+  def get_contacts_page
+    @contacts = Contact.all_open(@params['page'].to_i)
+    puts @contacts.inspect
+    @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.chars.first}
+    render :action => :contact_page
   end
 
   # GET /Contact/{1}

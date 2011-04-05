@@ -1,11 +1,18 @@
 <style type="text/css">
+	/* set the selected tab's div to visible */
 	div#<%= @params['selected_tab'] %> {
 		display: block;
 	}
 </style>
+
 <script type='text/javascript'>
 	$(document).ready(function() {
+		// add the selected style to the selected tab button
 		$('a#<%= @params['selected_tab'] %>-button').addClass('ui-btn-active');
+		
+		loadNewLeads(); 
+		loadFollowUps();
+		loadAppointments();
 	});
 </script>
 

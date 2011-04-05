@@ -31,10 +31,6 @@ $(document).ready(function() {
 	    cache: false  
 	});
 	
-	loadNewLeads(); 
-	loadFollowUps();
-	loadAppointments();
-	
  });
 
 function checkForChanges(tab){
