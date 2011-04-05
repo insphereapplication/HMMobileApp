@@ -31,6 +31,8 @@ class Activity
   enable :sync
   set :sync_priority, 2 # this needs to be loaded before opportunities so that opportunities can know their context
   
+  # set :schema_version, '1.0'
+  
   OPEN_STATE_CODES = ['Open', 'Scheduled']
   
   def parent
