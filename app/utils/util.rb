@@ -34,7 +34,7 @@ module SQLHelper
       )
   } 
   
-  SELECT_APPOINTMENT_SQL = "select a.* from Activity a, Opportunity o where type='Appointment'"
+  SELECT_APPOINTMENT_SQL = "select a.* from Activity a, Opportunity o where a.type='Appointment'"
   
   SCHEDULED_END_SQL = "date(scheduledend)"
   SCHEDULED_START_SQL = "date(scheduledstart)"
