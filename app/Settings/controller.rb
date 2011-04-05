@@ -193,11 +193,6 @@ class SettingsController < Rho::RhoController
         login("/app/Settings/retry_login_callback")
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/401 Unauthorized/].nil?
         #proxy returned a 401, need to re-login
-        Alert.show_popup({
-          :message => "It appears the proxy has been restarted, trying to log you in again.", 
-          :title => "Proxy Restarted", 
-          :buttons => ["OK"]
-        })
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
         login("/app/Settings/retry_login_callback")
