@@ -1,0 +1,1 @@
+require 'lib/changed_flag'
