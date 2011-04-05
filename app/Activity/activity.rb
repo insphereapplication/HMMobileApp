@@ -111,28 +111,22 @@ class Activity
 
 # class Appointment < Activity
   
-  def self.open_appointments(page=nil, page_size=DEFAULT_PAGE_SIZE)
-    find_by_sql(%Q{
-        select a.* from Activity a, Opportunity o where type='Appointment' and
-        #{OWNED_BY_OPEN_OPPORTUNITY_SQL}
-        #{get_pagination_sql(page, page_size)}
-      })
-  end
-  
   def self.past_due_appointments(page=nil, page_size=DEFAULT_PAGE_SIZE)
     find_by_sql(%Q{
         #{SELECT_APPOINTMENT_SQL} and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-        #{SCHEDULED_START_SQL} < #{NOW_SQL}
+        #{SCHEDULED_START_SQL} < #{NOW_SQL}and 
+        #{APPOINTMENT_OPEN_SQL}
         #{get_pagination_sql(page, page_size)}
       })
   end
   
-  def self.future_appointments(page=nil, page_size=DEFAULT_PAGE_SIZE)
+  def self.future_appointments(page=nil, page_size=DEFAULT_PAGE_SIZE)    
     find_by_sql(%Q{
         #{SELECT_APPOINTMENT_SQL} and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-        #{SCHEDULED_START_SQL} > #{NOW_SQL}
+        #{SCHEDULED_START_SQL} > #{NOW_SQL} and 
+        #{APPOINTMENT_OPEN_SQL} 
         #{get_pagination_sql(page, page_size)}
       })
   end
@@ -141,7 +135,8 @@ class Activity
     find_by_sql(%Q{
         #{SELECT_APPOINTMENT_SQL} and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-        #{SCHEDULED_START_SQL} = #{NOW_SQL}
+        #{SCHEDULED_START_SQL} = #{NOW_SQL}and 
+        #{APPOINTMENT_OPEN_SQL}
         #{get_pagination_sql(page, page_size)}
       })
   end

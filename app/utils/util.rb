@@ -47,7 +47,7 @@ module SQLHelper
     #{NO_ACTIVITIES_FOR_OPPORTUNITY_SQL}
   }
   
-  
+  APPOINTMENT_OPEN_SQL = "a.statecode in ('Open', 'Scheduled')"
     
   SELECT_FIRST_PER_OPPORTUNITY_SQL = "group by o.object order by datetime(a.scheduledend)"
   
