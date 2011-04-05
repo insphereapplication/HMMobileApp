@@ -46,6 +46,12 @@ class OpportunityController < Rho::RhoController
     
   end
   
+  def refresh_if_changed
+    if Opportunity.local_changed?
+      WebView.navigate( url_for(:action => :index, :query => {:selected_tab => @params['tab']}) )
+    end
+  end
+  
   def intialize_nav_contexts
     $new_leads_nav_context = []
     $follow_ups_nav_context = []
@@ -56,6 +62,7 @@ class OpportunityController < Rho::RhoController
   def index
     if SyncEngine::logged_in == 1
       intialize_nav_contexts
+      Opportunity.local_changed = false
       @params['selected_tab'] ||= 'new-leads'
       set_opportunities_nav_context(@params['selected_tab']);    
       render :action => :index, :layout => 'layout_JQM_Lite'
@@ -126,7 +133,7 @@ class OpportunityController < Rho::RhoController
   end
 
   def get_appointments(color, text, appointments)
-    $appointments_nav_context += appointments.map{|app| app.opportunity.opportunityid }
+    $appointments_nav_context += appointments.map{|appointment| appointment.opportunity.opportunityid }
     @color = color
     @label = text
     @page = appointments

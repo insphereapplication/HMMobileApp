@@ -2,6 +2,7 @@ require '/initializers/object_extension'
 
 class Contact
   include Rhom::FixedSchema
+  include ChangedFlag
 
   enable :sync
   set :sync_priority, 1

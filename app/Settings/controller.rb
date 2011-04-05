@@ -156,7 +156,10 @@ class SettingsController < Rho::RhoController
     status = @params['status'] ? @params['status'] : ""
     
     if status == "complete" or status == "ok"
-      # do nothing
+      if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
+        klass = Object.const_get(@params['source_name'].capitalize)
+        klass.local_changed=true if klass && klass.respond_to?(:local_changed=)
+      end
     elsif status == "error"
       
       if @params['server_errors'] && @params['server_errors']['create-error']
@@ -169,7 +172,6 @@ class SettingsController < Rho::RhoController
       @msg = rho_error.message unless @msg and @msg.length > 0   
 
       if (@params['error_message'].downcase == 'unknown client') or rho_error.unknown_client?(@params['error_message'])
-        puts "Received unknown client, resetting!"
         Alert.show_popup({
             :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
             :title => "Unknown client", 
