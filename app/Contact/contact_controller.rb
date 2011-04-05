@@ -39,6 +39,12 @@ class ContactController < Rho::RhoController
     end
   end
   
+  def select_preferred(phone_type, preferred)
+    if phone_type == preferred
+      return "selected"
+    end
+  end
+  
   def age(dob)
     begin
       birthdate = Date.parse(dob)
