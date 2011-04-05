@@ -149,7 +149,8 @@ class Activity
   def complete
     update_attributes({
       :statuscode => 'Completed',
-      :statecode => 'Completed'
+      :statecode => 'Completed',
+      :cssi_disposition => 'Appointment Held'
     })
   end
   
