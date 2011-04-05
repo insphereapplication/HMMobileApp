@@ -31,7 +31,7 @@
 							<% @opportunity.contact.addresses.each do |type, address| %>
 								<option value="<%= address %>"><%= type %></option>
 							<% end %>
-								<option value="">Ad Hoc</option>
+								<option value=" ">Ad Hoc</option>
 						</select><br />
 						<label for="location" class="fieldLabel">Address:</label>
 			            <input maxlength="200" type="text" id="location" name="location" value="<%= @opportunity.contact.default_address %>" /><br />

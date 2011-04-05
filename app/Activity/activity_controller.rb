@@ -164,7 +164,9 @@ class ActivityController < Rho::RhoController
   
   def complete_appointments(appointmentids)
     if appointmentids
+      puts "&$&$&$&$&$&$&$&$&$&$&$&$&$&$  SUBMITTING APPOINTMENTS FOR COMPLETION &$&$&$&$&$&$&$&$&$&$&$&$&$&$ "
       appointmentids.each do |id|
+        puts "My appointment id is #{id}"
         appointment = Activity.find(id, :conditions => {:type => 'Appointment'})
         appointment.complete if appointment
       end

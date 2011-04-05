@@ -5,7 +5,7 @@ $(document).ready(function() {
 			return this.value
 		});
 
-		appointments = "&appointments[]=" + $.makeArray(apptids).join(",");
+		appointments = '&appointments[]=' + $.makeArray(apptids).join('&appointments[]=');
 		window.location.href = $(this).attr('href') + appointments;
 		return false;
 	});
@@ -16,7 +16,7 @@ $(document).ready(function() {
 				return this.value
 			});
 	
-			appointments = "&appointments[]=" + $.makeArray(apptids).join(",");
+			appointments = '&appointments[]=' + $.makeArray(apptids).join('&appointments[]=');
 			window.location.href = $(this).attr('href') + appointments;
 			return false;
 		}
@@ -31,7 +31,7 @@ $(document).ready(function() {
 				return this.value
 			});
 	
-			appointments = "&appointments[]=" + $.makeArray(apptids).join(",");
+			appointments = '&appointments[]=' + $.makeArray(apptids).join('&appointments[]=');
 			window.location.href = $(this).attr('href') + appointments;
 			return false;
 		}
