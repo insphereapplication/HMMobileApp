@@ -123,7 +123,7 @@ class Activity
     find_by_sql(%Q{
         #{SELECT_APPOINTMENT_SQL} and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-        #{SCHEDULED_START_SQL} > #{NOW_SQL}
+        #{SCHEDULED_START_SQL} < #{NOW_SQL}
         #{get_pagination_sql(page, page_size)}
       })
   end
@@ -132,7 +132,7 @@ class Activity
     find_by_sql(%Q{
         #{SELECT_APPOINTMENT_SQL} and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-        #{SCHEDULED_START_SQL} < #{NOW_SQL}
+        #{SCHEDULED_START_SQL} > #{NOW_SQL}
         #{get_pagination_sql(page, page_size)}
       })
   end

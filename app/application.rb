@@ -2,6 +2,7 @@ require 'rho/rhoapplication'
 require 'rho/rhotabbar'
 require 'utils/util'
 require 'initializers/extensions'
+require 'lib/libs'
 
 class AppApplication < Rho::RhoApplication
   def initialize

@@ -68,7 +68,6 @@ module Rhom
 
     module RhomClassMethods
       def inherited(sti_model)
-        puts "INHERITED " + "%"*80
         # sti_model has inherited from a class that itself included Rhom::PropertyBag, therefore this is an STI child class
         sti_name = sti_model.name # store name before it's overidden
         sti_model.extend STI::ClassMethods
@@ -77,7 +76,6 @@ module Rhom
     end
 
     def self.included(model)
-      puts "INCLUDED" + "$"*80
       model.extend RhomClassMethods
       model.extend PropertyBag
     end

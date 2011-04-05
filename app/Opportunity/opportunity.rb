@@ -4,6 +4,7 @@ require 'rho/rhotabbar'
 
 class Opportunity
   include Rhom::FixedSchema
+  include ChangedFlag
   include SQLHelper
   
   enable :sync
@@ -41,8 +42,6 @@ class Opportunity
   index :opp_createdon_index, [:createdon]
 
   belongs_to :contact_id, 'Contact'
-  
-  DEFAULT_PAGINATION = 5
     
   def contact
     Contact.find(self.contact_id)
@@ -90,7 +89,7 @@ class Opportunity
             a2.parent_id=o.object and
             (a2.statecode in ('Open', 'Scheduled') and a2.scheduledend is not null and a2.scheduledend <> '')
           )
-      order by datetime(o.cssi_lastactivitydate) desc
+      order by datetime(o.cssi_lastactivitydate) asc
       #{get_pagination_sql(page, page_size)}
     })
   end
@@ -127,11 +126,13 @@ class Opportunity
   
   def notes
     Note.find_by_sql(%Q{
-        select n.* from Note n where #{is_owned_by_this_opportunity_sql} or
-        (n.parent_type = 'PhoneCall' and n.parent_id in (
-          select pc.object from Activity pc where pc.type='PhoneCall' and 
-          pc.parent_type='Opportunity' and pc.parent_id='#{object}'
-        ))
+        select n.* from Note n where #{is_owned_by_this_opportunity_sql} or (
+          n.parent_type = 'PhoneCall' and n.parent_id in (
+            select pc.object from Activity pc where pc.type='PhoneCall' and 
+            pc.parent_type='Opportunity' and 
+            pc.parent_id='#{object}'
+          )
+        )
     })
   end
   
