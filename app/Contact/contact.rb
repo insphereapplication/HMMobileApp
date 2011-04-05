@@ -147,7 +147,9 @@ class Contact
   
   def default_number
     phone_numbers.each do |type, number|
-      return number
+        if type == cssi_preferredphone
+          return number
+        end
     end
     return ""
   end
@@ -171,5 +173,6 @@ class Contact
         puts "Could not generate home_map map string; Value is #{}"
     end
   end
+  
   
 end
