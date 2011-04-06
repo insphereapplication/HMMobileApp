@@ -42,30 +42,54 @@ function setNavContext(context){
 }
 
 function loadNewLeads(){
-	loadOpportunities('todays_new_leads', 'span#todays-leads-list', 0);
-	loadOpportunities('previous_days_new_leads', 'span#previous-days-leads-list', 0);
+	newLeadBuckets = getLinkedBucketList([ { opportunity_method: 'todays_new_leads',          list_selector: 'span#todays-leads-list',         next: null},
+										   { opportunity_method: 'previous_days_new_leads',   list_selector: 'span#previous-days-leads-list',  next: null}]);
+											
+	loadOpportunities(newLeadBuckets, 0);
 }
 
 function loadFollowUps(){
-	loadOpportunities('past_due_follow_ups', 'span#past-due-follow-ups-list', 0);
-	loadOpportunities('todays_follow_ups', 'span#todays-follow-ups-list', 0);
-	loadOpportunities('by_last_activities', 'span#by-last-activities-list', 0);
-	loadOpportunities('future_follow_ups', 'span#future-follow-ups-list', 0);
+	
+	followUpBuckets = getLinkedBucketList([ { opportunity_method: 'past_due_follow_ups', list_selector: 'span#past-due-follow-ups-list', next: null},
+											{ opportunity_method: 'todays_follow_ups',   list_selector: 'span#todays-follow-ups-list',   next: null},
+											{ opportunity_method: 'by_last_activities',  list_selector: 'span#by-last-activities-list',  next: null},
+											{ opportunity_method: 'future_follow_ups',   list_selector: 'span#future-follow-ups-list',   next: null} ]);
+	
+	loadOpportunities(followUpBuckets, 0);
 }
 
 function loadAppointments(){
-	loadOpportunities('past_due_appointments', 'span#past-due-appointments-list', 0);
-	loadOpportunities('todays_appointments', 'span#todays-appointments-list', 0);
-	loadOpportunities('future_appointments', 'span#future-appointments-list', 0);
+	followUpBuckets = getLinkedBucketList([ { opportunity_method: 'past_due_appointments', list_selector: 'span#past-due-appointments-list', next: null},
+											{ opportunity_method: 'todays_appointments',   list_selector: 'span#todays-appointments-list',   next: null},
+											{ opportunity_method: 'future_appointments',   list_selector: 'span#future-appointments-list',   next: null}]);
+											
+	loadOpportunities(followUpBuckets, 0);
 }
 
-function loadOpportunities(opportunity_method, list_selector, opportunity_page){
-	$.post('Opportunity/' + opportunity_method, { page: opportunity_page },
+ 				 
+
+function loadOpportunities(opportunityBucket, opportunity_page){
+	$.post('Opportunity/' + opportunityBucket.opportunity_method, { page: opportunity_page },
 		function(opportunities) {				
 			if (opportunities && $.trim(opportunities) != ""){
-				$(list_selector).append(opportunities);
-				loadOpportunities(opportunity_method, list_selector, opportunity_page + 1);
-			} 
+				$(opportunityBucket.list_selector).append(opportunities);
+				loadOpportunities(opportunityBucket, opportunity_page + 1);
+			}else if (opportunityBucket.next != null){
+				loadOpportunities(opportunityBucket.next, 0);
+			}
 		}
 	);
 }
+
+// link the bucket lists. 
+function getLinkedBucketList(bucketArray){
+	for(var i=0; i<bucketArray.length; i++){
+		bucketArray[i].next = bucketArray[i+1]; 
+	}
+	return bucketArray[0];
+}
+
+
+
+
+
