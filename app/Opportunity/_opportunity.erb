@@ -23,13 +23,11 @@
 	</div>
 
 	<a href="<%= url_for :action => launcher, :id=> opportunity.object, :query =>{:opportunity => opportunity.object, :location => location, :origin => origin}%>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
-		<span class="ui-btn-inner"><span class="ui-btn-text"></span>
-		<span title="" data-theme="b" class="ui-btn ui-btn-up-b ui-btn-icon-notext ui-btn-corner-all ui-shadow">
-			<span class="ui-btn-inner ui-btn-corner-all">
-				<span class="ui-btn-text"></span>
-				<span class="ui-icon ui-icon-<%=icon%> ui-icon-shadow"></span>
-			</span>
-		</span>
+		<% if icon=="mapopp"%>
+			<img class="opp-icon" src="/public/images/map_icon.png">
+		<% else %>
+			<img class="opp-icon" src="/public/images/phone_black.png">
+		<% end %>
 	</a>			
 </li>
 

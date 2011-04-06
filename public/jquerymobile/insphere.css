@@ -127,6 +127,13 @@ ul li a { display: block; padding: 1px 5px; text-decoration: none;}
 	background-image: url(/public/images/phone_small_opp.jpg);
 }
 
+.opp-icon {
+	position: absolute;
+	width: 30px;
+	right: 5px;
+    top: 20px;
+}
+
 .ui-icon-mapopp {
 	background-image: url(/public/images/map_small_opp.jpg);
 }
