@@ -15,7 +15,7 @@ $(document).ready(function() {
 			var apptids = $('input:checkbox:checked.custom').map(function(){
 				return this.value
 			});
-	
+			
 			appointments = '&appointments[]=' + $.makeArray(apptids).join('&appointments[]=');
 			window.location.href = $(this).attr('href') + appointments;
 			return false;

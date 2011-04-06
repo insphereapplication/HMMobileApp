@@ -76,6 +76,19 @@ module DateUtil
       end
     end
     
+    def days_ago_relative(past_date)
+      begin
+        diff = (Date.today - Date.strptime(past_date, DEFAULT_TIME_FORMAT)).to_i
+        if diff == 0
+          "Today"
+        else
+          "Last Act -#{diff}d"
+        end
+      rescue Exception => e
+        puts "Unable to parse days_ago: #{past_date}: #{e}"
+      end
+    end
+    
     def seconds_until_hour(input_time)
       begin
         (60 - input_time.min)*60
