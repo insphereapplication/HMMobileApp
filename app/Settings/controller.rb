@@ -210,4 +210,11 @@ class SettingsController < Rho::RhoController
     Rho::RhoConfig.show_log
   end
   
+  def test_exception
+    raise "bang"
+  rescue Exception => e
+    ExceptionUtil.log_exception_to_server(e)
+    WebView.navigate ( url_for :action => :index )
+  end
+  
 end

@@ -1,3 +1,14 @@
+module ExceptionUtil
+  def self.log_exception_to_server(exception)
+    ClientException.create({
+      :message => exception.message,
+      :backtrace => exception.backtrace,
+      :exception_id => Time.now.to_i.to_s
+    });
+    ClientException.sync
+  end
+end
+
 module SQLHelper
   # SQL snippets to avoid duplication. Use with caution.
   DEFAULT_PAGE_SIZE = 5
