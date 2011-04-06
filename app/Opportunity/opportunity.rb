@@ -131,6 +131,7 @@ class Opportunity
             select pc.object from Activity pc where pc.type='PhoneCall' and 
             pc.parent_type='Opportunity' and 
             pc.parent_id='#{object}'
+            order by datetime(n.createdon) desc
           )
         )
     })
