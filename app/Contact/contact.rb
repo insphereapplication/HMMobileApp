@@ -36,16 +36,7 @@ class Contact
   index :contact_pk_index, [:contactid]
   unique_index :unique_contact, [:contactid] 
   
-  def self.all_open(page=nil, page_size=DEFAULT_PAGE_SIZE)
-    puts "CONTACT SQL"
-    puts %Q{
-      select c.* from Contact c, Opportunity o 
-      where o.contact_id=c.contactid and 
-      o.statecode not in ('Won', 'Lost')
-      order by c.lastname
-      #{get_pagination_sql(page, page_size)}
-    }
-    
+  def self.all_open(page=nil, page_size=DEFAULT_PAGE_SIZE)    
     Contact.find_by_sql(%Q{
       select c.* from Contact c, Opportunity o 
       where o.contact_id=c.contactid and 

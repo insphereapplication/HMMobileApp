@@ -35,7 +35,7 @@ class OpportunityController < Rho::RhoController
       { :label => "Contacts",  :action => '/app/Contact',  
         :icon => "/public/images/iphone/tabs/activities_tab_icon.png", :reload => true },
       { :label => "Settings",  :action => '/app/Settings',  
-        :icon => "/public/images/iphone/tabs/settings_tab_icon.png", :reload => true },
+        :icon => "/public/images/iphone/tabs/settings_tab_icon.png" },
     ]
     Rho::NativeTabbar.create(tabbar)
     Rho::NativeTabbar.switch_tab(0)
