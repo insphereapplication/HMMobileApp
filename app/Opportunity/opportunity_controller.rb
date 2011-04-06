@@ -109,7 +109,7 @@ class OpportunityController < Rho::RhoController
   end
 
   def by_last_activities
-    date_proc = lambda {|opportunity| "Last Act: -#{DateUtil.days_ago(opportunity.cssi_lastactivitydate)}d" unless opportunity.cssi_lastactivitydate.blank?}
+    date_proc = lambda {|opportunity| "#{DateUtil.days_ago_relative(opportunity.cssi_lastactivitydate)}" unless opportunity.cssi_lastactivitydate.blank?}
     opportunities = Opportunity.by_last_activities(@params['page'].to_i)
     get_follow_ups('yellow', 'By Last Activity', date_proc, opportunities)
   end

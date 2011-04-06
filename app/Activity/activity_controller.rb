@@ -24,6 +24,32 @@ class ActivityController < Rho::RhoController
       db.rollback
     end
   end
+  
+  def confirm_win_status
+    Alert.show_popup ({
+        :message => "Click OK to Confirm this Opportunity as Won", 
+        :title => "Confirm Win", 
+        :buttons => ["Cancel", "Ok",],
+        :callback => url_for(:action => :dismiss_win_popup, 
+                                        :query => {
+				                                :opportunity_id => @params['opportunity_id'],
+				                                :origin => @params['origin'],
+				                                :appointments => @params['appointments']
+				                                })
+				                   })
+  end
+  
+  def dismiss_win_popup
+    if @params['button_id'] == "Ok"
+      puts "DISMISS WIN:" + @params.inspect
+      WebView.navigate(url_for(:action => :update_won_status,
+                                :query => {
+                                :opportunity_id => @params['opportunity_id'],
+                                :origin => @params['origin'],
+                                :appointments => @params['appointments']})
+                                )
+    end
+  end
 
   def udpate_lost_status
     db = ::Rho::RHO.get_src_db('Opportunity')
@@ -168,6 +194,7 @@ class ActivityController < Rho::RhoController
   end
   
   def complete_appointments(appointmentids)
+    puts "Here are the appointment ids: #{appointmentids}"
     if appointmentids
       puts "&$&$&$&$&$&$&$&$&$&$&$&$&$&$  SUBMITTING APPOINTMENTS FOR COMPLETION &$&$&$&$&$&$&$&$&$&$&$&$&$&$ "
       appointmentids.each do |id|

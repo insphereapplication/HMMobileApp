@@ -11,7 +11,8 @@
 			<div class="ui-body ui-body-d">
 				<form name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_appointment_set, :query => {:origin => @params['origin']} %>">
 					<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
-					<input type="hidden" name="appointments[]" value="<%= @params['appointments'].join(',') %>" />
+					<!-- TODO: MAKE SURE THIS WORKS WITH MULTIPLE APPTS -->
+					<input type="hidden" name="appointments[]" value="<%= @params['appointments'] ? @params['appointments'].join(',')  : '' %>" />
 					<input type="hidden" id="cssi_location" name="cssi_location" />
 					
 					<div data-role="fieldcontain">
