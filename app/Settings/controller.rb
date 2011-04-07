@@ -197,7 +197,7 @@ class SettingsController < Rho::RhoController
         SyncEngine.stop_sync
         login("/app/Settings/retry_login_callback")
       else
-        ExceptionUtil.log_exception_to_server(new Exception("CLIENT ERROR #{err_code} in SyncNotify for user '#{Settings.login}': #{Rho::RhoError.err_message(err_code)} -- #{@params.inspect}"))
+        ExceptionUtil.log_exception_to_server(new Exception("Error #{err_code} in SyncNotify for user '#{Settings.login}': #{Rho::RhoError.err_message(err_code)} -- #{@params.inspect}"))
       end
     end
   end
