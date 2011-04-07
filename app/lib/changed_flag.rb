@@ -1,7 +1,5 @@
 module ChangedFlag
   def self.included(model)
-    puts "&"*80
-    puts "CHANGED FLAG INCLUDED: #{model}"
     model.extend ClassMethods
   end
   
