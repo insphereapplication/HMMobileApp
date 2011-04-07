@@ -71,7 +71,6 @@ class ActivityController < Rho::RhoController
   end
 
   def udpate_lost_status
-    puts "BUTTON ID VALUE IS:" + @params['button_id']
     if @params['button_id'] == "Ok"
         db = ::Rho::RHO.get_src_db('Opportunity')
         db.start_transaction
@@ -105,6 +104,29 @@ class ActivityController < Rho::RhoController
     else
       WebView.navigate(url_for :controller => :Opportunity, :action => :status_update, :id => @params['opportunity_id'], :query => {:origin => @params['origin']})
     end
+  end
+  
+  def update_lost_other_status
+        db = ::Rho::RHO.get_src_db('Opportunity')
+        db.start_transaction
+        begin
+          opportunity = Opportunity.find(@params['opportunity_id'])
+          opportunity.complete_most_recent_open_call
+          opportunity.update_attributes({
+            :statecode => 'Lost',
+            :statuscode => @params['status_code'],
+            :cssi_statusdetail => "",
+            :competitorid => @params['competitorid'] || ""
+          })
+      
+          opportunity.record_phone_call_made_now
+      
+          finished_update_status(opportunity, @params['origin'], @params['appointments'])
+          db.commit
+        rescue Exception => e
+          puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
+          db.rollback
+      end
   end
 
   def confirm_lost_status
