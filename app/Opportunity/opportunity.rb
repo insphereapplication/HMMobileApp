@@ -132,7 +132,7 @@ class Opportunity
             pc.parent_type='Opportunity' and 
             pc.parent_id='#{object}'
           )
-        )
+        ) order by datetime(n.createdon) desc
     })
   end
   
