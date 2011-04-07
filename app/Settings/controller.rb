@@ -15,40 +15,56 @@ class SettingsController < Rho::RhoController
     render :controller => :Setting, :action => :index, :layout => 'layout_jquerymobile'
   end
 
-  def login(callback="/app/Settings/login_callback")
+  def login
     @msg = @params['msg']
     # if the user has stored successful login credentials, attempt to auto-login with them
-    if Settings.has_persisted_credentials?
-      SyncEngine.login(Settings.login, Settings.password,  callback)
+    if Settings.has_verified_credentials?
+      SyncEngine.login(Settings.login, Settings.password, "/app/Settings/login_callback")
       @working = true # if @working is true, page will show spinner
     end
     
     Rho::NativeTabbar.remove
     render :action => :login, :back => '/app', :layout => 'layout_jquerymobile'
   end
+  
+  def goto_login(msg=nil)
+    WebView.navigate ( url_for :action => :login, :query => {:msg => msg} )
+  end
+  
+  def retry_login
+    # if the user has stored successful login credentials, attempt to auto-login with them
+    if Settings.has_verified_credentials?
+      SyncEngine.login(Settings.login, Settings.password,  '/app/Settings/retry_login_callback')
+    else
+      goto_login
+    end
+  end
 
   def login_callback
     errCode = @params['error_code'].to_i
     if errCode == 0
-      
       # set initial sync notification for OpportunityController#init_notify, which will redirect WebView to OpportunityController#index
       Opportunity.set_notification(
         url_for(:controller => :Opportunity, :action => :init_notify),
         "sync_complete=true"
       )
+      Settings.credentials_verified = true
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
-
+    elsif errCode == Rho::RhoError::ERR_NETWORK && Settings.has_verified_credentials?
+      error_popup("Verified credentials, but no network.")
+      SyncEngine.set_pollinterval($poll_interval)
+      Opportunity.init_notify
     else
       Settings.clear_credentials
       SyncEngine.set_pollinterval(0)
       if errCode == Rho::RhoError::ERR_CUSTOMSYNCSERVER
         @msg = @params['error_message']
       end
-  
+      
       @msg ||= "The user name or password you entered is not valid"    
-      WebView.navigate ( url_for :action => :login, :query => {:msg => @msg} )
-    end  
+      goto_login(@msg)
+    end
   end
   
   def retry_login_callback
@@ -56,15 +72,18 @@ class SettingsController < Rho::RhoController
     if errCode == 0
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
+    elsif errCode == Rho::RhoError::ERR_NETWORK && Settings.has_verified_credentials?
+      error_popup("Verified credentials, but no network.")
+      SyncEngine.set_pollinterval($poll_interval)
     else
       Settings.clear_credentials
       SyncEngine.set_pollinterval(0)
       if errCode == Rho::RhoError::ERR_CUSTOMSYNCSERVER
         @msg = @params['error_message']
       end
-  
+      
       @msg ||= "The user name or password you entered is not valid"    
-      WebView.navigate ( url_for :action => :login, :query => {:msg => @msg} )
+      goto_login(@msg)
     end
   end
 
@@ -154,6 +173,7 @@ class SettingsController < Rho::RhoController
     #     ERR_SYNCVERSION = 11
     #     ERR_GEOLOCATION = 12
     status = @params['status'] ? @params['status'] : ""
+    error_popup("Sync notify","")
     
     if status == "complete" or status == "ok"
       if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
@@ -163,7 +183,13 @@ class SettingsController < Rho::RhoController
     elsif status == "error"
       
       if @params['server_errors'] && @params['server_errors']['create-error']
-        SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'].keys(), :recreate)
+        error_popup("Create error", @params.inspect)
+        SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'], :recreate)
+      end
+      
+      if @params['server_errors'] && @params['server_errors']['update-error']
+        error_popup("Update error", @params.inspect)
+        SyncEngine.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :retry)
       end
 
       err_code = @params['error_code'].to_i
@@ -172,38 +198,47 @@ class SettingsController < Rho::RhoController
       @msg = rho_error.message unless @msg and @msg.length > 0   
 
       if (@params['error_message'].downcase == 'unknown client') or rho_error.unknown_client?(@params['error_message'])
-        Alert.show_popup({
-            :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
-            :title => "Unknown client", 
-            :buttons => ["OK"]
-          })
         Rhom::Rhom.database_fullclient_reset_and_logout
-        render :action => :login, :layout => 'layout_jquerymobile'
+        error_popup("Error: Unknown client", "Verified: #{Settings.has_verified_credentials?}" + Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
+        SyncEngine.set_pollinterval(-1)
+        SyncEngine.stop_sync
+        Settings.clear_credentials
+        goto_login
       elsif err_code == Rho::RhoError::ERR_NETWORK
         # do nothing for connectivity lapse
+        error_popup("Error: can't connect", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
+        SyncEngine.stop_sync
       elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)      
+        error_popup("RhoSync error: client is not logged in / unauthorized", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
-        login("/app/Settings/retry_login_callback")    
+        retry_login   
       elsif err_code == Rho::RhoError::ERR_REMOTESERVER && @params['error_message'] == SESSION_ERROR_MSG
         # Rhodes is sending the server a token for a non-existent session. Time to start over.
+        error_popup("RhoSync error: unknown session", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         Rhom::Rhom.database_fullclient_reset_and_logout
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
-        login("/app/Settings/retry_login_callback")
+        goto_login
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/401 Unauthorized/].nil?
         #proxy returned a 401, need to re-login
+        error_popup("Error: 401 Unauthorized from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
-        login("/app/Settings/retry_login_callback")
+        retry_login
       else
-         Alert.show_popup({
-          :message => Rho::RhoError.err_message(err_code) + " #{@params.inspect}", 
-          :title => "Error: #{err_code}", 
-          :buttons => ["OK"]
-        })
+        #TODO - push these errors to exceptional so that someone knows right away
+        error_popup("Error: #{err_code}", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
       end
     end
+  end
+  
+  def error_popup(title, message)
+    Alert.show_popup({
+      :message => message, 
+      :title => title, 
+      :buttons => ["OK"]
+    })
   end
   
   def show_log

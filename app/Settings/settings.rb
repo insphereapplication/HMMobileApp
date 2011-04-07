@@ -12,9 +12,14 @@ class Settings
       !instance.login.blank? && !instance.password.blank?
     end
     
+    def has_verified_credentials?
+      has_persisted_credentials? && instance.credentials_verified
+    end
+    
     def clear_credentials
       instance.login=nil
       instance.password=nil
+      instance.credentials_verified=false
       instance.save
     end
     
@@ -26,6 +31,10 @@ class Settings
       instance.password || ''
     end
     
+    def credentials_verified
+      instance.credentials_verified || false
+    end
+    
     def login=(login)
       instance.login=login
       instance.save
@@ -33,6 +42,11 @@ class Settings
     
     def password=(password)
       instance.password=password
+      instance.save
+    end
+    
+    def credentials_verified=(verified)
+      instance.credentials_verified=verified
       instance.save
     end
     
