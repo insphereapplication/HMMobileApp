@@ -52,7 +52,7 @@ class SettingsController < Rho::RhoController
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
     elsif errCode == Rho::RhoError::ERR_NETWORK && Settings.has_verified_credentials?
-      error_popup("Verified credentials, but no network.")
+      log_error("Verified credentials, but no network.")
       SyncEngine.set_pollinterval($poll_interval)
       Opportunity.init_notify
     else
@@ -73,7 +73,7 @@ class SettingsController < Rho::RhoController
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
     elsif errCode == Rho::RhoError::ERR_NETWORK && Settings.has_verified_credentials?
-      error_popup("Verified credentials, but no network.")
+      log_error("Verified credentials, but no network.")
       SyncEngine.set_pollinterval($poll_interval)
     else
       Settings.clear_credentials
@@ -182,12 +182,12 @@ class SettingsController < Rho::RhoController
       end
     elsif status == "error"
       if @params['server_errors'] && @params['server_errors']['create-error']
-        error_popup("Create error", @params.inspect)
+        log_error("Create error", @params.inspect)
         SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'], :recreate)
       end
       
       # if @params['server_errors'] && @params['server_errors']['update-error']
-      #         error_popup("Update error", @params.inspect)
+      #         log_error("Update error", @params.inspect)
       #         SyncEngine.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :retry)
       #       end
 
@@ -198,46 +198,46 @@ class SettingsController < Rho::RhoController
 
       if (@params['error_message'].downcase == 'unknown client') or rho_error.unknown_client?(@params['error_message'])
         Rhom::Rhom.database_fullclient_reset_and_logout
-        error_popup("Error: Unknown client", "Verified: #{Settings.has_verified_credentials?}" + Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
+        log_error("Error: Unknown client", "Verified: #{Settings.has_verified_credentials?}" + Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
         Settings.clear_credentials
         goto_login
       elsif err_code == Rho::RhoError::ERR_NETWORK
         # do nothing for connectivity lapse
-        error_popup("Error: can't connect", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
+        log_error("Error: can't connect", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         SyncEngine.stop_sync
       elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)      
-        error_popup("RhoSync error: client is not logged in / unauthorized", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
+        log_error("RhoSync error: client is not logged in / unauthorized", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
         retry_login   
       elsif err_code == Rho::RhoError::ERR_REMOTESERVER && @params['error_message'] == SESSION_ERROR_MSG
         # Rhodes is sending the server a token for a non-existent session. Time to start over.
-        error_popup("RhoSync error: unknown session", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
+        log_error("RhoSync error: unknown session", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         Rhom::Rhom.database_fullclient_reset_and_logout
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
         goto_login
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/401 Unauthorized/].nil?
         #proxy returned a 401, need to re-login
-        error_popup("Error: 401 Unauthorized from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
+        log_error("Error: 401 Unauthorized from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
         retry_login
       else
-        #TODO - push these errors to exceptional so that someone knows right away
-        error_popup("Error: #{err_code}", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
+        log_error("Unhandled error in sync_notify: #{err_code}", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
       end
     end
   end
   
-  def error_popup(title, message)
-    Alert.show_popup({
-      :message => message, 
-      :title => title, 
-      :buttons => ["OK"]
-    })
+  def log_error(title, message)
+    ExceptionUtil.log_exception_to_server(Exception.new("Error in SyncNotify for user '#{Settings.login}': #{title} -- #{message}"))
+    # Alert.show_popup({
+    #       :message => message, 
+    #       :title => title, 
+    #       :buttons => ["OK"]
+    #     })
   end
   
   def show_log
