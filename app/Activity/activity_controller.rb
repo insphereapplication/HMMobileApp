@@ -32,7 +32,7 @@ class ActivityController < Rho::RhoController
         if appointmentids != nil
           appointmentids = appointmentids.split(",")
         end
-        finished_update_status(opportunity, @params['origin'], appointmentids)
+        finished_win_loss_status(opportunity, @params['origin'], appointmentids)
         db.commit
       rescue Exception => e
         puts "Exception in update won status, rolling back: #{e.inspect} -- #{@params.inspect}"
@@ -96,7 +96,7 @@ class ActivityController < Rho::RhoController
             appointmentids = appointmentids.split(",")
           end
       
-          finished_update_status(opportunity, @params['origin'], appointmentids)
+          finished_win_loss_status(opportunity, @params['origin'], appointmentids)
           db.commit
         rescue Exception => e
           puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
@@ -238,7 +238,14 @@ class ActivityController < Rho::RhoController
     complete_appointments(appointmentids)
     SyncEngine.dosync
     puts "REDIRECTING TO OPPORTUNITY DETAIL"
-    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}))
+    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
+  end
+  
+  def finished_win_loss_status(opportunity, origin, appointmentids=nil)
+    complete_appointments(appointmentids)
+    SyncEngine.dosync
+    puts "REDIRECTING TO OPPORTUNITY DETAIL"
+    WebView.navigate(url_for :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin})
   end
   
   def complete_appointments(appointmentids)

@@ -30,10 +30,10 @@ class OpportunityController < Rho::RhoController
     )
     
     tabbar = [
-      { :label => "Opps", :action => '/app/Opportunity', 
-        :icon => "/public/images/iphone/tabs/pib_tab_icon.png", :web_bkg_color => 0x7F7F7F }, 
+      { :label => "Opportunities", :action => '/app/Opportunity', 
+        :icon => "/public/images/dollar.png", :web_bkg_color => 0x7F7F7F }, 
       { :label => "Contacts",  :action => '/app/Contact',  
-        :icon => "/public/images/iphone/tabs/activities_tab_icon.png", :reload => true },
+        :icon => "/public/images/contacts.png", :reload => true },
       { :label => "Settings",  :action => '/app/Settings',  
         :icon => "/public/images/iphone/tabs/settings_tab_icon.png" },
     ]
