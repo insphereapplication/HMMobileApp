@@ -204,8 +204,8 @@ class SettingsController < Rho::RhoController
         Settings.clear_credentials
         goto_login
       elsif err_code == Rho::RhoError::ERR_NETWORK
-        # do nothing for connectivity lapse
-        log_error("Error: can't connect", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
+        # stop current sync, otherwise do nothing for connectivity lapse
+        log_error("Network connectivity lost", Rho::RhoError.err_message(err_code) + " #{@params.inspect}", {:send_to_exceptional => false})
         SyncEngine.stop_sync
       elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)      
         log_error("RhoSync error: client is not logged in / unauthorized", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
@@ -231,13 +231,19 @@ class SettingsController < Rho::RhoController
     end
   end
   
-  def log_error(title, message)
-    ExceptionUtil.log_exception_to_server(Exception.new("Error in SyncNotify for user '#{Settings.login}': #{title} -- #{message}"))
-    # Alert.show_popup({
-    #       :message => message, 
-    #       :title => title, 
-    #       :buttons => ["OK"]
-    #     })
+  def log_error(title, message, params={})
+    unless params[:send_to_exceptional] == false
+      ExceptionUtil.log_exception_to_server(Exception.new("Error in SyncNotify for user '#{Settings.login}': #{title} -- #{message}"))
+    end
+    
+    #uncomment the following lines to show popups when errors are logged
+    unless params[:show_popup] == false
+      # Alert.show_popup({
+      #                 :message => message, 
+      #                 :title => title, 
+      #                 :buttons => ["OK"]
+      #               })
+    end
   end
   
   def show_log
