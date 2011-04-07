@@ -52,9 +52,11 @@ class SettingsController < Rho::RhoController
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
     elsif errCode == Rho::RhoError::ERR_NETWORK && Settings.has_verified_credentials?
-      log_error("Verified credentials, but no network.")
+      #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
+      log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
+      #we've got cached, verified credentials, so proceed with the usual initialization process
       SyncEngine.set_pollinterval($poll_interval)
-      Opportunity.init_notify
+      WebView.navigate ( url_for :controller => :Opportunity, :action => :init_notify)
     else
       Settings.clear_credentials
       SyncEngine.set_pollinterval(0)
@@ -73,7 +75,10 @@ class SettingsController < Rho::RhoController
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
     elsif errCode == Rho::RhoError::ERR_NETWORK && Settings.has_verified_credentials?
-      log_error("Verified credentials, but no network.")
+      #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
+      log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
+      #at this point, we've got cached, verified credentials but we can't connect to RhoSync. 
+      #don't throw an error, but reinstate poll interval so that we continue to check for connectivity
       SyncEngine.set_pollinterval($poll_interval)
     else
       Settings.clear_credentials
@@ -204,8 +209,10 @@ class SettingsController < Rho::RhoController
         Settings.clear_credentials
         goto_login
       elsif err_code == Rho::RhoError::ERR_NETWORK
-        # stop current sync, otherwise do nothing for connectivity lapse
+        #leave ':send_to_exceptional => false' alone until infinite loop issue is fixed for clients without a network connection
         log_error("Network connectivity lost", Rho::RhoError.err_message(err_code) + " #{@params.inspect}", {:send_to_exceptional => false})
+        
+        #stop current sync, otherwise do nothing for connectivity lapse
         SyncEngine.stop_sync
       elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)      
         log_error("RhoSync error: client is not logged in / unauthorized", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
