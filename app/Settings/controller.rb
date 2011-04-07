@@ -112,7 +112,7 @@ class SettingsController < Rho::RhoController
     SyncEngine.set_pollinterval(-1)
     Rho::NativeTabbar.remove
     @msg = "You have been logged out."
-    render :action => :login, :layout => 'layout_jquerymobile'
+    redirect :action => :login, :layout => 'layout_jquerymobile'
   end
   
   def reset
