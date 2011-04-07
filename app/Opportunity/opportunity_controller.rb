@@ -99,37 +99,42 @@ class OpportunityController < Rho::RhoController
     get_new_leads('orange', 'Previous Days', Opportunity.previous_days_leads(@params['page'].to_i), @params['page'])
   end
   
-  def get_follow_ups(color, text, date_proc, opportunities)
-    $follow_ups_nav_context += opportunities.map{|opp| opp.opportunityid }
+  def get_follow_ups(color, text, date_proc, phone_calls)
+    $follow_ups_nav_context += phone_calls.map{|phone_call| phone_call.opportunity.opportunityid }
     @color = color
     @label = text
     @date_proc = date_proc
-    @page = opportunities
+    @page = phone_calls
     render :action => :follow_ups_page, :layout => 'layout_JQM_Lite'
+  end
+  
+  def get_activities(opportunities)
+    $follow_ups_nav_context += opportunities.map{|opp| opp.opportunityid }
+    @page = opportunities
+    render :action => :last_activities_page, :layout => 'layout_JQM_Lite'
   end
 
   def by_last_activities
-    date_proc = lambda {|opportunity| "#{DateUtil.days_ago_relative(opportunity.cssi_lastactivitydate)}" unless opportunity.cssi_lastactivitydate.blank?}
     opportunities = Opportunity.by_last_activities(@params['page'].to_i)
-    get_follow_ups('yellow', 'By Last Activity', date_proc, opportunities)
+    get_activities(opportunities)
   end
 
   def todays_follow_ups
     date_proc = lambda {|phone_call| "Today #{phone_call.scheduledend.hour_string }" if phone_call.scheduledend }
-    opportunities = Activity.todays_follow_ups(@params['page'].to_i).map{|activity| activity.opportunity }
-    get_follow_ups('orange', 'Today', date_proc, opportunities)
+    phone_calls = Activity.todays_follow_ups(@params['page'].to_i)
+    get_follow_ups('orange', 'Today', date_proc, phone_calls)
   end
 
   def future_follow_ups
-    date_proc = lambda {|opportunity| "Last Act: -#{DateUtil.days_ago(opportunity.cssi_lastactivitydate)}d" unless opportunity.cssi_lastactivitydate.blank?}
-    opportunities = Activity.future_follow_ups(@params['page'].to_i).map{|activity| activity.opportunity }
-    get_follow_ups('green', 'Future', date_proc, opportunities)
+    date_proc = lambda {|phone_call| "Last Act: -#{DateUtil.days_ago(phone_call.opportunity.cssi_lastactivitydate)}d" unless phone_call.opportunity.cssi_lastactivitydate.blank?}
+    phone_calls = Activity.future_follow_ups(@params['page'].to_i)
+    get_follow_ups('green', 'Future', date_proc, phone_calls)
   end
 
   def past_due_follow_ups
     date_proc = lambda {|phone_call| "Due: #{DateUtil.days_from_now(phone_call.scheduledend)}d" }
-    opportunities = Activity.past_due_follow_ups(@params['page'].to_i).map{|activity| activity.opportunity }
-    get_follow_ups('red', 'Past Due', date_proc, opportunities)
+    phone_calls = Activity.past_due_follow_ups(@params['page'].to_i)
+    get_follow_ups('red', 'Past Due', date_proc, phone_calls)
   end
 
   def get_appointments(color, text, appointments)
