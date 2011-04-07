@@ -51,13 +51,13 @@ LastVisitedPage = ''
 # for example: 'http://localhost:9292/application'
 
 #MODEL -- FOR USER ACCEPTANCE TESTING
-syncserver = 'http://rhohub-insphere-c58af007.rhosync.com/application' 
+#syncserver = 'http://rhohub-insphere-c58af007.rhosync.com/application' 
 
 #DEV
 #syncserver = 'http://rhohub-insphere-a06075d6.rhosync.com/application'
 
 #LOCAL
-# syncserver = 'http://localhost:9292/application'
+syncserver = 'http://localhost:9292/application'
 
 #sync_poll_interval=300
 

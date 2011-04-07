@@ -173,7 +173,7 @@ class SettingsController < Rho::RhoController
     #     ERR_SYNCVERSION = 11
     #     ERR_GEOLOCATION = 12
     status = @params['status'] ? @params['status'] : ""
-    error_popup("Sync notify","")
+    
     
     if status == "complete" or status == "ok"
       if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
@@ -181,16 +181,15 @@ class SettingsController < Rho::RhoController
         klass.local_changed=true if klass && klass.respond_to?(:local_changed=)
       end
     elsif status == "error"
-      
       if @params['server_errors'] && @params['server_errors']['create-error']
         error_popup("Create error", @params.inspect)
         SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'], :recreate)
       end
       
-      if @params['server_errors'] && @params['server_errors']['update-error']
-        error_popup("Update error", @params.inspect)
-        SyncEngine.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :retry)
-      end
+      # if @params['server_errors'] && @params['server_errors']['update-error']
+      #         error_popup("Update error", @params.inspect)
+      #         SyncEngine.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :retry)
+      #       end
 
       err_code = @params['error_code'].to_i
       rho_error = Rho::RhoError.new(err_code)
