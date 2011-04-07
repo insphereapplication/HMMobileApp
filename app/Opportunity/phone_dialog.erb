@@ -22,12 +22,12 @@
 			<% adhoc_nums=[] %>
 			<% @opportunity.activities.each do |activity| %>
 		     <% if activity.phonenumber %>
-				<% if (activity.phonenumber.length > 1) && !(adhoc_nums.include?(activity.phonenumber)) %>
+				<% if (activity.phonenumber.gsub(/ /,'').length > 2) && !(adhoc_nums.include?(activity.phonenumber)) %>
 					<% if (activity.phonenumber != @opportunity.contact.telephone1) && (activity.phonenumber != @opportunity.contact.telephone2) && (activity.phonenumber != @opportunity.contact.telephone3) && (activity.phonenumber != @opportunity.contact.mobilephone) %>
 						<% adhoc_nums << activity.phonenumber %>
 						<a href="<%= url_for(:action => :call_number, :query => {:phone_number => activity.phonenumber, :opportunity => @opportunity.object, :origin => @params['origin']}) %>" data-role="button"  data-rel="back" data-theme="c" style="white-space:normal" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-c">
 						<span class="ui-btn-inner ui-btn-corner-all" style="white-space:normal">
-						<span class="ui-btn-text" style="white-space:normal"><Cancel>Ad-Hoc: <%= activity.phonenumber activity.phonenumber.length %></span>
+						<span class="ui-btn-text" style="white-space:normal"><Cancel>Ad-Hoc: <%= activity.phonenumber %></span>
 						</span></a>
 			     <% end %>
 				<% end %>
