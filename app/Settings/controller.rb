@@ -157,7 +157,7 @@ class SettingsController < Rho::RhoController
     
     if status == "complete" or status == "ok"
       if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
-        klass = Object.const_get(@params['source_name'].capitalize)
+        klass = Object.const_get(@params['source_name'])
         klass.local_changed=true if klass && klass.respond_to?(:local_changed=)
       end
     elsif status == "error"
@@ -208,6 +208,13 @@ class SettingsController < Rho::RhoController
   
   def show_log
     Rho::RhoConfig.show_log
+  end
+  
+  def test_exception
+    raise "bang"
+  rescue Exception => e
+    ExceptionUtil.log_exception_to_server(e)
+    WebView.navigate ( url_for :action => :index )
   end
   
 end
