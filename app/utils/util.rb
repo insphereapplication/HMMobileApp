@@ -1,5 +1,9 @@
 module ExceptionUtil
   def self.log_exception_to_server(exception)
+    unless exception.kind_of?(Exception)
+      exception = new Exception(exception)
+    end
+    
     ClientException.create({
       :message => exception.message,
       :backtrace => exception.backtrace,
