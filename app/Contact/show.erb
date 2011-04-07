@@ -74,7 +74,7 @@
 						<% end %>
 					</li>
 				</ul>
-				<% if !@params['opportunity'] %>
+				<% if @params['origin'] == "contact" %>
 				 <ul data-role="listview" data-filter="false" data-inset="true">
 					<li data-role="list-divider">Opportunities</li>
 						<% @contact.opportunities.each do |opportunity| %>

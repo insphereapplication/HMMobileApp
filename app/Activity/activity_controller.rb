@@ -6,31 +6,50 @@ class ActivityController < Rho::RhoController
   include BrowserHelper
   
   def update_won_status
-    db = ::Rho::RHO.get_src_db('Opportunity')
-    db.start_transaction
-    begin
-      opportunity = Opportunity.find(@params['opportunity_id'])
-      opportunity.complete_most_recent_open_call
-      opportunity.update_attributes({
-        :statecode => 'Won', 
-        :statuscode => 'Sale',
-        :cssi_statusdetail => "",
-        :actual_end => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-      })
-      finished_update_status(opportunity, @params['origin'], @params['appointments'])
-      db.commit
-    rescue Exception => e
-      puts "Exception in update won status, rolling back: #{e.inspect} -- #{@params.inspect}"
-      db.rollback
+    puts "BEGINNING UPDATE WON STATUS"
+    puts @params.inspect
+    puts "BUTTON ID VALUE IS:" + @params['button_id']
+    if @params['button_id'] == "Ok"
+      puts "BEGINNING DB COMMIT"
+      db = ::Rho::RHO.get_src_db('Opportunity')
+      db.start_transaction
+      begin
+        opportunity = Opportunity.find(@params['opportunity_id'])
+        opportunity.complete_most_recent_open_call
+        opportunity.update_attributes({
+          :statecode => 'Won', 
+          :statuscode => 'Sale',
+          :cssi_statusdetail => "",
+          :actual_end => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+        })
+        puts "CALLING FINISHED UPDATE STATUS"
+        puts @params.inspect
+        appointmentids = ""
+        appointmentids = @params['appointments'].gsub!("[", "")
+        appointmentids = appointmentids.gsub!("]", "")
+        appointmentids = appointmentids.gsub!('"', "")
+        appointmentids = appointmentids.gsub!(/ /, "")
+        if appointmentids != nil
+          appointmentids = appointmentids.split(",")
+        end
+        finished_update_status(opportunity, @params['origin'], appointmentids)
+        db.commit
+      rescue Exception => e
+        puts "Exception in update won status, rolling back: #{e.inspect} -- #{@params.inspect}"
+        db.rollback
+      end
+    else
+      WebView.navigate(url_for :controller => :Opportunity, :action => :status_update, :id => @params['opportunity_id'], :query => {:origin => @params['origin']})
     end
   end
   
   def confirm_win_status
+    puts "BEGINNING STATUS CONFIRM"
     Alert.show_popup ({
         :message => "Click OK to Confirm this Opportunity as Won", 
         :title => "Confirm Win", 
         :buttons => ["Cancel", "Ok",],
-        :callback => url_for(:action => :dismiss_win_popup, 
+        :callback => url_for(:action => :update_won_status, 
                                         :query => {
 				                                :opportunity_id => @params['opportunity_id'],
 				                                :origin => @params['origin'],
@@ -52,28 +71,56 @@ class ActivityController < Rho::RhoController
   end
 
   def udpate_lost_status
-    db = ::Rho::RHO.get_src_db('Opportunity')
-    db.start_transaction
-    begin
-      opportunity = Opportunity.find(@params['opportunity_id'])
-      opportunity.complete_most_recent_open_call
-      opportunity.update_attributes({
-        :statecode => 'Lost',
-        :statuscode => @params['status_code'],
-        :cssi_statusdetail => "",
-        :competitorid => @params['competitorid'] || ""
-      })
+    puts "BUTTON ID VALUE IS:" + @params['button_id']
+    if @params['button_id'] == "Ok"
+        db = ::Rho::RHO.get_src_db('Opportunity')
+        db.start_transaction
+        begin
+          opportunity = Opportunity.find(@params['opportunity_id'])
+          opportunity.complete_most_recent_open_call
+          opportunity.update_attributes({
+            :statecode => 'Lost',
+            :statuscode => @params['status_code'],
+            :cssi_statusdetail => "",
+            :competitorid => @params['competitorid'] || ""
+          })
       
-      opportunity.record_phone_call_made_now
+          opportunity.record_phone_call_made_now
       
-      finished_update_status(opportunity, @params['origin'], @params['appointments'])
-      db.commit
-    rescue Exception => e
-      puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
-      db.rollback
+          appointmentids = ""
+          appointmentids = @params['appointments'].gsub!("[", "")
+          appointmentids = appointmentids.gsub!("]", "")
+          appointmentids = appointmentids.gsub!('"', "")
+          appointmentids = appointmentids.gsub!(/ /, "")
+          if appointmentids != nil
+            appointmentids = appointmentids.split(",")
+          end
+      
+          finished_update_status(opportunity, @params['origin'], appointmentids)
+          db.commit
+        rescue Exception => e
+          puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
+          db.rollback
+      end
+    else
+      WebView.navigate(url_for :controller => :Opportunity, :action => :status_update, :id => @params['opportunity_id'], :query => {:origin => @params['origin']})
     end
   end
-  
+
+  def confirm_lost_status
+    puts "BEGINNING STATUS CONFIRM"
+    Alert.show_popup ({
+        :message => "Click OK to Confirm this Opportunity as Lost", 
+        :title => "Confirm Loss", 
+        :buttons => ["Cancel", "Ok",],
+        :callback => url_for(:action => :udpate_lost_status, 
+                                        :query => {
+				                                :opportunity_id => @params['opportunity_id'],
+				                                :origin => @params['origin'],
+				                                :appointments => @params['appointments']
+				                                })
+				                   })
+  end  
   def update_status_no_contact
     puts @params.inspect
     opportunity = Opportunity.find(@params['opportunity_id'])
@@ -190,7 +237,8 @@ class ActivityController < Rho::RhoController
   def finished_update_status(opportunity, origin, appointmentids=nil)
     complete_appointments(appointmentids)
     SyncEngine.dosync
-    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
+    puts "REDIRECTING TO OPPORTUNITY DETAIL"
+    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}))
   end
   
   def complete_appointments(appointmentids)
