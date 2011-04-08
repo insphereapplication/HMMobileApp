@@ -20,16 +20,20 @@ class ActivityController < Rho::RhoController
         })
 
         appointmentids = ""
-        appointmentids = @params['appointments'].gsub!("[", "")
-        appointmentids = appointmentids.gsub!("]", "")
-        appointmentids = appointmentids.gsub!('"', "")
-        appointmentids = appointmentids.gsub!(/ /, "")
-        
-        if appointmentids != nil
+        puts "pre gsub #{appointmentids}"
+        appointmentids = @params['appointments'].gsub("[", "")
+        puts "post gsub[ #{appointmentids}"
+        appointmentids = appointmentids.gsub("]", "")
+        puts "post gsub] #{appointmentids}"
+        appointmentids = appointmentids.gsub('"', "")
+        puts "post gsub-quote #{appointmentids}"
+        appointmentids = appointmentids.gsub(' ',"")
+        appointmentids = appointmentids.strip
+        puts "THE APPOINTMENT ids is #{appointmentids}" 
+        unless appointmentids.nil?
           appointmentids = appointmentids.split(",")
         end
-        
-        finished_update_status(opportunity, @params['origin'], appointmentids)
+        finished_win_loss_status(opportunity, @params['origin'], appointmentids)
         db.commit
       rescue Exception => e
         puts "Exception in update won status, rolling back: #{e.inspect} -- #{@params.inspect}"
@@ -68,8 +72,50 @@ class ActivityController < Rho::RhoController
   end
 
   def udpate_lost_status
-    puts "BUTTON ID VALUE IS:" + @params['button_id']
     if @params['button_id'] == "Ok"
+        db = ::Rho::RHO.get_src_db('Opportunity')
+        db.start_transaction
+        begin
+          opportunity = Opportunity.find(@params['opportunity_id'])
+          opportunity.complete_most_recent_open_call
+          puts "!~!~!~!~!~ Status code is #{@params['status_code']} !~!~!~!~!~!~!"
+          opportunity.update_attributes({
+            :statecode => 'Lost',
+            :statuscode => @params['status_code'],
+            :cssi_statusdetail => "",
+            :competitorid => @params['competitorid'] || ""
+          })
+      
+          opportunity.record_phone_call_made_now
+      
+          puts "CALLING FINISHED UPDATE STATUS"
+          puts @params.inspect
+          appointmentids = ""
+          puts "pre gsub #{appointmentids}"
+          appointmentids = @params['appointments'].gsub("[", "")
+          puts "post gsub[ #{appointmentids}"
+          appointmentids = appointmentids.gsub("]", "")
+          puts "post gsub] #{appointmentids}"
+          appointmentids = appointmentids.gsub('"', "")
+          puts "post gsub-quote #{appointmentids}"
+          appointmentids = appointmentids.gsub(' ',"")
+          appointmentids = appointmentids.strip
+          puts "THE APPOINTMENT ids is #{appointmentids}" 
+          unless appointmentids.nil?
+            appointmentids = appointmentids.split(",")
+          end
+          finished_win_loss_status(opportunity, @params['origin'], appointmentids)
+          db.commit
+        rescue Exception => e
+          puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
+          db.rollback
+      end
+    else
+      WebView.navigate(url_for :controller => :Opportunity, :action => :status_update, :id => @params['opportunity_id'], :query => {:origin => @params['origin']})
+    end
+  end
+  
+  def update_lost_other_status
         db = ::Rho::RHO.get_src_db('Opportunity')
         db.start_transaction
         begin
@@ -84,25 +130,12 @@ class ActivityController < Rho::RhoController
       
           opportunity.record_phone_call_made_now
       
-          appointmentids = ""
-          appointmentids = @params['appointments'].gsub!("[", "")
-          appointmentids = appointmentids.gsub!("]", "")
-          appointmentids = appointmentids.gsub!('"', "")
-          appointmentids = appointmentids.gsub!(/ /, "")
-          
-          if appointmentids != nil
-            appointmentids = appointmentids.split(",")
-          end
-      
-          finished_update_status(opportunity, @params['origin'], appointmentids)
+          finished_update_status(opportunity, @params['origin'], @params['appointments'])
           db.commit
         rescue Exception => e
           puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
           db.rollback
       end
-    else
-      WebView.navigate(url_for :controller => :Opportunity, :action => :status_update, :id => @params['opportunity_id'], :query => {:origin => @params['origin']})
-    end
   end
 
   def confirm_lost_status
@@ -115,7 +148,8 @@ class ActivityController < Rho::RhoController
                                         :query => {
 				                                :opportunity_id => @params['opportunity_id'],
 				                                :origin => @params['origin'],
-				                                :appointments => @params['appointments']
+				                                :appointments => @params['appointments'],
+				                                :status_code => @params['status_code']
 				                                })
 				                   })
   end  
@@ -236,7 +270,14 @@ class ActivityController < Rho::RhoController
     complete_appointments(appointmentids)
     SyncEngine.dosync
     puts "REDIRECTING TO OPPORTUNITY DETAIL"
-    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}))
+    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
+  end
+  
+  def finished_win_loss_status(opportunity, origin, appointmentids=nil)
+    complete_appointments(appointmentids)
+    SyncEngine.dosync
+    puts "REDIRECTING TO OPPORTUNITY DETAIL"
+    WebView.navigate(url_for :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin})
   end
   
   def complete_appointments(appointmentids)
