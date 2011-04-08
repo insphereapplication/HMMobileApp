@@ -25,11 +25,17 @@ class ActivityController < Rho::RhoController
         puts "CALLING FINISHED UPDATE STATUS"
         puts @params.inspect
         appointmentids = ""
-        appointmentids = @params['appointments'].gsub!("[", "")
-        appointmentids = appointmentids.gsub!("]", "")
-        appointmentids = appointmentids.gsub!('"', "")
-        appointmentids = appointmentids.gsub!(/ /, "")
-        if appointmentids != nil
+        puts "pre gsub #{appointmentids}"
+        appointmentids = @params['appointments'].gsub("[", "")
+        puts "post gsub[ #{appointmentids}"
+        appointmentids = appointmentids.gsub("]", "")
+        puts "post gsub] #{appointmentids}"
+        appointmentids = appointmentids.gsub('"', "")
+        puts "post gsub-quote #{appointmentids}"
+        appointmentids = appointmentids.gsub(' ',"")
+        appointmentids = appointmentids.strip
+        puts "THE APPOINTMENT ids is #{appointmentids}" 
+        unless appointmentids.nil?
           appointmentids = appointmentids.split(",")
         end
         finished_win_loss_status(opportunity, @params['origin'], appointmentids)
@@ -77,6 +83,7 @@ class ActivityController < Rho::RhoController
         begin
           opportunity = Opportunity.find(@params['opportunity_id'])
           opportunity.complete_most_recent_open_call
+          puts "!~!~!~!~!~ Status code is #{@params['status_code']} !~!~!~!~!~!~!"
           opportunity.update_attributes({
             :statecode => 'Lost',
             :statuscode => @params['status_code'],
@@ -86,15 +93,22 @@ class ActivityController < Rho::RhoController
       
           opportunity.record_phone_call_made_now
       
+          puts "CALLING FINISHED UPDATE STATUS"
+          puts @params.inspect
           appointmentids = ""
-          appointmentids = @params['appointments'].gsub!("[", "")
-          appointmentids = appointmentids.gsub!("]", "")
-          appointmentids = appointmentids.gsub!('"', "")
-          appointmentids = appointmentids.gsub!(/ /, "")
-          if appointmentids != nil
+          puts "pre gsub #{appointmentids}"
+          appointmentids = @params['appointments'].gsub("[", "")
+          puts "post gsub[ #{appointmentids}"
+          appointmentids = appointmentids.gsub("]", "")
+          puts "post gsub] #{appointmentids}"
+          appointmentids = appointmentids.gsub('"', "")
+          puts "post gsub-quote #{appointmentids}"
+          appointmentids = appointmentids.gsub(' ',"")
+          appointmentids = appointmentids.strip
+          puts "THE APPOINTMENT ids is #{appointmentids}" 
+          unless appointmentids.nil?
             appointmentids = appointmentids.split(",")
           end
-      
           finished_win_loss_status(opportunity, @params['origin'], appointmentids)
           db.commit
         rescue Exception => e
@@ -139,7 +153,8 @@ class ActivityController < Rho::RhoController
                                         :query => {
 				                                :opportunity_id => @params['opportunity_id'],
 				                                :origin => @params['origin'],
-				                                :appointments => @params['appointments']
+				                                :appointments => @params['appointments'],
+				                                :status_code => @params['status_code']
 				                                })
 				                   })
   end  

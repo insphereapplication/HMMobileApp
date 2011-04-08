@@ -1,5 +1,5 @@
 <div data-role="page" data-theme="b" data-cache="never">
-	<div data-role="header" data-nobackbtn="true">
+	<div data-role="header" data-backbtn="false">
 		<h1>Settings</h1>
 	</div>
 	
@@ -8,14 +8,6 @@
 		<% if @msg %>
 	        <li style="color: red; text-align: center"><%= @msg %></li>
 	    <% end %>
-	   <li>
-	      <div class="itemLabel">
-	        <span class="title">Client ID:</span>
-	      </div>
-	      <div class="itemValue">
-	        <span class="clientID"><%= Rhom::Rhom::client_id %></span>
-	      </div>
-	    </li>
 		<li>
 			<img src="/public/images/login-key.png" class="ui-li-icon" style="margin-top:8px">
 			<% if SyncEngine::logged_in > 0 %>
@@ -25,25 +17,21 @@
 			<% end %>
 		</li>
 		<li>
-			<img src="/public/images/faq_small.png" class="ui-li-icon" style="margin-top:8px">
-			<h3><a href="#">FAQ</a></h3>
+			<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
+			<h3><a href="/app/Settings/about">About</a></h3>
 		</li>
 		<li>
-			<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
-			<h3><a href="#">About</a></h3>
-		</li>
-		<!-- <li>
 			<img src="/public/images/phone_small.png" class="ui-li-icon" style="margin-top:8px">
-			<h3><a href="tel:2147774757">Call Support</a></h3>
-		</li> --> 
+			<h3><a href="tel:8887314447">Call Support</a></h3>
+		</li> 
 		<li>
 			<img src="/public/images/email_icon.jpeg" class="ui-li-icon" style="margin-top:8px">
 			<h3><a href="mailto:InSiteMobile@insphereis.com">Email Support</a></h3>
 		</li>
-	    <li><a href="<%= url_for :action => :do_reset %>">Reset Database</a></li>
+	    <!-- <li><a href="<%= url_for :action => :do_reset %>">Reset Database</a></li>
 	    <li><a href="<%= url_for :action => :do_sync %>">Perform Sync</a></li>
         <li><a href="<%= url_for :action => :show_log %>">Show Log</a></li>
-        <li><a href="<%= url_for :action => :test_exception %>">Test Log Exception</a></li>
+        <li><a href="<%= url_for :action => :test_exception %>">Test Log Exception</a></li> -->
 	  </ul>
 	</div>
 </div>
