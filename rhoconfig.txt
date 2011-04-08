@@ -54,14 +54,18 @@ LastVisitedPage = ''
 # syncserver = 'http://rhohub-insphere-c58af007.rhosync.com/application' 
 
 #MODEL -- for UAT/QA of new features from master
-syncserver = 'http://rhohub-insphere-c3d43885.rhosync.com/application'
+# syncserver = 'http://rhohub-insphere-c3d43885.rhosync.com/application'
 
 
 #DEV
 #syncserver = 'http://rhohub-insphere-a06075d6.rhosync.com/application'
 
 #LOCAL
-#syncserver = 'http://localhost:9292/application'
+syncserver = 'http://localhost:9292/application'
+
+#PRODUCTION !!!
+# syncserver = 'http://rhohub-insphere-b3789b06.rhosync.com/application'
+
 #sync_poll_interval=300
 
 # geo location inactivity timeout (in seconds)
