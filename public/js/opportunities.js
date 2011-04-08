@@ -50,20 +50,20 @@ function loadNewLeads(){
 
 function loadFollowUps(){
 	
-	followUpBuckets = getLinkedBucketList([ { opportunity_method: 'past_due_follow_ups', list_selector: 'span#past-due-follow-ups-list', next: null},
+	followUpBucket = getLinkedBucketList([ { opportunity_method: 'past_due_follow_ups', list_selector: 'span#past-due-follow-ups-list', next: null},
 											{ opportunity_method: 'todays_follow_ups',   list_selector: 'span#todays-follow-ups-list',   next: null},
 											{ opportunity_method: 'by_last_activities',  list_selector: 'span#by-last-activities-list',  next: null},
 											{ opportunity_method: 'future_follow_ups',   list_selector: 'span#future-follow-ups-list',   next: null} ]);
 	
-	loadOpportunities(followUpBuckets, 0);
+	loadOpportunities(followUpBucket, 0);
 }
 
 function loadAppointments(){
-	followUpBuckets = getLinkedBucketList([ { opportunity_method: 'past_due_appointments', list_selector: 'span#past-due-appointments-list', next: null},
+	appointmentBucket = getLinkedBucketList([ { opportunity_method: 'past_due_appointments', list_selector: 'span#past-due-appointments-list', next: null},
 											{ opportunity_method: 'todays_appointments',   list_selector: 'span#todays-appointments-list',   next: null},
 											{ opportunity_method: 'future_appointments',   list_selector: 'span#future-appointments-list',   next: null}]);
 											
-	loadOpportunities(followUpBuckets, 0);
+	loadOpportunities(appointmentBucket, 0);
 }
 
  				 
@@ -81,7 +81,7 @@ function loadOpportunities(opportunityBucket, opportunity_page){
 	);
 }
 
-// link the bucket lists. 
+// link the buckets. 
 function getLinkedBucketList(bucketArray){
 	for(var i=0; i<bucketArray.length; i++){
 		bucketArray[i].next = bucketArray[i+1]; 
