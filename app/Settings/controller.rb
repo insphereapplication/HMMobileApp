@@ -191,16 +191,16 @@ class SettingsController < Rho::RhoController
         SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'], :recreate)
       end
       
-      # if @params['server_errors'] && @params['server_errors']['update-error']
-      #         log_error("Update error", @params.inspect)
-      #         SyncEngine.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :retry)
-      #       end
+      if @params['server_errors'] && @params['server_errors']['update-error']
+        log_error("Update error", @params.inspect)
+        SyncEngine.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :retry)
+      end
 
       err_code = @params['error_code'].to_i
       rho_error = Rho::RhoError.new(err_code)
 
       @msg = rho_error.message unless @msg and @msg.length > 0   
-
+      
       if (@params['error_message'].downcase == 'unknown client') or rho_error.unknown_client?(@params['error_message'])
         Rhom::Rhom.database_fullclient_reset_and_logout
         log_error("Error: Unknown client", "Verified: #{Settings.has_verified_credentials?}" + Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
