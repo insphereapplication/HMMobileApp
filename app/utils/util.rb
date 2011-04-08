@@ -44,7 +44,7 @@ module SQLHelper
   NO_ACTIVITIES_FOR_OPPORTUNITY_SQL =  %Q{
      not exists (
         select a.object from Activity a 
-        where parent_type='opportunity' and 
+        where parent_type='Opportunity' and 
         parent_id=o.object
       )
   } 
