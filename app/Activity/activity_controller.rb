@@ -6,11 +6,7 @@ class ActivityController < Rho::RhoController
   include BrowserHelper
   
   def update_won_status
-    puts "BEGINNING UPDATE WON STATUS"
-    puts @params.inspect
-    puts "BUTTON ID VALUE IS:" + @params['button_id']
     if @params['button_id'] == "Ok"
-      puts "BEGINNING DB COMMIT"
       db = ::Rho::RHO.get_src_db('Opportunity')
       db.start_transaction
       begin
@@ -22,8 +18,7 @@ class ActivityController < Rho::RhoController
           :cssi_statusdetail => "",
           :actual_end => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
         })
-        puts "CALLING FINISHED UPDATE STATUS"
-        puts @params.inspect
+
         appointmentids = ""
         puts "pre gsub #{appointmentids}"
         appointmentids = @params['appointments'].gsub("[", "")
@@ -286,11 +281,8 @@ class ActivityController < Rho::RhoController
   end
   
   def complete_appointments(appointmentids)
-    puts "Here are the appointment ids: #{appointmentids}"
     if appointmentids
-      puts "&$&$&$&$&$&$&$&$&$&$&$&$&$&$  SUBMITTING APPOINTMENTS FOR COMPLETION &$&$&$&$&$&$&$&$&$&$&$&$&$&$ "
       appointmentids.each do |id|
-        puts "My appointment id is #{id}"
         appointment = Activity.find(id, :conditions => {:type => 'Appointment'})
         appointment.complete if appointment
       end
