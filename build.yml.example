@@ -1,4 +1,4 @@
-sdk: "/Library/InsiteRhoMobile/rhodes"
+sdk: "/Library/ParivedaInsite/rhodes"
 sdkversion: 2.3.0
 name: InSite 
 version: 1.0
