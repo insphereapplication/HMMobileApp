@@ -292,6 +292,7 @@ function popupDateTimeAJPicker(flag, title, field_key) {
 function showSpin(message){
 	$.mobile.savingMessage = message;
 	$.mobile.pageSaving();
+	$(':input').attr('disabled', true);
 	setTimeout("hideSpin()",5000);
 }
 
