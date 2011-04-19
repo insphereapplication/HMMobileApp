@@ -1,3 +1,5 @@
+encrypt_database: 1
+
 # startup page for your application
 start_path = '/app/Settings/login'
 
@@ -48,15 +50,18 @@ LastVisitedPage = ''
 # sync server url, typically this will look like 'http://<hostname>:<port>/application'
 # for example: 'http://localhost:9292/application'
 
+#MODEL-OLD -- Old model url
+# syncserver = 'http://rhohub-insphere-c58af007.rhosync.com/application' 
 
 #MODEL -- for UAT/QA of new features from master
-syncserver = 'http://rhohub-insphere-c3d43885.rhosync.com/application'
+# syncserver = 'http://rhohub-insphere-c3d43885.rhosync.com/application'
+
 
 #DEV
 #syncserver = 'http://rhohub-insphere-a06075d6.rhosync.com/application'
 
 #LOCAL
-# syncserver = 'http://localhost:9292/application'
+syncserver = 'http://localhost:9292/application'
 
 #PRODUCTION !!!
 # syncserver = 'http://rhohub-insphere-b3789b06.rhosync.com/application'

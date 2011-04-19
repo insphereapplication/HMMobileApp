@@ -19,21 +19,9 @@ class ActivityController < Rho::RhoController
           :actual_end => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
         })
 
-        appointmentids = ""
-        puts "pre gsub #{appointmentids}"
-        appointmentids = @params['appointments'].gsub("[", "")
-        puts "post gsub[ #{appointmentids}"
-        appointmentids = appointmentids.gsub("]", "")
-        puts "post gsub] #{appointmentids}"
-        appointmentids = appointmentids.gsub('"', "")
-        puts "post gsub-quote #{appointmentids}"
-        appointmentids = appointmentids.gsub(' ',"")
-        appointmentids = appointmentids.strip
-        puts "THE APPOINTMENT ids is #{appointmentids}" 
-        unless appointmentids.nil?
-          appointmentids = appointmentids.split(",")
-        end
+        appointmentids = get_appointment_ids(@params['appointments'])
         finished_win_loss_status(opportunity, @params['origin'], appointmentids)
+
         db.commit
       rescue Exception => e
         puts "Exception in update won status, rolling back: #{e.inspect} -- #{@params.inspect}"
@@ -45,7 +33,6 @@ class ActivityController < Rho::RhoController
   end
   
   def confirm_win_status
-    puts "BEGINNING STATUS CONFIRM"
     Alert.show_popup ({
         :message => "Click OK to Confirm this Opportunity as Won", 
         :title => "Confirm Win", 
@@ -61,7 +48,6 @@ class ActivityController < Rho::RhoController
   
   def dismiss_win_popup
     if @params['button_id'] == "Ok"
-      puts "DISMISS WIN:" + @params.inspect
       WebView.navigate(url_for(:action => :update_won_status,
                                 :query => {
                                 :opportunity_id => @params['opportunity_id'],
@@ -78,7 +64,6 @@ class ActivityController < Rho::RhoController
         begin
           opportunity = Opportunity.find(@params['opportunity_id'])
           opportunity.complete_most_recent_open_call
-          puts "!~!~!~!~!~ Status code is #{@params['status_code']} !~!~!~!~!~!~!"
           opportunity.update_attributes({
             :statecode => 'Lost',
             :statuscode => @params['status_code'],
@@ -87,23 +72,8 @@ class ActivityController < Rho::RhoController
           })
       
           opportunity.record_phone_call_made_now
-      
-          puts "CALLING FINISHED UPDATE STATUS"
-          puts @params.inspect
-          appointmentids = ""
-          puts "pre gsub #{appointmentids}"
-          appointmentids = @params['appointments'].gsub("[", "")
-          puts "post gsub[ #{appointmentids}"
-          appointmentids = appointmentids.gsub("]", "")
-          puts "post gsub] #{appointmentids}"
-          appointmentids = appointmentids.gsub('"', "")
-          puts "post gsub-quote #{appointmentids}"
-          appointmentids = appointmentids.gsub(' ',"")
-          appointmentids = appointmentids.strip
-          puts "THE APPOINTMENT ids is #{appointmentids}" 
-          unless appointmentids.nil?
-            appointmentids = appointmentids.split(",")
-          end
+          appointmentids = get_appointment_ids(@params['appointments'])
+          
           finished_win_loss_status(opportunity, @params['origin'], appointmentids)
           db.commit
         rescue Exception => e
@@ -139,7 +109,6 @@ class ActivityController < Rho::RhoController
   end
 
   def confirm_lost_status
-    puts "BEGINNING STATUS CONFIRM"
     Alert.show_popup ({
         :message => "Click OK to Confirm this Opportunity as Lost", 
         :title => "Confirm Loss", 
@@ -266,17 +235,20 @@ class ActivityController < Rho::RhoController
   
   private
   
+  def get_appointment_ids(appointment_params)
+    ids = appointment_params.gsub(/[\[\]"\s]/, '')
+    ids.split(",") if ids
+  end
+  
   def finished_update_status(opportunity, origin, appointmentids=nil)
     complete_appointments(appointmentids)
     SyncEngine.dosync
-    puts "REDIRECTING TO OPPORTUNITY DETAIL"
     redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
   end
   
   def finished_win_loss_status(opportunity, origin, appointmentids=nil)
     complete_appointments(appointmentids)
     SyncEngine.dosync
-    puts "REDIRECTING TO OPPORTUNITY DETAIL"
     WebView.navigate(url_for :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin})
   end
   

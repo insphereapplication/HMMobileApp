@@ -1,4 +1,4 @@
-require '/initializers/object_extension'
+
 
 class Contact
   include Rhom::FixedSchema
