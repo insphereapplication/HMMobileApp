@@ -101,7 +101,7 @@ class ContactController < Rho::RhoController
       if System::get_property('platform') == 'APPLE'
         System.open_url("maps:q=#{@params['address']}")
       else
-        System.open_url('http://maps.google.com/?q=' + @params['address'])
+        System.open_url("http://maps.google.com/?q= #{@params['address'].strip.gsub(/ /,'+')}")
       end
   end
   

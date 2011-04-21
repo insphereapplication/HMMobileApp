@@ -315,11 +315,11 @@ class OpportunityController < Rho::RhoController
   end
   
   def map
-    WebView.refresh
-      if System::get_property('platform') == 'APPLE'
-        System.open_url("maps:q=#{@params['location'].strip.gsub(/ /,'+')}")
-      else
-        System.open_url('http://maps.google.com/?q=' + @params['address'])
-      end
+      WebView.refresh
+        if System::get_property('platform') == 'APPLE'
+          System.open_url("maps:q=#{@params['location'].strip.gsub(/ /,'+')}")
+        else
+            System.open_url("http://maps.google.com/?q=#{@params['location'].strip.gsub(/ /,'+')}")
+        end
   end
 end

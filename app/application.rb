@@ -8,7 +8,7 @@ class AppApplication < Rho::RhoApplication
   def initialize
     @@toolbar = nil
     super
-
+    @default_menu = {}
   end
   
   #wipe the database and force a resync if a different user logs in
