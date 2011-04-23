@@ -1,6 +1,7 @@
 <script type='text/javascript'>
 	$(document).ready(function() {
 		populatePhone(document.getElementById('phoneList'));
+		disablePhone(document.getElementById('phoneList'), document.getElementById('phoneNumber'));
 	});
 </script>
 <div data-role="page" data-theme="b">
@@ -20,7 +21,7 @@
 		            <label for="callback_datetime">Call Back Date and Time:</label>
 					<input id="callback_datetime" type="text" name="callback_datetime" readonly value="<%= $choosed['0'] %>"  onClick="popupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime');"></input>
 				    <label for="phonelist">Phone Type:</label>            
-					<select name="phoneList" id="phoneList" onchange='populatePhone(this.form.phoneList);'>
+					<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();">
 						<% @opportunity.contact.phone_numbers.each do |type, number| %>
 							<% if @opportunity.contact.cssi_preferredphone == type %>
 								<option selected value="<%= number %>"><%= type %></option>

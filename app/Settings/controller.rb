@@ -12,7 +12,7 @@ class SettingsController < Rho::RhoController
   
   def index
     @msg = @params['msg']
-    render :controller => :Setting, :action => :index, :layout => 'layout_jquerymobile'
+    render :controller => :Setting, :back => 'callback:', :action => :index, :layout => 'layout_jquerymobile'
   end
 
   def login
@@ -24,7 +24,7 @@ class SettingsController < Rho::RhoController
     end
     
     Rho::NativeTabbar.remove
-    render :action => :login, :back => '/app', :layout => 'layout_jquerymobile'
+    render :action => :login, :back => '/app/Settings/login', :layout => 'layout_jquerymobile'
   end
   
   def goto_login(msg=nil)
@@ -102,12 +102,12 @@ class SettingsController < Rho::RhoController
       rescue Rho::RhoError => e
         Settings.clear_credentials
         @msg = e.message
-        render :action => :login, :layout => 'layout_jquerymobile'
+        render :action => :login, :back => 'callback:', :layout => 'layout_jquerymobile'
       end
     else
       Settings.clear_credentials
       @msg = Rho::RhoError.err_message(Rho::RhoError::ERR_UNATHORIZED) unless @msg && @msg.length > 0
-      render :action => :login, :layout => 'layout_jquerymobile'
+      render :action => :login, :back => 'callback:', :layout => 'layout_jquerymobile'
     end
   end
   
@@ -117,11 +117,11 @@ class SettingsController < Rho::RhoController
     SyncEngine.set_pollinterval(-1)
     Rho::NativeTabbar.remove
     @msg = "You have been logged out."
-    redirect :action => :login, :layout => 'layout_jquerymobile'
+    redirect :action => :login, :back => 'callback:', :layout => 'layout_jquerymobile'
   end
   
   def reset
-    render :action => :reset
+    render :action => :reset, :back => 'callback:'
   end
   
   def do_reset
@@ -129,13 +129,13 @@ class SettingsController < Rho::RhoController
     Settings.clear_credentials
     SyncEngine.set_pollinterval(-1)
     @msg = "Database has been reset."
-    redirect :action => :index, :query => {:msg => @msg}
+    redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
   end
   
   def do_sync
     SyncEngine.dosync
     @msg =  "Sync has been triggered."
-    redirect :action => :index, :query => {:msg => @msg}
+    redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
   end
   
   def on_dismiss_notify_popup
