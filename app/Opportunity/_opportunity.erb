@@ -22,7 +22,7 @@
 		</div>
 	</div>
 
-	<a href="<%= url_for :action => launcher, :id=> opportunity.object, :query =>{:opportunity => opportunity.object, :location => location, :origin => origin}%>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
+	<a rel="external" href="<%= url_for :action => launcher, :id=> opportunity.object, :query =>{:opportunity => opportunity.object, :location => location, :origin => origin}%>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
 		<% if icon=="mapopp"%>
 			<img class="opp-icon" src="/public/images/map_icon.png">
 		<% else %>
