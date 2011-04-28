@@ -4,6 +4,12 @@
 		disablePhone(document.getElementById('phoneList'), document.getElementById('phoneNumber'));
 	});
 </script>
+<script type="text/javascript">
+function PickDateCallbackChangeFocus() {
+popupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime');
+document.getElementById('phoneList').focus();
+}
+</script>
 <div data-role="page" data-theme="b">
 	<div data-role="header" data-theme="d" data-position="inline">
 		<a href="<%=url_for(:action=>:show, :id => @opportunity.object)%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
@@ -19,7 +25,7 @@
 				<input type="hidden" name="appointments[]" value="<%= @params['appointments'].join(',') %>" />
 				<div data-role="fieldcontain">
 		            <label for="callback_datetime">Call Back Date and Time:</label>
-					<input id="callback_datetime" type="text" name="callback_datetime" readonly value="<%= $choosed['0'] %>"  onClick="popupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime');"></input>
+					<input id="callback_datetime" type="text" name="callback_datetime" readonly value="<%= $choosed['0'] %>"  onClick="PickDateCallbackChangeFocus();"></input>
 				    <label for="phonelist">Phone Type:</label>            
 					<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();">
 						<% @opportunity.contact.phone_numbers.each do |type, number| %>
