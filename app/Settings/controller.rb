@@ -24,6 +24,7 @@ class SettingsController < Rho::RhoController
     end
     
     Rho::NativeTabbar.remove
+    @menu = { "Log" => :log }
     render :action => :login, :back => '/app/Settings/login', :layout => 'layout_jquerymobile'
   end
   
