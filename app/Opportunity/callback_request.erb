@@ -35,10 +35,14 @@ document.getElementById('phoneList').focus();
 								<option value="<%= number %>"><%= type %></option>
 							<% end %>
 						<% end %>
-							<option value="&nbsp;">Ad-Hoc</option>
+							<option value=''>Ad-Hoc</option>
 					</select>
 					<label for="phone_number" class="fieldLabel">Phone Number:</label>
-		            <input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" id="phoneNumber" name="phone_number" value="" /><br />
+					<% if System::get_property('platform') == 'APPLE' %>
+		            	<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" id="phoneNumber" name="phone_number" value="" /><br />
+					<% else %>
+						<input maxlength="14" type="tel" id="phoneNumber" name="phone_number" /><br />
+					<% end %>
 					<label for="notetext">Notes:</label>
 					<textarea cols="40" rows="8" name="notetext" id="notetext"></textarea>
 					<input type="submit" class="standardButton" onclick="return validate();" value="Create Call Back"/>

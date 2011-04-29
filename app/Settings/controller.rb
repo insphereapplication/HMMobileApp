@@ -125,6 +125,10 @@ class SettingsController < Rho::RhoController
     render :action => :reset, :back => 'callback:'
   end
   
+  def about
+    render :action => :about, :back => 'callback:'
+  end
+  
   def do_reset
     Rhom::Rhom.database_fullclient_reset_and_logout
     Settings.clear_credentials
