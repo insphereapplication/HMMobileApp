@@ -319,7 +319,8 @@ class OpportunityController < Rho::RhoController
         if System::get_property('platform') == 'APPLE'
           System.open_url("maps:q=#{@params['location'].strip.gsub(/ /,'+')}")
         else
-            WebView.navigate("http://maps.google.com/?q=#{@params['location'].strip.gsub(/ /,'+')}")
+            System.open_url("http://maps.google.com/?q=#{@params['location'].strip.gsub(/ /,'+')}")
         end
+        #WebView.refresh
   end
 end

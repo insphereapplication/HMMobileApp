@@ -32,5 +32,23 @@ class AppApplication < Rho::RhoApplication
     # background return "stop_local_server"
     Rho::AsyncHttp.cancel(cancel_callback = "*")
   end
+  
+  def on_ui_created
+      # put your application UI creation code here
+      # for example, create tab bar:
+      # NativeBar.create(Rho::RhoApplication::TABBAR_TYPE, tabs)
+
+      super.on_ui_created() # To navigate to start_path from rhoconfig.txt
+  end
+  
+  def on_ui_destroyed
+      # put your code here
+      # example:
+      # @forbid_ui_operations = true
+  end
+  
+  
+  
+  
 
 end
