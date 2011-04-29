@@ -35,7 +35,7 @@ document.getElementById('phoneList').focus();
 								<option value="<%= number %>"><%= type %></option>
 							<% end %>
 						<% end %>
-							<option value=''>Ad-Hoc</option>
+							<option value='&nbsp;'>Ad-Hoc</option>
 					</select>
 					<label for="phone_number" class="fieldLabel">Phone Number:</label>
 					<% if System::get_property('platform') == 'APPLE' %>

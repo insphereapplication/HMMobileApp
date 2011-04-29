@@ -257,10 +257,16 @@ function populatePhone(dropdown)
     for (var i=0; i<dropdown.options.length; i++){
       if (dropdown.options[i].selected==true){
         selected = dropdown.options[i].value;
+		text=dropdown.options[i].text;
         break;
       }
     }
+	if (text='Ad-Hoc'){
+		document.getElementById("phoneNumber").value=''
+	}
+	else{
 	document.getElementById("phoneNumber").value=selected;
+	}
     return true;
 }
 
