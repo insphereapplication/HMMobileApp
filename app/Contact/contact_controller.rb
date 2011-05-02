@@ -9,14 +9,14 @@ class ContactController < Rho::RhoController
 
   #GET /Contact
   def index
-    render :action => :index, :layout => 'layout_JQM_Lite'
+    render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
   def get_contacts_page
     @contacts = Contact.all_open(@params['page'].to_i)
     puts @contacts.inspect
     @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.chars.first}
-    render :action => :contact_page
+    render :action => :contact_page, :back => 'callback:'
   end
 
   # GET /Contact/{1}
@@ -25,9 +25,9 @@ class ContactController < Rho::RhoController
     if @contact
       @next_id = (@contact.object.to_i + 1).to_s
       @prev_id = (@contact.object.to_i - 1).to_s
-      render :action => :show, :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']     
+      render :action => :show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']     
     else
-      redirect :action => :index
+      redirect :action => :index, :back => 'callback:'
     end
   end
   
@@ -59,23 +59,23 @@ class ContactController < Rho::RhoController
   # GET /Contact/new
   def new
     @contact = Contact.new
-    render :action => :new
+    render :action => :new, :back => 'callback:'
   end
 
   # GET /Contact/{1}/edit
   def edit
     @contact = Contact.find(@params['id'])
     if @contact
-      render :action => :edit
+      render :action => :edit, :back => 'callback:'
     else
-      redirect :action => :index
+      redirect :action => :index, :back => 'callback:'
     end
   end
 
   # POST /Contact/create
   def create
     @contact = Contact.create(@params['contact'])
-    redirect :action => :index
+    redirect :action => :index, :back => 'callback:'
   end
 
   # POST /Contact/{1}/update
@@ -84,7 +84,7 @@ class ContactController < Rho::RhoController
     @contact = Contact.find(@params['id'])
     @contact.update_attributes(@params['contact']) if @contact
     SyncEngine.dosync
-    redirect :action => :show,
+    redirect :action => :show, :back => 'callback:',
               :id => @contact.object,
               :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
   end
@@ -93,7 +93,7 @@ class ContactController < Rho::RhoController
   def delete
     @contact = Contact.find(@params['id'])
     @contact.destroy if @contact
-    redirect :action => :index
+    redirect :action => :index, :back => 'callback:'
   end
 
   def map
@@ -101,7 +101,7 @@ class ContactController < Rho::RhoController
       if System::get_property('platform') == 'APPLE'
         System.open_url("maps:q=#{@params['address']}")
       else
-        System.open_url('http://maps.google.com/?q=' + @params['address'])
+        System.open_url("http://maps.google.com/?q= #{@params['address'].strip.gsub(/ /,'+')}")
       end
   end
   

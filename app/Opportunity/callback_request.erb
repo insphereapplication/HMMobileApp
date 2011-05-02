@@ -1,7 +1,14 @@
 <script type='text/javascript'>
 	$(document).ready(function() {
 		populatePhone(document.getElementById('phoneList'));
+		disablePhone(document.getElementById('phoneList'), document.getElementById('phoneNumber'));
 	});
+</script>
+<script type="text/javascript">
+function PickDateCallbackChangeFocus() {
+popupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime');
+document.getElementById('phoneList').focus();
+}
 </script>
 <div data-role="page" data-theme="b">
 	<div data-role="header" data-theme="d" data-position="inline">
@@ -18,9 +25,9 @@
 				<input type="hidden" name="appointments[]" value="<%= @params['appointments'].join(',') %>" />
 				<div data-role="fieldcontain">
 		            <label for="callback_datetime">Call Back Date and Time:</label>
-					<input id="callback_datetime" type="text" name="callback_datetime" readonly value="<%= $choosed['0'] %>"  onClick="popupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime');"></input>
+					<input id="callback_datetime" type="text" name="callback_datetime" readonly value="<%= $choosed['0'] %>"  onClick="PickDateCallbackChangeFocus();"></input>
 				    <label for="phonelist">Phone Type:</label>            
-					<select name="phoneList" id="phoneList" onchange='populatePhone(this.form.phoneList);'>
+					<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();">
 						<% @opportunity.contact.phone_numbers.each do |type, number| %>
 							<% if @opportunity.contact.cssi_preferredphone == type %>
 								<option selected value="<%= number %>"><%= type %></option>
@@ -28,10 +35,14 @@
 								<option value="<%= number %>"><%= type %></option>
 							<% end %>
 						<% end %>
-							<option value="&nbsp;">Ad-Hoc</option>
+							<option value='&nbsp;'>Ad-Hoc</option>
 					</select>
 					<label for="phone_number" class="fieldLabel">Phone Number:</label>
-		            <input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" id="phoneNumber" name="phone_number" value="" /><br />
+					<% if System::get_property('platform') == 'APPLE' %>
+		            	<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" id="phoneNumber" name="phone_number" value="" /><br />
+					<% else %>
+						<input maxlength="14" type="tel" id="phoneNumber" name="phone_number" /><br />
+					<% end %>
 					<label for="notetext">Notes:</label>
 					<textarea cols="40" rows="8" name="notetext" id="notetext"></textarea>
 					<input type="submit" class="standardButton" onclick="return validate();" value="Create Call Back"/>

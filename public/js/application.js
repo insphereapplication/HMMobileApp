@@ -257,11 +257,94 @@ function populatePhone(dropdown)
     for (var i=0; i<dropdown.options.length; i++){
       if (dropdown.options[i].selected==true){
         selected = dropdown.options[i].value;
+		text=dropdown.options[i].text;
         break;
       }
     }
+	if (text='Ad-Hoc'){
+		document.getElementById("phoneNumber").value=''
+	}
+	else{
 	document.getElementById("phoneNumber").value=selected;
+	}
     return true;
+}
+
+function populateAddress(dropdown, textbox)
+{
+    for (var i=0; i<dropdown.options.length; i++){
+      if (dropdown.options[i].selected==true){
+        selected = dropdown.options[i].value;
+		text = dropdown.options[i].text;
+        break;
+      }
+    }
+	textbox.value=selected;
+	if (text == "Ad Hoc"){
+		textbox.disabled=false;
+	}
+	else{
+		textbox.disabled=true;
+	}
+    return true;
+}
+
+function updateAddress()
+{
+	var dropdown = document.getElementById('select_location');
+	var textbox = document.getElementById('location');
+	
+    for (var i=0; i<dropdown.options.length; i++){
+      if (dropdown.options[i].selected==true){
+        selected = dropdown.options[i].value;
+		text = dropdown.options[i].text;
+        break;
+      }
+    }
+	textbox.value=selected;
+	if (text == "Ad Hoc"){
+		textbox.disabled=false;
+	}
+	else{
+		textbox.disabled=true;
+	}
+    return true;
+}
+
+function disablePhone(dropdown, phoneText)
+{
+	for (var i=0; i<dropdown.options.length; i++){
+      if (dropdown.options[i].selected==true){
+        selected = dropdown.options[i].text;
+        break;
+      }
+    }
+
+	if (selected != "Ad-Hoc"){
+		phoneText.disabled='true';
+	}
+	return true;
+}
+
+function enablePhone()
+{
+	var dropdown = document.getElementById('phoneList');
+	var phoneText = document.getElementById('phoneNumber');
+	for (var i=0; i<dropdown.options.length; i++){
+      if (dropdown.options[i].selected==true){
+        selected = dropdown.options[i].text;
+        break;
+      }
+    }
+
+	if (selected == "Ad-Hoc"){
+		phoneText.disabled=false;
+	}
+	else
+	{
+		phoneText.disabled=true;
+	}
+	return true;
 }
 
 function populateAddress(dropdown)

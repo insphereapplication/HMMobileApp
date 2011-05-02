@@ -65,9 +65,9 @@ class OpportunityController < Rho::RhoController
       Opportunity.local_changed = false
       @params['selected_tab'] ||= 'new-leads'
       set_opportunities_nav_context(@params['selected_tab']);    
-      render :action => :index, :layout => 'layout_JQM_Lite'
+      render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
     else
-      redirect :controller => Settings, :action => :login, :layout => 'layout_JQM_Lite'
+      redirect :controller => Settings, :action => :login, :back => 'callback:', :layout => 'layout_JQM_Lite'
     end
   end
   
@@ -88,7 +88,7 @@ class OpportunityController < Rho::RhoController
     @color = color
     @label = text
     @page = opportunities
-    render :action => :opportunity_page, :layout => 'layout_JQM_Lite'
+    render :action => :opportunity_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
   def todays_new_leads
@@ -105,13 +105,13 @@ class OpportunityController < Rho::RhoController
     @label = text
     @date_proc = date_proc
     @page = phone_calls
-    render :action => :follow_ups_page, :layout => 'layout_JQM_Lite'
+    render :action => :follow_ups_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
   def get_activities(opportunities)
     $follow_ups_nav_context += opportunities.map{|opp| opp.opportunityid }
     @page = opportunities
-    render :action => :last_activities_page, :layout => 'layout_JQM_Lite'
+    render :action => :last_activities_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
 
   def by_last_activities
@@ -142,7 +142,7 @@ class OpportunityController < Rho::RhoController
     @color = color
     @label = text
     @page = appointments
-    render :action => :appointments_page, :layout => 'layout_JQM_Lite'
+    render :action => :appointments_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
   def future_appointments
@@ -172,9 +172,9 @@ class OpportunityController < Rho::RhoController
       @notes = @opportunity.notes
       current_nav_context.orient!(@opportunity.object)
       @contact = @opportunity.contact
-      render :action => :show, :layout => 'layout_jquerymobile'
+      render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
-      redirect :action => :index
+      redirect :action => :index, :back => 'callback:'
     end
   end
   
@@ -199,16 +199,16 @@ class OpportunityController < Rho::RhoController
       @notes = @opportunity.notes
       current_nav_context.orient!(@opportunity.object)
       @contact = @opportunity.contact
-      render :action => :show, :layout => 'layout_jquerymobile', :origin => @params['origin']
+      render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile', :origin => @params['origin']
     end
   end
   
   def status_update
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
-      render :action => :status_update, :layout => 'layout_jquerymobile'
+      render :action => :status_update, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
-      redirect :action => :index
+      redirect :action => :index, :back => 'callback:'
     end
   end 
   
@@ -216,9 +216,9 @@ class OpportunityController < Rho::RhoController
     $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
-      render :action => :callback_request, :layout => 'layout_jquerymobile'
+      render :action => :callback_request, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
-      redirect :action => :index
+      redirect :action => :index, :back => 'callback:'
     end
   end
   
@@ -226,9 +226,9 @@ class OpportunityController < Rho::RhoController
     $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
-      render :action => :appointment, :layout => 'layout_jquerymobile'
+      render :action => :appointment, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
-      redirect :action => :index
+      redirect :action => :index, :back => 'callback:'
     end
   end
   
@@ -238,9 +238,9 @@ class OpportunityController < Rho::RhoController
     
     @opportunity = Opportunity.find(@params['id'])
     if @opportunity
-      render :action => :lost_other, :layout => 'layout_jquerymobile'
+      render :action => :lost_other, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
-      redirect :action => :index
+      redirect :action => :index, :back => 'callback:'
     end
   end
   
@@ -249,7 +249,7 @@ class OpportunityController < Rho::RhoController
     @opportunity = Opportunity.find(@params['id'])
     @activities = @opportunity.activities
     if @opportunity
-      render :action => :activity_summary,
+      render :action => :activity_summary, :back => 'callback:',
               :layout => 'layout_jquerymobile',
               :origin => @params['origin']
     end
@@ -257,19 +257,19 @@ class OpportunityController < Rho::RhoController
 
   def phone_dialog
     @opportunity = Opportunity.find(@params['id'])
-    render :action => :phone_dialog, :layout => 'layout_JQM_Lite'
+    render :action => :phone_dialog, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
   def save
     $saved = 1
-    redirect :action => :index
+    redirect :action => :index, :back => 'callback:'
   end
   
   def call_number
     puts "Calling number " + @params['phone_number']
     telephone = @params['phone_number']
     telephone.gsub!(/[^0-9]/, "")
-    redirect :action => :phone_dialog,
+    redirect :action => :phone_dialog, :back => 'callback:',
               :id => @params['opportunity'],
               :query =>{:origin => @params['origin']}
     System.open_url('tel:' + telephone)
@@ -315,11 +315,12 @@ class OpportunityController < Rho::RhoController
   end
   
   def map
-    WebView.refresh
-      if System::get_property('platform') == 'APPLE'
-        System.open_url("maps:q=#{@params['location'].strip.gsub(/ /,'+')}")
-      else
-        System.open_url('http://maps.google.com/?q=' + @params['address'])
-      end
+        WebView.refresh
+        if System::get_property('platform') == 'APPLE'
+          System.open_url("maps:q=#{@params['location'].strip.gsub(/ /,'+')}")
+        else
+            System.open_url("http://maps.google.com/?q=#{@params['location'].strip.gsub(/ /,'+')}")
+        end
+        #WebView.refresh
   end
 end

@@ -1,4 +1,14 @@
-	
+<script type='text/javascript'>
+	$(document).ready(function() {
+		updateAddress();
+	});
+</script>
+<script type="text/javascript">
+function PickDateAppointmentChangeFocus() {
+popupDateTimeAJPicker('0', 'Appointment Time', 'appointment_datetime');
+document.getElementById('appointment_duration').focus();
+}
+</script>
 	<div data-role="page" data-theme="b">
 		<div data-role="header" data-theme="d" data-position="inline">
 			<a href="<%=url_for(:action=>:show, :id => @opportunity.object)%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
@@ -17,7 +27,7 @@
 					
 					<div data-role="fieldcontain">
 						<label for="appointment_datetime" class="fieldLabel">Appointment Start:</label>
-						<input id="appointment_datetime" type="text" name="appointment_datetime" readonly value="<%= $choosed['0'] %>"  onClick="popupDateTimeAJPicker('0', 'Appointment Time', 'appointment_datetime');"></input>
+						<input id="appointment_datetime" type="text" name="appointment_datetime" readonly value="<%= $choosed['0'] %>"  onClick="PickDateAppointmentChangeFocus();"></input>
 						<label for="appointment_duration" class="fieldLabel">Duration:</label>
 						<select name="appointment_duration" id="appointment_duration">
 							<option value="90.0">1.5 Hours</option>
@@ -28,14 +38,14 @@
 							<option value="240.0">4 Hours</option>
 						</select>
 						<label for="select_location" class="fieldLabel">Location:</label>
-			            <select name="select_location" id="select_location" onchange='populateAddress(this.form.select_location);'>
+			            <select name="select_location" id="select_location" onchange='updateAddress();'>
 							<% @opportunity.contact.addresses.each do |type, address| %>
 								<option value="<%= address %>"><%= type %></option>
 							<% end %>
 								<option value=" ">Ad Hoc</option>
 						</select><br />
 						<label for="location" class="fieldLabel">Address:</label>
-			            <input maxlength="200" type="text" id="location" name="location" value="<%= @opportunity.contact.default_address %>" /><br />
+			            <input maxlength="200" type="text" id="location" name="location" value="" onkeypress="if(event.keyCode==13){return false;}" /><br />
 						<label for="description">Description:</label>
 						<textarea cols="40" rows="8" name="description" id="notetext"></textarea>
 						<input type="submit" class="standardButton" onclick="getLocationType(); return validateAppt();" value="Create Appointment"/>

@@ -24,13 +24,21 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 	            <label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:</label>
-	            <input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %> />
+				<% if System::get_property('platform') == 'APPLE' %>
+	            	<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %> />
+				<% else %>
+					<input maxlength="14" type="tel" id="phoneNumber" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>/><br />
+				<% end %>
 		    	</div>
 		</div>
 	        <div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 	            <label for="contact[telephone1]" class="fieldLabel">Business Phone:</label>
-	            <input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %> />
+				<% if System::get_property('platform') == 'APPLE' %>
+	            	<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %> />
+				<% else %>
+					<input type="tel" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %> />
+				<% end %>
 				</div>
 			</div>
 			<div data-role="fieldcontain">
@@ -42,13 +50,21 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 	            <label for="contact[telephone2]" class="fieldLabel">Home Phone:</label>
-	            <input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %> />
-		    	</div>
+	            <% if System::get_property('platform') == 'APPLE' %>	
+					<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %> />
+		    	<% else %>
+					<input type="tel" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %> />
+				<% end %>
+				</div>
 			</div>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">	
 	            <label for="contact[telephone3]" class="fieldLabel">Alternate Phone:</label>
-	            <input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %> />
+				<% if System::get_property('platform') == 'APPLE' %>
+	            	<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %> />
+				<% else %>
+					<input type="tel" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %> />
+				<% end %>
 		    	</div>
 			</div>
 			<div data-role="fieldcontain">

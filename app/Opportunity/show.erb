@@ -58,8 +58,8 @@
 				<li data-role="list-divider">Appointments</li> 
 				<% @opportunity.appointments.each do |appointment| %>
 					<li> 
-								<a rel="external" href="<%= url_for(:controller => :Opportunity, :action => :map, :id => @opportunity.object,
-													:query =>  {:location => appointment.location, :origin => @params['origin']})%>">
+								<a href="<%= url_for(:controller => :Opportunity, :action => :map, :id => @opportunity.object,
+													:query =>  {:location => appointment.location, :origin => @params['origin']})%>" onclick="hideSpin()">
 							<div>
 								<p>&nbsp;</p>
 								<p><b><%= "#{to_datetime(appointment.scheduledstart)} - #{to_endtime(appointment.scheduledend)}" %></b></p>
