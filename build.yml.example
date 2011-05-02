@@ -1,22 +1,36 @@
 sdk: "/Library/ParivedaInsite/rhodes"
 sdkversion: 2.3.0
-name: InSite 
-version: 1.0
+name: InSite Mobile
+version: 1.0.5
 vendor: rhomobile
 build: debug
 bbver: 4.6
+android: 
+  emulator: rhoandroid
+  android_title: 0
+  push:
+    sender: inspheremobile@gmail.com
+    notifications: yes
+  capabilities: 
+  - network_state
+  - phone
+  - gps
+  - push
+  - vibrate
+  version: 2.2
 wmsdk: "Windows Mobile 6 Professional SDK (ARMV4I)"
 applog: rholog.txt
-encrypt_database: 1
+encrypt_database: '1'
 iphone:
   configuration: Debug
-  sdk: iphonesimulator4.0
+  sdk: 4.2
   #configuration: release
-  #sdk: iphoneos4.2
-  provisionprofile: 40AD3B33-1A3B-4724-9A92-7CA13E07A715
-  codesignidentity: "iPhone Developer: Kyle Norton (6YC5XZZ7BM)"
+  #sdk: iphoneos4.3
+  provisionprofile: 8BF76192-D1BA-4939-B286-16B52B33BEE7
+  codesignidentity: "iPhone Developer: Kyle Norton (ZVB8LA9NV2)"
   entitlements:
-  BundleIdentifier: com.insphere.insight
-  BundleURLScheme: insight
+  BundleIdentifier: com.insphere.insitemobile
+  BundleURLScheme: insite
+
 
 extensions: ["json", "another-extension", "fileutils", "mspec"]
