@@ -203,6 +203,9 @@ class SettingsController < Rho::RhoController
         
         if min_required_version > app_version
           puts "*** Client needs to upgrade ***"
+          Alert.show_popup "You will required to upgrade to version #{min_required_version}"
+          SyncEngine.stop_sync
+          WebView.navigate ( url_for :action => :index )
         else
           puts "*** Client does not need to upgrade *** "
         end
