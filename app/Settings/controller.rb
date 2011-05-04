@@ -183,9 +183,31 @@ class SettingsController < Rho::RhoController
     #     ERR_SYNCVERSION = 11
     #     ERR_GEOLOCATION = 12
     status = @params['status'] ? @params['status'] : ""
-    
+        
+    if @params['source_name']
+      sn = @params['source_name']
+      #puts "*** sync_notify for #{sn} ***"
+    end
     
     if status == "complete" or status == "ok"
+      #puts "*** sync_notify received complete or ok ***"
+      if @params['source_name'] && @params['source_name'] == 'AppInfo'
+        puts "$" * 80
+        #puts @params.inspect
+        #puts "APPINFO SYNCED: #{AppInfo.instance.inspect}"
+        min_required_version = AppInfo.instance[0].min_required_version
+        app_version = Rho::RhoConfig.app_version
+        
+        puts "*** Client should be running at least version #{min_required_version} ***"
+        puts "*** Client is running #{app_version} ***"
+        
+        if min_required_version > app_version
+          puts "*** Client needs to upgrade ***"
+        else
+          puts "*** Client does not need to upgrade *** "
+        end
+      end
+      
       if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
         klass = Object.const_get(@params['source_name'])
         klass.local_changed=true if klass && klass.respond_to?(:local_changed=)

@@ -29,7 +29,7 @@ class Activity
   index :activity_statecode_index, [:statecode]
   
   enable :sync
-  set :sync_priority, 2 # this needs to be loaded before opportunities so that opportunities can know their context
+  set :sync_priority, 3 # this needs to be loaded before opportunities so that opportunities can know their context
   
   set :schema_version, '1.0'
   
