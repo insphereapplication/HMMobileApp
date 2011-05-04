@@ -6,7 +6,7 @@ class Contact
   include SQLHelper
   
   enable :sync
-  set :sync_priority, 1
+  set :sync_priority, 20
   
   # Note: These property names are derived from the field names in Microsoft Dynamics CRM--to prevent mapping issues
   property :firstname, :string

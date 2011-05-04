@@ -21,6 +21,7 @@ class SettingsController < Rho::RhoController
     if Settings.has_verified_credentials?
       SyncEngine.login(Settings.login, Settings.password, "/app/Settings/login_callback")
       @working = true # if @working is true, page will show spinner
+      $firstLogin = true
     end
     
     Rho::NativeTabbar.remove
@@ -45,13 +46,19 @@ class SettingsController < Rho::RhoController
     errCode = @params['error_code'].to_i
     if errCode == 0
       # set initial sync notification for OpportunityController#init_notify, which will redirect WebView to OpportunityController#index
-      Opportunity.set_notification(
-        url_for(:controller => :Opportunity, :action => :init_notify),
-        "sync_complete=true"
-      )
+      
+      #Opportunity.set_notification(
+      #  url_for(:controller => :Opportunity, :action => :init_notify),
+      #  "sync_complete=true"
+      #)
+      
+      #SyncEngine.set_notification(-1, "/app/Settings/sync_notify", '')
+      
+
       Settings.credentials_verified = true
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
+      WebView.execute_js('update_wait_progress("'+"Starting.."+'", "'+"0"+'");')
     elsif errCode == Rho::RhoError::ERR_NETWORK && Settings.has_verified_credentials?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
@@ -75,12 +82,19 @@ class SettingsController < Rho::RhoController
     if errCode == 0
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
+      if $firstLogin
+        WebView.execute_js('update_wait_progress("'+"Starting.."+'", "'+"0"+'");')
+      end
     elsif errCode == Rho::RhoError::ERR_NETWORK && Settings.has_verified_credentials?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
       #at this point, we've got cached, verified credentials but we can't connect to RhoSync. 
       #don't throw an error, but reinstate poll interval so that we continue to check for connectivity
       SyncEngine.set_pollinterval($poll_interval)
+      if $firstLogin
+        @msg ||= "Error occurred while connecting.  Please try again."    
+        goto_login(@msg)
+      end        
     else
       Settings.clear_credentials
       SyncEngine.set_pollinterval(0)
@@ -98,8 +112,10 @@ class SettingsController < Rho::RhoController
     Settings.password = @params['password'] unless @params['password'].blank?
     
     if Settings.login and Settings.password
+      $firstLogin = true
       begin
         SyncEngine.login(Settings.login, Settings.password, (url_for :action => :login_callback) )
+        WebView.execute_js('update_wait_progress("'+"Initial Log In"+'", "'+"0"+'");')
       rescue Rho::RhoError => e
         Settings.clear_credentials
         @msg = e.message
@@ -182,14 +198,32 @@ class SettingsController < Rho::RhoController
     #     ERR_CANCELBYUSER = 10
     #     ERR_SYNCVERSION = 11
     #     ERR_GEOLOCATION = 12
+    sourcename = @params['source_name'] ? @params['source_name'] : ""
+  
     status = @params['status'] ? @params['status'] : ""
     
-    
-    if status == "complete" or status == "ok"
+    puts '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% entering sync_notify'
+    puts '************************************** Sync source name ' + sourcename
+    puts '************************************** Status ' + status   
+    puts '************************************** First Login entering sync_notify' + $firstLogin.to_s
+      
+      
+    if status == "complete"
       if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
         klass = Object.const_get(@params['source_name'])
         klass.local_changed=true if klass && klass.respond_to?(:local_changed=)
       end
+      if $firstLogin
+        $firstLogin = false
+        WebView.navigate(url_for(:controller => :Opportunity, :action => :init_notify))      
+      end
+    elsif status == "ok"
+      WebView.execute_js('update_wait_progress("' + @params['source_name'] + '", "0");')
+    elsif status == "in_progress"
+      percent = (@params["cumulative_count"].to_f/@params["total_count"].to_f * 100).to_i.to_s
+      
+      WebView.execute_js('update_wait_progress("' + @params['source_name'] + '", "'+percent+'");')     
+      
     elsif status == "error"
       if @params['server_errors'] && @params['server_errors']['create-error']
         log_error("Create error", @params.inspect)
@@ -219,6 +253,12 @@ class SettingsController < Rho::RhoController
         
         #stop current sync, otherwise do nothing for connectivity lapse
         SyncEngine.stop_sync
+        
+        #send them back to login because initial sync did not complete
+        if $firstLogin
+          goto_login("Error occurred while connecting.  Please try again.")
+        end
+          
       elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)      
         log_error("RhoSync error: client is not logged in / unauthorized", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         SyncEngine.set_pollinterval(-1)
@@ -239,6 +279,12 @@ class SettingsController < Rho::RhoController
         retry_login
       else
         log_error("Unhandled error in sync_notify: #{err_code}", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
+        if $firstLogin
+          Rhom::Rhom.database_fullclient_reset_and_logout
+          SyncEngine.stop_sync
+          
+          goto_login("Error occurred while connecting.  Please try again.")
+        end
       end
     end
   end

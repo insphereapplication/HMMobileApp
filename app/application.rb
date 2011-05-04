@@ -9,6 +9,8 @@ class AppApplication < Rho::RhoApplication
     @@toolbar = nil
     super
     @default_menu = {}
+    
+    SyncEngine.set_notification(-1, "/app/Settings/sync_notify", '') 
   end
   
   #wipe the database and force a resync if a different user logs in

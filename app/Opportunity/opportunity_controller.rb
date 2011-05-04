@@ -24,10 +24,10 @@ class OpportunityController < Rho::RhoController
   def init_notify
     System.set_push_notification("/app/Settings/push_notify", '')
     
-    SyncEngine.set_notification(
-      -1, "/app/Settings/sync_notify", 
-      "sync_complete=true"
-    )
+    #SyncEngine.set_notification(
+    #  -1, "/app/Settings/sync_notify", 
+    #  "sync_complete=true"
+    #)
     
     tabbar = [
       { :label => "Opportunities", :action => '/app/Opportunity', 

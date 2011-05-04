@@ -9,7 +9,7 @@ class Opportunity
   
   enable :sync
   
-  set :sync_priority, 100
+  set :sync_priority, 30
 
   property :opportunityid, :string
   property :statecode, :string
