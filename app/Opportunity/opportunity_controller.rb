@@ -61,6 +61,7 @@ class OpportunityController < Rho::RhoController
   
   # since this is the default entry point on startup, check here for login
   def index
+    $tab = 0
     if SyncEngine::logged_in == 1
       intialize_nav_contexts
       Opportunity.local_changed = false

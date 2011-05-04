@@ -54,17 +54,17 @@ LastVisitedPage = ''
 # syncserver = 'http://rhohub-insphere-c58af007.rhosync.com/application' 
 
 #MODEL -- for UAT/QA of new features from master
-syncserver = 'https://rhohub-insphere-c3d43885.rhosync.com/application'
+syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
 
 
 #DEV
-#syncserver = 'https://rhohub-insphere-a06075d6.rhosync.com/application'
+#syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
 
 #LOCAL
 #syncserver = 'http://localhost:9292/application'
 
 #PRODUCTION !!!
-#syncserver = 'https://rhohub-insphere-b3789b06.rhosync.com/application'
+#syncserver = 'https://rhohub-insphere-b3789b06.heroku.com/application'
 
 #sync_poll_interval=300
 

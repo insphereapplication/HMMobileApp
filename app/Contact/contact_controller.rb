@@ -9,6 +9,7 @@ class ContactController < Rho::RhoController
 
   #GET /Contact
   def index
+    $tab = 1
     render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
