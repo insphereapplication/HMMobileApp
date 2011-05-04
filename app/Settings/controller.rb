@@ -14,14 +14,18 @@ class SettingsController < Rho::RhoController
     @msg = @params['msg']
     render :controller => :Setting, :back => 'callback:', :action => :index, :layout => 'layout_jquerymobile'
   end
+  
+  def can_skip_login?
+    Settings.has_verified_credentials? and Settings.initial_sync_completed?
+  end
 
   def login
     @msg = @params['msg']
+    override_auto_login = @params['override_auto_login']
     # if the user has stored successful login credentials, attempt to auto-login with them
-    if Settings.has_verified_credentials?
+    if Settings.has_verified_credentials? and override_auto_login != true
       SyncEngine.login(Settings.login, Settings.password, "/app/Settings/login_callback")
       @working = true # if @working is true, page will show spinner
-      $firstLogin = true
     end
     
     Rho::NativeTabbar.remove
@@ -31,6 +35,10 @@ class SettingsController < Rho::RhoController
   
   def goto_login(msg=nil)
     WebView.navigate ( url_for :action => :login, :query => {:msg => msg} )
+  end
+  
+  def goto_login_override_auto(msg=nil)
+    WebView.navigate ( url_for :action => :login, :query => {:msg => msg, :override_auto_login => true} )
   end
   
   def retry_login
@@ -45,26 +53,20 @@ class SettingsController < Rho::RhoController
   def login_callback
     errCode = @params['error_code'].to_i
     if errCode == 0
-      # set initial sync notification for OpportunityController#init_notify, which will redirect WebView to OpportunityController#index
       
-      #Opportunity.set_notification(
-      #  url_for(:controller => :Opportunity, :action => :init_notify),
-      #  "sync_complete=true"
-      #)
+      #setup the sync event handlers for the application init sequence
+      set_init_sync_handlers
       
-      #SyncEngine.set_notification(-1, "/app/Settings/sync_notify", '')
-      
-
       Settings.credentials_verified = true
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
       WebView.execute_js('update_wait_progress("'+"Starting.."+'", "'+"0"+'");')
-    elsif errCode == Rho::RhoError::ERR_NETWORK && Settings.has_verified_credentials?
+    elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
       #we've got cached, verified credentials, so proceed with the usual initialization process
       SyncEngine.set_pollinterval($poll_interval)
-      WebView.navigate ( url_for :controller => :Opportunity, :action => :init_notify)
+      goto_opportunity_init_notify
     else
       Settings.clear_credentials
       SyncEngine.set_pollinterval(0)
@@ -82,19 +84,12 @@ class SettingsController < Rho::RhoController
     if errCode == 0
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
-      if $firstLogin
-        WebView.execute_js('update_wait_progress("'+"Starting.."+'", "'+"0"+'");')
-      end
-    elsif errCode == Rho::RhoError::ERR_NETWORK && Settings.has_verified_credentials?
+    elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
       #at this point, we've got cached, verified credentials but we can't connect to RhoSync. 
       #don't throw an error, but reinstate poll interval so that we continue to check for connectivity
-      SyncEngine.set_pollinterval($poll_interval)
-      if $firstLogin
-        @msg ||= "Error occurred while connecting.  Please try again."    
-        goto_login(@msg)
-      end        
+      SyncEngine.set_pollinterval($poll_interval)   
     else
       Settings.clear_credentials
       SyncEngine.set_pollinterval(0)
@@ -112,7 +107,6 @@ class SettingsController < Rho::RhoController
     Settings.password = @params['password'] unless @params['password'].blank?
     
     if Settings.login and Settings.password
-      $firstLogin = true
       begin
         SyncEngine.login(Settings.login, Settings.password, (url_for :action => :login_callback) )
         WebView.execute_js('update_wait_progress("'+"Initial Log In"+'", "'+"0"+'");')
@@ -184,6 +178,8 @@ class SettingsController < Rho::RhoController
   # this is the message returned from RhoSync when Rhodes is sending a token for a session that no longer exists (like after a Redis reset) 
   SESSION_ERROR_MSG = "undefined method `user_id' for nil:NilClass"
   
+  #sync_notify gets called whenever any sync is in progress, completed, or returns an error
+  #this is registered in the initialize method in application.rb
   def sync_notify
     #     ERR_NONE = 0
     #     ERR_NETWORK = 1
@@ -200,30 +196,19 @@ class SettingsController < Rho::RhoController
     #     ERR_GEOLOCATION = 12
     sourcename = @params['source_name'] ? @params['source_name'] : ""
   
-    status = @params['status'] ? @params['status'] : ""
-    
-    puts '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% entering sync_notify'
-    puts '************************************** Sync source name ' + sourcename
-    puts '************************************** Status ' + status   
-    puts '************************************** First Login entering sync_notify' + $firstLogin.to_s
+    status = @params['status'] ? @params['status'] : ""      
       
-      
-    if status == "complete"
+    if status == "complete"      
+      @on_sync_complete.call
+    elsif status == "ok"
       if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
         klass = Object.const_get(@params['source_name'])
         klass.local_changed=true if klass && klass.respond_to?(:local_changed=)
       end
-      if $firstLogin
-        $firstLogin = false
-        WebView.navigate(url_for(:controller => :Opportunity, :action => :init_notify))      
-      end
-    elsif status == "ok"
-      WebView.execute_js('update_wait_progress("' + @params['source_name'] + '", "0");')
+      
+      @on_sync_ok.call
     elsif status == "in_progress"
-      percent = (@params["cumulative_count"].to_f/@params["total_count"].to_f * 100).to_i.to_s
-      
-      WebView.execute_js('update_wait_progress("' + @params['source_name'] + '", "'+percent+'");')     
-      
+      @on_sync_in_progress.call
     elsif status == "error"
       if @params['server_errors'] && @params['server_errors']['create-error']
         log_error("Create error", @params.inspect)
@@ -255,9 +240,7 @@ class SettingsController < Rho::RhoController
         SyncEngine.stop_sync
         
         #send them back to login because initial sync did not complete
-        if $firstLogin
-          goto_login("Error occurred while connecting.  Please try again.")
-        end
+        @on_sync_error.call({:error_source => 'connection'})
           
       elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)      
         log_error("RhoSync error: client is not logged in / unauthorized", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
@@ -279,12 +262,7 @@ class SettingsController < Rho::RhoController
         retry_login
       else
         log_error("Unhandled error in sync_notify: #{err_code}", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        if $firstLogin
-          Rhom::Rhom.database_fullclient_reset_and_logout
-          SyncEngine.stop_sync
-          
-          goto_login("Error occurred while connecting.  Please try again.")
-        end
+        @on_sync_error.call({:error_source => 'unknown', :error_code => err_code})
       end
     end
   end
@@ -313,6 +291,62 @@ class SettingsController < Rho::RhoController
   rescue Exception => e
     ExceptionUtil.log_exception_to_server(e)
     WebView.navigate ( url_for :action => :index )
+  end
+
+  def goto_opportunity_init_notify
+    WebView.navigate ( url_for :controller => :Opportunity, :action => :init_notify)
+  end
+  
+  def set_background_sync_handlers
+    @on_sync_error = lambda {|*args|}
+    @on_sync_complete = lambda {|*args|}
+    @on_sync_in_progress = lambda {|*args|}
+    @on_sync_ok = lambda {|*args|}
+  end
+  
+  def set_init_sync_handlers
+    @on_sync_error = lambda {|*args| init_on_sync_error(*args)}
+    @on_sync_complete = lambda {|*args| init_on_sync_complete(*args)}
+    @on_sync_in_progress = lambda {|*args| init_on_sync_in_progress(*args)}
+    @on_sync_ok = lambda {|*args| init_on_sync_ok(*args)}
+  end
+  
+  def init_on_sync_error(*args)
+    raise ArgumentError, "Hash must be given as the first argument" unless args[0].is_a?(Hash)    
+    
+    error_source = args[0][:error_source]
+    
+    if Settings.initial_sync_completed?
+      #if it's a connection based error, 
+      if error_source == 'connection'
+        #navigate to opportunity init_notify controller action
+        goto_opportunity_init_notify
+      end
+    else
+      #TODO: determine if database reset is needed here
+      #we haven't successfully synced before, so navigate back to the login screen (but keep the credentials)
+      goto_login_override_auto("Sync error. Please try logging in again.")
+    end
+  end
+  
+  def init_on_sync_complete(*args)
+    #change sync handlers back to default
+    set_background_sync_handlers
+    
+    Settings.initial_sync_complete = true
+    
+    #navigate to opportunity init_notify controller action
+    goto_opportunity_init_notify
+  end
+  
+  def init_on_sync_in_progress(*args)
+    #progress bar logic
+    percent = (@params["cumulative_count"].to_f/@params["total_count"].to_f * 100).to_i.to_s
+    WebView.execute_js('update_wait_progress("' + @params['source_name'] + '", "'+percent+'");')
+  end
+  
+  def init_on_sync_ok(*args)
+    WebView.execute_js('update_wait_progress("' + @params['source_name'] + '", "0");')
   end
   
 end

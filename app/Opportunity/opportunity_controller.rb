@@ -24,11 +24,6 @@ class OpportunityController < Rho::RhoController
   def init_notify
     System.set_push_notification("/app/Settings/push_notify", '')
     
-    #SyncEngine.set_notification(
-    #  -1, "/app/Settings/sync_notify", 
-    #  "sync_complete=true"
-    #)
-    
     tabbar = [
       { :label => "Opportunities", :action => '/app/Opportunity', 
         :icon => "/public/images/dollar.png", :web_bkg_color => 0x7F7F7F }, 
@@ -37,6 +32,7 @@ class OpportunityController < Rho::RhoController
       { :label => "Settings",  :action => '/app/Settings',  
         :icon => "/public/images/iphone/tabs/settings_tab_icon.png" },
     ]
+    
     Rho::NativeTabbar.create(tabbar)
     # Rho::NativeTabbar.create(:tabs => tabbar, :place_tabs_bottom => true)    
     Rho::NativeTabbar.switch_tab(0)
@@ -44,7 +40,6 @@ class OpportunityController < Rho::RhoController
     $new_leads_nav_context = []
     $follow_ups_nav_context = []
     $appointments_nav_context = []
-    
   end
   
   def refresh_if_changed
