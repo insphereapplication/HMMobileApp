@@ -38,6 +38,7 @@ class OpportunityController < Rho::RhoController
         :icon => "/public/images/iphone/tabs/settings_tab_icon.png" },
     ]
     Rho::NativeTabbar.create(tabbar)
+    # Rho::NativeTabbar.create(:tabs => tabbar, :place_tabs_bottom => true)    
     Rho::NativeTabbar.switch_tab(0)
     
     $new_leads_nav_context = []
@@ -315,7 +316,8 @@ class OpportunityController < Rho::RhoController
   end
   
   def map
-        WebView.refresh
+        # WebView.refresh
+        WebView.navigate(WebView.current_location)
         if System::get_property('platform') == 'APPLE'
           System.open_url("maps:q=#{@params['location'].strip.gsub(/ /,'+')}")
         else
