@@ -5,6 +5,7 @@ class AppInfo
   set :sync_priority, 1
   
   property :min_required_version, :string
+  property :upgrade_url, :string
   
   def self.instance
     AppInfo.find_by_sql("select * from AppInfo limit 1")

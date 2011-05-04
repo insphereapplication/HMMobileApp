@@ -196,16 +196,18 @@ class SettingsController < Rho::RhoController
         #puts @params.inspect
         #puts "APPINFO SYNCED: #{AppInfo.instance.inspect}"
         min_required_version = AppInfo.instance[0].min_required_version
+        upgrade_url = AppInfo.instance[0].upgrade_url
         app_version = Rho::RhoConfig.app_version
         
         puts "*** Client should be running at least version #{min_required_version} ***"
         puts "*** Client is running #{app_version} ***"
+        puts "*** Upgrade URL is #{upgrade_url} ***"
         
         if min_required_version > app_version
           puts "*** Client needs to upgrade ***"
-          Alert.show_popup "You will required to upgrade to version #{min_required_version}"
           SyncEngine.stop_sync
-          WebView.navigate ( url_for :action => :index )
+          Alert.show_popup "You will required to upgrade to version #{min_required_version}"
+          WebView.navigate ( upgrade_url )
         else
           puts "*** Client does not need to upgrade *** "
         end
