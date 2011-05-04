@@ -41,7 +41,7 @@ document.getElementById('phoneList').focus();
 					<% if System::get_property('platform') == 'APPLE' %>
 		            	<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" id="phoneNumber" name="phone_number" value="" /><br />
 					<% else %>
-						<input maxlength="14" type="tel" id="phoneNumber" name="phone_number" /><br />
+						<input maxlength="14" type="tel" id="phoneNumber" name="phone_number" onkeypress="if(event.keyCode==13){return false;}" /><br />
 					<% end %>
 					<label for="notetext">Notes:</label>
 					<textarea cols="40" rows="8" name="notetext" id="notetext"></textarea>
