@@ -22,12 +22,20 @@
 		</div>
 	</div>
 
-	<a onclick="hideSpin()" href="<%= url_for :action => launcher, :id=> opportunity.object, :query =>{:opportunity => opportunity.object, :location => location, :origin => origin}%>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
-		<% if icon=="mapopp"%>
-			<img class="opp-icon" src="/public/images/map_icon.png">
-		<% else %>
-			<img class="opp-icon" src="/public/images/phone_black.png">
-		<% end %>
-	</a>			
+	<% if launcher == :phone_dialog%>
+	   <a onclick="hideSpin()" href="<%= url_for :action => launcher, :id=> opportunity.object, :query =>{:opportunity => opportunity.object, :location => location, :origin => origin}%>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
+	           <img class="opp-icon" src="/public/images/phone_black.png">
+	       </a>            
+	<% else %>
+	   <% if System::get_property('platform') == 'APPLE'%>
+	       <a onclick="hideSpin()" href=<%="maps:q=#{Rho::RhoSupport.url_encode(location)}"%>
+	           <img class="opp-icon" src="/public/images/map_icon.png">
+	       </a>
+	   <%else%>            
+	       <a onclick="hideSpin()" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(location)}"%>
+	           <img class="opp-icon" src="/public/images/map_icon.png">
+	       </a>
+	   <%end%>
+	<%end%>		
 </li>
 

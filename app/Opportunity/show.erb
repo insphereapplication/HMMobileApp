@@ -58,8 +58,13 @@
 				<li data-role="list-divider">Appointments</li> 
 				<% @opportunity.appointments.each do |appointment| %>
 					<li> 
-								<a rel="external" href="<%= url_for(:controller => :Opportunity, :action => :map, :id => @opportunity.object,
-													:query =>  {:location => appointment.location, :origin => @params['origin']})%>">
+						<% if System::get_property('platform') == 'APPLE'%>
+							<a onclick="hideSpin();" href=<%="maps:q=#{Rho::RhoSupport.url_encode(appointment.location)}"%>
+							</a>
+						<%else%>			
+							<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(appointment.location)}"%>
+							</a>
+						<%end%>
 							<div>
 								<p>&nbsp;</p>
 								<p><b><%= "#{to_datetime(appointment.scheduledstart)} - #{to_endtime(appointment.scheduledend)}" %></b></p>
