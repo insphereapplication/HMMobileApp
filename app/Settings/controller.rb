@@ -55,7 +55,7 @@ class SettingsController < Rho::RhoController
     if errCode == 0
       
       #setup the sync event handlers for the application init sequence
-      set_init_sync_handlers
+      set_sync_type('init')
       
       Settings.credentials_verified = true
       SyncEngine.set_pollinterval($poll_interval)
@@ -194,11 +194,14 @@ class SettingsController < Rho::RhoController
     #     ERR_CANCELBYUSER = 10
     #     ERR_SYNCVERSION = 11
     #     ERR_GEOLOCATION = 12
+    
+    setup_sync_handlers
+    
     sourcename = @params['source_name'] ? @params['source_name'] : ""
   
     status = @params['status'] ? @params['status'] : ""      
       
-    if status == "complete"      
+    if status == "complete"   
       @on_sync_complete.call
     elsif status == "ok"
       if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
@@ -282,6 +285,14 @@ class SettingsController < Rho::RhoController
     end
   end
   
+  def show_popup(title, message)
+    Alert.show_popup({
+      :message => message,
+      :title => title,
+      :buttons => ["OK"]
+    })
+  end
+  
   def show_log
     Rho::RhoConfig.show_log
   end
@@ -295,6 +306,20 @@ class SettingsController < Rho::RhoController
 
   def goto_opportunity_init_notify
     WebView.navigate ( url_for :controller => :Opportunity, :action => :init_notify)
+  end
+  
+  def setup_sync_handlers
+    if Settings.is_init_sync?
+      set_init_sync_handlers
+    else
+      set_background_sync_handlers
+    end
+  end
+  
+  def set_sync_type(type)
+    show_popup("Setting sync type to #{type}", "")
+    Settings.sync_type = type
+    setup_sync_handlers
   end
   
   def set_background_sync_handlers
@@ -325,13 +350,14 @@ class SettingsController < Rho::RhoController
     else
       #TODO: determine if database reset is needed here
       #we haven't successfully synced before, so navigate back to the login screen (but keep the credentials)
+      #show_popup("Sync error init handler", @params.inspect)
       goto_login_override_auto("Sync error. Please try logging in again.")
     end
   end
   
   def init_on_sync_complete(*args)
     #change sync handlers back to default
-    set_background_sync_handlers
+    set_sync_type('background')
     
     Settings.initial_sync_complete = true
     
