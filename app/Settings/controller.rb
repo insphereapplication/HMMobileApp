@@ -11,6 +11,7 @@ class SettingsController < Rho::RhoController
   include BrowserHelper
   
   def index
+    $tab = 2
     @msg = @params['msg']
     render :controller => :Setting, :back => 'callback:', :action => :index, :layout => 'layout_jquerymobile'
   end

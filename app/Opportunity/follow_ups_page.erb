@@ -3,7 +3,7 @@
 <% end %>
 <% @page.each do |phone_call| %>
 <% opportunity = phone_call.opportunity %>
-	<%= render :partial =>"opportunity", :locals => { 
+	<%= render :partial =>"opportunity", :back => 'callback:', :locals => { 
 		   	:opportunity => opportunity, 
 		    :color => @color, 
 		    :top_right_text => opportunity.cssi_statusdetail,
