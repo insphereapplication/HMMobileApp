@@ -17,36 +17,30 @@ class AppApplication < Rho::RhoApplication
     Rhom::Rhom.database_full_reset
   end
   
-  # def on_activate_app
-  #     # put your application activation code here
-  # end
-  # 
-  # def on_deactivate_app
-  #     # Don't call any UI operations here, they'll be ignored
-  #     # For example, WebView.refresh
-  # 
-  #     # to stop sync background thread call 
-  #     # SyncEngine.stop_sync; SyncEngine.set_pollinterval(0)
-  # 
-  #     # To stop local web server when application switched to 
-  #     # background return "stop_local_server"
-  #     # return "stop_local_server" 
-  # end
-  # 
+  def on_activate_app
+      # put your application activation code here
+      SyncEngine.set_pollinterval($poll_interval)
+  end
+  
+  def on_deactivate_app
+      # Don't call any UI operations here, they'll be ignored
+      # For example, WebView.refresh
+  
+      # to stop sync background thread call 
+      SyncEngine.stop_sync
+      SyncEngine.set_pollinterval(-1)
+  
+      # To stop local web server when application switched to 
+      # background return "stop_local_server"
+      # return "stop_local_server" 
+  end
+  
   # def on_ui_created
   #   puts "calling ui_created!!!"
   #     # put your application UI creation code here
   #     # for example, create tab bar:
   #     # NativeBar.create(Rho::RhoApplication::TABBAR_TYPE, tabs)
   #     
-  #     
-  #     if SyncEngine::logged_in == 1 && $destroyed_location
-  #       #navigate to the last location
-  #       WebView.navigate($destroyed_location, $tab)
-  #       puts "!~~!~!~!~!~!~!~! NAVIGATING TO: #{$destroyed_location} TAB NUMBER IS #{$tab}"
-  #     else
-  #       super.on_ui_created() # To navigate to start_path from rhoconfig.txt
-  #     end
   # end
   # 
   # def on_ui_destroyed
@@ -54,7 +48,7 @@ class AppApplication < Rho::RhoApplication
   #     # put your code here
   #     # example:
   #     # @forbid_ui_operations = true
-  #   $destroyed_location = WebView.current_location
+  # 
   # end
   
   
