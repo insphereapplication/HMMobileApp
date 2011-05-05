@@ -276,7 +276,7 @@ class SettingsController < Rho::RhoController
   end
   
   def update_login_sync_progress(model, percent)
-    text = "Downloading:\n#{model} #{percent.to_s}%"
+    text = "Synchronizing:<br/>#{model} #{percent.to_s}%"
     update_login_wait_progress(text)
   end
   
@@ -376,17 +376,12 @@ class SettingsController < Rho::RhoController
   end
   
   def init_on_sync_in_progress(*args)
-    #progress bar logic
-    #show_popup("Sync in progress", "")
     percent = (@params["cumulative_count"].to_f/@params["total_count"].to_f * 100).to_i
-    # percent = 50
     update_login_sync_progress(@params['source_name'], percent)
   end
   
   def init_on_sync_ok(*args)
-    text = "Sync complete for #{@params['source_name']}"
-    show_popup(text, "")
-    update_login_wait_progress(text)
+    update_login_sync_progress(@params['source_name'], 100)
   end
   
 end
