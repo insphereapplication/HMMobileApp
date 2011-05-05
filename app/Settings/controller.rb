@@ -60,7 +60,7 @@ class SettingsController < Rho::RhoController
       Settings.credentials_verified = true
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
-      WebView.execute_js('update_wait_progress("'+"Starting.."+'", "'+"0"+'");')
+      update_login_wait_progress("Starting", 0)
     elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
@@ -109,7 +109,7 @@ class SettingsController < Rho::RhoController
     if Settings.login and Settings.password
       begin
         SyncEngine.login(Settings.login, Settings.password, (url_for :action => :login_callback) )
-        WebView.execute_js('update_wait_progress("'+"Initial Log In"+'", "'+"0"+'");')
+        update_login_wait_progress("Initial Log In", "0")
       rescue Rho::RhoError => e
         Settings.clear_credentials
         @msg = e.message
@@ -270,6 +270,10 @@ class SettingsController < Rho::RhoController
     end
   end
   
+  def update_login_wait_progress(message, percent)
+    WebView.execute_js('update_wait_progress("'+message+'", "'+percent.to_s+'");')
+  end
+  
   def log_error(title, message, params={})
     unless params[:send_to_exceptional] == false
       ExceptionUtil.log_exception_to_server(Exception.new("Error in SyncNotify for user '#{Settings.login}': #{title} -- #{message}"))
@@ -367,12 +371,13 @@ class SettingsController < Rho::RhoController
   
   def init_on_sync_in_progress(*args)
     #progress bar logic
-    percent = (@params["cumulative_count"].to_f/@params["total_count"].to_f * 100).to_i.to_s
-    WebView.execute_js('update_wait_progress("' + @params['source_name'] + '", "'+percent+'");')
+    percent = (@params["cumulative_count"].to_f/@params["total_count"].to_f * 100).to_i
+    update_login_wait_progress(@params['source_name'], percent)
   end
   
   def init_on_sync_ok(*args)
-    WebView.execute_js('update_wait_progress("' + @params['source_name'] + '", "0");')
+    percent = (@params["cumulative_count"].to_f/@params["total_count"].to_f * 100).to_i
+    update_login_wait_progress(@params['source_name'], percent)
   end
   
 end

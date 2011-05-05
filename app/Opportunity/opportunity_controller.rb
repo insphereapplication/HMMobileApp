@@ -11,13 +11,16 @@ class OpportunityController < Rho::RhoController
   $choosed = {}
 
   def sync_notify
-     Rho::NativeTabbar.switch_tab(0) 
-     WebView.navigate( 
+    if @params['status'] == 'ok' or @params['status'] == 'complete'
+      @on_sync_complete.call
+      Rho::NativeTabbar.switch_tab(0) 
+      WebView.navigate( 
         url_for(
           :controller => 'Opportunity',
           :action => :index
         )
       )
+    end
   end
 	  
   # this callback is set once in the login_callback method of the Settings controller
