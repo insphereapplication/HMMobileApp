@@ -24,6 +24,7 @@ document.getElementById('appointment_duration').focus();
 					<!-- TODO: MAKE SURE THIS WORKS WITH MULTIPLE APPTS -->
 					<input type="hidden" name="appointments[]" value="<%= @params['appointments'] ? @params['appointments'].join(',')  : '' %>" />
 					<input type="hidden" id="cssi_location" name="cssi_location" />
+					<input type="hidden" id="appointment_location" name="appointment_location" />
 					
 					<div data-role="fieldcontain">
 						<label for="appointment_datetime" class="fieldLabel">Appointment Start:</label>
