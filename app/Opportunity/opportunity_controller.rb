@@ -12,7 +12,6 @@ class OpportunityController < Rho::RhoController
 
   def sync_notify
     if @params['status'] == 'ok' or @params['status'] == 'complete'
-      @on_sync_complete.call
       Rho::NativeTabbar.switch_tab(0) 
       WebView.navigate( 
         url_for(

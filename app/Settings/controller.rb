@@ -24,6 +24,7 @@ class SettingsController < Rho::RhoController
     override_auto_login = @params['override_auto_login']
     # if the user has stored successful login credentials, attempt to auto-login with them
     if Settings.has_verified_credentials? and override_auto_login != true
+      update_login_wait_progress("Logging in with cached credentials")
       SyncEngine.login(Settings.login, Settings.password, "/app/Settings/login_callback")
       @working = true # if @working is true, page will show spinner
     end
@@ -60,7 +61,7 @@ class SettingsController < Rho::RhoController
       Settings.credentials_verified = true
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
-      update_login_wait_progress("Starting", 0)
+      update_login_wait_progress("Login successful, starting sync...")
     elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
@@ -109,7 +110,7 @@ class SettingsController < Rho::RhoController
     if Settings.login and Settings.password
       begin
         SyncEngine.login(Settings.login, Settings.password, (url_for :action => :login_callback) )
-        update_login_wait_progress("Initial Log In", "0")
+        update_login_wait_progress("Logging in...")
       rescue Rho::RhoError => e
         Settings.clear_credentials
         @msg = e.message
@@ -270,8 +271,13 @@ class SettingsController < Rho::RhoController
     end
   end
   
-  def update_login_wait_progress(message, percent)
-    WebView.execute_js('update_wait_progress("'+message+'", "'+percent.to_s+'");')
+  def update_login_wait_progress(text)
+    WebView.execute_js('update_wait_progress("'+text+'");')
+  end
+  
+  def update_login_sync_progress(model, percent)
+    text = "Downloading:\n#{model} #{percent.to_s}%"
+    update_login_wait_progress(text)
   end
   
   def log_error(title, message, params={})
@@ -321,7 +327,7 @@ class SettingsController < Rho::RhoController
   end
   
   def set_sync_type(type)
-    show_popup("Setting sync type to #{type}", "")
+    # show_popup("Setting sync type to #{type}", "")
     Settings.sync_type = type
     setup_sync_handlers
   end
@@ -371,13 +377,16 @@ class SettingsController < Rho::RhoController
   
   def init_on_sync_in_progress(*args)
     #progress bar logic
+    #show_popup("Sync in progress", "")
     percent = (@params["cumulative_count"].to_f/@params["total_count"].to_f * 100).to_i
-    update_login_wait_progress(@params['source_name'], percent)
+    # percent = 50
+    update_login_sync_progress(@params['source_name'], percent)
   end
   
   def init_on_sync_ok(*args)
-    percent = (@params["cumulative_count"].to_f/@params["total_count"].to_f * 100).to_i
-    update_login_wait_progress(@params['source_name'], percent)
+    text = "Sync complete for #{@params['source_name']}"
+    show_popup(text, "")
+    update_login_wait_progress(text)
   end
   
 end

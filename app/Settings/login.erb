@@ -30,16 +30,8 @@
 </div>
 
 <script type="text/javascript">
-  function update_wait_progress(name,percent) {
-	var htmlText = ""
-    if (name != "")
-    {
-      htmlText=htmlText+'Downloading:<br/>'+name
-    }
-    if (percent != "0")
-    {
-      htmlText=htmlText+': '+percent+'%'
-    }
+  function update_wait_progress(text) {
+	var htmlText = text.replace("\n", "<br/>")
     
     $('div.login_progress').html(htmlText);    
   }
