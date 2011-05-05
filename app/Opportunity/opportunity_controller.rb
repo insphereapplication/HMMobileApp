@@ -46,7 +46,7 @@ class OpportunityController < Rho::RhoController
   
   def refresh_if_changed
     if Opportunity.local_changed?
-      WebView.navigate( url_for(:action => :index, :query => {:selected_tab => @params['tab']}) )
+      WebView.navigate( url_for(:action => :index, :back => 'callback:', :query => {:selected_tab => @params['tab']}) )
     end
   end
   
@@ -58,6 +58,7 @@ class OpportunityController < Rho::RhoController
   
   # since this is the default entry point on startup, check here for login
   def index
+    $tab = 0
     if SyncEngine::logged_in == 1
       intialize_nav_contexts
       Opportunity.local_changed = false
@@ -71,6 +72,7 @@ class OpportunityController < Rho::RhoController
   
   def set_opportunities_nav_context(context=nil)
     $current_nav_context = @params['context'] || context
+    render :back => 'callback:'
   end
   
   def current_nav_context
@@ -278,8 +280,9 @@ class OpportunityController < Rho::RhoController
     if ['0', '1', '2'].include?(flag)
       ttt = $choosed[flag]
         preset_time = Time.new + 86400 + DateUtil.seconds_until_hour(Time.new)
-      DateTimePicker.choose url_for(:action => :callback), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
+      DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
     end
+    render :back => 'callback:'
   end
 
   def callback
@@ -296,6 +299,7 @@ class OpportunityController < Rho::RhoController
       formatted_result = Time.at(@params['result'].to_i).strftime(format)
       $choosed[datetime_vars[:flag]] = formatted_result
       WebView.execute_js('setFieldValue("'+datetime_vars[:field_key]+'","'+formatted_result+'");')
+      render :back => 'callback:'
     end
   end
   
