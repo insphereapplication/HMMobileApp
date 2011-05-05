@@ -192,25 +192,10 @@ class SettingsController < Rho::RhoController
     if status == "complete" or status == "ok"
       #puts "*** sync_notify received complete or ok ***"
       if @params['source_name'] && @params['source_name'] == 'AppInfo'
-        puts "$" * 80
-        #puts @params.inspect
-        #puts "APPINFO SYNCED: #{AppInfo.instance.inspect}"
-        min_required_version = AppInfo.instance[0].min_required_version
-        upgrade_url = AppInfo.instance[0].upgrade_url
-        app_version = Rho::RhoConfig.app_version
+        # Checking here to see if there is a mandatory upgrade. The user will be forced
+        # to accept this before continuing to use the app.
         
-        puts "*** Client should be running at least version #{min_required_version} ***"
-        puts "*** Client is running #{app_version} ***"
-        puts "*** Upgrade URL is #{upgrade_url} ***"
-        
-        if min_required_version > app_version
-          puts "*** Client needs to upgrade ***"
-          SyncEngine.stop_sync
-          Alert.show_popup "You will required to upgrade to version #{min_required_version}"
-          WebView.navigate ( upgrade_url )
-        else
-          puts "*** Client does not need to upgrade *** "
-        end
+        check_force_upgrade
       end
       
       if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
@@ -294,6 +279,43 @@ class SettingsController < Rho::RhoController
   rescue Exception => e
     ExceptionUtil.log_exception_to_server(e)
     WebView.navigate ( url_for :action => :index )
+  end
+  
+  def check_force_upgrade
+    puts "$" * 80
+    #puts @params.inspect
+    #puts "APPINFO SYNCED: #{AppInfo.instance.inspect}"
+    min_required_version = AppInfo.instance[0].min_required_version
+    upgrade_url = AppInfo.instance[0].upgrade_url
+    app_version = Rho::RhoConfig.app_version
+    
+    puts "*** Client should be running at least version #{min_required_version} ***"
+    puts "*** Client is running #{app_version} ***"
+    puts "*** Upgrade URL is #{upgrade_url} ***"
+    
+    if min_required_version > app_version
+      puts "*** Client needs to upgrade ***"
+      SyncEngine.stop_sync
+      Alert.show_popup(
+      {
+        :message => "You will required to upgrade to version #{min_required_version}",
+        :title => 'Update Required!',
+        :buttons => ["OK"],
+        :callback => url_for( :action => :on_dismiss_popup )
+      } )
+       
+    else
+      puts "*** Client does not need to upgrade *** "
+    end
+  end
+  
+  def on_dismiss_popup
+    id = @params[:button_id]
+    title = @params[:button_title]
+    index = @params[:button_index]
+    
+    upgrade_url = AppInfo.instance[0].upgrade_url
+    WebView.navigate ( upgrade_url )
   end
   
 end
