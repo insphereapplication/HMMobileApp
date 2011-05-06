@@ -19,6 +19,18 @@ class SettingsController < Rho::RhoController
   def can_skip_login?
     Settings.has_verified_credentials? and Settings.initial_sync_completed?
   end
+  
+  def init
+    if can_skip_login?
+      #login & sync in background
+      SyncEngine.login(Settings.login, Settings.password,  '/app/Settings/retry_login_callback')
+      #go to opportunity index page
+      goto_opportunity_init_notify
+    else
+      #go to login screen
+      goto_login
+    end
+  end
 
   def login
     @msg = @params['msg']
