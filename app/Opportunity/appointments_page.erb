@@ -5,7 +5,7 @@
 	<%= render :partial =>"opportunity", :back => 'callback:', :locals => { 
               :opportunity => appointment.opportunity , 
               :color => @color, 
-              :bottom_right_text => "Created #{appointment.opportunity.days_ago}",
+              :bottom_right_text => "Due #{DateUtil.days_calc_formatted(appointment.scheduledstart)}",
               :top_right_text => to_datetime_noyear(appointment.scheduledstart),
               :origin => "appointments",
               :launcher => :map,
