@@ -1,7 +1,7 @@
 encrypt_database: 1
 
 # startup page for your application
-start_path = '/app/Settings/login'
+start_path = '/app/Settings/init'
 
 # path to the options page (in this case handled by javascript)
 options_path = '/app/Settings'
@@ -51,7 +51,7 @@ LastVisitedPage = ''
 # for example: 'http://localhost:9292/application'
 
 #MODEL -- for UAT/QA of new features from master
-syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
+#syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
 
 
 #DEV
@@ -61,7 +61,7 @@ syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
 #syncserver = 'http://localhost:9292/application'
 
 #PRODUCTION !!!
-#syncserver = 'https://rhohub-insphere-b3789b06.heroku.com/application'
+syncserver = 'https://rhohub-insphere-b3789b06.heroku.com/application'
 
 #sync_poll_interval=300
 
@@ -79,7 +79,7 @@ syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
 # Port of the local (embedded) HTTP server. This parameter is mainly for debug purposes.
 # If not specified, application will use dynamically selected one.
 # WARNING!!! Remove this parameter before put application to production.
-local_server_port = 8080
+#local_server_port = 8080
 
 # show status bar on windows mobile. default 1
 #wm_show_statusbar = 1
