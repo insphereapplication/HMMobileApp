@@ -10,7 +10,7 @@ class Note
   property :subject, :string
   
   enable :sync
-  set :sync_priority, 5
+  set :sync_priority, 50
   
   belongs_to :parent_id, ['Activity', 'Opportunity']
    

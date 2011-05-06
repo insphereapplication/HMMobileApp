@@ -9,7 +9,6 @@ module ExceptionUtil
       :backtrace => exception.backtrace,
       :exception_id => Time.now.to_i.to_s
     });
-    ClientException.sync
   end
 end
 

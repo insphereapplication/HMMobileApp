@@ -11,23 +11,20 @@ class OpportunityController < Rho::RhoController
   $choosed = {}
 
   def sync_notify
-     Rho::NativeTabbar.switch_tab(0) 
-     WebView.navigate( 
+    if @params['status'] == 'ok' or @params['status'] == 'complete'
+      Rho::NativeTabbar.switch_tab(0) 
+      WebView.navigate( 
         url_for(
           :controller => 'Opportunity',
           :action => :index
         )
       )
+    end
   end
 	  
   # this callback is set once in the login_callback method of the Settings controller
   def init_notify
     System.set_push_notification("/app/Settings/push_notify", '')
-    
-    SyncEngine.set_notification(
-      -1, "/app/Settings/sync_notify", 
-      "sync_complete=true"
-    )
     
     tabbar = [
       { :label => "Opportunities", :action => '/app/Opportunity', 
@@ -37,6 +34,7 @@ class OpportunityController < Rho::RhoController
       { :label => "Settings",  :action => '/app/Settings',  
         :icon => "/public/images/iphone/tabs/settings_tab_icon.png" },
     ]
+    
     Rho::NativeTabbar.create(tabbar)
     # Rho::NativeTabbar.create(:tabs => tabbar, :place_tabs_bottom => true)    
     Rho::NativeTabbar.switch_tab(0)
@@ -44,7 +42,6 @@ class OpportunityController < Rho::RhoController
     $new_leads_nav_context = []
     $follow_ups_nav_context = []
     $appointments_nav_context = []
-    
   end
   
   def refresh_if_changed
