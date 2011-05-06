@@ -31,7 +31,6 @@ class Contact
   property :cssi_state2id, :string #business address state
   property :address2_postalcode, :string 
   property :contactid, :string
-  property :cssi_assignedagentid, :string
   
   index :contact_pk_index, [:contactid]
   unique_index :unique_contact, [:contactid] 

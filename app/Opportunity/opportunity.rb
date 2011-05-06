@@ -17,7 +17,6 @@ class Opportunity
   property :cssi_leadvendorid, :string
   property :cssi_inputsource, :string
   property :cssi_leadsourceid, :string
-  property :cssi_assignedagentid, :string
   property :statuscode, :string
   property :cssi_statusdetail, :string
   property :createdon, :string
