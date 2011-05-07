@@ -135,7 +135,19 @@ module DateUtil
         if  (Date.today - Date.strptime(past_date, DEFAULT_TIME_FORMAT)).to_i == 0
           return "Today"
         else
-          "#{(Date.today - Date.strptime(past_date, DEFAULT_TIME_FORMAT)).to_i} d"
+          "#{(Date.today - Date.strptime(past_date, DEFAULT_TIME_FORMAT)).to_i}d"
+        end
+      rescue Exception => e
+        puts "Unable to parse days_ago_formatted: #{past_date}: #{e}"
+      end
+    end
+    
+    def days_calc_formatted(past_date)
+      begin
+        if  (Date.today - Date.strptime(past_date, DEFAULT_TIME_FORMAT)).to_i == 0
+          return "Today"
+        else
+          "#{(Date.strptime(past_date, DEFAULT_TIME_FORMAT)  - Date.today).to_i}d"
         end
       rescue Exception => e
         puts "Unable to parse days_ago_formatted: #{past_date}: #{e}"

@@ -31,14 +31,13 @@ class Contact
   property :cssi_state2id, :string #business address state
   property :address2_postalcode, :string 
   property :contactid, :string
-  property :cssi_assignedagentid, :string
   
   index :contact_pk_index, [:contactid]
   unique_index :unique_contact, [:contactid] 
   
   def self.all_open(page=nil, page_size=DEFAULT_PAGE_SIZE)    
     Contact.find_by_sql(%Q{
-      select c.* from Contact c, Opportunity o 
+      select distinct(c.contactid), c.* from Contact c, Opportunity o 
       where o.contact_id=c.contactid and 
       o.statecode not in ('Won', 'Lost')
       order by c.lastname
