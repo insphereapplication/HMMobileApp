@@ -13,6 +13,18 @@ class ContactController < Rho::RhoController
     render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
+  def show_all_contacts
+    if Contact.local_changed? || ContactController.is_first_render?
+      WebView.navigate(url_for :controller => :Contact, :action => :index)
+    end
+  end
+  
+  def self.is_first_render?
+    rendered = !!@rendered
+    @rendered = true
+    !rendered
+  end
+  
   def get_contacts_page
     @contacts = Contact.all_open(@params['page'].to_i)
     puts @contacts.inspect
