@@ -36,7 +36,7 @@ class SettingsController < Rho::RhoController
     @msg = @params['msg']
     override_auto_login = @params['override_auto_login']
     # if the user has stored successful login credentials, attempt to auto-login with them
-    if Settings.has_verified_credentials? and override_auto_login != true
+    if Settings.has_verified_credentials? and override_auto_login.to_s != 'true'
       update_login_wait_progress("Logging in with cached credentials")
       SyncEngine.login(Settings.login, Settings.password, "/app/Settings/login_callback")
       @working = true # if @working is true, page will show spinner
@@ -298,6 +298,8 @@ class SettingsController < Rho::RhoController
       ExceptionUtil.log_exception_to_server(Exception.new("Error in SyncNotify for user '#{Settings.login}': #{title} -- #{message}"))
     end
     
+    puts "Error: #{title} --- #{message}"
+    
     #uncomment the following lines to show popups when errors are logged
     unless params[:show_popup] == false
       # Alert.show_popup({
@@ -367,13 +369,14 @@ class SettingsController < Rho::RhoController
     if Settings.initial_sync_completed?
       #if it's a connection based error, 
       if error_source == 'connection'
+        #swallow this error, let the user through
         #navigate to opportunity init_notify controller action
         goto_opportunity_init_notify
       end
     else
       #TODO: determine if database reset is needed here
       #we haven't successfully synced before, so navigate back to the login screen (but keep the credentials)
-      #show_popup("Sync error init handler", @params.inspect)
+      SyncEngine.stop_sync
       goto_login_override_auto("Sync error. Please try logging in again.")
     end
   end
