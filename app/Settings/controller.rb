@@ -15,11 +15,29 @@ class SettingsController < Rho::RhoController
     @msg = @params['msg']
     render :controller => :Setting, :back => 'callback:', :action => :index, :layout => 'layout_jquerymobile'
   end
+  
+  def can_skip_login?
+    Settings.has_verified_credentials? and Settings.initial_sync_completed?
+  end
+  
+  def init
+    if can_skip_login?
+      #login & sync in background
+      SyncEngine.login(Settings.login, Settings.password,  '/app/Settings/retry_login_callback')
+      #go to opportunity index page
+      goto_opportunity_init_notify
+    else
+      #go to login screen
+      goto_login
+    end
+  end
 
   def login
     @msg = @params['msg']
+    override_auto_login = @params['override_auto_login']
     # if the user has stored successful login credentials, attempt to auto-login with them
-    if Settings.has_verified_credentials?
+    if Settings.has_verified_credentials? and override_auto_login != true
+      update_login_wait_progress("Logging in with cached credentials")
       SyncEngine.login(Settings.login, Settings.password, "/app/Settings/login_callback")
       @working = true # if @working is true, page will show spinner
     end
@@ -31,6 +49,10 @@ class SettingsController < Rho::RhoController
   
   def goto_login(msg=nil)
     WebView.navigate ( url_for :action => :login, :query => {:msg => msg} )
+  end
+  
+  def goto_login_override_auto(msg=nil)
+    WebView.navigate ( url_for :action => :login, :query => {:msg => msg, :override_auto_login => true} )
   end
   
   def retry_login
@@ -45,20 +67,20 @@ class SettingsController < Rho::RhoController
   def login_callback
     errCode = @params['error_code'].to_i
     if errCode == 0
-      # set initial sync notification for OpportunityController#init_notify, which will redirect WebView to OpportunityController#index
-      Opportunity.set_notification(
-        url_for(:controller => :Opportunity, :action => :init_notify),
-        "sync_complete=true"
-      )
+      
+      #setup the sync event handlers for the application init sequence
+      set_sync_type('init')
+      
       Settings.credentials_verified = true
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
-    elsif errCode == Rho::RhoError::ERR_NETWORK && Settings.has_verified_credentials?
+      update_login_wait_progress("Login successful, starting sync...")
+    elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
       #we've got cached, verified credentials, so proceed with the usual initialization process
       SyncEngine.set_pollinterval($poll_interval)
-      WebView.navigate ( url_for :controller => :Opportunity, :action => :init_notify)
+      goto_opportunity_init_notify
     else
       Settings.clear_credentials
       SyncEngine.set_pollinterval(0)
@@ -76,12 +98,12 @@ class SettingsController < Rho::RhoController
     if errCode == 0
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
-    elsif errCode == Rho::RhoError::ERR_NETWORK && Settings.has_verified_credentials?
+    elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
       #at this point, we've got cached, verified credentials but we can't connect to RhoSync. 
       #don't throw an error, but reinstate poll interval so that we continue to check for connectivity
-      SyncEngine.set_pollinterval($poll_interval)
+      SyncEngine.set_pollinterval($poll_interval)   
     else
       Settings.clear_credentials
       SyncEngine.set_pollinterval(0)
@@ -101,6 +123,7 @@ class SettingsController < Rho::RhoController
     if Settings.login and Settings.password
       begin
         SyncEngine.login(Settings.login, Settings.password, (url_for :action => :login_callback) )
+        update_login_wait_progress("Logging in...")
       rescue Rho::RhoError => e
         Settings.clear_credentials
         @msg = e.message
@@ -119,7 +142,7 @@ class SettingsController < Rho::RhoController
     SyncEngine.set_pollinterval(-1)
     Rho::NativeTabbar.remove
     @msg = "You have been logged out."
-    redirect :action => :login, :back => 'callback:', :layout => 'layout_jquerymobile'
+    goto_login(@msg)
   end
   
   def reset
@@ -169,6 +192,8 @@ class SettingsController < Rho::RhoController
   # this is the message returned from RhoSync when Rhodes is sending a token for a session that no longer exists (like after a Redis reset) 
   SESSION_ERROR_MSG = "undefined method `user_id' for nil:NilClass"
   
+  #sync_notify gets called whenever any sync is in progress, completed, or returns an error
+  #this is registered in the initialize method in application.rb
   def sync_notify
     #     ERR_NONE = 0
     #     ERR_NETWORK = 1
@@ -183,14 +208,24 @@ class SettingsController < Rho::RhoController
     #     ERR_CANCELBYUSER = 10
     #     ERR_SYNCVERSION = 11
     #     ERR_GEOLOCATION = 12
-    status = @params['status'] ? @params['status'] : ""
     
+    setup_sync_handlers
     
-    if status == "complete" or status == "ok"
+    sourcename = @params['source_name'] ? @params['source_name'] : ""
+  
+    status = @params['status'] ? @params['status'] : ""      
+      
+    if status == "complete"   
+      @on_sync_complete.call
+    elsif status == "ok"
       if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
         klass = Object.const_get(@params['source_name'])
         klass.local_changed=true if klass && klass.respond_to?(:local_changed=)
       end
+      
+      @on_sync_ok.call
+    elsif status == "in_progress"
+      @on_sync_in_progress.call
     elsif status == "error"
       if @params['server_errors'] && @params['server_errors']['create-error']
         log_error("Create error", @params.inspect)
@@ -220,6 +255,10 @@ class SettingsController < Rho::RhoController
         
         #stop current sync, otherwise do nothing for connectivity lapse
         SyncEngine.stop_sync
+        
+        #send them back to login because initial sync did not complete
+        @on_sync_error.call({:error_source => 'connection'})
+          
       elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)      
         log_error("RhoSync error: client is not logged in / unauthorized", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         SyncEngine.set_pollinterval(-1)
@@ -240,8 +279,18 @@ class SettingsController < Rho::RhoController
         retry_login
       else
         log_error("Unhandled error in sync_notify: #{err_code}", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
+        @on_sync_error.call({:error_source => 'unknown', :error_code => err_code})
       end
     end
+  end
+  
+  def update_login_wait_progress(text)
+    WebView.execute_js('update_wait_progress("'+text+'");')
+  end
+  
+  def update_login_sync_progress(model, percent)
+    text = "Synchronizing:<br/>#{model} #{percent.to_s}%"
+    update_login_wait_progress(text)
   end
   
   def log_error(title, message, params={})
@@ -259,6 +308,14 @@ class SettingsController < Rho::RhoController
     end
   end
   
+  def show_popup(title, message)
+    Alert.show_popup({
+      :message => message,
+      :title => title,
+      :buttons => ["OK"]
+    })
+  end
+  
   def show_log
     Rho::RhoConfig.show_log
   end
@@ -268,6 +325,76 @@ class SettingsController < Rho::RhoController
   rescue Exception => e
     ExceptionUtil.log_exception_to_server(e)
     WebView.navigate ( url_for :action => :index )
+  end
+
+  def goto_opportunity_init_notify
+    WebView.navigate ( url_for :controller => :Opportunity, :action => :init_notify)
+  end
+  
+  def setup_sync_handlers
+    if Settings.is_init_sync?
+      set_init_sync_handlers
+    else
+      set_background_sync_handlers
+    end
+  end
+  
+  def set_sync_type(type)
+    # show_popup("Setting sync type to #{type}", "")
+    Settings.sync_type = type
+    setup_sync_handlers
+  end
+  
+  def set_background_sync_handlers
+    @on_sync_error = lambda {|*args|}
+    @on_sync_complete = lambda {|*args|}
+    @on_sync_in_progress = lambda {|*args|}
+    @on_sync_ok = lambda {|*args|}
+  end
+  
+  def set_init_sync_handlers
+    @on_sync_error = lambda {|*args| init_on_sync_error(*args)}
+    @on_sync_complete = lambda {|*args| init_on_sync_complete(*args)}
+    @on_sync_in_progress = lambda {|*args| init_on_sync_in_progress(*args)}
+    @on_sync_ok = lambda {|*args| init_on_sync_ok(*args)}
+  end
+  
+  def init_on_sync_error(*args)
+    raise ArgumentError, "Hash must be given as the first argument" unless args[0].is_a?(Hash)    
+    
+    error_source = args[0][:error_source]
+    
+    if Settings.initial_sync_completed?
+      #if it's a connection based error, 
+      if error_source == 'connection'
+        #navigate to opportunity init_notify controller action
+        goto_opportunity_init_notify
+      end
+    else
+      #TODO: determine if database reset is needed here
+      #we haven't successfully synced before, so navigate back to the login screen (but keep the credentials)
+      #show_popup("Sync error init handler", @params.inspect)
+      goto_login_override_auto("Sync error. Please try logging in again.")
+    end
+  end
+  
+  def init_on_sync_complete(*args)
+    #change sync handlers back to default
+    set_sync_type('background')
+    
+    Settings.initial_sync_complete = true
+    
+    #navigate to opportunity init_notify controller action
+    goto_opportunity_init_notify
+  end
+  
+  def init_on_sync_in_progress(*args)
+    percent = (@params["cumulative_count"].to_f/@params["total_count"].to_f * 100).to_i
+    update_login_sync_progress(@params['source_name'], percent)
+  end
+  
+  def init_on_sync_ok(*args)
+    update_login_sync_progress(@params['source_name'], 100)
   end
   
 end

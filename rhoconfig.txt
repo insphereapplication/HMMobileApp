@@ -1,7 +1,7 @@
 encrypt_database: 1
 
 # startup page for your application
-start_path = '/app/Settings/login'
+start_path = '/app/Settings/init'
 
 # path to the options page (in this case handled by javascript)
 options_path = '/app/Settings'
@@ -16,7 +16,7 @@ rhobundle_zip_pwd = nil
 # log level
 # 0-trace, 1-info(app level), 3-warnings, 4-errors
 # for production set to 3
-MinSeverity  = 3
+MinSeverity  = 1
 
 # enable copy log messages to standard output, useful for debugging
 LogToOutput = 1
@@ -50,11 +50,8 @@ LastVisitedPage = ''
 # sync server url, typically this will look like 'http://<hostname>:<port>/application'
 # for example: 'http://localhost:9292/application'
 
-#MODEL-OLD -- Old model url
-# syncserver = 'http://rhohub-insphere-c58af007.rhosync.com/application' 
-
 #MODEL -- for UAT/QA of new features from master
-syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
+#syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
 
 
 #DEV
@@ -64,7 +61,7 @@ syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
 #syncserver = 'http://localhost:9292/application'
 
 #PRODUCTION !!!
-#syncserver = 'https://rhohub-insphere-b3789b06.heroku.com/application'
+syncserver = 'https://rhohub-insphere-b3789b06.heroku.com/application'
 
 #sync_poll_interval=300
 
@@ -77,12 +74,12 @@ syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
 #full_screen = 1
 
 # disable the Android page loading progress bar
-#disable_loading_indication = 0
+#disable_loading_indication = 1
 
 # Port of the local (embedded) HTTP server. This parameter is mainly for debug purposes.
 # If not specified, application will use dynamically selected one.
 # WARNING!!! Remove this parameter before put application to production.
-local_server_port = 8080
+#local_server_port = 8080
 
 # show status bar on windows mobile. default 1
 #wm_show_statusbar = 1

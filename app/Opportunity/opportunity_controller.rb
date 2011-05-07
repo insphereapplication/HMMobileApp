@@ -11,32 +11,41 @@ class OpportunityController < Rho::RhoController
   $choosed = {}
 
   def sync_notify
-     Rho::NativeTabbar.switch_tab(0) 
-     WebView.navigate( 
+    if @params['status'] == 'ok' or @params['status'] == 'complete'
+      Rho::NativeTabbar.switch_tab(0) 
+      WebView.navigate( 
         url_for(
           :controller => 'Opportunity',
           :action => :index
         )
       )
+    end
   end
 	  
   # this callback is set once in the login_callback method of the Settings controller
   def init_notify
     System.set_push_notification("/app/Settings/push_notify", '')
     
-    SyncEngine.set_notification(
-      -1, "/app/Settings/sync_notify", 
-      "sync_complete=true"
-    )
-    
     tabbar = [
-      { :label => "Opportunities", :action => '/app/Opportunity', 
-        :icon => "/public/images/dollar.png", :web_bkg_color => 0x7F7F7F }, 
-      { :label => "Contacts",  :action => '/app/Contact',  
-        :icon => "/public/images/contacts.png", :reload => true },
-      { :label => "Settings",  :action => '/app/Settings',  
-        :icon => "/public/images/iphone/tabs/settings_tab_icon.png" },
+      { 
+        :label => "Opportunities", 
+        :action => '/app/Opportunity', 
+        :icon => "/public/images/dollar.png", 
+        :web_bkg_color => 0x7F7F7F 
+      }, 
+      { 
+        :label => "Contacts", 
+        :action => "callback:#{url_for(:controller => :Contact, :action => :show_all_contacts)}",  
+        :icon => "/public/images/contacts.png", 
+        :reload => true 
+      },
+      { 
+        :label => "Settings",  
+        :action => '/app/Settings',  
+        :icon => "/public/images/iphone/tabs/settings_tab_icon.png" 
+      }
     ]
+    
     Rho::NativeTabbar.create(tabbar)
     # Rho::NativeTabbar.create(:tabs => tabbar, :place_tabs_bottom => true)    
     Rho::NativeTabbar.switch_tab(0)

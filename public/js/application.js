@@ -20,7 +20,7 @@ function validate(){
       	alert('Please choose a callback date and time.');
 		return false;
    }
-   else { return true; }	
+   else { document.getElementById('phoneNumber').disabled=false; return true; }	
 }
 
 function validateAppt(){
@@ -28,7 +28,7 @@ function validateAppt(){
       	alert('Please choose an appointment date and time.');
 		return false;
    }
-   else { return true; }	
+   else { document.getElementById('location').disabled=false; return true; }	
 }
 
 function validateLost(){
@@ -257,12 +257,13 @@ function populatePhone(dropdown)
     for (var i=0; i<dropdown.options.length; i++){
       if (dropdown.options[i].selected==true){
         selected = dropdown.options[i].value;
-		text=dropdown.options[i].text;
+		text=document.getElementById("phoneList").text;
         break;
       }
     }
-	if (text='Ad-Hoc'){
+	if (selected.length < 6){
 		document.getElementById("phoneNumber").value=''
+		document.getElementById("phoneNumber").disabled = false
 	}
 	else{
 	document.getElementById("phoneNumber").value=selected;
@@ -311,16 +312,23 @@ function updateAddress()
     return true;
 }
 
+function enableLocation()
+{
+	var textbox = document.getElementById('location');
+	textbox.disabled=false;
+    return true;
+}
+
 function disablePhone(dropdown, phoneText)
 {
 	for (var i=0; i<dropdown.options.length; i++){
       if (dropdown.options[i].selected==true){
-        selected = dropdown.options[i].text;
+        selected = dropdown.options[i].value;
         break;
       }
     }
 
-	if (selected != "Ad-Hoc"){
+	if (selected.length > 1){
 		phoneText.disabled='true';
 	}
 	return true;
@@ -332,12 +340,12 @@ function enablePhone()
 	var phoneText = document.getElementById('phoneNumber');
 	for (var i=0; i<dropdown.options.length; i++){
       if (dropdown.options[i].selected==true){
-        selected = dropdown.options[i].text;
+        selected = dropdown.options[i].value;
         break;
       }
     }
 
-	if (selected == "Ad-Hoc"){
+	if (selected.length <= 1){
 		phoneText.disabled=false;
 	}
 	else

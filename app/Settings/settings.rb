@@ -16,6 +16,18 @@ class Settings
       has_persisted_credentials? && instance.credentials_verified
     end
     
+    def initial_sync_completed?
+      initial_sync_complete
+    end
+    
+    def is_background_sync?
+      sync_type == 'background'
+    end
+    
+    def is_init_sync?
+      sync_type == 'init'
+    end
+    
     def clear_credentials
       instance.login=nil
       instance.password=nil
@@ -35,6 +47,14 @@ class Settings
       instance.credentials_verified || false
     end
     
+    def initial_sync_complete
+      instance.initial_sync_complete || false
+    end
+    
+    def sync_type
+      instance.sync_type || 'background'
+    end
+    
     def login=(login)
       instance.login=login
       instance.save
@@ -47,6 +67,16 @@ class Settings
     
     def credentials_verified=(verified)
       instance.credentials_verified=verified
+      instance.save
+    end
+    
+    def initial_sync_complete=(value)
+      instance.initial_sync_complete=value
+      instance.save
+    end
+    
+    def sync_type=(value)
+      instance.sync_type=value
       instance.save
     end
     
