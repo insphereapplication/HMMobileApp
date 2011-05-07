@@ -27,12 +27,23 @@ class OpportunityController < Rho::RhoController
     System.set_push_notification("/app/Settings/push_notify", '')
     
     tabbar = [
-      { :label => "Opportunities", :action => '/app/Opportunity', 
-        :icon => "/public/images/dollar.png", :web_bkg_color => 0x7F7F7F }, 
-      { :label => "Contacts",  :action => '/app/Contact',  
-        :icon => "/public/images/contacts.png", :reload => true },
-      { :label => "Settings",  :action => '/app/Settings',  
-        :icon => "/public/images/iphone/tabs/settings_tab_icon.png" },
+      { 
+        :label => "Opportunities", 
+        :action => '/app/Opportunity', 
+        :icon => "/public/images/dollar.png", 
+        :web_bkg_color => 0x7F7F7F 
+      }, 
+      { 
+        :label => "Contacts", 
+        :action => "callback:#{url_for(:controller => :Contact, :action => :show_all_contacts)}",  
+        :icon => "/public/images/contacts.png", 
+        :reload => true 
+      },
+      { 
+        :label => "Settings",  
+        :action => '/app/Settings',  
+        :icon => "/public/images/iphone/tabs/settings_tab_icon.png" 
+      }
     ]
     
     Rho::NativeTabbar.create(tabbar)
@@ -42,6 +53,7 @@ class OpportunityController < Rho::RhoController
     $new_leads_nav_context = []
     $follow_ups_nav_context = []
     $appointments_nav_context = []
+    
   end
   
   def refresh_if_changed
