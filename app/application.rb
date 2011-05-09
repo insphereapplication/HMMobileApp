@@ -32,7 +32,7 @@ class AppApplication < Rho::RhoApplication
   
       # to stop sync background thread call 
       SyncEngine.stop_sync
-      SyncEngine.set_pollinterval(-1)
+      SyncEngine.set_pollinterval(0)
   
       # To stop local web server when application switched to 
       # background return "stop_local_server"
