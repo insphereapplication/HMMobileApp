@@ -130,10 +130,8 @@ class ActivityController < Rho::RhoController
       :cssi_statusdetail => @params['status_detail'],
       :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }
-    
-    if opportunity.is_new?
-      opp_attrs.merge!({:statuscode => 'No Contact Made'})
-    end
+
+    opp_attrs.merge!({:statuscode => 'No Contact Made'})
     
     db = ::Rho::RHO.get_src_db('Opportunity')
     db.start_transaction
@@ -156,9 +154,7 @@ class ActivityController < Rho::RhoController
       :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }
     
-    if opportunity.is_new? || opportunity.statuscode == 'No Contact Made'
-      opp_attrs.merge!({:statuscode => 'Contact Made'})
-    end
+    opp_attrs.merge!({:statuscode => 'Contact Made'})
     
     db = ::Rho::RHO.get_src_db('Opportunity')
     db.start_transaction

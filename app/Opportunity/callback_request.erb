@@ -26,28 +26,38 @@ document.getElementById('phoneList').focus();
 					<input type="hidden" name="appointments[]" value="<%= appt %>" />
 				<% end %>
 				<div data-role="fieldcontain">
-		            <label for="callback_datetime">Call Back Date and Time:</label>
-					<input id="callback_datetime" type="text" name="callback_datetime" readonly value="<%= $choosed['0'] %>"  onClick="PickDateCallbackChangeFocus();"></input>
-				    <label for="phonelist">Phone Type:</label>            
-					<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();">
-						<% @opportunity.contact.phone_numbers.each do |type, number| %>
-							<% if @opportunity.contact.cssi_preferredphone == type %>
-								<option selected value="<%= number %>"><%= type %></option>
-							<% else %>
-								<option value="<%= number %>"><%= type %></option>
+					<div data-role="fieldcontain">
+		            	<label for="callback_datetime">Call Back Date and Time:</label>
+						<input id="callback_datetime" type="text" name="callback_datetime" readonly value="<%= $choosed['0'] %>"  onClick="PickDateCallbackChangeFocus();"></input>
+					</div>
+					<div data-role="fieldcontain">
+					    <label for="phonelist">Phone Type:</label>            
+						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();">
+							<% @opportunity.contact.phone_numbers.each do |type, number| %>
+								<% if @opportunity.contact.cssi_preferredphone == type %>
+									<option selected value="<%= number %>"><%= type %></option>
+								<% else %>
+									<option value="<%= number %>"><%= type %></option>
+								<% end %>
 							<% end %>
+								<option value='&nbsp;'>Ad-Hoc</option>
+						</select>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="phone_number" class="fieldLabel">Phone Number:</label>
+						<% if System::get_property('platform') == 'APPLE' %>
+			            	<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" id="phoneNumber" name="phone_number" value="" /><br />
+						<% else %>
+							<input maxlength="14" type="tel" id="phoneNumber" name="phone_number" onkeypress="if(event.keyCode==13){return false;}" /><br />
 						<% end %>
-							<option value='&nbsp;'>Ad-Hoc</option>
-					</select>
-					<label for="phone_number" class="fieldLabel">Phone Number:</label>
-					<% if System::get_property('platform') == 'APPLE' %>
-		            	<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" id="phoneNumber" name="phone_number" value="" /><br />
-					<% else %>
-						<input maxlength="14" type="tel" id="phoneNumber" name="phone_number" onkeypress="if(event.keyCode==13){return false;}" /><br />
-					<% end %>
-					<label for="notetext">Notes:</label>
-					<textarea cols="40" rows="8" name="notetext" id="notetext"></textarea>
-					<input type="submit" class="standardButton" onclick="return validate();" value="Create Call Back"/>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="notetext">Notes:</label>
+						<textarea cols="40" rows="8" name="notetext" id="notetext"></textarea>
+					</div>
+					<div data-role="fieldcontain">
+						<input type="submit" class="standardButton" onclick="return validate();" value="Create Call Back"/>
+					</div>
 				</div>
 				<% unless System::get_property('platform') == 'Blackberry'%>
 				<%end%>
