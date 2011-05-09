@@ -214,15 +214,20 @@ class SettingsController < Rho::RhoController
     sourcename = @params['source_name'] ? @params['source_name'] : ""
   
     status = @params['status'] ? @params['status'] : ""      
-      
-    if status == "complete"   
+    
+    puts "&&&&&&&&&&&&&&&&&&&&&& STATUS = #{status.inspect} &&&&&&&&&&&&&&&&&&&&&&"
+    
+    if status == "complete"
+      if sourcename == 'AppInfo'
+        check_force_upgrade
+      end   
       @on_sync_complete.call
     elsif status == "ok"
+      if sourcename == 'AppInfo'
+        check_force_upgrade
+      end
+      
       if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
-        if sourcename == 'AppInfo'
-          check_force_upgrade
-        end
-        
         klass = Object.const_get(@params['source_name'])
         klass.local_changed=true if klass && klass.respond_to?(:local_changed=)
       end
@@ -403,16 +408,35 @@ class SettingsController < Rho::RhoController
   
   def check_force_upgrade
     min_required_version = AppInfo.instance[0].min_required_version
-    upgrade_url = AppInfo.instance[0].upgrade_url
+    apple_upgrade_url = AppInfo.instance[0].apple_upgrade_url
+    android_upgrade_url = AppInfo.instance[0].android_upgrade_url
     app_version = Rho::RhoConfig.app_version
     
     puts "*** Client should be running at least version #{min_required_version} ***"
     puts "*** Client is running #{app_version} ***"
-    puts "*** Upgrade URL is #{upgrade_url} ***"
+    puts "*** Apple Upgrade URL is #{apple_upgrade_url} ***"
+    puts "*** Android Upgrade URL is #{android_upgrade_url} ***"
     
-    if min_required_version > app_version
+    minAppVersion = AppInfo.instance[0].min_required_version
+    currentAppVersion = Rho::RhoConfig.app_version.split(".")
+    puts '************************************************************************** AppInfo: ' + minAppVersion + ' Curr ' + Rho::RhoConfig.app_version
+    needs_upgrade = false
+    minAppVersion.split(".").each_with_index do |ver, i|
+      puts 'Min Version: ' + ver + 'Cur Version: ' + currentAppVersion[i]
+      if ver > currentAppVersion[i]
+        puts 'Min greater than current'
+        needs_upgrade = true
+        break
+      else
+        puts 'Min less or equal than current'
+      end
+    end
+      
+    if needs_upgrade        
+    # if min_required_version > app_version
       puts "*** Client needs to upgrade ***"
       SyncEngine.stop_sync
+      SyncEngine.set_pollinterval(-1)
       Alert.show_popup(
       {
         :message => "You will required to upgrade to version #{min_required_version}",
@@ -431,8 +455,18 @@ class SettingsController < Rho::RhoController
     title = @params[:button_title]
     index = @params[:button_index]
     
-    upgrade_url = AppInfo.instance[0].upgrade_url
-    WebView.navigate ( upgrade_url )
+    platform = System.get_property('platform')
+    
+    if platform == 'APPLE'
+      upgrade_url = AppInfo.instance[0].apple_upgrade_url
+    elsif platform == 'ANDROID'
+      upgrade_url = AppInfo.instance[0].android_upgrade_url
+    end
+    
+    puts "*** Upgrade url = #{upgrade_url} ***"
+    
+    System.open_url( upgrade_url )
+    System.exit
   end
   
 end
