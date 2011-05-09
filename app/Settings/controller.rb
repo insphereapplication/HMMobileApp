@@ -208,7 +208,7 @@ class SettingsController < Rho::RhoController
     #     ERR_CANCELBYUSER = 10
     #     ERR_SYNCVERSION = 11
     #     ERR_GEOLOCATION = 12
-    
+
     setup_sync_handlers
     
     sourcename = @params['source_name'] ? @params['source_name'] : ""
@@ -219,6 +219,10 @@ class SettingsController < Rho::RhoController
       @on_sync_complete.call
     elsif status == "ok"
       if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
+        if sourcename == 'AppInfo'
+          check_force_upgrade
+        end
+        
         klass = Object.const_get(@params['source_name'])
         klass.local_changed=true if klass && klass.respond_to?(:local_changed=)
       end
@@ -395,6 +399,40 @@ class SettingsController < Rho::RhoController
   
   def init_on_sync_ok(*args)
     update_login_sync_progress(@params['source_name'], 100)
+  end
+  
+  def check_force_upgrade
+    min_required_version = AppInfo.instance[0].min_required_version
+    upgrade_url = AppInfo.instance[0].upgrade_url
+    app_version = Rho::RhoConfig.app_version
+    
+    puts "*** Client should be running at least version #{min_required_version} ***"
+    puts "*** Client is running #{app_version} ***"
+    puts "*** Upgrade URL is #{upgrade_url} ***"
+    
+    if min_required_version > app_version
+      puts "*** Client needs to upgrade ***"
+      SyncEngine.stop_sync
+      Alert.show_popup(
+      {
+        :message => "You will required to upgrade to version #{min_required_version}",
+        :title => 'Update Required!',
+        :buttons => ["OK"],
+        :callback => url_for( :action => :on_dismiss_popup )
+      } )
+       
+    else
+      puts "*** Client does not need to upgrade *** "
+    end
+  end
+  
+  def on_dismiss_popup
+    id = @params[:button_id]
+    title = @params[:button_title]
+    index = @params[:button_index]
+    
+    upgrade_url = AppInfo.instance[0].upgrade_url
+    WebView.navigate ( upgrade_url )
   end
   
 end
