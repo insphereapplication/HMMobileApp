@@ -13,7 +13,6 @@ android:
     notifications: yes
   capabilities: 
   - network_state
-  - phone
   - push
   - vibrate
   version: 2.3.3
