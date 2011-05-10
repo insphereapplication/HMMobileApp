@@ -16,8 +16,13 @@
 					<% if activity.type == "Appointment" %>
 						<p class="ui-li-aside"><strong><%= to_datetime(activity.scheduledstart) %></strong></p>
 					<% elsif activity.type == "PhoneCall" %>
-						<p class="ui-li-aside"><strong><%= to_datetime(activity.scheduledend) %></strong></p>
+						<% if !(activity.scheduledend.nil?)%>
+							<p class="ui-li-aside"><strong>Due: <%= to_datetime(activity.scheduledend) %></strong></p>
+						<% else %>
+							<p class="ui-li-aside"><strong><%= to_datetime(activity.createdon) %></strong></p>
+						<% end %>
 					<% end %>
+					
 					<% if activity.statuscode %>
 						<p><%= activity.statuscode%></p>
 					<% end %>
