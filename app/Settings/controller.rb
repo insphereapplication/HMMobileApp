@@ -300,6 +300,14 @@ class SettingsController < Rho::RhoController
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
         retry_login
+      elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/403 Forbidden/].nil?
+        #proxy returned a 403, need to purge the database and log the user out
+        log_error("Error: 403 Forbidden from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
+        SyncEngine.set_pollinterval(-1)
+        SyncEngine.stop_sync
+        msg = "The user name you entered is not authorized to use this application."
+        Rhom::Rhom.database_fullclient_reset_and_logout
+        goto_login(msg)
       else
         log_error("Unhandled error in sync_notify: #{err_code}", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         @on_sync_error.call({:error_source => 'unknown', :error_code => err_code})
