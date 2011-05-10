@@ -66,6 +66,8 @@ class SettingsController < Rho::RhoController
 
   def login_callback
     errCode = @params['error_code'].to_i
+    httpErrCode = @params['error_message'].split[0]
+
     if errCode == 0
       
       #setup the sync event handlers for the application init sequence
@@ -88,13 +90,21 @@ class SettingsController < Rho::RhoController
         @msg = @params['error_message']
       end
       
-      @msg ||= "The user name or password you entered is not valid"    
+      if httpErrCode == "403" # User is not authorized to use the mobile device, so we need to purge the local database
+        @msg ||= "The user name you entered is not authorized to use this application."
+        Rhom::Rhom.database_fullclient_reset_and_logout
+      else
+        @msg ||= "The user name or password you entered is not valid"    
+      end
+      
       goto_login(@msg)
     end
   end
   
   def retry_login_callback
     errCode = @params['error_code'].to_i
+    httpErrCode = @params['error_message'].split[0]
+    
     if errCode == 0
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
@@ -111,7 +121,13 @@ class SettingsController < Rho::RhoController
         @msg = @params['error_message']
       end
       
-      @msg ||= "The user name or password you entered is not valid"    
+      if httpErrCode == "403" # User is not authorized to use the mobile device, so we need to purge the local database
+        @msg ||= "The user name you entered is not authorized to use this application."
+        Rhom::Rhom.database_fullclient_reset_and_logout
+      else
+        @msg ||= "The user name or password you entered is not valid"    
+      end
+        
       goto_login(@msg)
     end
   end
@@ -213,9 +229,7 @@ class SettingsController < Rho::RhoController
     
     sourcename = @params['source_name'] ? @params['source_name'] : ""
   
-    status = @params['status'] ? @params['status'] : ""      
-    
-    puts "&&&&&&&&&&&&&&&&&&&&&& STATUS = #{status.inspect} &&&&&&&&&&&&&&&&&&&&&&"
+    status = @params['status'] ? @params['status'] : ""
     
     if status == "complete"
       if sourcename == 'AppInfo'
@@ -331,6 +345,17 @@ class SettingsController < Rho::RhoController
     Rho::RhoConfig.show_log
   end
   
+  # def mail_log
+  #     appBasePath = Rho::RhoApplication::get_base_app_path()
+  #     appBasePath.slice!('apps/')
+  #     rhoLogName = File.join(appBasePath, 'RhoLog.txt')
+  #     if File.exists?(rhoLogName)
+  #       show_popup("Mail Log", rhoLogName + " exists")
+  #     else
+  #       show_popup("Mail Log", rhoLogName + " does not exist")
+  #     end
+  #   end # mail_log
+  
   def test_exception
     raise "bang"
   rescue Exception => e
@@ -422,16 +447,14 @@ class SettingsController < Rho::RhoController
     
     minAppVersion = AppInfo.instance[0].min_required_version
     currentAppVersion = Rho::RhoConfig.app_version.split(".")
-    puts '************************************************************************** AppInfo: ' + minAppVersion + ' Curr ' + Rho::RhoConfig.app_version
+    puts '*** Version check -- AppInfo: ' + minAppVersion + ' Curr ' + Rho::RhoConfig.app_version + '***'
     needs_upgrade = false
     minAppVersion.split(".").each_with_index do |ver, i|
-      puts 'Min Version: ' + ver + 'Cur Version: ' + currentAppVersion[i]
+      # puts 'Min Version: ' + ver + 'Cur Version: ' + currentAppVersion[i]
       if ver > currentAppVersion[i]
-        puts 'Min greater than current'
         needs_upgrade = true
         break
       else
-        puts 'Min less or equal than current'
       end
     end
       
