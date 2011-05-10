@@ -66,6 +66,8 @@ class SettingsController < Rho::RhoController
 
   def login_callback
     errCode = @params['error_code'].to_i
+    httpErrCode = @params['error_message'].split[0]
+
     if errCode == 0
       
       #setup the sync event handlers for the application init sequence
@@ -88,13 +90,21 @@ class SettingsController < Rho::RhoController
         @msg = @params['error_message']
       end
       
-      @msg ||= "The user name or password you entered is not valid"    
+      if httpErrCode == "403" # User is not authorized to use the mobile device, so we need to purge the local database
+        @msg ||= "The user name you entered is not authorized to use this application."
+        Rhom::Rhom.database_fullclient_reset_and_logout
+      else
+        @msg ||= "The user name or password you entered is not valid"    
+      end
+      
       goto_login(@msg)
     end
   end
   
   def retry_login_callback
     errCode = @params['error_code'].to_i
+    httpErrCode = @params['error_message'].split[0]
+    
     if errCode == 0
       SyncEngine.set_pollinterval($poll_interval)
       SyncEngine.dosync
@@ -111,7 +121,13 @@ class SettingsController < Rho::RhoController
         @msg = @params['error_message']
       end
       
-      @msg ||= "The user name or password you entered is not valid"    
+      if httpErrCode == "403" # User is not authorized to use the mobile device, so we need to purge the local database
+        @msg ||= "The user name you entered is not authorized to use this application."
+        Rhom::Rhom.database_fullclient_reset_and_logout
+      else
+        @msg ||= "The user name or password you entered is not valid"    
+      end
+        
       goto_login(@msg)
     end
   end
@@ -208,16 +224,23 @@ class SettingsController < Rho::RhoController
     #     ERR_CANCELBYUSER = 10
     #     ERR_SYNCVERSION = 11
     #     ERR_GEOLOCATION = 12
-    
+
     setup_sync_handlers
     
     sourcename = @params['source_name'] ? @params['source_name'] : ""
   
-    status = @params['status'] ? @params['status'] : ""      
-      
-    if status == "complete"   
+    status = @params['status'] ? @params['status'] : ""
+    
+    if status == "complete"
+      if sourcename == 'AppInfo'
+        check_force_upgrade
+      end   
       @on_sync_complete.call
     elsif status == "ok"
+      if sourcename == 'AppInfo'
+        check_force_upgrade
+      end
+      
       if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
         klass = Object.const_get(@params['source_name'])
         klass.local_changed=true if klass && klass.respond_to?(:local_changed=)
@@ -322,6 +345,17 @@ class SettingsController < Rho::RhoController
     Rho::RhoConfig.show_log
   end
   
+  # def mail_log
+  #     appBasePath = Rho::RhoApplication::get_base_app_path()
+  #     appBasePath.slice!('apps/')
+  #     rhoLogName = File.join(appBasePath, 'RhoLog.txt')
+  #     if File.exists?(rhoLogName)
+  #       show_popup("Mail Log", rhoLogName + " exists")
+  #     else
+  #       show_popup("Mail Log", rhoLogName + " does not exist")
+  #     end
+  #   end # mail_log
+  
   def test_exception
     raise "bang"
   rescue Exception => e
@@ -398,6 +432,67 @@ class SettingsController < Rho::RhoController
   
   def init_on_sync_ok(*args)
     update_login_sync_progress(@params['source_name'], 100)
+  end
+  
+  def check_force_upgrade
+    min_required_version = AppInfo.instance[0].min_required_version
+    apple_upgrade_url = AppInfo.instance[0].apple_upgrade_url
+    android_upgrade_url = AppInfo.instance[0].android_upgrade_url
+    app_version = Rho::RhoConfig.app_version
+    
+    puts "*** Client should be running at least version #{min_required_version} ***"
+    puts "*** Client is running #{app_version} ***"
+    puts "*** Apple Upgrade URL is #{apple_upgrade_url} ***"
+    puts "*** Android Upgrade URL is #{android_upgrade_url} ***"
+    
+    minAppVersion = AppInfo.instance[0].min_required_version
+    currentAppVersion = Rho::RhoConfig.app_version.split(".")
+    puts '*** Version check -- AppInfo: ' + minAppVersion + ' Curr ' + Rho::RhoConfig.app_version + '***'
+    needs_upgrade = false
+    minAppVersion.split(".").each_with_index do |ver, i|
+      # puts 'Min Version: ' + ver + 'Cur Version: ' + currentAppVersion[i]
+      if ver > currentAppVersion[i]
+        needs_upgrade = true
+        break
+      else
+      end
+    end
+      
+    if needs_upgrade        
+    # if min_required_version > app_version
+      puts "*** Client needs to upgrade ***"
+      SyncEngine.stop_sync
+      SyncEngine.set_pollinterval(-1)
+      Alert.show_popup(
+      {
+        :message => "You will required to upgrade to version #{min_required_version}",
+        :title => 'Update Required!',
+        :buttons => ["OK"],
+        :callback => url_for( :action => :on_dismiss_popup )
+      } )
+       
+    else
+      puts "*** Client does not need to upgrade *** "
+    end
+  end
+  
+  def on_dismiss_popup
+    id = @params[:button_id]
+    title = @params[:button_title]
+    index = @params[:button_index]
+    
+    platform = System.get_property('platform')
+    
+    if platform == 'APPLE'
+      upgrade_url = AppInfo.instance[0].apple_upgrade_url
+    elsif platform == 'ANDROID'
+      upgrade_url = AppInfo.instance[0].android_upgrade_url
+    end
+    
+    puts "*** Upgrade url = #{upgrade_url} ***"
+    
+    System.open_url( upgrade_url )
+    System.exit
   end
   
 end

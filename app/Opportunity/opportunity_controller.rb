@@ -46,8 +46,8 @@ class OpportunityController < Rho::RhoController
       }
     ]
     
-    Rho::NativeTabbar.create(tabbar)
-    # Rho::NativeTabbar.create(:tabs => tabbar, :place_tabs_bottom => true)    
+    # Rho::NativeTabbar.create(tabbar)
+    Rho::NativeTabbar.create(:tabs => tabbar, :place_tabs_bottom => true)    
     Rho::NativeTabbar.switch_tab(0)
     
     $new_leads_nav_context = []
