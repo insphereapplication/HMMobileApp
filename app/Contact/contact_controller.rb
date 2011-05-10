@@ -7,6 +7,8 @@ require 'rho/rhotabbar'
 class ContactController < Rho::RhoController
   include BrowserHelper
 
+  $first_render = true
+
   #GET /Contact
   def index
     $tab = 1
@@ -14,8 +16,11 @@ class ContactController < Rho::RhoController
   end
   
   def show_all_contacts
-    if Contact.local_changed? || ContactController.is_first_render?
+    puts "CONTACT LOCAL IS CHANGED: #{Contact.local_changed?}"
+    if Contact.local_changed? || $first_render
       WebView.navigate(url_for :controller => :Contact, :action => :index)
+      Contact.local_changed = false
+      $first_render = false
     end
   end
   
@@ -28,7 +33,7 @@ class ContactController < Rho::RhoController
   def get_contacts_page
     @contacts = Contact.all_open(@params['page'].to_i)
     puts @contacts.inspect
-    @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.chars.first}
+    @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
     render :action => :contact_page, :back => 'callback:'
   end
 

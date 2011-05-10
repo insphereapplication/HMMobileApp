@@ -21,6 +21,8 @@ class AppApplication < Rho::RhoApplication
   
   def on_activate_app
       # put your application activation code here
+      #if user is logged in, poll interval in seconds
+      $poll_interval = 60
       SyncEngine.set_pollinterval($poll_interval)
   end
   
@@ -30,28 +32,28 @@ class AppApplication < Rho::RhoApplication
   
       # to stop sync background thread call 
       SyncEngine.stop_sync
-      SyncEngine.set_pollinterval(-1)
+      SyncEngine.set_pollinterval(0)
   
       # To stop local web server when application switched to 
       # background return "stop_local_server"
       # return "stop_local_server" 
   end
   
-  # def on_ui_created
-  #   puts "calling ui_created!!!"
-  #     # put your application UI creation code here
-  #     # for example, create tab bar:
-  #     # NativeBar.create(Rho::RhoApplication::TABBAR_TYPE, tabs)
-  #     
-  # end
-  # 
-  # def on_ui_destroyed
-  #   puts "calling ui_destroyed!"
-  #     # put your code here
-  #     # example:
-  #     # @forbid_ui_operations = true
-  # 
-  # end
+  def on_ui_created
+    puts "calling ui_created!!!"
+    $first_render = true
+      # put your application UI creation code here
+      # for example, create tab bar:
+      # NativeBar.create(Rho::RhoApplication::TABBAR_TYPE, tabs)
+      super.on_ui_created()      
+  end
+  
+  def on_ui_destroyed
+    puts "calling ui_destroyed!"
+      # put your code here
+      # example:
+      # @forbid_ui_operations = true
+  end
   
   
   
