@@ -5,11 +5,11 @@ module ChangedFlag
   
   module ClassMethods
     def local_changed=(changed)
-      @@local_changed=changed
+      @local_changed=changed
     end
     
     def local_changed?
-      @@local_changed ||= false
+      @local_changed ||= false
     end
   end
 end
