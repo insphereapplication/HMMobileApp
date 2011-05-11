@@ -125,13 +125,15 @@ class Opportunity
   
   def notes
     Note.find_by_sql(%Q{
-        select n.* from Note n where #{is_owned_by_this_opportunity_sql} or (
-          n.parent_type = 'PhoneCall' and n.parent_id in (
-            select pc.object from Activity pc where pc.type='PhoneCall' and 
-            pc.parent_type='Opportunity' and 
-            pc.parent_id='#{object}'
-          )
-        ) order by datetime(n.createdon) desc
+        select n.* 
+        from Note n 
+        where #{is_owned_by_this_opportunity_sql} 
+        or n.parent_id in (
+          select ac.object from Activity ac where 
+          ac.parent_type='Opportunity'
+          and ac.parent_id='#{object}'
+        )
+        order by datetime(n.createdon) desc
     })
   end
   

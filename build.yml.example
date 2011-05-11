@@ -7,7 +7,7 @@ build: debug
 bbver: 4.6
 android: 
   emulator: rhoandroid
-  android_title: 0
+  android_title: 1 #Set to 1 to display loading progress bar on Android
   push:
     sender: insphereapplication@insphereis.com
     notifications: yes
