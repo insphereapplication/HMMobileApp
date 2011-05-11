@@ -71,7 +71,7 @@ class SettingsController < Rho::RhoController
       set_sync_type('init')
       
       Settings.credentials_verified = true
-      SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVALConstants::DEFAULT_POLL_INTERVAL)
+      SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
       SyncEngine.dosync
       update_login_wait_progress("Login successful, starting sync...")
     elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?

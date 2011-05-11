@@ -10,6 +10,7 @@ class AppApplication < Rho::RhoApplication
     super
     @default_menu = {}
     
+    SyncEngine.set_ssl_verify_peer(false)
     SyncEngine.set_notification(-1, "/app/Settings/sync_notify", '') 
   end
   
@@ -40,10 +41,10 @@ class AppApplication < Rho::RhoApplication
   def on_ui_created
     puts "calling ui_created!!!"
     $first_render = true
-      # put your application UI creation code here
-      # for example, create tab bar:
-      # NativeBar.create(Rho::RhoApplication::TABBAR_TYPE, tabs)
-      super.on_ui_created()      
+    # put your application UI creation code here
+    # for example, create tab bar:
+    # NativeBar.create(Rho::RhoApplication::TABBAR_TYPE, tabs)
+    super
   end
   
   def on_ui_destroyed
