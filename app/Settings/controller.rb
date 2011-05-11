@@ -248,7 +248,7 @@ class SettingsController < Rho::RhoController
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
         Settings.clear_credentials
-        goto_login
+        goto_login("Unknown client, logging you back in.")
       elsif err_code == Rho::RhoError::ERR_NETWORK
         #leave ':send_to_exceptional => false' alone until infinite loop issue is fixed for clients without a network connection
         log_error("Network connectivity lost", Rho::RhoError.err_message(err_code) + " #{@params.inspect}", {:send_to_exceptional => false})
@@ -258,19 +258,18 @@ class SettingsController < Rho::RhoController
         
         #send them back to login because initial sync did not complete
         @on_sync_error.call({:error_source => 'connection'})
-          
       elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)      
         log_error("RhoSync error: client is not logged in / unauthorized", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
-        retry_login   
+        retry_login
       elsif err_code == Rho::RhoError::ERR_REMOTESERVER && @params['error_message'] == SESSION_ERROR_MSG
         # Rhodes is sending the server a token for a non-existent session. Time to start over.
-        log_error("RhoSync error: unknown session", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         Rhom::Rhom.database_fullclient_reset_and_logout
+        log_error("RhoSync error: unknown session", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
-        goto_login
+        goto_login("Unknown session, loging in again.")
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/401 Unauthorized/].nil?
         #proxy returned a 401, need to re-login
         log_error("Error: 401 Unauthorized from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
