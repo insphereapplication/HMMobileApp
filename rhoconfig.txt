@@ -1,5 +1,3 @@
-encrypt_database: 1
-
 # startup page for your application
 start_path = '/app/Settings/init'
 
@@ -16,7 +14,7 @@ rhobundle_zip_pwd = nil
 # log level
 # 0-trace, 1-info(app level), 3-warnings, 4-errors
 # for production set to 3
-MinSeverity  = 1
+MinSeverity  = 3
 
 # enable copy log messages to standard output, useful for debugging
 LogToOutput = 1
@@ -99,7 +97,7 @@ syncserver = 'https://rhosync.insphereis.net/application'
 #wm_show_statusbar = 1
 
 # disable screen rotation (enabled by default) - disable possible for ANDROID and iPhone ONLY
-disable_screen_rotation = 1
+#disable_screen_rotation = 1
 
 # disable close app when pressing back on home screen on blackberry
 #bb_disable_closebyback = 0

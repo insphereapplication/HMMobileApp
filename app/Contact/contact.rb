@@ -40,7 +40,7 @@ class Contact
       select distinct(c.contactid), c.* from Contact c, Opportunity o 
       where o.contact_id=c.contactid and 
       o.statecode not in ('Won', 'Lost')
-      order by c.lastname
+      order by LOWER(c.lastname)
       #{get_pagination_sql(page, page_size)}
     })
   end
