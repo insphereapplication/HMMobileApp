@@ -21,7 +21,7 @@ class AppApplication < Rho::RhoApplication
   
   def on_activate_app
       # put your application activation code here
-      SyncEngine.set_pollinterval($poll_interval)
+      SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
   end
   
   def on_deactivate_app

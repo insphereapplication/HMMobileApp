@@ -158,6 +158,8 @@ module DateUtil
 end
 
 module Constants
+  DEFAULT_POLL_INTERVAL = 60
+  
   OTHER_LOST_REASONS = [
     "Covered By Competitor",
     "Wrong Number",

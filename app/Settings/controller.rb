@@ -4,9 +4,6 @@ require 'rho/rhoerror'
 require 'helpers/browser_helper'
 require 'rho/rhotabbar'
 
-#if user is logged in, poll interval in seconds
-$poll_interval = 60
-
 class SettingsController < Rho::RhoController
   include BrowserHelper
   
@@ -72,14 +69,14 @@ class SettingsController < Rho::RhoController
       set_sync_type('init')
       
       Settings.credentials_verified = true
-      SyncEngine.set_pollinterval($poll_interval)
+      SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVALConstants::DEFAULT_POLL_INTERVAL)
       SyncEngine.dosync
       update_login_wait_progress("Login successful, starting sync...")
     elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
       #we've got cached, verified credentials, so proceed with the usual initialization process
-      SyncEngine.set_pollinterval($poll_interval)
+      SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
       goto_opportunity_init_notify
     else
       Settings.clear_credentials
@@ -96,14 +93,14 @@ class SettingsController < Rho::RhoController
   def retry_login_callback
     errCode = @params['error_code'].to_i
     if errCode == 0
-      SyncEngine.set_pollinterval($poll_interval)
+      SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
       SyncEngine.dosync
     elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
       #at this point, we've got cached, verified credentials but we can't connect to RhoSync. 
       #don't throw an error, but reinstate poll interval so that we continue to check for connectivity
-      SyncEngine.set_pollinterval($poll_interval)   
+      SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)   
     else
       Settings.clear_credentials
       SyncEngine.set_pollinterval(0)
