@@ -353,17 +353,6 @@ class SettingsController < Rho::RhoController
     Rho::RhoConfig.show_log
   end
   
-  # def mail_log
-  #     appBasePath = Rho::RhoApplication::get_base_app_path()
-  #     appBasePath.slice!('apps/')
-  #     rhoLogName = File.join(appBasePath, 'RhoLog.txt')
-  #     if File.exists?(rhoLogName)
-  #       show_popup("Mail Log", rhoLogName + " exists")
-  #     else
-  #       show_popup("Mail Log", rhoLogName + " does not exist")
-  #     end
-  #   end # mail_log
-  
   def test_exception
     raise "bang"
   rescue Exception => e
