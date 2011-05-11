@@ -353,6 +353,20 @@ class SettingsController < Rho::RhoController
     Rho::RhoConfig.show_log
   end
   
+  def save_log_config
+    RhoConf.set_property_by_name('MinSeverity', @params['minSeverity'])
+    RhoConf.set_property_by_name('MaxLogFileSize', @params['logFileSize'])
+    
+    minSeverity = RhoConf.get_property_by_name('MinSeverity')
+    logFileSize = RhoConf.get_property_by_name('MaxLogFileSize')
+    
+    alertMsg = "MinSeverity = #{minSeverity} and LogFileSize = #{logFileSize}"
+    Alert.show_popup( alertMsg )
+    
+    @msg = "Log config changes have been saved."
+    redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}  
+  end
+  
   def test_exception
     raise "bang"
   rescue Exception => e
