@@ -21,9 +21,7 @@ class AppApplication < Rho::RhoApplication
   
   def on_activate_app
       # put your application activation code here
-      #if user is logged in, poll interval in seconds
-      $poll_interval = 60
-      SyncEngine.set_pollinterval($poll_interval)
+      SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
   end
   
   def on_deactivate_app
