@@ -400,4 +400,8 @@ class SettingsController < Rho::RhoController
     update_login_sync_progress(@params['source_name'], 100)
   end
   
+  def close_app
+    System.exit
+  end
+    
 end
