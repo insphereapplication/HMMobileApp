@@ -260,6 +260,7 @@ class OpportunityController < Rho::RhoController
   def activity_summary
     @opportunity = Opportunity.find(@params['id'])
     @activities = @opportunity.activities
+    @activity_list = @opportunity.activity_list
     if @opportunity
       render :action => :activity_summary, :back => 'callback:',
               :layout => 'layout_jquerymobile',
