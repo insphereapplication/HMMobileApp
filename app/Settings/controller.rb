@@ -268,7 +268,7 @@ class SettingsController < Rho::RhoController
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
         Settings.clear_credentials
-        goto_login("Unknown client, logging you back in.")
+        goto_login("Unknown client, logging in again.")
       elsif err_code == Rho::RhoError::ERR_NETWORK
         #leave ':send_to_exceptional => false' alone until infinite loop issue is fixed for clients without a network connection
         log_error("Network connectivity lost", Rho::RhoError.err_message(err_code) + " #{@params.inspect}", {:send_to_exceptional => false})
@@ -289,7 +289,7 @@ class SettingsController < Rho::RhoController
         log_error("RhoSync error: unknown session", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         SyncEngine.set_pollinterval(-1)
         SyncEngine.stop_sync
-        goto_login("Unknown session, loging in again.")
+        goto_login("Unknown session, logging in again.")
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/401 Unauthorized/].nil?
         #proxy returned a 401, need to re-login
         log_error("Error: 401 Unauthorized from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
@@ -470,7 +470,7 @@ class SettingsController < Rho::RhoController
       SyncEngine.set_pollinterval(-1)
       Alert.show_popup(
       {
-        :message => "You will required to upgrade to version #{min_required_version}",
+        :message => "Please upgrade to version #{min_required_version}",
         :title => 'Update Required!',
         :buttons => ["OK"],
         :callback => url_for( :action => :on_dismiss_popup )
