@@ -74,20 +74,27 @@ class Opportunity
   
   # TODO: not an optimal query. find a better one.
   def self.by_last_activities(page=nil, page_size=DEFAULT_PAGE_SIZE)
+    #Find all opportunities that have activities of which none are open or scheduled
+    #Also include opportunities that have no activities and have a status code != "New Opportunity"
+    #Sort by the opportunity's last activity date
     find_by_sql(%Q{
-      select * from Opportunity o where o.statecode not in ('Won', 'Lost') and 
-        exists (
+      select * from Opportunity o 
+        where o.statecode not in ('Won', 'Lost') 
+        and (
+          o.statuscode <> 'New Opportunity'
+          or exists (
             select a1.object from Activity a1 where 
             a1.parent_type='Opportunity' and 
             a1.parent_id=o.object and 
             (a1.statecode not in ('Open', 'Scheduled') or a1.scheduledend = '' or a1.scheduledend is null)
-          ) and 
-        not exists (
-            select a2.object from Activity a2 where
-            a2.parent_type='Opportunity' and 
-            a2.parent_id=o.object and
-            (a2.statecode in ('Open', 'Scheduled') and a2.scheduledend is not null and a2.scheduledend <> '')
           )
+        )
+        and not exists (
+          select a2.object from Activity a2 where
+          a2.parent_type='Opportunity' and 
+          a2.parent_id=o.object and
+          (a2.statecode in ('Open', 'Scheduled') and a2.scheduledend is not null and a2.scheduledend <> '')
+        )
       order by datetime(o.cssi_lastactivitydate) asc
       #{get_pagination_sql(page, page_size)}
     })
