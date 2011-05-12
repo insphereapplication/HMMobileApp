@@ -45,9 +45,6 @@ logname='InsiteMobile-rhodes'
 KeepTrackOfLastVisitedPage = 0 
 LastVisitedPage = ''
 
-# sync server url, typically this will look like 'http://<hostname>:<port>/application'
-# for example: 'http://localhost:9292/application'
-
 #MODEL_RHOHUB -- for UAT/QA of new features from master
 # syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
 

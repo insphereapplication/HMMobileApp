@@ -42,26 +42,31 @@ function setNavContext(context){
 }
 
 function loadNewLeads(){
-	newLeadBuckets = getLinkedBucketList([ { opportunity_method: 'todays_new_leads',          list_selector: 'span#todays-leads-list',         next: null},
-										   { opportunity_method: 'previous_days_new_leads',   list_selector: 'span#previous-days-leads-list',  next: null}]);
+	newLeadBuckets = getLinkedBucketList([ 
+		{ opportunity_method: 'todays_new_leads', 			 list_selector: 'span#todays-leads-list', 				next: null},
+		{ opportunity_method: 'previous_days_new_leads', list_selector: 'span#previous-days-leads-list',  next: null}
+	]);
 											
 	loadOpportunities(newLeadBuckets, 0);
 }
 
 function loadFollowUps(){
-	
-	followUpBucket = getLinkedBucketList([ { opportunity_method: 'past_due_follow_ups', list_selector: 'span#past-due-follow-ups-list', next: null},
-											{ opportunity_method: 'todays_follow_ups',   list_selector: 'span#todays-follow-ups-list',   next: null},
-											{ opportunity_method: 'by_last_activities',  list_selector: 'span#by-last-activities-list',  next: null},
-											{ opportunity_method: 'future_follow_ups',   list_selector: 'span#future-follow-ups-list',   next: null} ]);
+	followUpBucket = getLinkedBucketList([ 
+		{ opportunity_method: 'past_due_follow_ups', list_selector: 'span#past-due-follow-ups-list', next: null},
+		{ opportunity_method: 'todays_follow_ups',   list_selector: 'span#todays-follow-ups-list',   next: null},
+		{ opportunity_method: 'by_last_activities',  list_selector: 'span#by-last-activities-list',  next: null},
+		{ opportunity_method: 'future_follow_ups',   list_selector: 'span#future-follow-ups-list',   next: null} 
+	]);
 	
 	loadOpportunities(followUpBucket, 0);
 }
 
 function loadAppointments(){
-	appointmentBucket = getLinkedBucketList([ { opportunity_method: 'past_due_appointments', list_selector: 'span#past-due-appointments-list', next: null},
-											{ opportunity_method: 'todays_appointments',   list_selector: 'span#todays-appointments-list',   next: null},
-											{ opportunity_method: 'future_appointments',   list_selector: 'span#future-appointments-list',   next: null}]);
+	appointmentBucket = getLinkedBucketList([ 
+		{ opportunity_method: 'past_due_appointments', list_selector: 'span#past-due-appointments-list', next: null},
+		{ opportunity_method: 'todays_appointments',   list_selector: 'span#todays-appointments-list',   next: null},
+		{ opportunity_method: 'future_appointments',   list_selector: 'span#future-appointments-list',   next: null}
+	]);
 											
 	loadOpportunities(appointmentBucket, 0);
 }
