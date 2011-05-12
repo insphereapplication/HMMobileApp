@@ -30,8 +30,8 @@ class AppApplication < Rho::RhoApplication
       # For example, WebView.refresh
   
       # to increase sync polling interval 
-      puts "SETTING POLL INTERVAL TO #{Constants::BACKGROUND_POLL_INTERVAL}"
-      SyncEngine.set_pollinterval(Constants::BACKGROUND_POLL_INTERVAL)
+      SyncEngine.stop_sync
+      SyncEngine.set_pollinterval(0)
   
       # To stop local web server when application switched to 
       # background return "stop_local_server"
