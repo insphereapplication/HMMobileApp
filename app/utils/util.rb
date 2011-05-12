@@ -159,6 +159,7 @@ end
 
 module Constants
   DEFAULT_POLL_INTERVAL = 60
+  BACKGROUND_POLL_INTERVAL = 600
   
   OTHER_LOST_REASONS = [
     "Covered By Competitor",

@@ -29,9 +29,9 @@ class AppApplication < Rho::RhoApplication
       # Don't call any UI operations here, they'll be ignored
       # For example, WebView.refresh
   
-      # to stop sync background thread call 
-      SyncEngine.stop_sync
-      SyncEngine.set_pollinterval(0)
+      # to increase sync polling interval 
+      puts "SETTING POLL INTERVAL TO #{Constants::BACKGROUND_POLL_INTERVAL}"
+      SyncEngine.set_pollinterval(Constants::BACKGROUND_POLL_INTERVAL)
   
       # To stop local web server when application switched to 
       # background return "stop_local_server"
