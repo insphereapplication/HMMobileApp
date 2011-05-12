@@ -5,9 +5,13 @@ version: 1.0.5
 vendor: rhomobile
 build: debug
 bbver: 4.6
+capabilities:
+    - push
 android: 
   emulator: rhoandroid
+
   android_title: 1 #Set to 1 to display loading progress bar on Android
+
   push:
     sender: insphereapplication@insphereis.com
     notifications: yes
@@ -24,11 +28,17 @@ iphone:
   # sdk: 4.2
   configuration: release
   sdk: iphoneos4.3
+<<<<<<< HEAD
   provisionprofile: [DOWNLOAD THE LATEST PROVISION PROFILE AT: http://developer.apple.com/ios/manage/provisioningprofiles/index.action]
   codesignidentity: [DOWNLOAD YOUR DEV CERTIFICATE AT: http://developer.apple.com/ios/manage/certificates/team/index.action]
+=======
+  provisionprofile: 5CE89095-3DE6-4278-8A96-E91A203E94AE
+  codesignidentity: "iPhone Developer: Kyle Norton (ZVB8LA9NV2)"
+>>>>>>> insite_mobile_1_0_5
   entitlements:
   BundleIdentifier: com.insphere.insitemobile
   BundleURLScheme: insite
-
-
+  capabilities:
+  - push
+  
 extensions: ["json", "another-extension", "fileutils", "mspec"]
