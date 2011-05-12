@@ -130,8 +130,10 @@ class ActivityController < Rho::RhoController
       :cssi_statusdetail => @params['status_detail'],
       :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }
-
-    opp_attrs.merge!({:statuscode => 'No Contact Made'})
+    
+    if opportunity[:statuscode] == 'New Opportunity'
+      opp_attrs.merge!({:statuscode => 'No Contact Made'})
+    end
     
     db = ::Rho::RHO.get_src_db('Opportunity')
     db.start_transaction
@@ -151,10 +153,9 @@ class ActivityController < Rho::RhoController
     
     opp_attrs = {
       :cssi_statusdetail => 'Call Back Requested',
-      :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+      :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
+      :statuscode => 'Contact Made'
     }
-    
-    opp_attrs.merge!({:statuscode => 'Contact Made'})
     
     db = ::Rho::RHO.get_src_db('Opportunity')
     db.start_transaction
@@ -194,7 +195,7 @@ class ActivityController < Rho::RhoController
       :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }
     
-    if opportunity.is_new? || ['No Contact Made', 'Contact Made'].include?(opportunity.statuscode)
+    if ['New Opportunity', 'No Contact Made', 'Contact Made'].include?(opportunity.statuscode)
       opp_attrs.merge!({:statuscode => 'Appointment Set'})
     end
     
