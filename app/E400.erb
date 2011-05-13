@@ -1,10 +1,10 @@
-<% puts "********** E500 ERROR PAGE **********" %>
-<% puts "E500 ERROR PAGE ERROR: #{Rho::RHO.current_exception.message().to_s}" %>
-<% puts "E500 ERROR PAGE STACKTRACE: #{Rho::RHO.current_exception.backtrace().to_s}" %>
+<% puts "********** E400 ERROR PAGE **********" %>
+<% puts "E400 ERROR PAGE ERROR: #{Rho::RHO.current_exception.message().to_s}" %>
+<% puts "E400 ERROR PAGE STACKTRACE: #{Rho::RHO.current_exception.backtrace().to_s}" %>
 <%
       ExceptionUtil.log_exception_to_server(Rho::RHO.current_exception)
 %>
-<% puts "********** END E500 ERROR PAGE **********" %>
+<% puts "********** END E400 ERROR PAGE **********" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -23,7 +23,7 @@
 
 <body>
 
-    <div data-role="page" data-theme="b" data-cache="never">
+    <div data-role="page" data-theme="b" data-cache="never" >
 		<div data-role="header" data-backbtn="false">
 			<h1>An Error Has Occurred</h1>
 		</div>
