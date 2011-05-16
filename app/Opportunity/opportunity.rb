@@ -106,8 +106,11 @@ class Opportunity
   
   def appointments
     Activity.find_by_sql(%Q{
-        select * from Activity where type='Appointment' and #{is_owned_by_this_opportunity_sql}
-      })
+        select * from Activity 
+        where type='Appointment' 
+        and #{is_owned_by_this_opportunity_sql}
+        order by datetime(scheduledstart) desc
+      }) 
   end
   
   def activities
