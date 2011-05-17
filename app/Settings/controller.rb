@@ -486,11 +486,11 @@ class SettingsController < Rho::RhoController
     puts '*** Version check -- AppInfo: ' + minAppVersion + ' Curr ' + Rho::RhoConfig.app_version + '***'
     needs_upgrade = false
     minAppVersion.split(".").each_with_index do |ver, i|
-      # puts 'Min Version: ' + ver + 'Cur Version: ' + currentAppVersion[i]
       if ver > currentAppVersion[i]
         needs_upgrade = true
         break
-      else
+      elsif ver < currentAppVersion[i]
+        break
       end
     end
       
