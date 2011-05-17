@@ -131,7 +131,7 @@ class ActivityController < Rho::RhoController
       :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }
     
-    if opportunity[:statuscode] == 'New Opportunity'
+    if opportunity.statuscode == 'New Opportunity'
       opp_attrs.merge!({:statuscode => 'No Contact Made'})
     end
     
