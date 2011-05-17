@@ -11,6 +11,7 @@ document.getElementById('phoneList').focus();
 }
 </script>
 <div data-role="page" data-theme="b">
+	<%= offline_bar%>
 	<div data-role="header" data-theme="d" data-position="inline">
 		<a href="<%=url_for(:action=>:show, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
 		<h1>Create Call Back</h1>
