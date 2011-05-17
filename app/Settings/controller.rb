@@ -247,18 +247,31 @@ class SettingsController < Rho::RhoController
     elsif status == "in_progress"
       @on_sync_in_progress.call
     elsif status == "error"
+      err_code = @params['error_code'].to_i
+      rho_error = Rho::RhoError.new(err_code)
+      
+      is_bad_request_data = (err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER) && !@params['server_errors'].to_s[/406 Not Acceptable/].nil?
+      
       if @params['server_errors'] && @params['server_errors']['create-error']
         log_error("Create error", @params.inspect)
-        SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'], :recreate)
+        unless is_bad_request_data  
+          SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'], :recreate)
+        else
+          #notify the user here?
+          #the create data given to the proxy was bad and will not succeed if tried again; delete the create
+          SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'], :delete)
+        end
       end
       
       if @params['server_errors'] && @params['server_errors']['update-error']
         log_error("Update error", @params.inspect)
-        SyncEngine.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :retry)
+        unless is_bad_request_data
+          SyncEngine.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :retry)
+        else
+          #notify the user here?
+          #we need to roll back the change that was made here, but the Rhodes API doesn't provide a mechanism to do this
+        end
       end
-
-      err_code = @params['error_code'].to_i
-      rho_error = Rho::RhoError.new(err_code)
 
       @msg = rho_error.message unless @msg and @msg.length > 0   
       
@@ -304,6 +317,8 @@ class SettingsController < Rho::RhoController
         msg = "The user name you entered is not authorized to use this application."
         Rhom::Rhom.database_fullclient_reset_and_logout
         goto_login(msg)
+      elsif is_bad_request_data
+        log_error("Bad request data","Bad request data, client sent invalid data to CRM proxy, proxy returned 406. Error params: #{@params.inspect}")
       else
         log_error("Unhandled error in sync_notify: #{err_code}", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         @on_sync_error.call({:error_source => 'unknown', :error_code => err_code})
@@ -329,18 +344,14 @@ class SettingsController < Rho::RhoController
     
     #uncomment the following lines to show popups when errors are logged
     unless params[:show_popup] == false
-      # Alert.show_popup({
-      #                 :message => message, 
-      #                 :title => title, 
-      #                 :buttons => ["OK"]
-      #               })
+      # show_popup(title, message)
     end
   end
   
   def show_popup(title, message)
     Alert.show_popup({
-      :message => message,
       :title => title,
+      :message => message,
       :buttons => ["OK"]
     })
   end
