@@ -29,6 +29,26 @@ class SettingsController < Rho::RhoController
     end
   end
 
+  def local_changes?
+    Activity.changed? || Contact.changed? || Opportunity.changed? || Note.changed?
+  end
+  
+  def sync_state
+    if local_changes?
+      "Yes"
+    else
+      "No"
+    end
+  end
+
+  def has_connection?
+    if System.has_network
+      "Online"
+    else
+      "Offline"
+    end
+  end
+  
   def login
     @msg = @params['msg']
     override_auto_login = @params['override_auto_login']
