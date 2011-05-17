@@ -469,6 +469,30 @@ class SettingsController < Rho::RhoController
     update_login_sync_progress(@params['source_name'], 100)
   end
   
+  def needs_upgrade?(min_version, current_version) # returns true if current_version is less than min_version
+    # comparison is lexicographical, as in it reads from left to right and only proceeds to the 
+    # next sub-version if a given sub-version in min_version and current_version is equal
+    min_version_split = min_version.split(".")
+    current_version_split = current_version.split(".")
+    
+    puts "****Version check: min version = #{min_version_split}, current version = #{current_version_split}****"
+    
+    # compare sub-versions from left to right
+    # if current_version has fewer version numbers than min_version, assume '0' for missing version numbers to the right 
+    (0...min_version_split.count).each do |i|
+      if min_version_split[i] > (current_version_split[i] || '0')
+        # current_version must be older, no need to continue checking
+        return true
+      elsif min_version_split[i] < (current_version_split[i] || '0')
+        # current_version must be newer, no need to continue checking
+        return false
+      end
+    end
+    
+    # given versions are equal
+    return false
+  end
+  
 
   def check_force_upgrade
     min_required_version = AppInfo.instance[0].min_required_version
@@ -480,22 +504,10 @@ class SettingsController < Rho::RhoController
     puts "*** Client is running #{app_version} ***"
     puts "*** Apple Upgrade URL is #{apple_upgrade_url} ***"
     puts "*** Android Upgrade URL is #{android_upgrade_url} ***"
-    
-    minAppVersion = AppInfo.instance[0].min_required_version
-    currentAppVersion = Rho::RhoConfig.app_version.split(".")
-    puts '*** Version check -- AppInfo: ' + minAppVersion + ' Curr ' + Rho::RhoConfig.app_version + '***'
-    needs_upgrade = false
-    minAppVersion.split(".").each_with_index do |ver, i|
-      if ver > currentAppVersion[i]
-        needs_upgrade = true
-        break
-      elsif ver < currentAppVersion[i]
-        break
-      end
-    end
+
+    puts '*** Version check -- AppInfo: ' + min_required_version + ' Curr ' + app_version + '***'
       
-    if needs_upgrade        
-    # if min_required_version > app_version
+    if needs_upgrade?(min_required_version, app_version) 
       puts "*** Client needs to upgrade ***"
       SyncEngine.stop_sync
       SyncEngine.set_pollinterval(-1)
@@ -506,7 +518,11 @@ class SettingsController < Rho::RhoController
         :buttons => ["OK"],
         :callback => url_for( :action => :on_dismiss_popup )
       } )
-       
+      
+      # take the user back to the login screen, don't let them skip it in the future
+      # the roundabout way of preventing the skip is to say that the initial sync has not yet occurred
+      Settings.initial_sync_complete = false
+      goto_login_override_auto
     else
       puts "*** Client does not need to upgrade *** "
     end
