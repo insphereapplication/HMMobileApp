@@ -109,7 +109,7 @@ class Opportunity
         select * from Activity 
         where type='Appointment' 
         and #{is_owned_by_this_opportunity_sql}
-        order by datetime(scheduledstart) desc
+        order by datetime(scheduledstart) 
       }) 
   end
   
