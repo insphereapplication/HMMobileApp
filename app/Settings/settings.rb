@@ -15,7 +15,7 @@ class Settings
     end
     
     def has_verified_credentials?
-      has_persisted_credentials? && instance.credentials_verified
+      has_persisted_credentials? && credentials_verified
     end
     
     def initial_sync_completed?
@@ -46,11 +46,13 @@ class Settings
     end
     
     def credentials_verified
-      instance.credentials_verified || false
+      #use string comparison below because settings DB always stores & returns strings
+      instance.credentials_verified == 'true'
     end
     
     def initial_sync_complete
-      instance.initial_sync_complete || false
+      #use string comparison below because settings DB always stores & returns strings
+      instance.initial_sync_complete == 'true'
     end
     
     def sync_type
