@@ -1,6 +1,8 @@
 
 class Settings
   include Rhom::PropertyBag
+  
+  set :schema_version, '1.0'
 
   class << self
     
@@ -13,7 +15,7 @@ class Settings
     end
     
     def has_verified_credentials?
-      has_persisted_credentials? && instance.credentials_verified
+      has_persisted_credentials? && credentials_verified
     end
     
     def initial_sync_completed?
@@ -44,11 +46,17 @@ class Settings
     end
     
     def credentials_verified
-      instance.credentials_verified || false
+      # use string comparison below because settings DB always stores & returns strings
+      # sometimes "instance" is in-memory and **not** fetched from db, which could return real boolean types instead of strings here
+      # to_s covers both cases
+      instance.credentials_verified.to_s == 'true'
     end
     
     def initial_sync_complete
-      instance.initial_sync_complete || false
+      # use string comparison below because settings DB always stores & returns strings
+      # sometimes "instance" is in-memory and **not** fetched from db, which could return real boolean types instead of strings here
+      # to_s covers both cases
+      instance.initial_sync_complete.to_s == 'true'
     end
     
     def sync_type
@@ -80,8 +88,13 @@ class Settings
       instance.save
     end
     
-    def instance
-      @instance ||= Settings.find(:first) || Settings.create({})
+    def instance #pulls settings from DB, caches them in @instance
+      flush_instance unless @instance
+      @instance
+    end
+    
+    def flush_instance #populates @instance with settings from DB
+      @instance = Settings.find(:first) || Settings.create({})
     end
   end
 end

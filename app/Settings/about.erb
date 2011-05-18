@@ -21,6 +21,7 @@
 
 <body <% if @working %> onLoad="showSpin(null)" <% end %>>		
     <div data-role="page" data-theme="b" data-cache="never">
+	<%= offline_bar%>
 		<div data-role="header">
 			<a href="/app/Settings/index" data-direction="reverse" data-icon="back">Settings</a>
 			<h1>About</h1>
@@ -29,6 +30,9 @@
 		<div id="contentDiv" data-role="content">
 			<ul data-role="listview" data-inset="true">
 				<li><h3>Version:</h3><p>InSite Mobile <% if Rho::RhoConfig.app_version && Rho::RhoConfig.app_version.length > 0 %><%= Rho::RhoConfig.app_version %><% else %>N/A<% end %></p></li> 
+				<li><h3>Last Sync:</h3><p> <%= Rhom::RhomSource.find('Contact').last_updated.to_s %></p></li>
+				<li><h3>Connection State:</h3><p> <%= has_connection? %></p></li> 
+				<li><h3>Local Changes?:</h3><p> <%= sync_state %></p></li> 
 				<li><h3>Platform:</h3><p><%= System.get_property('platform') %></p></li>
 				<li><h3>Device Name:</h3><p><%= System.get_property('device_name') %></p></li>
 				<li><h3>Device Model:</h3><p><% if System.get_property('os_version') && System.get_property('os_version').length > 0 %><%= System.get_property('os_version') %><% else %>&nbsp;<% end %></p></li>

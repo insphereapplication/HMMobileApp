@@ -1,4 +1,5 @@
 <div data-role="page" data-theme="b" data-cache="never">
+	<%= offline_bar%>
 	<div data-role="header" data-backbtn="false">
 				<% if @params['origin'] == "contact"%>
 					<a href="<%=url_for(:action => :index)%>" data-direction="reverse" rel="external" data-icon="back">Contacts</a>
