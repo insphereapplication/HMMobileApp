@@ -46,13 +46,17 @@ class Settings
     end
     
     def credentials_verified
-      #use string comparison below because settings DB always stores & returns strings
-      instance.credentials_verified == 'true'
+      # use string comparison below because settings DB always stores & returns strings
+      # sometimes "instance" is in-memory and **not** fetched from db, which could return real boolean types instead of strings here
+      # to_s covers both cases
+      instance.credentials_verified.to_s == 'true'
     end
     
     def initial_sync_complete
-      #use string comparison below because settings DB always stores & returns strings
-      instance.initial_sync_complete == 'true'
+      # use string comparison below because settings DB always stores & returns strings
+      # sometimes "instance" is in-memory and **not** fetched from db, which could return real boolean types instead of strings here
+      # to_s covers both cases
+      instance.initial_sync_complete.to_s == 'true'
     end
     
     def sync_type
@@ -84,8 +88,13 @@ class Settings
       instance.save
     end
     
-    def instance
-      @instance ||= Settings.find(:first) || Settings.create({})
+    def instance #pulls settings from DB, caches them in @instance
+      flush_instance unless @instance
+      @instance
+    end
+    
+    def flush_instance #populates @instance with settings from DB
+      @instance = Settings.find(:first) || Settings.create({})
     end
   end
 end
