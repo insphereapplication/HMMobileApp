@@ -1,6 +1,8 @@
 
 class Settings
   include Rhom::PropertyBag
+  
+  set :schema_version, '1.0'
 
   class << self
     

@@ -8,7 +8,7 @@ class Opportunity
   include SQLHelper
   
   enable :sync
-  
+  set :schema_version, '1.0'
   set :sync_priority, 30
 
   property :opportunityid, :string

@@ -5,6 +5,7 @@ class Contact
   include ChangedFlag
   include SQLHelper
   
+  set :schema_version, '1.0'
   enable :sync
   set :sync_priority, 20
   

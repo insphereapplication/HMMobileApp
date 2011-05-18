@@ -9,6 +9,7 @@ class Note
   property :modifiedon, :string
   property :subject, :string
   
+  set :schema_version, '1.0'
   enable :sync
   set :sync_priority, 50
   

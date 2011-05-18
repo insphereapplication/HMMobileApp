@@ -2,6 +2,8 @@ class Activity
   include Rhom::FixedSchema
   include SQLHelper
   
+  set :schema_version, '1.1'
+  
   property :statecode, :string
   property :activityid, :string
   property :phonenumber, :string
