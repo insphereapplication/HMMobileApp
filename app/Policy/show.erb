@@ -1,0 +1,93 @@
+<div class="pageTitle">
+  <h1><%= @policy.product %></h1>
+</div>
+
+<div class="toolbar">
+  <div class="leftItem backButton">
+    <a href="<%= url_for :action => :index %>">Back</a>
+  </div>
+  <div class="rightItem regularButton">
+    <a href="<%= url_for :action => :edit, :id => @policy.object %>">Edit</a>
+  </div>
+</div>
+
+<div class="content">
+  <ul>
+    
+        <li>
+          <div class="itemLabel">Product</div>
+          <div class="itemValue"><%= @policy.product %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">Carrier</div>
+          <div class="itemValue"><%= @policy.carrier %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">PrimaryInsured</div>
+          <div class="itemValue"><%= @policy.primary_insured %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">PolicyStatus</div>
+          <div class="itemValue"><%= @policy.policy_status %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">StatusReason</div>
+          <div class="itemValue"><%= @policy.status_reason %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">CarrierStatus</div>
+          <div class="itemValue"><%= @policy.carrier_status %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">DecisionClassification</div>
+          <div class="itemValue"><%= @policy.decision_classification %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">ApplicationNumber</div>
+          <div class="itemValue"><%= @policy.application_number %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">ApplicationDate</div>
+          <div class="itemValue"><%= @policy.application_date %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">SubmittedDate</div>
+          <div class="itemValue"><%= @policy.submitted_date %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">PolicyNumber</div>
+          <div class="itemValue"><%= @policy.policy_number %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">EffectiveDate</div>
+          <div class="itemValue"><%= @policy.effective_date %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">PaymentMode</div>
+          <div class="itemValue"><%= @policy.payment_mode %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">AnnualPremium</div>
+          <div class="itemValue"><%= @policy.annual_premium %></div>
+        </li>
+    
+        <li>
+          <div class="itemLabel">InsuredType</div>
+          <div class="itemValue"><%= @policy.insured_type %></div>
+        </li>
+    
+  </ul>
+</div>

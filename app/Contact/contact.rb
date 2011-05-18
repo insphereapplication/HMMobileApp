@@ -162,6 +162,10 @@ class Contact
     Opportunity.find(:all, :conditions => {"contact_id" => self.object})
   end
   
+  def policies
+    Policy.find(:all)
+  end
+  
   def business_map
     begin
         return ("#{address2_line1}+#{address2_city}+#{cssi_state2id}+#{address2_postalcode}").gsub!(" ","+")
