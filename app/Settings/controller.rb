@@ -108,7 +108,7 @@ class SettingsController < Rho::RhoController
       end
       
       if httpErrCode == "403" # User is not authorized to use the mobile device, so we need to purge the local database
-        @msg ||= "The user name you entered is not authorized to use this application."
+        @msg ||= "Sorry! The Insphere InSIte Mobile application is only available for download for authorized pilot users.  More to come regarding the Insphere InSite Mobile Program and roll-out schedule in July."
         Rhom::Rhom.database_fullclient_reset_and_logout
       else
         @msg ||= "The user name or password you entered is not valid"    
@@ -139,7 +139,7 @@ class SettingsController < Rho::RhoController
       end
       
       if httpErrCode == "403" # User is not authorized to use the mobile device, so we need to purge the local database
-        @msg ||= "The user name you entered is not authorized to use this application."
+        @msg ||= "Sorry! The Insphere InSite Mobile application is only available for download for authorized pilot users.  More to come regarding the Insphere InSite Mobile Program and roll-out schedule in July."
         Rhom::Rhom.database_fullclient_reset_and_logout
       else
         @msg ||= "The user name or password you entered is not valid"    
@@ -369,7 +369,7 @@ class SettingsController < Rho::RhoController
         
         full_reset_logout
         
-        msg = "The user name you entered is not authorized to use this application."
+        msg = "Sorry! The Insphere InSite Mobile application is only available for download for authorized pilot users.  More to come regarding the Insphere InSite Mobile Program and roll-out schedule in July."
         goto_login(msg)
       elsif is_bad_request_data
         log_error("Bad request data","Bad request data, client sent invalid data to CRM proxy, proxy returned 406. Error params: #{@params.inspect}")
