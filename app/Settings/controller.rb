@@ -171,8 +171,9 @@ class SettingsController < Rho::RhoController
   
   def do_logout
     Rhom::Rhom.database_full_reset_and_logout
-    Settings.clear_credentials
-    SyncEngine.set_pollinterval(-1)
+    SyncEngine.set_pollinterval(0)
+    Settings.flush_instance
+    
     Rho::NativeTabbar.remove
     @msg = "You have been logged out."
     goto_login(@msg)
@@ -188,10 +189,36 @@ class SettingsController < Rho::RhoController
   
   def do_reset
     Rhom::Rhom.database_fullclient_reset_and_logout
-    Settings.clear_credentials
-    SyncEngine.set_pollinterval(-1)
+    Settings.flush_instance
+    SyncEngine.set_pollinterval(0)
     @msg = "Database has been reset."
     redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
+  end
+  
+  def full_reset_logout_keep_device_id
+    Rhom::Rhom.database_full_reset_and_logout
+    # clear out cached settings
+    Settings.flush_instance
+  end
+  
+  def full_reset_logout
+    Rhom::Rhom.database_fullclient_reset_and_logout
+    # clear out cached settings
+    Settings.flush_instance
+  end
+  
+  def full_reset_logout_keep_credentials
+    # backup credential cache before DB reset
+    login_backup = Settings.login
+    password_backup = Settings.password
+    credentials_verified_backup = Settings.credentials_verified
+            
+    full_reset_logout
+    
+    # restore credential cache after DB reset
+    Settings.login = login_backup
+    Settings.password = password_backup
+    Settings.credentials_verified = credentials_verified_backup
   end
   
   def do_sync
@@ -296,11 +323,13 @@ class SettingsController < Rho::RhoController
       @msg = rho_error.message unless @msg and @msg.length > 0   
       
       if (@params['error_message'].downcase == 'unknown client') or rho_error.unknown_client?(@params['error_message'])
-        Rhom::Rhom.database_fullclient_reset_and_logout
-        log_error("Error: Unknown client", "Verified: #{Settings.has_verified_credentials?}" + Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        SyncEngine.set_pollinterval(-1)
+        log_error("Error: Unknown client", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
+        
+        SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
-        Settings.clear_credentials
+        
+        full_reset_logout_keep_credentials
+        
         goto_login("Unknown client, logging in again.")
       elsif err_code == Rho::RhoError::ERR_NETWORK
         #leave ':send_to_exceptional => false' alone until infinite loop issue is fixed for clients without a network connection
@@ -313,29 +342,34 @@ class SettingsController < Rho::RhoController
         @on_sync_error.call({:error_source => 'connection'})
       elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)      
         log_error("RhoSync error: client is not logged in / unauthorized", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        SyncEngine.set_pollinterval(-1)
+        SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
         retry_login
       elsif err_code == Rho::RhoError::ERR_REMOTESERVER && @params['error_message'] == SESSION_ERROR_MSG
         # Rhodes is sending the server a token for a non-existent session. Time to start over.
-        Rhom::Rhom.database_fullclient_reset_and_logout
         log_error("RhoSync error: unknown session", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        SyncEngine.set_pollinterval(-1)
+        
+        SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
+                
+        full_reset_logout_keep_credentials
+        
         goto_login("Unknown session, logging in again.")
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/401 Unauthorized/].nil?
         #proxy returned a 401, need to re-login
         log_error("Error: 401 Unauthorized from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        SyncEngine.set_pollinterval(-1)
+        SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
         retry_login
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/403 Forbidden/].nil?
         #proxy returned a 403, need to purge the database and log the user out
         log_error("Error: 403 Forbidden from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        SyncEngine.set_pollinterval(-1)
+        SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
+        
+        full_reset_logout
+        
         msg = "The user name you entered is not authorized to use this application."
-        Rhom::Rhom.database_fullclient_reset_and_logout
         goto_login(msg)
       elsif is_bad_request_data
         log_error("Bad request data","Bad request data, client sent invalid data to CRM proxy, proxy returned 406. Error params: #{@params.inspect}")
@@ -510,7 +544,7 @@ class SettingsController < Rho::RhoController
     if needs_upgrade?(min_required_version, app_version) 
       puts "*** Client needs to upgrade ***"
       SyncEngine.stop_sync
-      SyncEngine.set_pollinterval(-1)
+      SyncEngine.set_pollinterval(0)
       Alert.show_popup(
       {
         :message => "Please upgrade to version #{min_required_version}",
