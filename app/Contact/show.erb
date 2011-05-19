@@ -105,19 +105,13 @@
 				<% end %>
 				<ul data-role="listview" data-filter="false" data-inset="true">
 					<li data-role="list-divider">Policies</li>
+					<% puts @contact.policies.inspect %>
 					<% @contact.policies.each do |policy| %>
 					<li>
-						<a href="<%= url_for(:controller => :Policy, :action => :show) %>">
-							<h3>Carrier:</h3>
-							<p>Application Date:</p>
-							<p>Status:</p>
-						</a>
-					</li>
-					<li>
-						<a href="<%= url_for(:controller => :Policy, :action => :show) %>">
-							<h3>Carrier:</h3>
-							<p>Application Date:</p>
-							<p>Status:</p>
+						<a href="<%= url_for(:controller => :Policy, :action => :show, :id => policy.object, :query => {:origin => "contact"}) %>">
+							<p>Carrier: <%= policy.carrier_name %></p>
+							<p>Application Date: <%= to_date(policy.cssi_applicationdate) %></p>
+							<p>Status: <%= policy.cssi_statusreason %></p>
 						</a>
 					</li>
 					<% end %>

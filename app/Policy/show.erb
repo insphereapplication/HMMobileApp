@@ -1,93 +1,51 @@
-<div class="pageTitle">
-  <h1><%= @policy.product %></h1>
+<div data-role="page" data-theme="b" data-cache="never">
+	<%= offline_bar %>
+	<% if @params['origin'] == "contact" %>
+		<div data-role="header" data-backbtn="false">
+<%
+=begin %>
+			<a href="<%= url_for(:controller => :Contact, :action => :show, :id => @policy.contact.object, :query =>{:origin => @params['origin']}) %>" data-direction="reverse" data-icon="back">Contact</a>
+<%
+=end %>
+			<a rel="external" href="<%= url_for(:controller => :Contact, :action => :index) %>" data-direction="reverse" data-icon="back">Contacts</a>
+			<h3>Policy Detail</h3
+		</div>
+	<% else %>
+		<div data-role="header" data-backbtn="false">
+			<h3>Policy Detail</h3>
+		</div>
+	<% end %>
+	<div data-role="content">
+		<ul data-role="listview" data-theme="d" data-inset="true">
+			<li data-role="list-divider">General Information</li>
+			<li>Carrier: <%= @policy.carrier_name %></li>
+			<li>Product: <%= @policy.product_name %></li>
+			<li>Primary Insured: <%= @policy.cssi_primaryinsured %></li>
+		</ul>
+				
+		<ul data-role="listview" data-theme="d" data-inset="true">		
+			<li data-role="list-divider">Status Information</li>
+			<li>Policy Status: <%= @policy.statuscode %></li>
+			<li>Status Reason: <%= @policy.cssi_statusreason %></li>
+			<li>Carrier Status: <%= @policy.cssi_carrierstatusvalue %></li>
+			<li>Decision Classification:</li>
+		</ul>
+		
+		<ul data-role="listview" data-theme="d" data-inset="true">	
+			<li data-role="list-divider">Application Information</li>
+			<li>Application Number: <%= @policy.cssi_applicationnumber %></li>
+			<li>Submitted Date: <%= to_date(@policy.cssi_submitteddate) %></li>
+			<li>Application Date: <%= to_date(@policy.cssi_applicationdate) %></li>
+		</ul>
+			
+		<ul data-role="listview" data-theme="d" data-inset="true">
+			<li data-role="list-divider">Policy Information</li>
+			<li>Policy Number: <%= @policy.cssi_policynumber %></li>
+			<li>Effective Date: <%= to_date(@policy.cssi_effectivedate) %></li>
+			<li>Payment Mode: <%= @policy.cssi_paymentmode %></li>
+			<li>Annual Premium: &#36;<%= @policy.cssi_annualpremium.to_f %></li>
+			<li>Insured Type: <%= @policy.cssi_insuredtype %></li>
+		</ul>
+	</div>
 </div>
 
-<div class="toolbar">
-  <div class="leftItem backButton">
-    <a href="<%= url_for :action => :index %>">Back</a>
-  </div>
-  <div class="rightItem regularButton">
-    <a href="<%= url_for :action => :edit, :id => @policy.object %>">Edit</a>
-  </div>
-</div>
-
-<div class="content">
-  <ul>
-    
-        <li>
-          <div class="itemLabel">Product</div>
-          <div class="itemValue"><%= @policy.product %></div>
-        </li>
-    
-        <li>
-          <div class="itemLabel">Carrier</div>
-          <div class="itemValue"><%= @policy.carrier %></div>
-        </li>
-    
-        <li>
-          <div class="itemLabel">PrimaryInsured</div>
-          <div class="itemValue"><%= @policy.primary_insured %></div>
-        </li>
-    
-        <li>
-          <div class="itemLabel">PolicyStatus</div>
-          <div class="itemValue"><%= @policy.policy_status %></div>
-        </li>
-    
-        <li>
-          <div class="itemLabel">StatusReason</div>
-          <div class="itemValue"><%= @policy.status_reason %></div>
-        </li>
-    
-        <li>
-          <div class="itemLabel">CarrierStatus</div>
-          <div class="itemValue"><%= @policy.carrier_status %></div>
-        </li>
-    
-        <li>
-          <div class="itemLabel">DecisionClassification</div>
-          <div class="itemValue"><%= @policy.decision_classification %></div>
-        </li>
-    
-        <li>
-          <div class="itemLabel">ApplicationNumber</div>
-          <div class="itemValue"><%= @policy.application_number %></div>
-        </li>
-    
-        <li>
-          <div class="itemLabel">ApplicationDate</div>
-          <div class="itemValue"><%= @policy.application_date %></div>
-        </li>
-    
-        <li>
-          <div class="itemLabel">SubmittedDate</div>
-          <div class="itemValue"><%= @policy.submitted_date %></div>
-        </li>
-    
-        <li>
-          <div class="itemLabel">PolicyNumber</div>
-          <div class="itemValue"><%= @policy.policy_number %></div>
-        </li>
-    
-        <li>
-          <div class="itemLabel">EffectiveDate</div>
-          <div class="itemValue"><%= @policy.effective_date %></div>
-        </li>
-    
-        <li>
-          <div class="itemLabel">PaymentMode</div>
-          <div class="itemValue"><%= @policy.payment_mode %></div>
-        </li>
-    
-        <li>
-          <div class="itemLabel">AnnualPremium</div>
-          <div class="itemValue"><%= @policy.annual_premium %></div>
-        </li>
-    
-        <li>
-          <div class="itemLabel">InsuredType</div>
-          <div class="itemValue"><%= @policy.insured_type %></div>
-        </li>
-    
-  </ul>
-</div>

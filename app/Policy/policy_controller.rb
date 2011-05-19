@@ -14,6 +14,8 @@ class PolicyController < Rho::RhoController
   def show
     @policy = Policy.find(@params['id'])
     if @policy
+      @contact = @policy.contact
+      puts "*** @contact = " + @contact.inspect + " ***"
       render :action => :show, :back => url_for(:action => :index)
     else
       redirect :action => :index

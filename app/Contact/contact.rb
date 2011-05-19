@@ -164,6 +164,7 @@ class Contact
   end
   
   def policies
+    # Policy.find(:all, :conditions => {"contact_id" => self.object})
     Policy.find(:all)
   end
   
