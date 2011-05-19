@@ -179,6 +179,39 @@ class SettingsController < Rho::RhoController
     goto_login(@msg)
   end
   
+  def validate_pin
+    enter_pin = @params['enter_pin']
+    verify_pin = @params['verify_pin']
+    password = @params['pin_password']
+    
+    if enter_pin and verify_pin and password
+      if ( enter_pin == verify_pin )
+        if ( password == Settings.password )
+          @msg = nil
+          Settings.pin = verify_pin
+          @msg =  "Your PIN has been reset."
+          redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
+          # Alert.show_popup(
+          #           {
+          #             :message => "Your PIN has been reset.",
+          #             :buttons => ["OK"],
+          #             :callback => url_for( :action => :validate_pin_callback )
+          #           })
+        else
+          @msg = 'The password you entered is not valid.'
+        end
+      else
+        @msg = 'Please enter matching PINs'
+      end
+    end
+    
+    render :action => :pin if @msg and @msg.length > 0
+  end # validate_pin
+  
+  def validate_pin_callback
+    redirect :action => :index
+  end
+  
   def reset
     render :action => :reset, :back => 'callback:'
   end

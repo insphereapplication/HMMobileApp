@@ -7,11 +7,11 @@ class Settings
   class << self
     
     def credentials
-      [login,password]
+      [login,password,pin]
     end
     
     def has_persisted_credentials?
-      !instance.login.blank? && !instance.password.blank?
+      !instance.login.blank? && !instance.password.blank? && !instance.pin.blank?
     end
     
     def has_verified_credentials?
@@ -33,6 +33,7 @@ class Settings
     def clear_credentials
       instance.login=nil
       instance.password=nil
+      instance.pin=nil
       instance.credentials_verified=false
       instance.save
     end
@@ -43,6 +44,10 @@ class Settings
     
     def password
       instance.password || ''
+    end
+    
+    def pin
+      instance.pin || ''
     end
     
     def credentials_verified
@@ -70,6 +75,11 @@ class Settings
     
     def password=(password)
       instance.password=password
+      instance.save
+    end
+    
+    def pin=(pin)
+      instance.pin=pin
       instance.save
     end
     
