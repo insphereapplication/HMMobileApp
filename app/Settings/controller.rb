@@ -246,7 +246,11 @@ class SettingsController < Rho::RhoController
       :buttons => ["Cancel", "View"],
       :callback => url_for(:action => :on_dismiss_notify_popup) 
     })
-    "rho_push"
+    if System::get_property('platform') == 'ANDROID'
+      "rho_push"
+    else
+      ""
+    end
   end
   
   # this is the message returned from RhoSync when Rhodes is sending a token for a session that no longer exists (like after a Redis reset) 
