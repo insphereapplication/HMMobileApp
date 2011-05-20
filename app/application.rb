@@ -9,7 +9,6 @@ class AppApplication < Rho::RhoApplication
     @@toolbar = nil
     super
     @default_menu = { 
-      "Refresh" => :refresh, 
       "Close" => :close, 
       "View Log" => :log 
     }

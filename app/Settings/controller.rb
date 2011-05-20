@@ -30,7 +30,7 @@ class SettingsController < Rho::RhoController
   end
 
   def local_changes?
-    Activity.changed? || Contact.changed? || Opportunity.changed? || Note.changed?
+    (Opportunity.changed? || Contact.changed?)
   end
   
   def sync_state
