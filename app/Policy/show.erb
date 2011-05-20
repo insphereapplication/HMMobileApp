@@ -2,12 +2,12 @@
 	<%= offline_bar %>
 	<% if @params['origin'] == "contact" %>
 		<div data-role="header" data-backbtn="false">
-<%
-=begin %>
 			<a href="<%= url_for(:controller => :Contact, :action => :show, :id => @policy.contact.object, :query =>{:origin => @params['origin']}) %>" data-direction="reverse" data-icon="back">Contact</a>
 <%
-=end %>
+=begin %>
 			<a rel="external" href="<%= url_for(:controller => :Contact, :action => :index) %>" data-direction="reverse" data-icon="back">Contacts</a>
+<%
+=end %>
 			<h3>Policy Detail</h3
 		</div>
 	<% else %>

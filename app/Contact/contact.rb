@@ -38,12 +38,20 @@ class Contact
   
   def self.all_open(page=nil, page_size=DEFAULT_PAGE_SIZE)    
     Contact.find_by_sql(%Q{
-      select distinct(c.contactid), c.* from Contact c, Opportunity o 
-      where o.contact_id=c.contactid and 
-      o.statecode not in ('Won', 'Lost')
-      order by LOWER(c.lastname)
-      #{get_pagination_sql(page, page_size)}
+      select c.contactid, c.* from Contact c, Opportunity o 
+            where o.contact_id=c.contactid and 
+            o.statecode not in ('Won', 'Lost')
+      union
+      select c.contactid, c.* from Contact c, Policy p where c.contactid = p.contact_id
+      order by lastname collate nocase
     })
+    # Contact.find_by_sql(%Q{
+    #       select distinct(c.contactid), c.* from Contact c, Opportunity o 
+    #       where o.contact_id=c.contactid and 
+    #       o.statecode not in ('Won', 'Lost')
+    #       order by LOWER(c.lastname)
+    #       #{get_pagination_sql(page, page_size)}
+    #     })
   end
   
   def full_name
@@ -164,8 +172,8 @@ class Contact
   end
   
   def policies
-    # Policy.find(:all, :conditions => {"contact_id" => self.object})
-    Policy.find(:all)
+    Policy.find(:all, :conditions => {"contact_id" => self.object})
+    #Policy.find(:all)
   end
   
   def business_map
