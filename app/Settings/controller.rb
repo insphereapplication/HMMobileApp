@@ -170,7 +170,7 @@ class SettingsController < Rho::RhoController
   end
   
   def do_logout
-    Rhom::Rhom.database_full_reset_and_logout
+    Settings.clear_credentials
     SyncEngine.set_pollinterval(0)
     Settings.flush_instance
     
