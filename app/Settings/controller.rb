@@ -40,6 +40,10 @@ class SettingsController < Rho::RhoController
       "No"
     end
   end
+  
+  def detailed_logging_enabled?
+    RhoConf.get_property_by_name('MinSeverity') == '1'
+  end
 
   def has_connection?
     if System.has_network
@@ -416,6 +420,16 @@ class SettingsController < Rho::RhoController
   
   def show_log
     Rho::RhoConfig.show_log
+  end
+  
+  def toggle_log_level
+    new_log_level = detailed_logging_enabled? ? '3' : '1'
+    RhoConf.set_property_by_name('MinSeverity', new_log_level)
+    
+    log_level_message = "Detailed logging #{new_log_level == '3' ? 'disabled' : 'enabled'}."
+    
+    @msg = log_level_message
+    redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
   end
   
   def save_log_config
