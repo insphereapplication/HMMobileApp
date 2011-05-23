@@ -29,10 +29,6 @@
 
 		<div id="contentDiv" data-role="content">
 			<ul data-role="listview" data-inset="true">
-				<li><h3><a href="<%= url_for :action => :show_log %>">Show Log</a></h3></li>
-				<li><h3><a href="<%= url_for :action => :toggle_log_level %>"><%= detailed_logging_enabled? ? 'Disable' : 'Enable' %> Detailed Logging</a></h3></li>
-			</ul>
-			<ul data-role="listview" data-inset="true">
 				<li><h3>Version:</h3><p>InSite Mobile <% if Rho::RhoConfig.app_version && Rho::RhoConfig.app_version.length > 0 %><%= Rho::RhoConfig.app_version %><% else %>N/A<% end %></p></li> 
 				<li><h3>Last Sync:</h3><p> <%= Rhom::RhomSource.find('Contact').last_updated.to_s %></p></li>
 				<li><h3>Connection State:</h3><p> <%= has_connection? %></p></li> 
@@ -47,6 +43,10 @@
 		        	<li><a href="<%= url_for :action => :show_log %>">Show Log</a></li>
 					<li><a href="<%= url_for :action => :configure_log %>">Configure Log</a></l>
 				</div>
+			</ul>
+			<ul data-role="listview" data-inset="true">
+				<li><h3><a href="<%= url_for :action => :show_log %>">Show Log</a></h3></li>
+				<li><h3><a href="<%= url_for :action => :toggle_log_level %>"><%= detailed_logging_enabled? ? 'Disable' : 'Enable' %> Detailed Logging</a></h3></li>
 			</ul>
 			<div>
 	</div>

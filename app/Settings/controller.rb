@@ -427,9 +427,8 @@ class SettingsController < Rho::RhoController
     RhoConf.set_property_by_name('MinSeverity', new_log_level)
     
     log_level_message = "Detailed logging #{new_log_level == '3' ? 'disabled' : 'enabled'}."
-    
-    @msg = log_level_message
-    redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
+
+    redirect :action => :about, :back => 'callback:'
   end
   
   def save_log_config
