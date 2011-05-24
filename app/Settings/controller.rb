@@ -389,9 +389,9 @@ class SettingsController < Rho::RhoController
         SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
                 
-        full_reset_logout_keep_credentials
+        full_reset_logout
         
-        goto_login("Unknown session, logging in again.")
+        goto_login("Unknown session, please log in again.")
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/401 Unauthorized/].nil?
         #proxy returned a 401, need to re-login
         log_error("Error: 401 Unauthorized from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
