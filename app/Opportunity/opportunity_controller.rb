@@ -277,7 +277,7 @@ class OpportunityController < Rho::RhoController
   def contact_opp_new    
      redirect :action => :new,
               :controller => "Contact",
-              :query =>{:origin => @params['origin']}
+              :query =>{:origin => $current_nav_context}
   end
   
   def callback_request
@@ -380,14 +380,6 @@ class OpportunityController < Rho::RhoController
         redirect :action => :index, :back => 'callback:'
       end
   end
-  
-  
-  def contact_opp_new    
-    redirect :action => :new,
-             :controller => "Contact",
-             :query =>{:origin => @params['origin']}
-  end
-  
   
   # GET /Opportunity/{1}/activity_summary
   def activity_summary
