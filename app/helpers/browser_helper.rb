@@ -36,10 +36,7 @@ module BrowserHelper
   
   def offline_bar
     %Q{
-      	<div data-nobackbtn="true" class="ui-offline-bar" role="banner"> Connection State: Offline </div>
-      	<script type="text/javascript">
-      		updateConnectionStatusIndicator();
-      	</script>
+      	<div data-nobackbtn="true" class="ui-offline-bar#{ DeviceCapabilities.is_connected? ? ' ui-hidden' : '' }" role="banner"> Connection State: Offline </div>
     }
   end
   

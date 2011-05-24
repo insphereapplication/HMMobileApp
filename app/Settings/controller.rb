@@ -41,12 +41,8 @@ class SettingsController < Rho::RhoController
     end
   end
   
-  def connection_status
-    System.has_network ? 'Online' : 'Offline'
-  end
-  
   def get_connection_status
-    @connection_status = connection_status
+    @connection_status = DeviceCapabilities.connection_status
     render :action => :get_connection_status, :back => 'callback:', :layout => false
   end
   

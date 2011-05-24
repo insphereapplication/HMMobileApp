@@ -160,6 +160,9 @@ ul li a { display: block; padding: 1px 5px; text-decoration: none;}
 	text-align:center; 
 	color:#FFFFFD;
 	font-size:10px;
+}
+
+.ui-hidden {
 	display:none;
 }
 
