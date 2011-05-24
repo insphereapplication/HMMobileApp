@@ -35,12 +35,12 @@ module BrowserHelper
   end
   
   def offline_bar
-    if !System.has_network
-      #show connection state
-      %Q{
-        	<div data-nobackbtn="true" class="ui-offline-bar" role="banner"> Connection State: Offline </div>
-      }
-    end
+    %Q{
+      	<div data-nobackbtn="true" class="ui-offline-bar" role="banner"> Connection State: Offline </div>
+      	<script type="text/javascript">
+      		updateConnectionStatusIndicator();
+      	</script>
+    }
   end
   
   def udpate_status_lost_link(opportunity, text, status_code)

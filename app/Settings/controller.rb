@@ -41,16 +41,17 @@ class SettingsController < Rho::RhoController
     end
   end
   
+  def connection_status
+    System.has_network ? 'Online' : 'Offline'
+  end
+  
+  def get_connection_status
+    @connection_status = connection_status
+    render :action => :get_connection_status, :back => 'callback:', :layout => false
+  end
+  
   def detailed_logging_enabled?
     RhoConf.get_property_by_name('MinSeverity') == '1'
-  end
-
-  def has_connection?
-    if System.has_network
-      "Online"
-    else
-      "Offline"
-    end
   end
   
   def login
