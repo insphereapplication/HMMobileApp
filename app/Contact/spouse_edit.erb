@@ -1,0 +1,59 @@
+<script type="text/javascript">
+function PickDateCallbackChangeFocus() {
+popupBirthDateAJPicker('1', 'Birth Date', 'callback_datetime');
+document.getElementById('phoneList').focus();
+}
+</script>
+<div data-role="page" data-theme="b" data-cache="never">
+	<!-- TODO: What? --><form method="post" id="contact_edit" action="<%= url_for :action => :update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" name="contact_edit" onSubmit="javascript:return checkEdit(this);">
+		<%= offline_bar %>
+		<div data-role="header">
+			<a href="<%=url_for(:action => :show)%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
+			<h1>Edit</h1>
+			<a href="<%=url_for(:action=> :spouse_edit, :id => @contact.object)%>" data-direction="forward" data-icon="false"> Done </a>
+		</div>
+		<div data-role="content">
+			<input type="hidden" name="id" value="<%= @contact.object %>"/>
+			<ul data-role="listview" data-filter="false" data-inset="true">
+				<li data-icon="false">
+					<label for="contact[cssi_spousename]" class="fieldLabel">First Name:</label>
+					<input maxLength="50" name="contact[cssi_spousename]" value="<%= @contact.cssi_spousename %>"></label>
+				</li>
+				<li data-icon="false">
+					<label for="contact[cssi_spouselastname]" class="fieldLabel">Last Name:</label>
+					<input maxLength="50" name="contact[cssi_spouselastname]" value="<%= @contact.cssi_spouselastname %>"></label>
+				</li>
+				<li data-icon="false">
+					<label for="contact[cssi_spouse]" class="fieldLabel">Height:</label>
+		            <select name="contact[cssi_spouseheightft]" id="select-choice-2">
+						<option data-placeholder="true"> <%= @contact.cssi_spouseheightft %> </option>
+						<% (0..10).each do |i| %>
+							<option value="<%= i %>"><%= i %></option>
+						<% end %>
+					</select>
+					<select name="contact[cssi_spouseheightin]" id="select-choice-2">
+						<option data-placeholder="true"> <%= @contact.cssi_spouseheightin %> </option>
+						<% (0..12).each do |i| %>
+							<option value="<%= i %>"><%= i %></option>
+						<% end %>
+					</select>
+				</li>
+				<li data-icon="false">
+					<label for="contact[cssi_spouseweight]" class="fieldLabel">Weight:</label>
+					<input type="number" maxLength="4" name="contact[cssi_spouseweight]" value="<%= @contact.cssi_spouseweight %>">
+				</li>
+				<li data-icon="false">
+					<label for="contact[cssi_spousebirthdate]" class="fieldLabel">Date of Birth</label>
+					<input id="cssi_spousebirthdate" type="text" name="cssi_spousebirthdate" readonly value="<%= $choosed['0'] %>"  onClick="PickDateCallbackChangeFocus();"></input>
+					<!-- TODO: pre-populate birthdate for edit -->
+				</li>
+				<li>
+					<!-- TODO: gender select -->
+				</li>
+				<li>
+					<!-- TODO: tobacco use -->
+				</li>
+			</ul>
+		</div>
+	</form>
+</div>

@@ -395,6 +395,11 @@ function popupDateTimeAJPicker(flag, title, field_key) {
   return false;
 }
 
+function popupBirthDateAJPicker(flag, title, field_key) {
+  $.get('/app/Opportunity/birthpopup', { flag: flag, title: title, field_key: field_key });
+  return false;
+}
+
 function showSpin(message){
 	$.mobile.savingMessage = message;
 	$.mobile.pageSaving();
