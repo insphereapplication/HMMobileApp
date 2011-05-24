@@ -107,6 +107,14 @@ class ContactController < Rho::RhoController
     end 
   end
   
+  def do_not_call_button_spacing(allow_call,company_dnc,phone_type,phone_number,contact)
+    if allow_call == 'True' && company_dnc == 'False' && !phone_number.blank?
+      %Q{
+          <td width="20"></td>
+        }
+    end 
+  end
+  
   def do_not_call_press
     Settings.record_activity
     phone_type = @params['phone_type']
