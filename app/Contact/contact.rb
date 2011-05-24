@@ -44,6 +44,7 @@ class Contact
       union
       select c.contactid, c.* from Contact c, Policy p where c.contactid = p.contact_id
       order by lastname collate nocase
+      #{get_pagination_sql(page, page_size)}
     })
     # Contact.find_by_sql(%Q{
     #       select distinct(c.contactid), c.* from Contact c, Opportunity o 
