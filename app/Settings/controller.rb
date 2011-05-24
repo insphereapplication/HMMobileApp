@@ -111,6 +111,8 @@ class SettingsController < Rho::RhoController
       if httpErrCode == "403" # User is not authorized to use the mobile device, so we need to purge the local database
         @msg ||= "Sorry! The Insphere InSIte Mobile application is only available for download for authorized pilot users.  More to come regarding the Insphere InSite Mobile Program and roll-out schedule in July."
         Rhom::Rhom.database_fullclient_reset_and_logout
+      elsif errCode == Rho::RhoError::ERR_NETWORK
+        @msg ||= "Can't connect to the network. Please try again."
       else
         @msg ||= "The user name or password you entered is not valid"    
       end
