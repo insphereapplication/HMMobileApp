@@ -56,10 +56,9 @@
 				<div class="ui-body ui-body-d">
 					<label for="contact[cssi_spousegender]" class="fieldLabel">Gender:</label>
 					<select name="contact[cssi_spousegender]" data-role="none" id="contact[cssi_spousegender]">
-						<option data-placeholder="true"> <%= @contact.cssi_spousegender %> </option>
 						<option value=""></option>
-						<option value="Male">Male</option>
-						<option value="Female">Female</option>
+						<option value="Male" <% if @contact.cssi_spousegender == "Male" %> selected="selected" <% end %>>Male</option>
+						<option value="Female" <% if @contact.cssi_spousegender == "Female" %> selected="selected" <% end %>>Female</option>
 					</select>
 				</div>
 			</div>
