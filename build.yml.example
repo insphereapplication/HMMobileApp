@@ -7,7 +7,11 @@ build: debug
 bbver: 4.6
 capabilities:
     - push
-android: 
+android:
+  production:
+    certificate: /full/path/to/insphere_insite.keystore
+    password: "5zW8e3ZuS7DWY0TsnCTyyWnpGSDUqUgj"
+    alias: "Insite"
   emulator: rhoandroid
   android_title: 1
   push:
