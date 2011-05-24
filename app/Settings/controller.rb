@@ -681,12 +681,13 @@ class SettingsController < Rho::RhoController
   end
 
   def check_for_upgrade
-    latest_version = AppInfo.instance[0].latest_version
-    min_required_version = AppInfo.instance[0].min_required_version
+    latest_version = AppInfo.instance.latest_version
+    min_required_version = AppInfo.instance.min_required_version
     app_version = Rho::RhoConfig.app_version
     
     puts "*** Client should be running at least version #{min_required_version} ***"
     puts "*** Client is running #{app_version} ***"
+    puts "*** Latest version is #{latest_version.inspect} ***"
 
     puts '*** Version check -- AppInfo: ' + min_required_version + ' Curr ' + app_version + '***'
       
@@ -700,21 +701,21 @@ class SettingsController < Rho::RhoController
         :message => "Please upgrade to version #{min_required_version}",
         :title => 'Update Required!',
         :buttons => ["OK"],
-        :callback => url_for( :action => :on_dismiss_popup )
+        :callback => url_for( :action => :on_dismiss_popup, :query => {:upgrade_type => 'force'} )
       } )
       
       # take the user back to the login screen, don't let them skip it in the future
       # the roundabout way of preventing the skip is to say that the initial sync has not yet occurred
       Settings.initial_sync_complete = false
       goto_login_override_auto
-    elsif needs_upgrade?( latest_version, app_version ) && $prompted_for_upgrade == false
+    elsif !latest_version.nil? && needs_upgrade?( latest_version, app_version ) && $prompted_for_upgrade == false
       $prompted_for_upgrade = true
       Alert.show_popup(
       {
         :message => "A new version (#{latest_version}) is available. Would you like to upgrade now?",
         :title => 'Update Available!',
         :buttons => ["Yes", "No"],
-        :callback => url_for( :action => :on_dismiss_popup )
+        :callback => url_for( :action => :on_dismiss_popup, :query => {:upgrade_type => 'soft'} )
       } )
     else
       puts "*** Client does not need to upgrade *** "
@@ -725,15 +726,17 @@ class SettingsController < Rho::RhoController
     id = @params['button_id']
     title = @params['button_title']
     index = @params['button_index']
+    upgrade_type = @params['upgrade_type']
     
     platform = System.get_property('platform')
     
+    # upgrade_type options are currently 'force' and 'soft'; code below will have to change if we add other options
     if platform == 'APPLE'
-      upgrade_url = AppInfo.instance[0].apple_upgrade_url
+      upgrade_url = @params['upgrade_type'] == 'force' ? AppInfo.instance.apple_upgrade_url : AppInfo.instance.apple_soft_upgrade_url
     elsif platform == 'ANDROID'
-      upgrade_url = AppInfo.instance[0].android_upgrade_url
+      upgrade_url = @params['upgrade_type'] == 'force' ? AppInfo.instance.android_upgrade_url : AppInfo.instance.android_soft_upgrade_url
     end
-        
+    
     if ( id == 'OK' || id == 'Yes' ) # OK for force upgrade, Yes for optional upgrade
       System.open_url( upgrade_url )
     end
