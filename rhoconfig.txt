@@ -4,6 +4,9 @@ start_path = '/app/Settings/init'
 # path to the options page (in this case handled by javascript)
 options_path = '/app/Settings'
 
+#app database version -- changing this value will wipe the entire db for an upgrade
+app_db_version = '1.0'
+
 # location of bundle url (i.e. from rhohub.com); used by desktop win32 simulator
 rhobundle_zip_url = ''
 
@@ -26,7 +29,7 @@ LogCategories = *
 ExcludeLogCategories = 
 
 # max log file size in Bytes, set 0 to unlimited size; when limit is reached, log wraps to beginning of file
-MaxLogFileSize=50000
+MaxLogFileSize=0
 
 # turn on local http server traces, off by default
 #net_trace = 0
@@ -46,10 +49,10 @@ KeepTrackOfLastVisitedPage = 0
 LastVisitedPage = ''
 
 #MODEL_RHOHUB -- for UAT/QA of new features from master
-# syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
+syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
 
 #MODEL ONSITE
-syncserver = 'https://rhosync.insphereis.net/application'
+#syncserver = 'https://rhosync.insphereis.net/application'
 
 #MODEL ONSITE IP
 # syncserver = 'https://199.102.216.25/application'
@@ -77,7 +80,7 @@ syncserver = 'https://rhosync.insphereis.net/application'
 # open rhodes app in full screen mode
 # default 1 for Android up to Rhodes 2.2.5.
 # on all other platforms and on Android from Rhodes >2.2.5 default 0
-#full_screen = 1
+full_screen = 0
 
 # disable the Android page loading progress bar
 #disable_loading_indication = 1

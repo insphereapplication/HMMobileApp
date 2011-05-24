@@ -1,0 +1,97 @@
+<div class="pageTitle">
+  <h1>Edit <%= @policy.product %></h1>
+</div>
+
+<div class="toolbar">
+  <div class="leftItem backButton">
+    <a href="<%= url_for :action => :show, :id => @policy.object %>">Cancel</a>
+  </div>
+  <div class="rightItem regularButton">
+    <a class="button" href="<%= url_for :action => :delete, :id => @policy.object %>">Delete</a>
+  </div>
+</div>
+
+<div class="content">
+  <form method="POST" action="<%= url_for :action => :update %>">
+    <input type="hidden" name="id" value="<%= @policy.object %>"/>
+    <ul>
+      
+          <li>
+            <label for="policy[product]" class="fieldLabel">Product</label>
+            <input type="text" name="policy[product]" value="<%= @policy.product %>" <%= placeholder( "Product" ) %> />
+          </li>
+      
+          <li>
+            <label for="policy[carrier]" class="fieldLabel">Carrier</label>
+            <input type="text" name="policy[carrier]" value="<%= @policy.carrier %>" <%= placeholder( "Carrier" ) %> />
+          </li>
+      
+          <li>
+            <label for="policy[primary_insured]" class="fieldLabel">Primary insured</label>
+            <input type="text" name="policy[primary_insured]" value="<%= @policy.primary_insured %>" <%= placeholder( "Primary insured" ) %> />
+          </li>
+      
+          <li>
+            <label for="policy[policy_status]" class="fieldLabel">Policy status</label>
+            <input type="text" name="policy[policy_status]" value="<%= @policy.policy_status %>" <%= placeholder( "Policy status" ) %> />
+          </li>
+      
+          <li>
+            <label for="policy[status_reason]" class="fieldLabel">Status reason</label>
+            <input type="text" name="policy[status_reason]" value="<%= @policy.status_reason %>" <%= placeholder( "Status reason" ) %> />
+          </li>
+      
+          <li>
+            <label for="policy[carrier_status]" class="fieldLabel">Carrier status</label>
+            <input type="text" name="policy[carrier_status]" value="<%= @policy.carrier_status %>" <%= placeholder( "Carrier status" ) %> />
+          </li>
+      
+          <li>
+            <label for="policy[decision_classification]" class="fieldLabel">Decision classification</label>
+            <input type="text" name="policy[decision_classification]" value="<%= @policy.decision_classification %>" <%= placeholder( "Decision classification" ) %> />
+          </li>
+      
+          <li>
+            <label for="policy[application_number]" class="fieldLabel">Application number</label>
+            <input type="text" name="policy[application_number]" value="<%= @policy.application_number %>" <%= placeholder( "Application number" ) %> />
+          </li>
+      
+          <li>
+            <label for="policy[application_date]" class="fieldLabel">Application date</label>
+            <input type="text" name="policy[application_date]" value="<%= @policy.application_date %>" <%= placeholder( "Application date" ) %> />
+          </li>
+      
+          <li>
+            <label for="policy[submitted_date]" class="fieldLabel">Submitted date</label>
+            <input type="text" name="policy[submitted_date]" value="<%= @policy.submitted_date %>" <%= placeholder( "Submitted date" ) %> />
+          </li>
+      
+          <li>
+            <label for="policy[policy_number]" class="fieldLabel">Policy number</label>
+            <input type="text" name="policy[policy_number]" value="<%= @policy.policy_number %>" <%= placeholder( "Policy number" ) %> />
+          </li>
+      
+          <li>
+            <label for="policy[effective_date]" class="fieldLabel">Effective date</label>
+            <input type="text" name="policy[effective_date]" value="<%= @policy.effective_date %>" <%= placeholder( "Effective date" ) %> />
+          </li>
+      
+          <li>
+            <label for="policy[payment_mode]" class="fieldLabel">Payment mode</label>
+            <input type="text" name="policy[payment_mode]" value="<%= @policy.payment_mode %>" <%= placeholder( "Payment mode" ) %> />
+          </li>
+      
+          <li>
+            <label for="policy[annual_premium]" class="fieldLabel">Annual premium</label>
+            <input type="text" name="policy[annual_premium]" value="<%= @policy.annual_premium %>" <%= placeholder( "Annual premium" ) %> />
+          </li>
+      
+          <li>
+            <label for="policy[insured_type]" class="fieldLabel">Insured type</label>
+            <input type="text" name="policy[insured_type]" value="<%= @policy.insured_type %>" <%= placeholder( "Insured type" ) %> />
+          </li>
+      
+    </ul>
+    <input type="submit" class="standardButton" value="Update"/>
+  </form>
+</div>

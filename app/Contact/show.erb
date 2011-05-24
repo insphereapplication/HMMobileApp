@@ -1,4 +1,5 @@
 <div data-role="page" data-theme="b" data-cache="never">
+	<%= offline_bar%>
 	<div data-role="header" data-backbtn="false">
 				<% if @params['origin'] == "contact"%>
 					<a href="<%=url_for(:action => :index)%>" data-direction="reverse" rel="external" data-icon="back">Contacts</a>
@@ -102,6 +103,19 @@
 						<% end %>
 				 </ul>
 				<% end %>
+				<ul data-role="listview" data-filter="false" data-inset="true">
+					<li data-role="list-divider">Policies</li>
+					<% puts @contact.policies.inspect %>
+					<% @contact.policies.each do |policy| %>
+					<li>
+						<a href="<%= url_for(:controller => :Policy, :action => :show, :id => policy.object, :query => {:origin => "contact"}) %>">
+							<p>Carrier: <%= policy.carrier_name %></p>
+							<p>Application Date: <%= to_date(policy.cssi_applicationdate) %></p>
+							<p>Status: <%= policy.cssi_statusreason %></p>
+						</a>
+					</li>
+					<% end %>
+				</ul>
 			</div>
 			
 </div>

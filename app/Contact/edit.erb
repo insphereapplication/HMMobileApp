@@ -1,6 +1,7 @@
 <div data-role="page" data-theme="b">
 	  <form method="post" id="contact_edit" action="<%= url_for :action => :update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" name="contact_edit" onSubmit="javascript:return checkEdit(this);">
-	<div data-inline="true">	
+	<div data-inline="true">
+		<%= offline_bar%>	
 		<div data-role="header" data-backbtn="false" data-theme="b" >
 		
 			<a href="<%=url_for(:action=>:show, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-direction="reverse" data-icon="back">Cancel</a>

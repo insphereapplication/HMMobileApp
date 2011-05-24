@@ -29,6 +29,26 @@ class SettingsController < Rho::RhoController
     end
   end
 
+  def local_changes?
+    (Opportunity.changed? || Contact.changed?)
+  end
+  
+  def sync_state
+    if local_changes?
+      "Yes"
+    else
+      "No"
+    end
+  end
+
+  def has_connection?
+    if System.has_network
+      "Online"
+    else
+      "Offline"
+    end
+  end
+  
   def login
     @msg = @params['msg']
     override_auto_login = @params['override_auto_login']
@@ -88,7 +108,7 @@ class SettingsController < Rho::RhoController
       end
       
       if httpErrCode == "403" # User is not authorized to use the mobile device, so we need to purge the local database
-        @msg ||= "The user name you entered is not authorized to use this application."
+        @msg ||= "Sorry! The Insphere InSIte Mobile application is only available for download for authorized pilot users.  More to come regarding the Insphere InSite Mobile Program and roll-out schedule in July."
         Rhom::Rhom.database_fullclient_reset_and_logout
       else
         @msg ||= "The user name or password you entered is not valid"    
@@ -119,7 +139,7 @@ class SettingsController < Rho::RhoController
       end
       
       if httpErrCode == "403" # User is not authorized to use the mobile device, so we need to purge the local database
-        @msg ||= "The user name you entered is not authorized to use this application."
+        @msg ||= "Sorry! The Insphere InSite Mobile application is only available for download for authorized pilot users.  More to come regarding the Insphere InSite Mobile Program and roll-out schedule in July."
         Rhom::Rhom.database_fullclient_reset_and_logout
       else
         @msg ||= "The user name or password you entered is not valid"    
@@ -151,11 +171,45 @@ class SettingsController < Rho::RhoController
   
   def do_logout
     Rhom::Rhom.database_full_reset_and_logout
-    Settings.clear_credentials
-    SyncEngine.set_pollinterval(-1)
+    SyncEngine.set_pollinterval(0)
+    Settings.flush_instance
+    
     Rho::NativeTabbar.remove
     @msg = "You have been logged out."
     goto_login(@msg)
+  end
+  
+  def validate_pin
+    enter_pin = @params['enter_pin']
+    verify_pin = @params['verify_pin']
+    password = @params['pin_password']
+    
+    if enter_pin and verify_pin and password
+      if ( enter_pin == verify_pin )
+        if ( password == Settings.password )
+          @msg = nil
+          Settings.pin = verify_pin
+          @msg =  "Your PIN has been reset."
+          redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
+          # Alert.show_popup(
+          #           {
+          #             :message => "Your PIN has been reset.",
+          #             :buttons => ["OK"],
+          #             :callback => url_for( :action => :validate_pin_callback )
+          #           })
+        else
+          @msg = 'The password you entered is not valid.'
+        end
+      else
+        @msg = 'Please enter matching PINs'
+      end
+    end
+    
+    render :action => :pin if @msg and @msg.length > 0
+  end # validate_pin
+  
+  def validate_pin_callback
+    redirect :action => :index
   end
   
   def reset
@@ -168,10 +222,36 @@ class SettingsController < Rho::RhoController
   
   def do_reset
     Rhom::Rhom.database_fullclient_reset_and_logout
-    Settings.clear_credentials
-    SyncEngine.set_pollinterval(-1)
+    Settings.flush_instance
+    SyncEngine.set_pollinterval(0)
     @msg = "Database has been reset."
     redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
+  end
+  
+  def full_reset_logout_keep_device_id
+    Rhom::Rhom.database_full_reset_and_logout
+    # clear out cached settings
+    Settings.flush_instance
+  end
+  
+  def full_reset_logout
+    Rhom::Rhom.database_fullclient_reset_and_logout
+    # clear out cached settings
+    Settings.flush_instance
+  end
+  
+  def full_reset_logout_keep_credentials
+    # backup credential cache before DB reset
+    login_backup = Settings.login
+    password_backup = Settings.password
+    credentials_verified_backup = Settings.credentials_verified
+            
+    full_reset_logout
+    
+    # restore credential cache after DB reset
+    Settings.login = login_backup
+    Settings.password = password_backup
+    Settings.credentials_verified = credentials_verified_backup
   end
   
   def do_sync
@@ -199,7 +279,11 @@ class SettingsController < Rho::RhoController
       :buttons => ["Cancel", "View"],
       :callback => url_for(:action => :on_dismiss_notify_popup) 
     })
-    ""
+    if System::get_property('platform') == 'ANDROID'
+      "rho_push"
+    else
+      ""
+    end
   end
   
   # this is the message returned from RhoSync when Rhodes is sending a token for a session that no longer exists (like after a Redis reset) 
@@ -247,28 +331,43 @@ class SettingsController < Rho::RhoController
     elsif status == "in_progress"
       @on_sync_in_progress.call
     elsif status == "error"
+      err_code = @params['error_code'].to_i
+      rho_error = Rho::RhoError.new(err_code)
+      
+      is_bad_request_data = (err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER) && !@params['server_errors'].to_s[/406 Not Acceptable/].nil?
+      
       if @params['server_errors'] && @params['server_errors']['create-error']
         log_error("Create error", @params.inspect)
-        SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'], :recreate)
+        unless is_bad_request_data  
+          SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'], :recreate)
+        else
+          #notify the user here?
+          #the create data given to the proxy was bad and will not succeed if tried again; delete the create
+          SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'], :delete)
+        end
       end
       
       if @params['server_errors'] && @params['server_errors']['update-error']
         log_error("Update error", @params.inspect)
-        SyncEngine.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :retry)
+        unless is_bad_request_data
+          SyncEngine.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :retry)
+        else
+          #notify the user here?
+          #we need to roll back the change that was made here, but the Rhodes API doesn't provide a mechanism to do this
+        end
       end
-
-      err_code = @params['error_code'].to_i
-      rho_error = Rho::RhoError.new(err_code)
 
       @msg = rho_error.message unless @msg and @msg.length > 0   
       
       if (@params['error_message'].downcase == 'unknown client') or rho_error.unknown_client?(@params['error_message'])
-        Rhom::Rhom.database_fullclient_reset_and_logout
-        log_error("Error: Unknown client", "Verified: #{Settings.has_verified_credentials?}" + Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        SyncEngine.set_pollinterval(-1)
+        log_error("Error: Unknown client", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
+        
+        SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
-        Settings.clear_credentials
-        goto_login("Unknown client, logging you back in.")
+        
+        full_reset_logout_keep_credentials
+        
+        goto_login("Unknown client, logging in again.")
       elsif err_code == Rho::RhoError::ERR_NETWORK
         #leave ':send_to_exceptional => false' alone until infinite loop issue is fixed for clients without a network connection
         log_error("Network connectivity lost", Rho::RhoError.err_message(err_code) + " #{@params.inspect}", {:send_to_exceptional => false})
@@ -280,30 +379,37 @@ class SettingsController < Rho::RhoController
         @on_sync_error.call({:error_source => 'connection'})
       elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)      
         log_error("RhoSync error: client is not logged in / unauthorized", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        SyncEngine.set_pollinterval(-1)
+        SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
         retry_login
       elsif err_code == Rho::RhoError::ERR_REMOTESERVER && @params['error_message'] == SESSION_ERROR_MSG
         # Rhodes is sending the server a token for a non-existent session. Time to start over.
-        Rhom::Rhom.database_fullclient_reset_and_logout
         log_error("RhoSync error: unknown session", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        SyncEngine.set_pollinterval(-1)
+        
+        SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
-        goto_login("Unknown session, loging in again.")
+                
+        full_reset_logout
+        
+        goto_login("Unknown session, please log in again.")
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/401 Unauthorized/].nil?
         #proxy returned a 401, need to re-login
         log_error("Error: 401 Unauthorized from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        SyncEngine.set_pollinterval(-1)
+        SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
         retry_login
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/403 Forbidden/].nil?
         #proxy returned a 403, need to purge the database and log the user out
         log_error("Error: 403 Forbidden from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        SyncEngine.set_pollinterval(-1)
+        SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
-        msg = "The user name you entered is not authorized to use this application."
-        Rhom::Rhom.database_fullclient_reset_and_logout
+        
+        full_reset_logout
+        
+        msg = "Sorry! The Insphere InSite Mobile application is only available for download for authorized pilot users.  More to come regarding the Insphere InSite Mobile Program and roll-out schedule in July."
         goto_login(msg)
+      elsif is_bad_request_data
+        log_error("Bad request data","Bad request data, client sent invalid data to CRM proxy, proxy returned 406. Error params: #{@params.inspect}")
       else
         log_error("Unhandled error in sync_notify: #{err_code}", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         @on_sync_error.call({:error_source => 'unknown', :error_code => err_code})
@@ -329,18 +435,14 @@ class SettingsController < Rho::RhoController
     
     #uncomment the following lines to show popups when errors are logged
     unless params[:show_popup] == false
-      # Alert.show_popup({
-      #                 :message => message, 
-      #                 :title => title, 
-      #                 :buttons => ["OK"]
-      #               })
+      # show_popup(title, message)
     end
   end
   
   def show_popup(title, message)
     Alert.show_popup({
-      :message => message,
       :title => title,
+      :message => message,
       :buttons => ["OK"]
     })
   end
@@ -438,6 +540,30 @@ class SettingsController < Rho::RhoController
     update_login_sync_progress(@params['source_name'], 100)
   end
   
+  def needs_upgrade?(min_version, current_version) # returns true if current_version is less than min_version
+    # comparison is lexicographical, as in it reads from left to right and only proceeds to the 
+    # next sub-version if a given sub-version in min_version and current_version is equal
+    min_version_split = min_version.split(".")
+    current_version_split = current_version.split(".")
+    
+    puts "****Version check: min version = #{min_version_split}, current version = #{current_version_split}****"
+    
+    # compare sub-versions from left to right
+    # if current_version has fewer version numbers than min_version, assume '0' for missing version numbers to the right 
+    (0...min_version_split.count).each do |i|
+      if min_version_split[i] > (current_version_split[i] || '0')
+        # current_version must be older, no need to continue checking
+        return true
+      elsif min_version_split[i] < (current_version_split[i] || '0')
+        # current_version must be newer, no need to continue checking
+        return false
+      end
+    end
+    
+    # given versions are equal
+    return false
+  end
+  
 
   def check_force_upgrade
     min_required_version = AppInfo.instance[0].min_required_version
@@ -449,33 +575,25 @@ class SettingsController < Rho::RhoController
     puts "*** Client is running #{app_version} ***"
     puts "*** Apple Upgrade URL is #{apple_upgrade_url} ***"
     puts "*** Android Upgrade URL is #{android_upgrade_url} ***"
-    
-    minAppVersion = AppInfo.instance[0].min_required_version
-    currentAppVersion = Rho::RhoConfig.app_version.split(".")
-    puts '*** Version check -- AppInfo: ' + minAppVersion + ' Curr ' + Rho::RhoConfig.app_version + '***'
-    needs_upgrade = false
-    minAppVersion.split(".").each_with_index do |ver, i|
-      # puts 'Min Version: ' + ver + 'Cur Version: ' + currentAppVersion[i]
-      if ver > currentAppVersion[i]
-        needs_upgrade = true
-        break
-      else
-      end
-    end
+
+    puts '*** Version check -- AppInfo: ' + min_required_version + ' Curr ' + app_version + '***'
       
-    if needs_upgrade        
-    # if min_required_version > app_version
+    if needs_upgrade?(min_required_version, app_version) 
       puts "*** Client needs to upgrade ***"
       SyncEngine.stop_sync
-      SyncEngine.set_pollinterval(-1)
+      SyncEngine.set_pollinterval(0)
       Alert.show_popup(
       {
-        :message => "You will required to upgrade to version #{min_required_version}",
+        :message => "Please upgrade to version #{min_required_version}",
         :title => 'Update Required!',
         :buttons => ["OK"],
         :callback => url_for( :action => :on_dismiss_popup )
       } )
-       
+      
+      # take the user back to the login screen, don't let them skip it in the future
+      # the roundabout way of preventing the skip is to say that the initial sync has not yet occurred
+      Settings.initial_sync_complete = false
+      goto_login_override_auto
     else
       puts "*** Client does not need to upgrade *** "
     end

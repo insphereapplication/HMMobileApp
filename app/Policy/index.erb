@@ -1,5 +1,5 @@
 <div class="pageTitle">
-  <h1>Notes</h1>
+  <h1>Policies</h1>
 </div>
 
 <div class="toolbar">
@@ -13,11 +13,11 @@
 
 <div class="content">
   <ul>
-    <% @notes.each do |note| %>
+    <% @policies.each do |policy| %>
     
         <li>
-          <a href="<%= url_for :action => :show, :id => note.object %>">
-            <span class="title"><%= note.parent_id %></span><span class="disclosure_indicator"></span>
+          <a href="<%= url_for :action => :show, :id => policy.object %>">
+            <span class="title"><%= policy.product_name %></span><span class="disclosure_indicator"></span>
           </a>
         </li>
     

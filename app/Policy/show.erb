@@ -1,0 +1,51 @@
+<div data-role="page" data-theme="b" data-cache="never">
+	<%= offline_bar %>
+	<% if @params['origin'] == "contact" %>
+		<div data-role="header" data-backbtn="false">
+			<a href="<%= url_for(:controller => :Contact, :action => :show, :id => @policy.contact.object, :query =>{:origin => @params['origin']}) %>" data-direction="reverse" data-icon="back">Contact</a>
+<%
+=begin %>
+			<a rel="external" href="<%= url_for(:controller => :Contact, :action => :index) %>" data-direction="reverse" data-icon="back">Contacts</a>
+<%
+=end %>
+			<h3>Policy Detail</h3
+		</div>
+	<% else %>
+		<div data-role="header" data-backbtn="false">
+			<h3>Policy Detail</h3>
+		</div>
+	<% end %>
+	<div data-role="content">
+		<ul data-role="listview" data-theme="d" data-inset="true">
+			<li data-role="list-divider">General Information</li>
+			<li>Carrier: <%= @policy.carrier_name %></li>
+			<li>Product: <%= @policy.product_name %></li>
+			<li>Primary Insured: <%= @policy.cssi_primaryinsured %></li>
+		</ul>
+				
+		<ul data-role="listview" data-theme="d" data-inset="true">		
+			<li data-role="list-divider">Status Information</li>
+			<li>Policy Status: <%= @policy.statuscode %></li>
+			<li>Status Reason: <%= @policy.cssi_statusreason %></li>
+			<li>Carrier Status: <%= @policy.cssi_carrierstatusvalue %></li>
+			<li>Decision Classification:</li>
+		</ul>
+		
+		<ul data-role="listview" data-theme="d" data-inset="true">	
+			<li data-role="list-divider">Application Information</li>
+			<li>Application Number: <%= @policy.cssi_applicationnumber %></li>
+			<li>Submitted Date: <%= to_date(@policy.cssi_submitteddate) %></li>
+			<li>Application Date: <%= to_date(@policy.cssi_applicationdate) %></li>
+		</ul>
+			
+		<ul data-role="listview" data-theme="d" data-inset="true">
+			<li data-role="list-divider">Policy Information</li>
+			<li>Policy Number: <%= @policy.cssi_policynumber %></li>
+			<li>Effective Date: <%= to_date(@policy.cssi_effectivedate) %></li>
+			<li>Payment Mode: <%= @policy.cssi_paymentmode %></li>
+			<li>Annual Premium: &#36;<%= @policy.cssi_annualpremium.to_f %></li>
+			<li>Insured Type: <%= @policy.cssi_insuredtype %></li>
+		</ul>
+	</div>
+</div>
+
