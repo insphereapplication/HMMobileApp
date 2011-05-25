@@ -20,7 +20,7 @@ class SettingsController < Rho::RhoController
   def init
     if can_skip_login?
       #login & sync in background
-      SyncEngine.login(Settings.login, Settings.password,  '/app/Settings/retry_login_callback')
+      SyncEngine.login(Settings.login, Settings.password,  '/app/Settings/background_login_callback')
       #go to opportunity index page
       goto_opportunity_init_notify
     else
@@ -73,10 +73,10 @@ class SettingsController < Rho::RhoController
     WebView.navigate ( url_for :action => :login, :query => {:msg => msg, :override_auto_login => true} )
   end
   
-  def retry_login
+  def background_login
     # if the user has stored successful login credentials, attempt to auto-login with them
     if Settings.has_verified_credentials?
-      SyncEngine.login(Settings.login, Settings.password,  '/app/Settings/retry_login_callback')
+      SyncEngine.login(Settings.login, Settings.password,  '/app/Settings/background_login_callback')
     else
       goto_login
     end
@@ -121,7 +121,7 @@ class SettingsController < Rho::RhoController
     end
   end
   
-  def retry_login_callback
+  def background_login_callback
     errCode = @params['error_code'].to_i
     httpErrCode = @params['error_message'].split[0]
     
@@ -351,7 +351,7 @@ class SettingsController < Rho::RhoController
         log_error("RhoSync error: client is not logged in / unauthorized", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
-        retry_login
+        background_login
       elsif err_code == Rho::RhoError::ERR_REMOTESERVER && @params['error_message'] == SESSION_ERROR_MSG
         # Rhodes is sending the server a token for a non-existent session. Time to start over.
         log_error("RhoSync error: unknown session", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
@@ -367,7 +367,7 @@ class SettingsController < Rho::RhoController
         log_error("Error: 401 Unauthorized from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
-        retry_login
+        background_login
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/403 Forbidden/].nil?
         #proxy returned a 403, need to purge the database and log the user out
         log_error("Error: 403 Forbidden from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
