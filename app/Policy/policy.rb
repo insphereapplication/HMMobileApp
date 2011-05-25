@@ -28,7 +28,6 @@ class Policy
   property :modifiedon, :string
   
   def contact
-    puts "*** Contact id = " + self.contact_id + " ***"
     Contact.find(self.contact_id)
   end
 end
