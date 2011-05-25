@@ -93,7 +93,7 @@
 				</ul>
 				<div data-role="collapsible" data-collapsed="true">
 					<% if @contact.has_spouse_info? %>
-						<h3>Spouse - <%= @contact.cssi_spousename %> <%= @contact.cssi_spouselastname %>
+						<h3>Spouse - <%= @contact.cssi_spousename %>&nbsp;<%= @contact.cssi_spouselastname %></h3>
 					<% else %>
 						<h3>Spouse</h3>
 					<% end %>
@@ -106,15 +106,7 @@
 								<p>DOB: <%= to_date(@contact.cssi_spousebirthdate) %></p>
 							</li>
 						<% else %>
-							<li data-icon="plus">
-								<a href="<%= url_for(:controller => :Contact, :action => :spouse_add, :id => contact.object, :query => {:origin => "contact"}) %>">
-							</li>
-						<% end %>
-					</ul>
-				</div>
-				<div data-role="collapsible" data-collapsed="true">
-					<% if @contact.dependents.size == 0 %
-							<li data-icon="plus">
+							<li data-icon="add">
 								<a href="<%= url_for(:controller => :Contact, :action => :spouse_add, :id => @contact.object, :query => {:origin => "contact"}) %>">Add Spouse</a>
 							</li>
 						<% end %>
@@ -133,8 +125,7 @@
 						</li>
 						<% @contact.dependents.each do |dependent| %>
 						<li>
-							<a href="<%= url_for(:controller => :Contact, :action => :dependent_show, :id => dependent.object, :query => {:origin => "contact"}) %>"></a>
-							<p></p><p><b><%= dependent.cssi_name %>&nbsp;<%= dependent.cssi_lastname %></b></p>
+							<p></p><a href="<%= url_for(:controller => :Dependent, :action => :show, :id => dependent.object, :query => {:origin => "contact"}) %>"><%= dependent.cssi_name %>&nbsp;<%= dependent.cssi_lastname %></a>
 							<p><%= dependent.cssi_gender %>, Age <%= dependent.cssi_age %></p>
 							<p>DOB: <%= to_date(dependent.cssi_dateofbirth) %></p>
 						</li>

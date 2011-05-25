@@ -14,7 +14,7 @@ class DependentController < Rho::RhoController
   def show
     @dependent = Dependent.find(@params['id'])
     if @dependent
-      @contact = @policy.contact
+      @contact = @dependent.contact
       puts "*** @contact = " + @contact.inspect + " ***"
       render :action => :show, :back => url_for(:action => :index)
     else
