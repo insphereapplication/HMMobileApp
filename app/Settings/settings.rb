@@ -30,6 +30,10 @@ class Settings
       sync_type == 'init'
     end
     
+    def is_new_opportunity_sync?
+      sync_type == 'new_opportunity'
+    end
+    
     def clear_credentials
       instance.login=nil
       instance.password=nil

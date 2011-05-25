@@ -230,25 +230,11 @@ class SettingsController < Rho::RhoController
     redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
   end
   
-  def on_dismiss_notify_popup
-    if @params['button_id'] == 'View'
-      Opportunity.set_notification(
-        url_for(:controller => :Opportunity, :action => :sync_notify),
-        "sync_complete=true"
-      )
-      SyncEngine.dosync
-    end
-  end
-  
   def push_notify
-    Alert.vibrate(2000)
+    #setup callbacks to use new opportunity workflow
+    set_sync_type('new_opportunity')
+    SyncEngine.dosync
 
-    Alert.show_popup({
-      :message => "You have new Opportunities", 
-      :title => 'New Opportunities', 
-      :buttons => ["Cancel", "View"],
-      :callback => url_for(:action => :on_dismiss_notify_popup) 
-    })
     if System::get_property('platform') == 'ANDROID'
       "rho_push"
     else
@@ -455,6 +441,8 @@ class SettingsController < Rho::RhoController
   def setup_sync_handlers
     if Settings.is_init_sync?
       set_init_sync_handlers
+    elsif Settings.is_new_opportunity_sync?
+      set_new_opportunity_sync_handlers
     else
       set_background_sync_handlers
     end
@@ -478,6 +466,13 @@ class SettingsController < Rho::RhoController
     @on_sync_complete = lambda {|*args| init_on_sync_complete(*args)}
     @on_sync_in_progress = lambda {|*args| init_on_sync_in_progress(*args)}
     @on_sync_ok = lambda {|*args| init_on_sync_ok(*args)}
+  end
+  
+  def set_new_opportunity_sync_handlers
+    @on_sync_error = lambda {|*args|}
+    @on_sync_complete = lambda {|*args|}
+    @on_sync_in_progress = lambda {|*args|}
+    @on_sync_ok = lambda {|*args| new_opportunity_on_sync_ok(*args)}
   end
   
   def init_on_sync_error(*args)
@@ -517,6 +512,28 @@ class SettingsController < Rho::RhoController
   
   def init_on_sync_ok(*args)
     update_login_sync_progress(@params['source_name'], 100)
+  end
+  
+  def new_opportunity_on_sync_ok(*args)
+    if @params['source_name'] == 'Opportunity'
+      Alert.vibrate(2000)
+
+      Alert.show_popup({
+        :message => "You have new Opportunities", 
+        :title => 'New Opportunities', 
+        :buttons => ["Cancel", "View"],
+        :callback => url_for(:action => :on_dismiss_new_opportunity_popup, :back => 'callback:') 
+      })
+    end
+  end
+  
+  def on_dismiss_new_opportunity_popup
+    if @params['button_id'] == 'View'
+      Rho::NativeTabbar.switch_tab(0) 
+      WebView.navigate( 
+        url_for(:controller => :Opportunity, :action => :index)
+      )
+    end
   end
   
   def needs_upgrade?(min_version, current_version) # returns true if current_version is less than min_version
