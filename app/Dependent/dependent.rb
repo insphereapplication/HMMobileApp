@@ -6,9 +6,9 @@ class Dependent
   enable :sync
   set :sync_priority, 70
 
+  property :contact_id, :string
   property :cssi_age, :string
   property :cssi_comments, :string
-  property :cssi_contactid, :string
   property :cssi_dateofbirth, :string
   property :cssi_dependentsid, :string
   property :cssi_gender, :string

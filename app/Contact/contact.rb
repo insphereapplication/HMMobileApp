@@ -32,6 +32,7 @@ class Contact
   property :cssi_state2id, :string #business address state
   property :address2_postalcode, :string 
   property :contactid, :string
+  property :cssi_heightft, :string
   property :cssi_heightin, :string
   property :cssi_weight, :string
   property :cssi_usetobacco, :string
