@@ -92,28 +92,28 @@
 					</li>
 				</ul>
 				<div data-role="collapsible" data-collapse="true">
-					<% if @contact.cssi_spousename %>
-						<h3>Spouse</h3>
-					<% else %>
+					<% if @contact.has_spouse_info? %>
 						<h3>Spouse - <%= @contact.cssi_spousename %> <%= @contact.cssi_spouselastname %>
+					<% else %>
+						<h3>Spouse</h3>
 					<% end %>
 					<ul data-role="listview" data-filter="false" data-inset="true">
 						<li data-role="list-divider">Spouse</li>
-						<% if @contact.spouse %>
-						<li data-icon="plus">
-							<a href="<%= url_for(:controller => :Contact, :action => :spouse_add, :id => contact.object, :query => {:origin => "contact"}) %>">
-						</li>
+						<% if @contact.has_spouse_info? %>
+							<li>
+								<a href="<%= url_for(:controller => :Contact, :action => :spouse_show, :id => @contact.object, :query => {:origin => "contact"}) %>"><%= @contact.cssi_spousename %>&nbsp;<%= @contact.cssi_spouselastname%></a><br/><br/>
+								<p><%= @contact.cssi_spousegender %>, Age 36</p>
+								<p>DOB: <%= to_date(@contact.cssi_spousebirthdate) %></p>
+							</li>
 						<% else %>
-						<li>
-							<a href="<%= url_for(:controller => :Contact, :action => :spouse_show, :id => contact.spouse.object, :query => {:origin => "contact"}) %>"><br/><br/>
-							<p><%= @contact.spouse.gender %>, Age <%= @contact.spouse.age %></p>
-							<p>DOB: <%= to_date(@contact.spouse.dateofbirth) %></p>
-						</li>
+							<li data-icon="plus">
+								<a href="<%= url_for(:controller => :Contact, :action => :spouse_add, :id => @contact.object, :query => {:origin => "contact"}) %>">Add Spouse</a>
+							</li>
 						<% end %>
 					</ul>
 				</div>
 				<div data-role="collapsible" data-collapse="true">
-					<% if @contacts.dependents.size == 0 %>
+					<% if @contact.dependents.size == 0 %>
 						<h3>Dependents</h3>
 					<% else %>	
 						<h3>Dependents - <%= @contact.dependents.size %></h3>
@@ -121,22 +121,19 @@
 					<ul data-role="listview" data-filter="false" data-inset="true">
 						<li data-role="list-divider">Dependents</li>
 						<li>
-							<a href="<%= url_for(:controller => :Contact, :action => :dependent_add, :id => contact.object, :query => {:origin => "contact"}) %>">
+							<a href="<%= url_for(:controller => :Contact, :action => :dependent_add, :id => @contact.object, :query => {:origin => "contact"}) %>" />
 						</li>
-						<% puts @contact.dependents.inspect %>
 						<% @contact.dependents.each do |dependent| %>
 						<li>
-							<a href="<%= url_for(:controller => :Contact, :action => :dependent_show, :id => dependent.object, :query => {:origin => "contact"}) %>"><br/><br/>
-								<p><%= dependent.gender %>, Age <%= dependent.age %></p>
-								<p>DOB: <%= to_date(depdendent.dateofbirth) %></p>
-							</a>
+							<a href="<%= url_for(:controller => :Contact, :action => :dependent_show, :id => dependent.object, :query => {:origin => "contact"}) %>"><%= dependent.cssi_name %>&nbsp;<%= dependent.cssi_lastname %></a><br/><br/>
+							<p><%= dependent.cssi_gender %>, Age <%= dependent.cssi_age %></p>
+							<p>DOB: <%= to_date(dependent.cssi_dateofbirth) %></p>
 						</li>
 						<% end %>
 					</ul>
 				</div>
 				<ul data-role="listview" data-filter="false" data-inset="true">
 					<li data-role="list-divider">Policies</li>
-					<% puts @contact.policies.inspect %>
 					<% @contact.policies.each do |policy| %>
 					<li>
 						<a href="<%= url_for(:controller => :Policy, :action => :show, :id => policy.object, :query => {:origin => "contact"}) %>">

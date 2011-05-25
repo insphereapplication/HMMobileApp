@@ -52,7 +52,11 @@ class Contact
   
   
   index :contact_pk_index, [:contactid]
-  unique_index :unique_contact, [:contactid] 
+  unique_index :unique_contact, [:contactid]
+  
+  def has_spouse_info?
+    return cssi_spousename || cssi_spouselastname
+  end
   
   def self.all_open(page=nil, page_size=DEFAULT_PAGE_SIZE)    
     Contact.find_by_sql(%Q{
