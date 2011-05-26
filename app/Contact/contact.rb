@@ -32,31 +32,9 @@ class Contact
   property :cssi_state2id, :string #business address state
   property :address2_postalcode, :string 
   property :contactid, :string
-  property :cssi_heightft, :string
-  property :cssi_heightin, :string
-  property :cssi_weight, :string
-  property :cssi_usetobacco, :string
-  property :familystatuscode, :string
-  property :cssi_allowcallsalternatephone, :string
-  property :cssi_allowcallsbusinessphone, :string
-  property :cssi_allowcallshomephone, :string
-  property :cssi_allowcallsmobilephone, :string
-  property :cssi_spousename, :string #start contact spouse information
-  property :cssi_spouselastname, :string
-  property :cssi_spousebirthdate, :string
-  property :cssi_spouseheightft, :string
-  property :cssi_spouseheightin, :string
-  property :cssi_spouseweight, :string
-  property :cssi_spouseusetobacco, :string
-  property :cssi_spousegender, :string #end contact spouse information
-  
   
   index :contact_pk_index, [:contactid]
-  unique_index :unique_contact, [:contactid]
-  
-  def has_spouse_info?
-    return cssi_spousename || cssi_spouselastname
-  end
+  unique_index :unique_contact, [:contactid] 
   
   def use_tobacco_string
     if cssi_usetobacco == 'True'
@@ -161,17 +139,6 @@ class Contact
     end
   end
   
-  def spouse_age
-    begin
-      birthday = Date.strptime(cssi_spousebirthdate, DateUtil::DEFAULT_TIME_FORMAT)
-       day_diff = Date.today - cssi_spousebirthdate.day
-       month_diff = Date.today.month - birthday.month - (day_diff < 0 ? 1 : 0)
-        (Date.today.year - birthday.year - (month_diff < 0 ? 1 : 0)).to_s
-    rescue
-      puts "Invalid date parameter in spouse age calculation method; no spouse age returned"
-    end
-  end
-  
   def phone_numbers
     {'Home' => telephone2, 'Mobile' => mobilephone, 'Business' => telephone1, 'Alternate' => telephone3 }.reject{|type, number| number.blank? }
   end
@@ -215,10 +182,7 @@ class Contact
   
   def policies
     Policy.find(:all, :conditions => {"contact_id" => self.object})
-  end
-  
-  def dependents
-    Dependent.find(:all, :conditions => {"contact_id" => self.object})
+    #Policy.find(:all)
   end
   
   def business_map

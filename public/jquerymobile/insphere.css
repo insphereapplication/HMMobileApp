@@ -135,6 +135,10 @@ ul li a { display: block; padding: 1px 5px; text-decoration: none;}
 	background-image: url(/public/images/map_small_opp.jpg);
 }
 
+.ui-icon-maplink {
+	background-image: url(/public/images/map_icon.png);
+}
+
 .ui-icon-contact {
 	background-image: url(/public/images/person-icon.gif);
 }

@@ -1,0 +1,14 @@
+<div data-role="page" data-theme="b" data-cache="never">
+		<div data-role="header" data-backbtn="false">
+			<h3>Note Detail</h3>
+			<a href="<%=url_for(:controller => :Opportunity, :action=>:show, :id => @note.parent_opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
+		</div>
+	<div data-role="content">
+		<ul data-role="listview" data-theme="d" data-inset="true">
+			<li data-role="list-divider">Note Detail</li>
+			<li>Created On: <%= "#{to_datetime(@note.createdon)}" %></li>
+			<li>Note: <%= @note.notetext %></li>
+		</ul>
+	</div>
+</div>
+

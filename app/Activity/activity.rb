@@ -103,6 +103,15 @@ class Activity
       })
   end
   
+  def notes
+        Note.find_by_sql(%Q{
+          select n.*
+          from Note n 
+          where parent_type = 'PhoneCall' and parent_id = '#{object}'
+          order by datetime(n.createdon) desc
+      })
+  end
+  
   def create_note(note_text)
     unless note_text.blank?
       Note.create({

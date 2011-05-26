@@ -395,8 +395,8 @@ function popupDateTimeAJPicker(flag, title, field_key) {
   return false;
 }
 
-function popupBirthDateAJPicker(flag, title, field_key) {
-  $.get('/app/Opportunity/birthpopup', { flag: flag, title: title, field_key: field_key });
+function editpopupDateTimeAJPicker(flag, title, field_key, preset) {
+  $.get('/app/Opportunity/edit_popup', { flag: flag, title: title, field_key: field_key, preset: preset });
   return false;
 }
 

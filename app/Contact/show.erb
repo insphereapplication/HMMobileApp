@@ -126,6 +126,7 @@ $(document).ready( function(){
 						<% end %>
 					</li>
 				</ul>
+<<<<<<< HEAD
 				<div data-role="collapsible" data-collapsed="true">
 					<% if @contact.has_spouse_info? %>
 						<h3>Spouse - <%= @contact.cssi_spousename %>&nbsp;<%= @contact.cssi_spouselastname %></h3>
@@ -171,6 +172,7 @@ $(document).ready( function(){
 				</div>
 				<ul data-role="listview" data-filter="false" data-inset="true">
 					<li data-role="list-divider">Policies</li>
+					<% puts @contact.policies.inspect %>
 					<% @contact.policies.each do |policy| %>
 					<li>
 						<a href="<%= url_for(:controller => :Policy, :action => :show, :id => policy.object, :query => {:origin => "contact"}) %>">
@@ -180,9 +182,6 @@ $(document).ready( function(){
 						</a>
 					</li>
 					<% end %>
-					<% if @contact.policies.size == 0 %>
-						<li><div style="text-align:center"><i> (No Policies) </i></div></li>
-					<% end %>
 				</ul>
 				<% if @params['origin'] == "contact" %>
 				 <ul data-role="listview" data-filter="false" data-inset="true">
@@ -190,7 +189,7 @@ $(document).ready( function(){
 						<% @contact.opportunities.each do |opportunity| %>
 						<li>
 							<a href="<%= url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => "contact"}) %>"> 
-								<strong><%= to_date(opportunity.createdon) %></strong> <TEST> <%= opportunity.rollup_status %>
+								<br/><strong><%= to_date(opportunity.createdon) %></strong> <TEST> <%= opportunity.rollup_status %>
 							</a>
 						</li>
 						<% end %>

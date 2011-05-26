@@ -14,7 +14,6 @@ class Policy
   property :carrier_name, :string #
   property :cssi_primaryinsured, :string #
   property :statuscode, :string #
-  property :statecode, :string 
   property :cssi_statusreason, :string #
   property :cssi_carrierstatusvalue, :string #
   property :cssi_applicationnumber, :string #
@@ -29,6 +28,7 @@ class Policy
   property :modifiedon, :string
   
   def contact
+    puts "*** Contact id = " + self.contact_id + " ***"
     Contact.find(self.contact_id)
   end
 end
