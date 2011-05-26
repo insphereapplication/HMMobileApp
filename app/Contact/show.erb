@@ -111,7 +111,8 @@ $(document).ready( function(){
 						<li data-role="list-divider">Spouse</li>
 						<% if @contact.has_spouse_info? %>
 							<li>
-								<p></p><a href="<%= url_for(:controller => :Contact, :action => :spouse_show, :id => @contact.object, :query => {:origin => "contact"}) %>"><%= @contact.cssi_spousename %>&nbsp;<%= @contact.cssi_spouselastname%></a>
+								<a href="<%= url_for(:controller => :Contact, :action => :spouse_show, :id => @contact.object, :query => {:origin => "contact"}) %>"></a>
+								<p></p><p><b><%= @contact.cssi_spousename %>&nbsp;<%= @contact.cssi_spouselastname%></b></p>
 								<p><%= @contact.cssi_spousegender %>, Age 36</p>
 								<p>DOB: <%= to_date(@contact.cssi_spousebirthdate) %></p>
 							</li>
@@ -135,7 +136,8 @@ $(document).ready( function(){
 						</li>
 						<% @contact.dependents.each do |dependent| %>
 						<li>
-							<p></p><a href="<%= url_for(:controller => :Dependent, :action => :show, :id => dependent.object, :query => {:origin => "contact"}) %>"><%= dependent.cssi_name %>&nbsp;<%= dependent.cssi_lastname %></a>
+							<a href="<%= url_for(:controller => :Dependent, :action => :show, :id => dependent.object, :query => {:origin => "contact"}) %>"></a>
+							<p></p><p><b><%= dependent.cssi_name %>&nbsp;<%= dependent.cssi_lastname %></b></p>
 							<p><%= dependent.cssi_gender %>, Age <%= dependent.cssi_age %></p>
 							<p>DOB: <%= to_date(dependent.cssi_dateofbirth) %></p>
 						</li>
