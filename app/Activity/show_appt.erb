@@ -1,0 +1,29 @@
+<div data-role="page" data-theme="b" data-cache="never">
+		<div data-role="header" data-backbtn="false">
+			<a href="<%=url_for(:controller => :Opportunity, :action=>:show, :id => @appt.opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>			
+			<h3>Appointment</h3>
+			<a href="<%=url_for(:action=>:edit_appt, :id => @appt.object, :query => {:origin => @params['origin']})%>" data-direction="forward"> Edit </a>
+		</div>
+	<div data-role="content">
+		<ul data-role="listview" data-theme="d" data-inset="true">
+			<li data-role="list-divider">Appointment Detail</li>
+			<li>Appointment Start: <br/><%= "#{to_datetime(@appt.scheduledstart)}" %></li>
+			<% if get_duration(@appt.scheduledstart, @appt.scheduledend) == 30.0 %>
+        		<li>Duration: 30 Minutes </li>
+			<% elsif get_duration(@appt.scheduledstart, @appt.scheduledend) == 60.0 %>
+        		<li>Duration: 1 Hour </li>
+			<% elsif get_duration(@appt.scheduledstart, @appt.scheduledend) == 90.0 %>
+        		<li>Duration: 1.5 Hours </li>
+			<% elsif get_duration(@appt.scheduledstart, @appt.scheduledend) == 120.0 %>
+	        	<li>Duration: 2 Hours </li>
+			<% elsif get_duration(@appt.scheduledstart, @appt.scheduledend) == 180.0 %>
+	        	<li>Duration: 3 Hours </li>
+			<% else %>
+        		<li>Duration: 4 Hours </li>
+			<% end %>
+			<li>Location: <%= @appt.cssi_location %></li>
+			<li>Address: <%= @appt.location %></li>
+			<li>Description: <%= @appt.description %></li>
+		</ul>
+	</div>
+</div>

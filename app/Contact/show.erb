@@ -97,7 +97,7 @@
 						<% @contact.opportunities.each do |opportunity| %>
 						<li>
 							<a href="<%= url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => "contact"}) %>"> 
-								<strong><%= to_date(opportunity.createdon) %></strong> <TEST> <%= opportunity.rollup_status %>
+								<br/><strong><%= to_date(opportunity.createdon) %></strong> <TEST> <%= opportunity.rollup_status %>
 							</a>
 						</li>
 						<% end %>
