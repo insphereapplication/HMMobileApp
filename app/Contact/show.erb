@@ -60,6 +60,31 @@ $(document).ready( function(){
 					<% else %>
 					<li data-icon="false"><a href="#">Email:</a></li>
 					<% end %>
+					
+					<% if @contact.cssi_heightft && @contact.cssi_heightin %>
+					<li data-icon="false"><a href="#">Height: <%= @contact.cssi_heightft + '\' ' + @contact.cssi_heightin + "\"" %></a></li>
+					<% else %>
+					<li data-icon="false"><a href="#">Height :</a></li>
+					<% end %>
+					
+					<% if @contact.cssi_weight %>
+					<li data-icon="false"><a href="#">Weight: <%= @contact.cssi_weight %>&nbsp;lbs</a></li>
+					<% else %>
+					<li data-icon="false"><a href="#">Weight :</a></li>
+					<% end %>
+										
+					<% if @contact.cssi_usetobacco %>
+					<li data-icon="false"><a href="#">Tobacco: <%= @contact.use_tobacco_string %></a></li>
+					<% else %>
+					<li data-icon="false"><a href="#">Tobacco :</a></li>
+					<% end %>
+					
+					<% if @contact.familystatuscode %>
+					<li data-icon="false"><a href="#">Marital Status: <%= @contact.familystatuscode %></a></li>
+					<% else %>
+					<li data-icon="false"><a href="#">Marital Status :</a></li>
+					<% end %>
+					
 					<li data-role="list-divider">Home Address</li>
 					<li data-icon="false">
 						<% if @contact.home_city %>

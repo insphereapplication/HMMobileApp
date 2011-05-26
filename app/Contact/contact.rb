@@ -58,6 +58,14 @@ class Contact
     return cssi_spousename || cssi_spouselastname
   end
   
+  def use_tobacco_string
+    if cssi_usetobacco == 'True'
+      'Yes'
+    else
+      'No'
+    end
+  end
+  
   def self.all_open(page=nil, page_size=DEFAULT_PAGE_SIZE)    
     Contact.find_by_sql(%Q{
       select c.contactid, c.* from Contact c, Opportunity o 
