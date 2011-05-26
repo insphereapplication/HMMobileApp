@@ -5,6 +5,81 @@ require 'date'
 class ActivityController < Rho::RhoController
   include BrowserHelper
   
+  # GET /Appt/{1}
+  def show_appt
+    @appt = Activity.find(@params['id'])
+    if @appt
+      render :action => :show_appt, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+    else
+      redirect :action => :index, :back => 'callback:'
+    end
+  end
+  
+  # EDIT /Appt/{1}
+  def edit_appt
+    @appt = Activity.find(@params['id'])
+    if @appt
+      render :action => :edit_appt, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+    else
+      redirect :action => :index, :back => 'callback:'
+    end
+  end
+  
+  # GET /callback/{1}
+  def show_callback
+    @callback = Activity.find(@params['id'])
+
+    if @callback
+      @notes = @callback.notes
+      render :action => :show_callback, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+    else
+      redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
+    end
+  end
+  
+  # EDIT /callback/{1}
+  def edit_callback
+    @callback = Activity.find(@params['id'])
+    if @callback
+      render :action => :edit_callback, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+    else
+      redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
+    end
+  end
+  
+  def get_duration(time1, time2)
+    duration = (Time.parse(time2) - Time.parse(time1))/60
+  end
+  
+  def update_appt
+    puts "APPOINTMENT UPDATE: #{@params.inspect}"
+    @appointment = Activity.find(@params['id'])
+    @appointment.update_attributes({
+      :scheduledstart => DateUtil.date_build(@params['appointment_datetime']),
+      :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
+      :location => @params['location'],
+      :description => @params['description'],
+      :cssi_location => @params['cssi_location']     
+    }) if @appointment
+    SyncEngine.dosync
+    redirect :action => :show_appt, :back => 'callback:',
+              :id => @appointment.object,
+              :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
+  end
+  
+  def update_callback
+    puts "CALLBACK UPDATE: #{@params.inspect}"
+    @callback = Activity.find(@params['id'])
+    @callback.update_attributes({
+        :scheduledend => DateUtil.date_build(@params['callback_datetime']),
+        :phonenumber => @params['phone_number'] 
+    }) if @callback
+    SyncEngine.dosync
+    redirect :action => :show_callback, :back => 'callback:',
+              :id => @callback.object,
+              :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
+  end
+  
   def update_won_status
     if @params['button_id'] == "Ok"
       db = ::Rho::RHO.get_src_db('Opportunity')
