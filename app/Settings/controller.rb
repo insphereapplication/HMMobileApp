@@ -87,13 +87,10 @@ class SettingsController < Rho::RhoController
     httpErrCode = @params['error_message'].split[0]
 
     if errCode == 0
-      
-      #setup the sync event handlers for the application init sequence
-      set_sync_type('init')
-      
       Settings.credentials_verified = true
       SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
-      SyncEngine.dosync
+      #setup the sync event handlers for the application init sequence, start sync
+      SyncUtil.start_sync('init')
       update_login_wait_progress("Login successful, starting sync...")
     elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
@@ -127,7 +124,8 @@ class SettingsController < Rho::RhoController
     
     if errCode == 0
       SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
-      SyncEngine.dosync
+      #perform a sync in the background
+      SyncUtil.start_sync
     elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
@@ -225,15 +223,14 @@ class SettingsController < Rho::RhoController
   end
   
   def do_sync
-    SyncEngine.dosync
+    SyncUtil.start_sync('background')
     @msg =  "Sync has been triggered."
     redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
   end
   
   def push_notify
-    #setup callbacks to use new opportunity workflow
-    set_sync_type('new_opportunity')
-    SyncEngine.dosync
+    #setup callbacks to use new opportunity workflow, start sync
+    SyncUtil.start_sync('new_opportunity')
 
     if System::get_property('platform') == 'ANDROID'
       "rho_push"
@@ -448,12 +445,6 @@ class SettingsController < Rho::RhoController
     end
   end
   
-  def set_sync_type(type)
-    # show_popup("Setting sync type to #{type}", "")
-    Settings.sync_type = type
-    setup_sync_handlers
-  end
-  
   def set_background_sync_handlers
     @on_sync_error = lambda {|*args|}
     @on_sync_complete = lambda {|*args|}
@@ -470,7 +461,7 @@ class SettingsController < Rho::RhoController
   
   def set_new_opportunity_sync_handlers
     @on_sync_error = lambda {|*args|}
-    @on_sync_complete = lambda {|*args|}
+    @on_sync_complete = lambda {|*args| new_opportunity_on_sync_complete(*args)}
     @on_sync_in_progress = lambda {|*args|}
     @on_sync_ok = lambda {|*args| new_opportunity_on_sync_ok(*args)}
   end
@@ -497,7 +488,7 @@ class SettingsController < Rho::RhoController
   
   def init_on_sync_complete(*args)
     #change sync handlers back to default
-    set_sync_type('background')
+    SyncUtil.set_sync_type('background')
     
     Settings.initial_sync_complete = true
     
@@ -519,12 +510,17 @@ class SettingsController < Rho::RhoController
       Alert.vibrate(2000)
 
       Alert.show_popup({
-        :message => "You have new Opportunities", 
-        :title => 'New Opportunities', 
+        :title => 'View New Leads?',
+        :message => "New lead(s) have been synced.\nWould you like to view them?", 
         :buttons => ["Cancel", "View"],
         :callback => url_for(:action => :on_dismiss_new_opportunity_popup, :back => 'callback:') 
       })
     end
+  end
+  
+  def new_opportunity_on_sync_complete(*args)
+    #change sync handlers back to background
+    SyncUtil.set_sync_type('background')
   end
   
   def on_dismiss_new_opportunity_popup

@@ -101,7 +101,7 @@ class ContactController < Rho::RhoController
     puts "CONTACT UPDATE: #{@params.inspect}"
     @contact = Contact.find(@params['id'])
     @contact.update_attributes(@params['contact']) if @contact
-    SyncEngine.dosync
+    SyncUtil.start_sync
     redirect :action => :show, :back => 'callback:',
               :id => @contact.object,
               :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
