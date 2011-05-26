@@ -73,6 +73,22 @@ module BrowserHelper
       }
   end
   
+  def cancelbutton_by_origin(origin)
+    case origin
+      when "new-leads"
+        # we've removed the icon as it overlaps with the header text; to put it back, add 'data-icon="back"' to the tag
+        '<a href="/app/Opportunity?selected_tab=new-leads" data-direction="reverse" rel="external">Cancel</a>'
+      when "follow-ups"
+        '<a href="/app/Opportunity?selected_tab=follow-ups" data-direction="reverse" rel="external">Cancel</a>'
+      when "appointments"
+        '<a href="/app/Opportunity?selected_tab=appointments" data-direction="reverse" rel="external">Cancel</a>'
+      when "contact"
+         '<a href="/app/Contact" data-direction="reverse" rel="external">Cancel</a>'
+      else
+        '<a href="/app/Opportunity" data-direction="reverse" rel="external">Cancel</a>'
+    end
+  end
+  
   def opp_detail_backbutton(origin)
       case origin
         when "new-leads"

@@ -93,7 +93,7 @@ class ContactController < Rho::RhoController
   # GET /Contact/new
   def new
     @contact = Contact.new
-    render :action => :new, :back => 'callback:'
+    render :action => :new, :back => 'callback:', :layout => 'layout_jquerymobile'
   end
 
   # GET /Contact/{1}/edit

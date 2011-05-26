@@ -231,9 +231,13 @@ class OpportunityController < Rho::RhoController
     else
       redirect :action => :index, :back => 'callback:'
     end
-  end
-  
+  end  
 
+  def contact_opp_new    
+     redirect :action => :new,
+              :controller => "Contact",
+              :query =>{:origin => @params['origin']}
+  end
   
   def callback_request
     $choosed['0'] = ""
