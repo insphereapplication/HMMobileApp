@@ -1,0 +1,26 @@
+<div data-role="page" data-theme="b" data-cache="never">
+		<div data-role="header" data-backbtn="false">
+			<a href="<%=url_for(:controller => :Opportunity, :action=>:show, :id => @callback.opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>			
+			<h3>Callback</h3>
+			<a href="<%=url_for(:action=>:edit_callback, :id => @callback.object, :query => {:origin => @params['origin']})%>" data-direction="forward"> Edit </a>
+		</div>
+	<div data-role="content">
+		<ul data-role="listview" data-theme="d" data-inset="true">
+			<li data-role="list-divider">Callback Detail</li>
+			<li>Callback Date and Time: <br/><%= "#{to_datetime(@callback.scheduledend)}" %></li>
+				<% if @callback.phonenumber == @callback.opportunity.contact.telephone2 %>
+            		<li>Phone Type: Home </li>
+				<% elsif @callback.phonenumber == @callback.opportunity.contact.mobilephone  %>
+					<li>Phone Type: Mobile </li>
+				<% elsif @callback.phonenumber == @callback.opportunity.contact.telephone1  %>
+					<li>Phone Type: Business </li>
+				<% else %>
+					<li>Phone Type: Ad Hoc </li>
+				<% end %>
+			<li>Phone Number: <%= @callback.phonenumber %></li>
+			<% @notes.each do |note| %>
+				<li>Notes: <%= note.notetext %></li>
+			<% end %>			
+		</ul>
+	</div>
+</div>
