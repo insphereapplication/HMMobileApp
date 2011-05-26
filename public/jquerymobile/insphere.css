@@ -143,6 +143,11 @@ ul li a { display: block; padding: 1px 5px; text-decoration: none;}
 	background-image: url(/public/images/dollar_sign_icon.png) 50% 50% no-repeat;
 }
 
+.ui-icon-donotcall {
+	background-image: url(/public/images/glyphish-icons/21-skull.png);
+	background-size: 16px 16px;
+}
+
 .ui-offline-bar {
 	background: 			#CC0000;
 	color: 					#fff;
