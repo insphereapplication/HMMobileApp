@@ -11,7 +11,7 @@ class Settings
     end
     
     def has_persisted_credentials?
-      !instance.login.blank? && !instance.password.blank? && !instance.pin.blank?
+      !instance.login.blank? && !instance.password.blank?
     end
     
     def has_verified_credentials?

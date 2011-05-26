@@ -51,7 +51,6 @@ class ContactController < Rho::RhoController
   
   def check_preferred_and_donotcall(phone_type, preferred, allow_call)
     is_preferred = phone_type == preferred
-    puts "********** phone_type = #{phone_type} and is_preferred = #{is_preferred} and allow_call = #{allow_call} **********"
 
     # Special case where we need 2 icons side by side, and some jQuery/JavaScript tricks are needed
     # We look for the two-icons attribute in the .erb and substitute a formatted HTML string that will show both
@@ -66,6 +65,12 @@ class ContactController < Rho::RhoController
     else
       'data-icon="false"'
     end    
+  end
+  
+  def show_edit_do_not_call_icon(allow_call)
+    if allow_call == 'False'
+      '<img src="/public/images/glyphish-icons/28-star.png" height="18" width="18" />'
+    end
   end
   
   def select_preferred(phone_type, preferred)
