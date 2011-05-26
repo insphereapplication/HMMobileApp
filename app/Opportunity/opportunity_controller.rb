@@ -271,6 +271,14 @@ class OpportunityController < Rho::RhoController
     end
   end
   
+  
+  def contact_opp_new    
+    redirect :action => :new,
+             :controller => "Contact",
+             :query =>{:origin => @params['origin']}
+  end
+  
+  
   # GET /Opportunity/{1}/activity_summary
   def activity_summary
     @opportunity = Opportunity.find(@params['id'])
