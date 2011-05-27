@@ -162,6 +162,7 @@ class ContactController < Rho::RhoController
     puts "CONTACT UPDATE: #{@params.inspect}"
     @contact = Contact.find(@params['id'])
     @contact.update_attributes(@params['contact']) if @contact
+    @contact.update_attributes(:cssi_spousebirthdate => DateUtil.birthdate_build(@contact.cssi_spousebirthdate))
     SyncEngine.dosync
     redirect :action => :show, :back => 'callback:',
               :id => @contact.object,
@@ -201,6 +202,40 @@ class ContactController < Rho::RhoController
   def spouse_edit
       @contact = Contact.find(@params['id'])
       render :action => :spouse_edit, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
+  end
+  
+  def confirm_spouse_delete
+    Alert.show_popup ({
+        :message => "Click OK to Delete this Spouse", 
+        :title => "Confirm Delete", 
+        :buttons => ["Cancel", "Ok",],
+        :callback => url_for(:action => :spouse_delete, 
+                                        :query => {
+				                                :id => @params['id'],
+				                                :origin => @params['origin']
+				                                })
+				                   })
+  end
+ 
+  def spouse_delete
+    if @params['button_id'] == "Ok"
+      puts "CONTACT DELETE SPOUSE: #{@params.inspect}"
+      @contact = Contact.find(@params['id'])
+      @contact.update_attributes(:cssi_spousename => "")
+      @contact.update_attributes(:cssi_spouselastname => "")
+      @contact.update_attributes(:cssi_spousebirthdate => "")
+      @contact.update_attributes(:cssi_spouseheightft => "")
+      @contact.update_attributes(:cssi_spouseheightin => "")
+      @contact.update_attributes(:cssi_spouseweight => "")
+      @contact.update_attributes(:cssi_spouseusetobacco => "")
+      @contact.update_attributes(:cssi_spousewecssi_spousegenderight => "")
+      SyncEngine.dosync
+      redirect :action => :show, :back => 'callback:',
+                :id => @contact.object,
+                :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
+    else
+      WebView.navigate(url_for :controller => :Contact, :action => :spouse_edit, :id => @params['id'], :query => {:origin => @params['origin']})
+    end
   end
   
 end

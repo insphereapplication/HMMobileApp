@@ -1,9 +1,11 @@
 <div data-role="page" data-theme="b">
 	<form method="post" id="dependent_update" action="<%= url_for(:action => :update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" name="dependent_update">
-		<div data-role="header">
+		<div data-role="header" data-backbtn="false" data-theme="b">
 			<a href="<%=url_for(:controller=>:Contact, :action=>:show, :id => @dependent.contact.object, :query=>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
 			<h1>Edit Dependent</h1>
-			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+			<span class="ui-btn-right">
+				<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+			</span>
 		</div>
 		<div id="contentDiv" data-role="content">
 			<input type="hidden" name="dependent[cssi_dependentsid]" value="<%= @dependent.cssi_dependentsid %>"/>
@@ -62,11 +64,12 @@
 				</div>
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d"> 
-					 <fieldset data-role="controlgroup">
-						<input type="checkbox" name="dependent[cssi_usetobacco]" id="dependent[cssi_usetobacco]" value="<%= @dependent.cssi_usetobacco %>" />
-						<label for="dependent[cssi_usetobacco]">Use Tobacco</label>
-				    </fieldset>
+				<div class="ui-body ui-body-d">
+					<label for="tobaccoSlider" class="fieldLabel">Tobacco:</label>
+					<select name="dependent[cssi_usetobacco]" id="tobaccoSlider" data-role="slider">
+						<option value="False" <% if @dependent.cssi_usetobacco == "False" %> selected="selected" <% end %> >No</option>
+						<option value="True" <% if @dependent.cssi_usetobacco == "True" %> selected="selected" <% end %>>Yes</option>						
+					</select>
 				</div>
 			</div>			
 			<div data-role="fieldcontain">
@@ -76,6 +79,7 @@
 				</div>
 			</div>
 			<input type="submit" href="#" onClick="goBack()" data-theme="b" data-direction="reverse" value="Done"/>
+			<a href="<%= url_for(:controller => :Dependent, :action => :confirm_dependent_delete, :query => {:id => @dependent.object, :opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-theme="e" data-direction="reverse" data-role="button">Delete</a>
 		</div>
 	</form>
 </div>

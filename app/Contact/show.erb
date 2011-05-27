@@ -138,7 +138,7 @@ $(document).ready( function(){
 							<li>
 								<a href="<%= url_for(:controller => :Contact, :action => :spouse_show, :id => @contact.object, :query => {:origin => "contact"}) %>"></a>
 								<p></p><p><b><%= @contact.cssi_spousename %>&nbsp;<%= @contact.cssi_spouselastname%></b></p>
-								<p><%= @contact.cssi_spousegender %>, Age 36</p>
+								<p><%= @contact.cssi_spousegender %>, <%= @contact.spouse_age %></p>
 								<p>DOB: <%= to_date(@contact.cssi_spousebirthdate) %></p>
 							</li>
 						<% else %>

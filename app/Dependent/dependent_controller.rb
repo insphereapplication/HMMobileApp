@@ -61,6 +61,29 @@ class DependentController < Rho::RhoController
     redirect :action => :index  end
   end
   
+  def confirm_dependent_delete
+    Alert.show_popup ({
+        :message => "Click OK to Delete this Dependent", 
+        :title => "Confirm Delete", 
+        :buttons => ["Cancel", "Ok",],
+        :callback => url_for(:action => :dependent_delete, 
+                                        :query => {
+				                                :id => @params['id'],
+				                                :origin => @params['origin']
+				                                })
+				                   })
+  end
+  
+  def dependent_delete
+    if @params['button_id'] == "Ok"
+      @dependent = Dependent.find(@params['id'])
+      @dependent.destroy if @dependent
+      WebView.navigate(url_for :controller => :Contact, :action => :show, :id => @dependent.cssi_dependentsid, :query => {:origin => @params['origin']})
+    else
+      WebView.navigate(url_for :controller => :Dependent, :action => :dependent_edit, :id => @params['id'], :query => {:origin => @params['origin']})
+    end 
+  end
+  
   def age(dob)
     begin
       puts dob.inspect

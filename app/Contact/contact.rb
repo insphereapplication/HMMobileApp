@@ -62,7 +62,7 @@ class Contact
   end
   
   def has_spouse_info?
-    return cssi_spousename || cssi_spouselastname
+    return cssi_spousename != "" || cssi_spouselastname != ""
   end
   
   def self.all_open(page=nil, page_size=DEFAULT_PAGE_SIZE)    
