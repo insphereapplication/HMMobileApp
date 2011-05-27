@@ -15,7 +15,7 @@ class DependentController < Rho::RhoController
     @dependent = Dependent.find(@params['id'])
     if @dependent
       @contact = @dependent.contact
-      render :action => :show, :back => url_for(:action => :index)
+      render :action => :show, :back => url_for(:action => :index), :layout => 'layout_jquerymobile'
     else
       redirect :action => :index
     end
@@ -25,14 +25,14 @@ class DependentController < Rho::RhoController
   def new
     @contact = Contact.find(@params['id'])
     @dependent = Dependent.new
-    render :action => :new, :back => url_for(:action => :index)
+    render :action => :new, :back => url_for(:action => :index), :layout => 'layout_jquerymobile'
   end
 
   # GET /Dependent/{1}/edit
   def edit
     @dependent = Dependent.find(@params['id'])
     if @dependent
-      render :action => :edit, :back => url_for(:action => :index)
+      render :action => :edit, :back => url_for(:action => :index), :layout => 'layout_jquerymobile'
     else
       redirect :action => :index
     end
@@ -58,11 +58,12 @@ class DependentController < Rho::RhoController
     redirect :action => :index
   end
 
+
   # POST /Dependent/{1}/delete
   def delete
     @dependent = Dependent.find(@params['id'])
     @dependent.destroy if @dependent
-    redirect :action => :index  end
+    redirect :action => :index
   end
   
   def confirm_dependent_delete
@@ -81,10 +82,11 @@ class DependentController < Rho::RhoController
   def dependent_delete
     if @params['button_id'] == "Ok"
       @dependent = Dependent.find(@params['id'])
+      contactid = @dependent.contact_id
       @dependent.destroy if @dependent
-      WebView.navigate(url_for :controller => :Contact, :action => :show, :id => @dependent.cssi_dependentsid, :query => {:origin => @params['origin']})
+      WebView.navigate(url_for :controller => :Contact, :action => :show, :id => contactid, :query => {:origin => @params['origin']})
     else
-      WebView.navigate(url_for :controller => :Dependent, :action => :dependent_edit, :id => @params['id'], :query => {:origin => @params['origin']})
+      WebView.navigate(url_for :controller => :Dependent, :action => :edit, :id => @params['id'], :query => {:origin => @params['origin']})
     end 
   end
   
@@ -99,3 +101,4 @@ class DependentController < Rho::RhoController
       puts "Invalid date parameter in age calculation method; no age returned"
     end
   end
+end

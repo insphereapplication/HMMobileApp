@@ -1,7 +1,7 @@
 <div data-role="page" data-theme="b">
 	<form method="post" id="dependent_update" action="<%= url_for(:action => :update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" name="dependent_update">
 		<div data-role="header" data-backbtn="false" data-theme="b">
-			<a href="<%=url_for(:controller=>:Contact, :action=>:show, :id => @dependent.contact.object, :query=>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
+			<a href="<%=url_for(:controller=>:Dependent, :action=>:show, :id => @dependent.object, :query=>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
 			<h1>Edit Dependent</h1>
 			<span class="ui-btn-right">
 				<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
@@ -78,7 +78,7 @@
 					<input type="text" maxlength="255" name="dependent[cssi_comments]" value="<%= @dependent.cssi_comments %>" />
 				</div>
 			</div>
-			<input type="submit" href="#" onClick="goBack()" data-theme="b" data-direction="reverse" value="Done"/>
+			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
 			<a href="<%= url_for(:controller => :Dependent, :action => :confirm_dependent_delete, :query => {:id => @dependent.object, :opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-theme="e" data-direction="reverse" data-role="button">Delete</a>
 		</div>
 	</form>
