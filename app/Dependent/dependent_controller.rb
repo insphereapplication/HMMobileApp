@@ -24,6 +24,7 @@ class DependentController < Rho::RhoController
 
   # GET /Dependent/new
   def new
+    @contact = Contact.find(@params['id'])
     @dependent = Dependent.new
     render :action => :new, :back => url_for(:action => :index)
   end
@@ -41,6 +42,8 @@ class DependentController < Rho::RhoController
   # POST /Dependent/create
   def create
     @dependent = Dependent.create(@params['dependent'])
+    @dependent.update_attributes(:cssi_dateofbirth => DateUtil.birthdate_build(@dependent.cssi_dateofbirth))
+    @dependent.update_attributes(:cssi_age => age(@dependent.cssi_dateofbirth))
     redirect :action => :index
   end
 
@@ -56,4 +59,16 @@ class DependentController < Rho::RhoController
     @dependent = Dependent.find(@params['id'])
     @dependent.destroy if @dependent
     redirect :action => :index  end
-end
+  end
+  
+  def age(dob)
+    begin
+      puts dob.inspect
+      birthdate = Date.parse(dob)
+       day_diff = Date.today - birthdate.day
+       month_diff = Date.today.month - birthdate.month - (day_diff < 0 ? 1 : 0)
+       (Date.today.year - birthdate.year - (month_diff < 0 ? 1 : 0)).to_s
+    rescue
+      puts "Invalid date parameter in age calculation method; no age returned"
+    end
+  end

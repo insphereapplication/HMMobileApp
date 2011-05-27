@@ -131,5 +131,14 @@ class ContactController < Rho::RhoController
       System.open_url("maps:q=5918_capella_park_dr+houston+tx")
   end
   
+  def spouse_show
+      @contact = Contact.find(@params['id'])
+      render :action => :spouse_show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
+  end
+  
+  def spouse_add
+      @contact = Contact.find(@params['id'])
+      render :action => :spouse_add, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
+  end
   
 end

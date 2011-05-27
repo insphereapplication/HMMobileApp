@@ -138,6 +138,17 @@ module BrowserHelper
     end
   end
   
+  def to_birthdate(input)
+    begin
+      date = (Date.strptime(input, DateUtil::DEFAULT_BIRTHDATE_FORMAT))
+      result = date.strftime('%m/%d/%Y')
+      result
+    rescue
+      puts "DATE !~!~!~!~!~ DATE ISSUE !~!~!!~!~!~!~!~!~!!~!"
+      puts "Could not parse date value: #{input}"
+    end
+  end
+  
   def to_date_noyear(input)
     begin
       date = (Date.strptime(input, DateUtil::DEFAULT_TIME_FORMAT))

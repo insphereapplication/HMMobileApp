@@ -122,7 +122,7 @@
 					<ul data-role="listview" data-filter="false" data-inset="true">
 						<li data-role="list-divider">Dependents</li>
 						<li data-icon="add">
-							<a href="<%= url_for(:controller => :Contact, :action => :dependent_add, :id => @contact.object, :query => {:origin => "contact"}) %>">Add Dependent</a>
+							<a href="<%= url_for(:controller => :Dependent, :action => :new, :id => @contact.object, :query => {:origin => "contact"}) %>">Add Dependent</a>
 						</li>
 						<% @contact.dependents.each do |dependent| %>
 						<li>
@@ -161,6 +161,5 @@
 						<% end %>
 				 </ul>
 				<% end %>
-			</div>
-			
+			</div>		
 </div>

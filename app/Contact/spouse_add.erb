@@ -1,0 +1,62 @@
+<div data-role="page" data-theme="b">
+	<form method="post" id="spouse_add" action="<%= url_for :action => :add, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" name="spouse_add">
+		<div data-role="header">
+			<a href="<%=url_for(:controller=>:Contact, :action=>:show, :id => @contact.object, :query=>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
+			<h1>Add Spouse</h1>
+			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+		</div>
+		<div id="contentDiv" data-role="content">
+			<input type="hidden" name="id" value="@contact.object.id"/>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="spouse[cssi_spousename]" class="fieldLabel">First Name:<font color="red">  *</font></label>
+					<input type="text" maxlength="50" name="spouse[cssi_spousename]" value="" />
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="spouse[cssi_spouselastname]" class="fieldLabel">Last Name:</label>
+					<input type="email" maxlength="50" name="spouse[cssi_spouselastname]" value="" />
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="spouse[cssi_spouseheightft]" class="fieldLabel">Height:</label>
+					<select name="spouse[cssi_spouseheightft]" data-role="none" id="spouse[cssi_spouseheightft]">
+						<option value=""></option>
+						<% (0..10).each do |i| %>
+							<option value="<%= i %>"><%= i %></option>
+						<% end %>				
+					</select>'&nbsp;
+					<select name="spouse[cssi_spouseheightin]" data-role="none" id="spouse[cssi_spouseheightin]">
+						<option value=""></option>
+						<% (0..12).each do |i| %>
+							<option value="<%= i %>"><%= i %></option>
+						<% end %>
+					</select>"
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="spouse[cssi_spouseweight]" class="fieldLabel">Weight (lbs):</label>
+					<input type="number" min="0" max="2000" maxlength="4" name="spouse[cssi_spouseweight]" value="" />					
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="spouse[cssi_spousebirthdate]" class="fieldLabel">Date of Birth:</label>
+					<input id="spouse[cssi_spousebirthdate]" type="text" name="spouse[cssi_spousebirthdate]" readonly value="<%= $choosed['0'] %>"  onClick="popupBirthDateAJPicker('1', 'Spouse Birth Date', 'dependent[cssi_spousebirthdate]');"></input>
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d"> 
+					 <fieldset data-role="controlgroup">
+						<input type="checkbox" name="spouse[cssi_spouseusetobacco]" id="spouse[cssi_spouseusetobacco]" />
+						<label for="spouse[cssi_spouseusetobacco]">Use Tobacco</label>
+				    </fieldset>
+				</div>
+			</div>			
+			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+		</div>
+	</form>
+</div>

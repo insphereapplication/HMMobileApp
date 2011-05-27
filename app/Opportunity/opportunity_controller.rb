@@ -288,11 +288,21 @@ class OpportunityController < Rho::RhoController
     System.open_url('tel:' + telephone)
   end
 
-  def popup
+  def birthpopup
     flag = @params['flag']
     if ['0', '1', '2'].include?(flag)
       ttt = $choosed[flag]
         preset_time = Time.new - 1157000000
+      DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
+    end
+    render :back => 'callback:'
+  end
+  
+  def popup
+    flag = @params['flag']
+    if ['0', '1', '2'].include?(flag)
+      ttt = $choosed[flag]
+        preset_time = Time.new + 86400 + DateUtil.seconds_until_hour(Time.new)
       DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
     end
     render :back => 'callback:'
@@ -304,7 +314,7 @@ class OpportunityController < Rho::RhoController
      datetime_vars = Marshal.load(@params['opaque'])
       format = case datetime_vars[:flag]
         when "0" then '%m/%d/%Y %I:%M %p'
-        when "1" then '%F'
+        when "1" then '%m/%d/%Y'
         when "2" then '%T'
         else '%F %T'
       end

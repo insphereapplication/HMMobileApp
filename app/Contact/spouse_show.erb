@@ -1,20 +1,19 @@
-<div data-role="page" data-theme="b" data-cache="never">
-	<%= offline_bar %>
+<div data-role="page" data-theme="b">
 	<div data-role="header">
-		<a href="<%=url_for(:action => :show)%>" data-direction="reverse" rel="external" data-icon="back">Contact</a>
+		<a href="<%=url_for(:action=>:show, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-direction="reverse" data-icon="back">Back</a>
 		<h1>Spouse Detail</h1>
-		<a href="<%=url_for(:action=> :spouse_edit, :id => @contact.object)%>" data-direction="forward" data-icon="edit"> Edit </a>
+		<a href="contacts_edit_dependent.html" data-direction="forward" data-icon="edit"> Edit </a>
 	</div>
 	<div data-role="content">
-		<ul data-role="listview" data-filter="false" data-inset="true">
+		<ul data-role="listview" data-filter="false" data-inset="true"> 
 			<li>
-				<h3><%= @contact.cssi_spousename %> <%= @contact.cssi_spouselastname %></h3>
-				<p><%= @contact.cssi_spousegender %>, Age <%= (@contact.spouse_age).to_s %></p>
-				<p>DOB: <%= to_date(@contact.cssi_spousebirthdate) %></p>
-			</li>
-			<li data-icon="false"><h3>Height: <%= @contact.cssi_spouseheightft %>' <%= @contact.cssi_spouseheightin %>"</h3></li>
-			<li data-icon="false"><h3>Weight: <%= @contact.cssi_spouseweight %> lbs</h3></li>
-			<li data-icon="false"><h3>Tobacco: <%= @contact.cssi_spouseusetobacco %></h3></li>
+					<h3><%= @contact.cssi_spousename %>&nbsp;<%= @contact.cssi_spouselastname %></h3>
+					<p><%= @contact.cssi_spousegender %>, Age <%= @contact.spouse_age %></p>
+					<p>DOB: <%= to_date(@contact.cssi_spousebirthdate) %></p>
+			</li> 
+			<li data-icon="false"><h3>Height:&nbsp;<%= @contact.cssi_spouseheightft %>'&nbsp;<%= @contact.cssi_spouseheightin %>"</h3></li>
+			<li data-icon="false"><h3>Weight:&nbsp;<%= @contact.cssi_spouseweight %>&nbsp;lbs</h3></li>
+			<li data-icon="false"><h3>Tobacco:&nbsp;<%= @contact.cssi_spouseusetobacco %></h3></li>
 		</ul>
 	</div>
 </div>

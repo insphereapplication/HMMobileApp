@@ -156,7 +156,7 @@ class Contact
   def spouse_age
     begin
       birthday = Date.strptime(cssi_spousebirthdate, DateUtil::DEFAULT_TIME_FORMAT)
-       day_diff = Date.today - cssi_spousebirthdate.day
+       day_diff = Date.today - birthday.day
        month_diff = Date.today.month - birthday.month - (day_diff < 0 ? 1 : 0)
         (Date.today.year - birthday.year - (month_diff < 0 ? 1 : 0)).to_s
     rescue

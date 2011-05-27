@@ -74,6 +74,8 @@ end
 module DateUtil
   DEFAULT_TIME_FORMAT = '%Y-%m-%d %H:%M:%S' # YYYY-MM-DD HH:MM:SS
   DATE_PICKER_TIME_FORMAT = '%m/%d/%Y %I:%M %p'
+  BIRTHDATE_PICKER_TIME_FORMAT = '%m/%d/%Y'
+  DEFAULT_BIRTHDATE_FORMAT = '%m/%d/%Y'
   HOUR_FORMAT = '%I:%M %p'
   NO_YEAR_FORMAT = '%m/%d %I:%M %p'
   
@@ -113,6 +115,11 @@ module DateUtil
     
     def date_build(date_string)
       date = (DateTime.strptime(date_string, DATE_PICKER_TIME_FORMAT))
+      date.strftime(DEFAULT_TIME_FORMAT)
+    end
+
+    def birthdate_build(date_string)
+      date = (DateTime.strptime(date_string, BIRTHDATE_PICKER_TIME_FORMAT))
       date.strftime(DEFAULT_TIME_FORMAT)
     end
 
