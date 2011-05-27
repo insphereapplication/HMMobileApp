@@ -1,0 +1,95 @@
+<script type='text/javascript'>
+	$(document).ready(function() {
+		updateAddress();
+	});
+</script>
+<script type="text/javascript">
+function PickDateAppointmentChangeFocus() {
+popupDateTimeAJPicker('0', 'Appointment Time', 'appointment_datetime');
+document.getElementById('appointment_duration').focus();
+}
+</script>
+
+	<div data-role="page" data-theme="b">
+		<form name="appointment_form" method="POST" action="<%= url_for :action => :update_appt, :id => @appt.object, :query => {:origin => @params['origin']} %>">
+		<%= offline_bar%>
+		<div data-role="header" data-theme="b" data-position="inline">
+			<a href="<%=url_for(:action=>:show_appt, :id => @appt.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
+			<h1>Edit Appt</h1>
+			<span class="ui-btn-right">
+			<input type="submit" data-theme="b" class="standardButton" onclick="getLocationType(); return validateAppt();" value="Done"/>
+			</span>
+		</div>
+		<div style="text-align:center" class="ui-bar ui-bar-c"> 
+			<%= "#{@appt.opportunity.contact.full_name} - #{to_date(@appt.opportunity.createdon)}" %><br/>
+		</div>
+		<div id="contentDiv" data-role="content">
+			<div class="ui-body ui-body-d">
+
+					<input type="hidden" name="opportunity_id" value="<%= @appt.opportunity.object %>" />
+					<input type="hidden" id="cssi_location" name="cssi_location" />
+					<input type="hidden" id="appointment_location" name="appointment_location" />
+					
+					<div data-role="fieldcontain">
+						<div data-role="fieldcontain">
+							<label for="appointment_datetime" class="fieldLabel">Appointment Start:</label>
+							<input id="appointment_datetime" type="text" name="appointment_datetime" readonly value="<%= to_datetime(@appt.scheduledstart) %>"  onClick="editpopupDateTimeAJPicker('0', 'Appointment Time', 'appointment_datetime', '<%= @appt.scheduledstart %>');"></input>
+						</div>
+						<div data-role="fieldcontain">
+							<label for="appointment_duration" class="fieldLabel">Duration:</label>
+							<select name="appointment_duration" id="appointment_duration">
+									<% if get_duration(@appt.scheduledstart, @appt.scheduledend) == 30.0 %>
+					        			<option data-placeholder="true"> 30 Minutes</option>
+									<% elsif get_duration(@appt.scheduledstart, @appt.scheduledend) == 60.0 %>
+					        			<option data-placeholder="true"> 1 Hour</option>
+									<% elsif get_duration(@appt.scheduledstart, @appt.scheduledend) == 90.0 %>
+					        			<option data-placeholder="true"> 1.5 Hour</option>
+									<% elsif get_duration(@appt.scheduledstart, @appt.scheduledend) == 120.0 %>
+						        		<option data-placeholder="true"> 2 Hours</option>
+									<% elsif get_duration(@appt.scheduledstart, @appt.scheduledend) == 180.0 %>
+						        		<option data-placeholder="true"> 3 Hours</option>
+									<% else %>
+					        			<option data-placeholder="true"> 4 Hours</option>
+									<% end %>								
+								<option value="90.0">1.5 Hours</option>
+								<option value="30.0">30 Minutes</option>
+								<option value="60.0">1 Hour</option>
+								<option value="120.0">2 Hours</option>
+								<option value="180.0">3 Hours</option>
+								<option value="240.0">4 Hours</option>
+							</select>
+						</div>
+						<div data-role="fieldcontain">
+							<label for="select_location" class="fieldLabel">Location:</label>
+				            <select name="select_location" id="select_location" onchange='updateAddress();'>
+									<option data-placeholder="true"><%= @appt.cssi_location %> </option>
+								<% @appt.opportunity.contact.addresses.each do |type, address| %>
+									<option value="<%= address %>"><%= type %></option>
+								<% end %>
+									<option value=" ">Ad Hoc</option>
+							</select><br />
+						</div>
+						<div data-role="fieldcontain">
+							<label for="location" class="fieldLabel">Address:</label>
+				            <input maxlength="200" type="text" id="location" name="location" value="<%= @appt.location %>" onkeypress="if(event.keyCode==13){return false;}" /><br />
+						</div>
+						<div data-role="fieldcontain">
+							<label for="description">Description:</label>
+							<textarea cols="40" rows="8" name="description" id="notetext"> <%= "#{@appt.description}" %> </textarea>
+						</div>
+						<div data-role="fieldcontain">
+							<input type="submit" data-theme="b" class="standardButton" onclick="getLocationType(); return validateAppt();" value="Done"/>
+						</div>    
+						<% if not $saved.nil? %>
+						      Saved date/time values:<br/>
+						      <% $choosed.each do |k,v| %>
+						        <b>Format (<%=k%>): <%= v %></b><br/>
+						      <% end %>
+						    <% end %>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	</div>
+

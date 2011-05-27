@@ -1,3 +1,13 @@
+<script type="text/javascript" >
+$(document).ready( function(){
+	var replace = $('li[two-icons] div span');
+	if ( replace.length = 1 ) // We can only have 1 preferred number, so only one of these will have the attribute
+	{
+		replace.replaceWith('<span class="ui-icon ui-icon-delete" style="float:right; position:relative;"></span><span class="ui-icon ui-icon-add" style="float:right; right:-30px; position:relative;"></span>');
+	}
+});
+</script>
+
 <div data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar%>
 	<div data-role="header" data-backbtn="false">
@@ -18,13 +28,13 @@
 					</li> 
 					
 					<% if @contact.mobilephone %>
-						<li data-icon="<%= check_preferred("Mobile", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.mobilephone.to_s %>"> Mobile: <%= @contact.mobilephone %></a></li>
+						<li <%= check_preferred_and_donotcall("Mobile", @contact.cssi_preferredphone, @contact.cssi_allowcallsmobilephone) %> ><a href="tel: <%= @contact.mobilephone.to_s %>"> Mobile: <%= @contact.mobilephone %></a></li>
 					<% else %>
 						<li data-icon="false"><a href="#">Mobile:</a></li>
 					<% end %>
 					
 					<% if @contact.telephone1 %>
-						<li data-icon="<%= check_preferred("Business", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone1.to_s %>">Bus: <%= @contact.telephone1 %></a>
+						<li <%= check_preferred_and_donotcall("Business", @contact.cssi_preferredphone, @contact.cssi_allowcallsbusinessphone) %> ><a href="tel: <%= @contact.telephone1.to_s %>">Bus: <%= @contact.telephone1 %></a>
 							<% if (@contact.cssi_businessphoneext != nil || @contact.cssi_businessphoneext == "")%> 
 								<!-- <div align="center"><p> -->x<%= @contact.cssi_businessphoneext %><!-- </p></div> -->
 							<% end %>
@@ -34,13 +44,13 @@
 					<% end %>
 					
 					<% if @contact.telephone2 %>
-						<li data-icon="<%= check_preferred("Home", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone2.to_s %>">Home: <%= @contact.telephone2 %></a></li>
+						<li <%= check_preferred_and_donotcall("Home", @contact.cssi_preferredphone, @contact.cssi_allowcallshomephone) %> ><a href="tel: <%= @contact.telephone2.to_s %>">Home: <%= @contact.telephone2 %></a></li>
 					<% else %>
 						<li data-icon="false"><a href="#">Home:</a></li>
 					<% end %>
 					
 					<% if @contact.telephone3 %>
-						<li data-icon="<%= check_preferred("Alternate", @contact.cssi_preferredphone) %>"><a href="tel: <%= @contact.telephone3.to_s %>">Alternate: <%= @contact.telephone3 %></a></li>
+						<li <%= check_preferred_and_donotcall("Alternate", @contact.cssi_preferredphone, @contact.cssi_allowcallsalternatephone) %> ><a href="tel: <%= @contact.telephone3.to_s %>">Alternate: <%= @contact.telephone3 %></a></li>
 					<% else %>
 						<li data-icon="false"><a href="#">Alternate:</a></li>
 					<% end %>
@@ -50,6 +60,31 @@
 					<% else %>
 					<li data-icon="false"><a href="#">Email:</a></li>
 					<% end %>
+					
+					<% if @contact.cssi_heightft && @contact.cssi_heightin %>
+					<li data-icon="false"><a href="#">Height: <%= @contact.cssi_heightft + '\' ' + @contact.cssi_heightin + "\"" %></a></li>
+					<% else %>
+					<li data-icon="false"><a href="#">Height :</a></li>
+					<% end %>
+					
+					<% if @contact.cssi_weight %>
+					<li data-icon="false"><a href="#">Weight: <%= @contact.cssi_weight %>&nbsp;lbs</a></li>
+					<% else %>
+					<li data-icon="false"><a href="#">Weight :</a></li>
+					<% end %>
+										
+					<% if @contact.cssi_usetobacco %>
+					<li data-icon="false"><a href="#">Tobacco: <%= @contact.use_tobacco_string %></a></li>
+					<% else %>
+					<li data-icon="false"><a href="#">Tobacco :</a></li>
+					<% end %>
+					
+					<% if @contact.familystatuscode %>
+					<li data-icon="false"><a href="#">Marital Status: <%= @contact.familystatuscode %></a></li>
+					<% else %>
+					<li data-icon="false"><a href="#">Marital Status :</a></li>
+					<% end %>
+					
 					<li data-role="list-divider">Home Address</li>
 					<li data-icon="false">
 						<% if @contact.home_city %>
@@ -136,6 +171,7 @@
 				</div>
 				<ul data-role="listview" data-filter="false" data-inset="true">
 					<li data-role="list-divider">Policies</li>
+					<% puts @contact.policies.inspect %>
 					<% @contact.policies.each do |policy| %>
 					<li>
 						<a href="<%= url_for(:controller => :Policy, :action => :show, :id => policy.object, :query => {:origin => "contact"}) %>">
@@ -145,9 +181,6 @@
 						</a>
 					</li>
 					<% end %>
-					<% if @contact.policies.size == 0 %>
-						<li><div style="text-align:center"><i> (No Policies) </i></div></li>
-					<% end %>
 				</ul>
 				<% if @params['origin'] == "contact" %>
 				 <ul data-role="listview" data-filter="false" data-inset="true">
@@ -155,7 +188,7 @@
 						<% @contact.opportunities.each do |opportunity| %>
 						<li>
 							<a href="<%= url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => "contact"}) %>"> 
-								<strong><%= to_date(opportunity.createdon) %></strong> <TEST> <%= opportunity.rollup_status %>
+								<br/><strong><%= to_date(opportunity.createdon) %></strong> <TEST> <%= opportunity.rollup_status %>
 							</a>
 						</li>
 						<% end %>

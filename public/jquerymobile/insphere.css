@@ -135,12 +135,21 @@ ul li a { display: block; padding: 1px 5px; text-decoration: none;}
 	background-image: url(/public/images/map_small_opp.jpg);
 }
 
+.ui-icon-maplink {
+	background-image: url(/public/images/map_icon.png);
+}
+
 .ui-icon-contact {
 	background-image: url(/public/images/person-icon.gif);
 }
 
 .ui-icon-dollar {
 	background-image: url(/public/images/dollar_sign_icon.png) 50% 50% no-repeat;
+}
+
+.ui-icon-donotcall {
+	background-image: url(/public/images/glyphish-icons/21-skull.png);
+	background-size: 16px 16px;
 }
 
 .ui-offline-bar {

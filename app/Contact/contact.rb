@@ -50,9 +50,16 @@ class Contact
   property :cssi_spouseusetobacco, :string
   property :cssi_spousegender, :string #end contact spouse information
   
-  
   index :contact_pk_index, [:contactid]
-  unique_index :unique_contact, [:contactid]
+  unique_index :unique_contact, [:contactid] 
+  
+  def use_tobacco_string
+    if cssi_usetobacco == 'True'
+      'Yes'
+    else
+      'No'
+    end
+  end
   
   def has_spouse_info?
     return cssi_spousename || cssi_spouselastname
@@ -68,13 +75,6 @@ class Contact
       order by lastname collate nocase
       #{get_pagination_sql(page, page_size)}
     })
-    # Contact.find_by_sql(%Q{
-    #       select distinct(c.contactid), c.* from Contact c, Opportunity o 
-    #       where o.contact_id=c.contactid and 
-    #       o.statecode not in ('Won', 'Lost')
-    #       order by LOWER(c.lastname)
-    #       #{get_pagination_sql(page, page_size)}
-    #     })
   end
   
   def full_name

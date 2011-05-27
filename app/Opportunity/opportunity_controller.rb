@@ -224,6 +224,21 @@ class OpportunityController < Rho::RhoController
     end
   end 
   
+  def note_create
+    @opportunity = Opportunity.find(@params['id'])
+    if @opportunity
+      render :action => :note_create, :back => 'callback:', :layout => 'layout_jquerymobile'
+    else
+      redirect :action => :index, :back => 'callback:'
+    end
+  end  
+
+  def contact_opp_new    
+     redirect :action => :new,
+              :controller => "Contact",
+              :query =>{:origin => @params['origin']}
+  end
+  
   def callback_request
     $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
@@ -255,6 +270,14 @@ class OpportunityController < Rho::RhoController
       redirect :action => :index, :back => 'callback:'
     end
   end
+  
+  
+  def contact_opp_new    
+    redirect :action => :new,
+             :controller => "Contact",
+             :query =>{:origin => @params['origin']}
+  end
+  
   
   # GET /Opportunity/{1}/activity_summary
   def activity_summary
@@ -307,6 +330,16 @@ class OpportunityController < Rho::RhoController
     end
     render :back => 'callback:'
   end
+
+  def edit_popup
+     flag = @params['flag']
+      if ['0', '1', '2'].include?(flag)
+        ttt = $choosed[flag]
+          preset_time= Time.parse(@params['preset'])
+        DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
+      end
+      render :back => 'callback:'
+    end
 
   def callback
     if @params['status'] == 'ok'
