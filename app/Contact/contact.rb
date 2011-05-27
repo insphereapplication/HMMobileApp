@@ -68,10 +68,10 @@ class Contact
   def self.all_open(page=nil, page_size=DEFAULT_PAGE_SIZE)    
     Contact.find_by_sql(%Q{
       select c.contactid, c.* from Contact c, Opportunity o 
-            where o.contact_id=c.contactid and 
+            where o.contact_id=c.object and 
             o.statecode not in ('Won', 'Lost')
       union
-      select c.contactid, c.* from Contact c, Policy p where c.contactid = p.contact_id
+      select c.contactid, c.* from Contact c, Policy p where c.object = p.contact_id
       order by lastname collate nocase
       #{get_pagination_sql(page, page_size)}
     })
