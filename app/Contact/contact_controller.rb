@@ -162,8 +162,17 @@ class ContactController < Rho::RhoController
     puts "Here's the Opportunity param:"
     puts @params['opportunity']
     
-    @contact = Contact.create(@params['contact'])    
-    @opp = Opportunity.create(@params['opportunity'].merge({:contact_id => @contact.object}))  
+    @contact = Contact.create(@params['contact'])
+    @opp = Opportunity.create( {:contact_id => @contact.object,
+                                :statecode => 'Open',
+                                :statuscode => 'New Opportunity',
+                                :cssi_statusdetail => 'New',
+                                :cssi_fromrhosync => 'True',
+                                :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"),
+                                :modifiedon => Time.now.strftime("%Y-%m-%d %H:%M:%S"),
+                                :overriddencreatedon => Time.now.strftime("%Y-%m-%d %H:%M:%S"),
+                               }.merge(@params['opportunity'])
+                             )  
       
     puts "Here's the Contact:"
     puts @contact
