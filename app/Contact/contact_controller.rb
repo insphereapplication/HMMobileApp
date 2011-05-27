@@ -73,21 +73,24 @@ class ContactController < Rho::RhoController
     end
   end
   
-  def do_not_call_button(allow_call,phone_type,contact)
+  def do_not_call_button(allow_call,phone_type,phone_number,contact)
     if allow_call == 'True'
       %Q{
-          <a href="#{url_for(:controller => :Contact, :action => :do_not_call_press, :id => @contact.object, :query => {:phone_type => phone_type, :contact => contact})}" data-role="button" data-theme="b">DNC</a>
+          <a href="#{url_for(:controller => :Contact, :action => :do_not_call_press, :id => @contact.object, :query => {:phone_type => phone_type, :phone_number => phone_number, :contact => contact})}" data-role="button" data-theme="b">DNC</a>
         }
     end 
   end
   
   def do_not_call_press
     phone_type = @params['phone_type']
+    phone_number = @params['phone_number']
     id = @params['id']
     
+    message = "This will mark #{phone_number} as do not call."
     Alert.show_popup(
                 {
-                  :message => "Mark as Do Not Call?",
+                  :title => "Mark as Do Not Call?",
+                  :message => message,
                   :buttons => ["Confirm","Cancel"],
                   :callback => url_for( :action => :do_not_call_press_callback, :query => {:phone_type => phone_type, :id => id} )
                 })

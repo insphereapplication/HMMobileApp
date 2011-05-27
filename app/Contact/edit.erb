@@ -41,7 +41,7 @@
 											<% end %>
 										</td>	
 										<td>
-											<%= do_not_call_button(@contact.cssi_allowcallsmobilephone,"Mobile",@contact.object) %>
+											<%= do_not_call_button(@contact.cssi_allowcallsmobilephone,"Mobile",@contact.mobilephone,@contact.object) %>
 										</td>
 									</tr>
 								</table>
@@ -64,7 +64,7 @@
 											<% end %>
 										</td>
 										<td>
-											<%= do_not_call_button(@contact.cssi_allowcallsbusinessphone,"Business",@contact.object) %><%#  %>
+											<%= do_not_call_button(@contact.cssi_allowcallsbusinessphone,"Business",@contact.telephone1,@contact.object) %><%#  %>
 										</td>
 									</tr>
 								</table>
@@ -93,7 +93,7 @@
 											<% end %>
 										</td>
 										<td>
-											<%= do_not_call_button(@contact.cssi_allowcallshomephone,"Home",@contact.object) %><%#  %>
+											<%= do_not_call_button(@contact.cssi_allowcallshomephone,"Home",@contact.telephone2,@contact.object) %><%#  %>
 										</td>
 									</tr>
 								</table>
@@ -116,7 +116,7 @@
 											<% end %>
 										</td>
 										<td>
-											<%= do_not_call_button(@contact.cssi_allowcallsalternatephone,"Alternative",@contact.object) %><%#  %>
+											<%= do_not_call_button(@contact.cssi_allowcallsalternatephone,"Alternative",@contact.telephone3,@contact.object) %><%#  %>
 										</td>
 									</tr>
 								</table>

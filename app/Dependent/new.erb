@@ -3,7 +3,7 @@
 		<div data-role="header">
 			<a href="<%=url_for(:controller=>:Contact, :action=>:show, :id => @contact.object, :query=>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
 			<h1>Add Dependent</h1>
-			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+			<%# <input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/> %>
 		</div>
 		<div id="contentDiv" data-role="content">
 			<input type="hidden" name="dependent[contact_id]" value="<%= @contact.object %>"/>
@@ -72,7 +72,7 @@
 					<input type="text" maxlength="255" name="dependent[cssi_comments]" value="" />
 				</div>
 			</div>
-			<input type="submit" href="#" onClick="goBack()" data-theme="b" data-direction="reverse" value="Done"/>
+			<input type="submit" data-theme="b" value="Done"/>
 		</div>
 	</form>
 </div>

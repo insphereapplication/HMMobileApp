@@ -18,6 +18,8 @@ class Dependent
   property :cssi_name, :string
   property :cssi_usetobacco, :string
   property :cssi_weight, :string
+  
+  belongs_to :contact_id, 'Contact'
 
   def contact
     Contact.find(self.contact_id)
