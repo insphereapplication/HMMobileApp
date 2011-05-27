@@ -157,8 +157,24 @@ class ContactController < Rho::RhoController
 
   # POST /Contact/create
   def create
-    @contact = Contact.create(@params['contact'])
-    redirect :action => :index, :back => 'callback:'
+    
+    puts "Here's the Contact param:"
+    puts @params['contact']
+    puts "Here's the Opportunity param:"
+    puts @params['opportunity']
+    
+    @contact = Contact.create(@params['contact'])    
+    @opp = Opportunity.create(@params['opportunity'].merge({:contact_id => @contact.object}))  
+      
+    puts "Here's the Contact:"
+    puts @contact
+    puts "Here's the Opportunity after:"
+    puts @opp
+  
+    redirect :action => :show, 
+             :back => 'callback:',
+             :id => @contact.object,
+             :query =>{:origin => 'contact'}
   end
 
   # POST /Contact/{1}/update
