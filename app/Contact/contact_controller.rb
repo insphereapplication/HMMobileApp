@@ -73,6 +73,51 @@ class ContactController < Rho::RhoController
     end
   end
   
+  def do_not_call_button(allow_call,phone_type,contact)
+    if allow_call == 'True'
+      %Q{
+          <a href="#{url_for(:controller => :Contact, :action => :do_not_call_press, :id => @contact.object, :query => {:phone_type => phone_type, :contact => contact})}" data-role="button" data-theme="b">DNC</a>
+        }
+    end 
+  end
+  
+  def do_not_call_press
+    phone_type = @params['phone_type']
+    id = @params['id']
+    
+    Alert.show_popup(
+                {
+                  :message => "Mark as Do Not Call?",
+                  :buttons => ["Confirm","Cancel"],
+                  :callback => url_for( :action => :do_not_call_press_callback, :query => {:phone_type => phone_type, :id => id} )
+                })
+  end
+  
+  def do_not_call_press_callback
+    button_id   = @params['button_id']
+    id          = @params['id']
+    phone_type  = @params['phone_type']
+    
+    contact = Contact.find(id)
+    
+    if button_id == 'Confirm' and contact
+      case phone_type
+        when "Mobile"
+          contact.update_attributes( { :cssi_allowcallsmobilephone => 'False' } )
+        when "Home"
+          contact.update_attributes( { :cssi_allowcallshomephone => 'False' } )
+        when "Business"
+          contact.update_attributes( { :cssi_allowcallsbusinessphone => 'False' } )
+        when "Alternative"
+          contact.update_attributes( { :cssi_allowcallsalternatephone => 'False' } )
+      end
+      
+      SyncEngine.dosync
+    end
+    
+    WebView.navigate( url_for :controller => :Contact, :action => :show, :back => 'callback:', :id => id, :layout => 'layout_jquerymobile' )
+  end
+  
   def select_preferred(phone_type, preferred)
     if phone_type == preferred
       return "selected"

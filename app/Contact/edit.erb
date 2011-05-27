@@ -26,22 +26,48 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
-								<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsmobilephone) %> 
-								<% if System::get_property('platform') == 'APPLE' %>
-								<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>> 
-								<% else %>
-								<input maxlength="14" type="tel" id="phoneNumber" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>><br>
-								<% end %>
+								<table width="100%">
+									<tr>
+										<td colspan="2">
+											<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsmobilephone) %> 
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<% if System::get_property('platform') == 'APPLE' %>
+											<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>> 
+											<% else %>
+											<input maxlength="14" type="tel" id="phoneNumber" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>><br>
+											<% end %>
+										</td>	
+										<td>
+											<%= do_not_call_button(@contact.cssi_allowcallsmobilephone,"Mobile",@contact.object) %>
+										</td>
+									</tr>
+								</table>
 							</div>
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
-								<label for="contact[telephone1]" class="fieldLabel">Business Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsbusinessphone) %> 
-								<% if System::get_property('platform') == 'APPLE' %>
-								<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
-								<% else %>
-								<input type="tel" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
-								<% end %>
+								<table width="100%">
+									<tr>
+										<td colspan="2">
+											<label for="contact[telephone1]" class="fieldLabel">Business Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsbusinessphone) %>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<% if System::get_property('platform') == 'APPLE' %>
+											<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
+											<% else %>
+											<input type="tel" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
+											<% end %>
+										</td>
+										<td>
+											<%= do_not_call_button(@contact.cssi_allowcallsbusinessphone,"Business",@contact.object) %><%#  %>
+										</td>
+									</tr>
+								</table>
 							</div>
 						</div>
 						<div data-role="fieldcontain">
@@ -52,14 +78,50 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
-								<label for="contact[telephone2]" class="fieldLabel">Home Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone) %> 
-								<% if System::get_property('platform') == 'APPLE' %> <input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>> <% else %> <input type="tel" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>> <% end %>
+								<table width="100%">
+									<tr>
+										<td colspan="2">
+											<label for="contact[telephone2]" class="fieldLabel">Home Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone) %> 
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<% if System::get_property('platform') == 'APPLE' %>
+											<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
+											<% else %>
+											<input type="tel" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
+											<% end %>
+										</td>
+										<td>
+											<%= do_not_call_button(@contact.cssi_allowcallshomephone,"Home",@contact.object) %><%#  %>
+										</td>
+									</tr>
+								</table>
 							</div>
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
-								<label for="contact[telephone3]" class="fieldLabel">Alternate Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsalternatephone) %> 
-								<% if System::get_property('platform') == 'APPLE' %> <input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>> <% else %> <input type="tel" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>> <% end %>
+								<table width="100%">
+									<tr>
+										<td colspan="2">
+											<label for="contact[telephone3]" class="fieldLabel">Alternate Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsalternatephone) %> 
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<% if System::get_property('platform') == 'APPLE' %>
+											<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>>
+											<% else %>
+											<input type="tel" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>>
+											<% end %>
+										</td>
+										<td>
+											<%= do_not_call_button(@contact.cssi_allowcallsalternatephone,"Alternative",@contact.object) %><%#  %>
+										</td>
+									</tr>
+								</table>
+								
+								
 							</div>
 						</div>
 						<div data-role="fieldcontain">
@@ -92,7 +154,7 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
-								<table>
+								<table width="100%">
 									<tr>
 										<td colspan="2">
 											<label for="contact[cssi_heightft]" class="fieldLabel">Height:</label>

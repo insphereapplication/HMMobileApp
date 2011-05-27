@@ -75,13 +75,6 @@ class Contact
       order by lastname collate nocase
       #{get_pagination_sql(page, page_size)}
     })
-    # Contact.find_by_sql(%Q{
-    #       select distinct(c.contactid), c.* from Contact c, Opportunity o 
-    #       where o.contact_id=c.contactid and 
-    #       o.statecode not in ('Won', 'Lost')
-    #       order by LOWER(c.lastname)
-    #       #{get_pagination_sql(page, page_size)}
-    #     })
   end
   
   def full_name
