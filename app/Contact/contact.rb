@@ -32,6 +32,23 @@ class Contact
   property :cssi_state2id, :string #business address state
   property :address2_postalcode, :string 
   property :contactid, :string
+  property :cssi_heightft, :string
+  property :cssi_heightin, :string
+  property :cssi_weight, :string
+  property :cssi_usetobacco, :string
+  property :familystatuscode, :string
+  property :cssi_allowcallsalternatephone, :string
+  property :cssi_allowcallsbusinessphone, :string
+  property :cssi_allowcallshomephone, :string
+  property :cssi_allowcallsmobilephone, :string
+  property :cssi_spousename, :string #start contact spouse information
+  property :cssi_spouselastname, :string
+  property :cssi_spousebirthdate, :string
+  property :cssi_spouseheightft, :string
+  property :cssi_spouseheightin, :string
+  property :cssi_spouseweight, :string
+  property :cssi_spouseusetobacco, :string
+  property :cssi_spousegender, :string #end contact spouse information
   
   index :contact_pk_index, [:contactid]
   unique_index :unique_contact, [:contactid] 
@@ -42,6 +59,10 @@ class Contact
     else
       'No'
     end
+  end
+  
+  def has_spouse_info?
+    return cssi_spousename || cssi_spouselastname
   end
   
   def self.all_open(page=nil, page_size=DEFAULT_PAGE_SIZE)    
