@@ -2,7 +2,7 @@
 	<div data-role="header">
 		<a href="<%=url_for(:action=>:show, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-direction="reverse" data-icon="back">Back</a>
 		<h1>Spouse Detail</h1>
-		<a href="contacts_edit_dependent.html" data-direction="forward" data-icon="edit"> Edit </a>
+		<a href="<%=url_for(:action=>:spouse_edit, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-direction="reverse" data-icon="edit">Edit</a>
 	</div>
 	<div data-role="content">
 		<ul data-role="listview" data-filter="false" data-inset="true"> 
