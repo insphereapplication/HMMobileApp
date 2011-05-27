@@ -239,9 +239,6 @@ class SettingsController < Rho::RhoController
     end
   end
   
-  # this is the message returned from RhoSync when Rhodes is sending a token for a session that no longer exists (like after a Redis reset) 
-  SESSION_ERROR_MSG = "undefined method `user_id' for nil:NilClass"
-  
   #sync_notify gets called whenever any sync is in progress, completed, or returns an error
   #this is registered in the initialize method in application.rb
   def sync_notify
@@ -310,17 +307,24 @@ class SettingsController < Rho::RhoController
         end
       end
 
-      @msg = rho_error.message unless @msg and @msg.length > 0   
+      @msg = rho_error.message unless @msg and @msg.length > 0
       
-      if (@params['error_message'].downcase == 'unknown client') or rho_error.unknown_client?(@params['error_message'])
+      # RhoSync 2.1.5 has fixes that will cause rho_error.unknown_client? to return true in the proper scenarios.
+      is_unknown_client_error = rho_error.unknown_client?(@params['error_message']) 
+      
+      # Legacy support for RhoSync versions before 2.1.5
+      is_unknown_client_error ||= (err_code == Rho::RhoError::ERR_REMOTESERVER && @params['error_message'] == "undefined method `user_id' for nil:NilClass")
+      
+      # Rhosync is not aware of this client's ID. Reset and force the user to the login screen.
+      if is_unknown_client_error
         log_error("Error: Unknown client", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         
         SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
         
-        full_reset_logout_keep_credentials
+        full_reset_logout
         
-        goto_login("Unknown client, logging in again.")
+        goto_login("Unknown client, please log in again.")
       elsif err_code == Rho::RhoError::ERR_NETWORK
         #leave ':send_to_exceptional => false' alone until infinite loop issue is fixed for clients without a network connection
         log_error("Network connectivity lost", Rho::RhoError.err_message(err_code) + " #{@params.inspect}", {:send_to_exceptional => false})
@@ -335,16 +339,6 @@ class SettingsController < Rho::RhoController
         SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
         background_login
-      elsif err_code == Rho::RhoError::ERR_REMOTESERVER && @params['error_message'] == SESSION_ERROR_MSG
-        # Rhodes is sending the server a token for a non-existent session. Time to start over.
-        log_error("RhoSync error: unknown session", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        
-        SyncEngine.set_pollinterval(0)
-        SyncEngine.stop_sync
-                
-        full_reset_logout
-        
-        goto_login("Unknown session, please log in again.")
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/401 Unauthorized/].nil?
         #proxy returned a 401, need to re-login
         log_error("Error: 401 Unauthorized from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
