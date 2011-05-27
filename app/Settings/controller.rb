@@ -230,7 +230,7 @@ class SettingsController < Rho::RhoController
   
   def push_notify
     #setup callbacks to use new opportunity workflow, start sync
-    SyncUtil.start_sync('new_opportunity')
+    SyncUtil.restart_sync('new_opportunity')
 
     if System::get_property('platform') == 'ANDROID'
       "rho_push"
