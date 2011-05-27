@@ -20,7 +20,6 @@ class Dependent
   property :cssi_weight, :string
 
   def contact
-    puts "*** Dependent contact id = " + self.contact_id + " ***"
     Contact.find(self.contact_id)
   end
 end

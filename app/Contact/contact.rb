@@ -203,7 +203,10 @@ class Contact
   
   def policies
     Policy.find(:all, :conditions => {"contact_id" => self.object})
-    #Policy.find(:all)
+  end
+  
+  def dependents
+    Dependent.find(:all, :conditions => {"contact_id" => self.object})
   end
   
   def business_map
