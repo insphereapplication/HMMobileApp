@@ -11,8 +11,9 @@ document.getElementById('appointment_duration').focus();
 </script>
 
 	<div data-role="page" data-theme="b">
+		<form name="appointment_form" method="POST" action="<%= url_for :action => :update_appt, :id => @appt.object, :query => {:origin => @params['origin']} %>">
 		<%= offline_bar%>
-		<div data-role="header" data-position="inline">
+		<div data-role="header" data-theme="b" data-position="inline">
 			<a href="<%=url_for(:action=>:show_appt, :id => @appt.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
 			<h1>Edit Appt</h1>
 			<span class="ui-btn-right">
@@ -24,7 +25,7 @@ document.getElementById('appointment_duration').focus();
 		</div>
 		<div id="contentDiv" data-role="content">
 			<div class="ui-body ui-body-d">
-				<form name="appointment_form" method="POST" action="<%= url_for :action => :update_appt, :id => @appt.object, :query => {:origin => @params['origin']} %>">
+
 					<input type="hidden" name="opportunity_id" value="<%= @appt.opportunity.object %>" />
 					<input type="hidden" id="cssi_location" name="cssi_location" />
 					<input type="hidden" id="appointment_location" name="appointment_location" />
