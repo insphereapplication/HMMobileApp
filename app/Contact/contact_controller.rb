@@ -150,10 +150,6 @@ class ContactController < Rho::RhoController
       redirect :action => :index, :back => 'callback:'
     end
   end
-  
-  def dependent_show
-    render :action => :dependent_show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
-  end
 
   # POST /Contact/create
   def create
@@ -200,6 +196,11 @@ class ContactController < Rho::RhoController
   def spouse_add
       @contact = Contact.find(@params['id'])
       render :action => :spouse_add, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
+  end
+  
+  def spouse_edit
+      @contact = Contact.find(@params['id'])
+      render :action => :spouse_edit, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
   end
   
 end
