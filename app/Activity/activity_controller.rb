@@ -11,7 +11,7 @@ class ActivityController < Rho::RhoController
     if @appt
       render :action => :show_appt, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
     else
-      redirect :action => :index, :back => 'callback:'
+      redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
     end
   end
   
@@ -21,7 +21,7 @@ class ActivityController < Rho::RhoController
     if @appt
       render :action => :edit_appt, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
     else
-      redirect :action => :index, :back => 'callback:'
+      redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
     end
   end
   

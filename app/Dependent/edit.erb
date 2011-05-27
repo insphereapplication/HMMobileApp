@@ -1,5 +1,5 @@
 <div data-role="page" data-theme="b">
-	<form method="post" id="dependent_update" action="<%= url_for :action => :update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" name="dependent_update">
+	<form method="post" id="dependent_update" action="<%= url_for(:action => :update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" name="dependent_update">
 		<div data-role="header">
 			<a href="<%=url_for(:controller=>:Contact, :action=>:show, :id => @dependent.contact.object, :query=>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
 			<h1>Edit Dependent</h1>
@@ -47,7 +47,7 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="dependent[cssi_dateofbirth]" class="fieldLabel">Date of Birth:</label>
-					<input id="dependent[cssi_dateofbirth]" type="text" name="dependent[cssi_dateofbirth]" readonly value="<%= to_date(@dependent.cssi_dateofbirth) %>" onClick="popupBirthDateAJPicker('1', 'Dependent Birth Date', 'dependent[cssi_dateofbirth]');"></input>
+					<input id="dependent[cssi_dateofbirth]" type="text" name="dependent[cssi_dateofbirth]" readonly value="<%= to_date(@dependent.cssi_dateofbirth) %>" onClick="editpopupDateTimeAJPicker('1', 'Dependent Birth Date', 'dependent[cssi_dateofbirth]', '<%= @dependent.cssi_dateofbirth %>');"></input>
 				</div>
 			</div>
 			<div data-role="fieldcontain">
@@ -64,7 +64,7 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d"> 
 					 <fieldset data-role="controlgroup">
-						<input type="checkbox" name="dependent[cssi_usetobacco]" id="dependent[cssi_usetobacco]" />
+						<input type="checkbox" name="dependent[cssi_usetobacco]" id="dependent[cssi_usetobacco]" value="<%= @dependent.cssi_usetobacco %>" />
 						<label for="dependent[cssi_usetobacco]">Use Tobacco</label>
 				    </fieldset>
 				</div>
