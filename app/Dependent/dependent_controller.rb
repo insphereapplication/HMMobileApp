@@ -15,7 +15,6 @@ class DependentController < Rho::RhoController
     @dependent = Dependent.find(@params['id'])
     if @dependent
       @contact = @dependent.contact
-      puts "*** @contact = " + @contact.inspect + " ***"
       render :action => :show, :back => url_for(:action => :index)
     else
       redirect :action => :index
@@ -41,14 +40,19 @@ class DependentController < Rho::RhoController
 
   # POST /Dependent/create
   def create
+    puts "********** Calling DependentController.create **********"
+    puts "********** attributes = #{@params['dependent']}"
     @dependent = Dependent.create(@params['dependent'])
     @dependent.update_attributes(:cssi_dateofbirth => DateUtil.birthdate_build(@dependent.cssi_dateofbirth))
     @dependent.update_attributes(:cssi_age => age(@dependent.cssi_dateofbirth))
-    redirect :action => :index
+    SyncEngine.dosync
+    redirect :controller => :Contact, :action => :show, :id => @dependent.contact_id
   end
 
   # POST /Dependent/{1}/update
   def update
+    puts "********** Calling DependentController.update **********"
+    puts "********** attributes = #{@params['dependent']}"
     @dependent = Dependent.find(@params['id'])
     @dependent.update_attributes(@params['dependent']) if @dependent
     redirect :action => :index

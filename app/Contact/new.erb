@@ -1,82 +1,83 @@
 <div data-role="page" data-theme="b">
+  <form method="POST" action="<%= url_for :action => :create %>">
+	<input type="hidden" name="origin" value="<%=@params['origin']%>">
 	<div data-inline="true">
 		<%= offline_bar%>
 		<div data-role="header" data-backbtn="false" data-theme="b">		
 			<%= cancelbutton_by_origin(@params['origin']) %>
 			<h1>Add Contact/Opp</h1>
-			<div data-iconpos="right">
-				<input type="submit" href="#" onclick="goBack()" data-theme="b" data-direction="reverse" value="Done" />
-			</div>
+			<span class="ui-btn-right">
+				<input type="submit" data-theme="b" class="standardButton validateContactOpp" onsubmit="return validateNewContactInfo();" value="Done" />
+			</span>
 		</div>
 	</div>
 	
 	<div data-role="content">
 		
 		<div align="center">
-			<label class="fieldLabel"><h3>Add Contact</h3></label>
+			<label class="fieldLabel"><b>Add Contact</b></label>
 		</div>
-
-	
-		<div data-role="collapsible" data-collapsed="false" >
-			<h3>
-				<a href="#" data-theme="b">General Information</a>
-			</h3>
+		
+		<div>
+			<br />
+			<b>General Information</b>
 					
 			<div data-role="fieldcontain">
-				<div>
-	        		<label for="contact[name]" class="fieldLabel">First Name:<font color="red">  *</font></label>
-	        		<input maxlength="50" type="text" name="contact[name]" <%= placeholder( "First Name" ) %> />
+				<div class="ui-body ui-body-d">
+	        		<label for="contact[firstname]" class="fieldLabel">First Name:<font color="red">  *</font></label>
+	        		<input id="contact_firstname" maxlength="50" type="text" name="contact[firstname]" <%= placeholder( "First Name" ) %> />
 				</div>
 			</div>		
 
 			<div data-role="fieldcontain">
-				<div>
-	        		<label for="contact[name]" class="fieldLabel">Last Name:<font color="red">  *</font></label>
-	        		<input maxlength="50" type="text" name="contact[last_name]" <%= placeholder( "Last Name" ) %> />
+				<div class="ui-body ui-body-d">
+	        		<label for="contact[lastname]" class="fieldLabel">Last Name:<font color="red">  *</font></label>
+	        		<input id="contact_lastname" maxlength="50" type="text" name="contact[lastname]" <%= placeholder( "Last Name" ) %> />
 				</div>
 			</div>		
 
 			<div data-role="fieldcontain">
-				<div>
-	        		<label for="contact[name]" class="fieldLabel">Email Address:<font color="blue">  +</font></label>
-	        		<input maxlength="50" type="text" name="contact[name]" <%= placeholder( "Email Address" ) %> />
+				<div class="ui-body ui-body-d">
+	        		<label for="contact[emailaddress1]" class="fieldLabel">Email Address:<font color="blue">  +</font></label>
+	        		<input maxlength="50" type="text" id="contact_emailaddress1" name="contact[emailaddress1]" <%= placeholder( "Email Address" ) %> />
 				</div>
 			</div>		
 		
 			<div data-role="fieldcontain">
-				<div>
+				<div class="ui-body ui-body-d">
 	            	<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:<font color="blue">  +</font></label>
-					<input maxlength="50" type="text" name="contact[telephone1]" <%= placeholder( "Mobile Phone" ) %> />
+					<input maxlength="50" type="text" id="contact_mobilephone" name="contact[mobilephone]" <%= placeholder( "Mobile Phone" ) %> />
 		    	</div>
 			</div>
 				
 			<div data-role="fieldcontain">
-				<div>
-	            	<label for="contact[mobilephone]" class="fieldLabel">Business Phone:<font color="blue">  +</font></label>
-					<input maxlength="50" type="text" name="contact[telephone1]" <%= placeholder( "Business Phone" ) %> />
+				<div class="ui-body ui-body-d">
+	            	<label for="contact[telephone1]" class="fieldLabel">Business Phone:<font color="blue">  +</font></label>
+					<input maxlength="50" type="text" id="contact_telephone1" name="contact[telephone1]" <%= placeholder( "Business Phone" ) %> />
 		    	</div>
 			</div>
 				
 			<div data-role="fieldcontain">
-				<div>
-	            	<label for="contact[mobilephone]" class="fieldLabel">Home Phone:<font color="blue">  +</font></label>
-					<input maxlength="50" type="text" name="contact[telephone1]" <%= placeholder( "Home Phone" ) %> />
+				<div class="ui-body ui-body-d">
+	            	<label for="contact[telephone2]" class="fieldLabel">Home Phone:<font color="blue">  +</font></label>
+					<input maxlength="50" type="text" id="contact_telephone2" name="contact[telephone2]" <%= placeholder( "Home Phone" ) %> />
 		    	</div>
 			</div>
 
 			<div data-role="fieldcontain">
-				<div>
-	            	<label for="contact[mobilephone]" class="fieldLabel">Alternative Phone:<font color="blue">  +</font></label>
-					<input maxlength="50" type="text" name="contact[telephone1]" <%= placeholder( "Alternative Phone" ) %> />
+				<div class="ui-body ui-body-d">
+	            	<label for="contact[telephone3]" class="fieldLabel">Alternative Phone:<font color="blue">  +</font></label>
+					<input maxlength="50" type="text" id="contact_telephone3" name="contact[telephone3]" <%= placeholder( "Alternative Phone" ) %> />
 		    	</div>
 			</div>
 
 			<div data-role="fieldcontain">
-				<div>
-	            	<label for="contact[mobilephone]" class="select">Preferred Phone:</label>
+				<div class="ui-body ui-body-d">
+	            	<label for="contact[cssi_preferredphone]" class="select">Preferred Phone:</label>
 					<div>
-						<select name="contact[cssi_preferredphone]" tabindex="-1">
-							<option selected="true" value="Business">Business</option>
+						<select id="contact_preferredphone" name="contact[cssi_preferredphone]">
+							<option value="" selected="true"></option>
+							<option value="Business">Business</option>
 							<option value="Mobile">Mobile</option>
 							<option value="Home">Home</option>
 							<option value="Alternate">Alternate</option>
@@ -86,11 +87,12 @@
 			</div>				
 
 			<div data-role="fieldcontain">
-				<div>
-	            	<label for="contact[mobilephone]" class="select">Gender:</label>
+				<div class="ui-body ui-body-d">
+	            	<label for="contact[gendercode]" class="select">Gender:</label>
 					<div>
-						<select name="contact[cssi_gender]" tabindex="-1">
-							<option selected="true" value="1">Male</option>
+						<select id="contact_gendercode" name="contact[gendercode]">
+							<option value="" selected="true"></option>
+							<option value="1">Male</option>
 							<option value="2">Female</option>
 						</select>
 					</div>
@@ -98,24 +100,22 @@
 			</div>				
 
 			<div data-role="fieldcontain">
-					<div>
-		            	<label for="contact[mobilephone]" class="fieldLabel">Date of Birth:</label>
-						<input maxlength="50" type="text" name="contact[telephone1]" <%= placeholder( "Alternative Phone" ) %> />
+					<div class="ui-body ui-body-d">
+		            	<label for="contact[birthdate]" class="fieldLabel">Date of Birth:</label>
+						<input maxlength="50" type="text" id="contact_birthdate" name="contact[birthdate]" <%= placeholder( "Date of Birth" ) %> />
 			    	</div>
 			</div>				
 		</div>
 			
 
 		<div data-role="collapsible" data-collapsed="false" >
-			<h3>
-				<a href="#" data-theme="b">Opportunity Details</a>
-			</h3>
+			<h3>Opportunity Details</h3>
 	
 			<div data-role="fieldcontain">
-				<div>
-	        		<label for="contact[name]" class="select">LOB:</label>
+				<div class="ui-body ui-body-d">
+	        		<label for="opportunity[cssi_lineofbusiness]" class="select">LOB:</label>
 					<div>
-						<select name="contact[cssi_gender]">
+						<select id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]">
 							<option value="" selected="true"></option>
 							<option value="Health">Health</option>
 							<option value="Life">Life</option>
@@ -131,10 +131,10 @@
 			</div>		
 
 			<div data-role="fieldcontain">
-				<div>
-	        		<label for="contact[name]" class="select">Source</label>
+				<div class="ui-body ui-body-d">
+	        		<label for="opportunity[cssi_inputsource]" class="select">Source:</label>
 					<div>
-						<select name="contact[cssi_gender]">
+						<select id="opportunity_inputsource" name="opportunity[cssi_inputsource]">
 							<option value="" selected="true"></option>
 							<option value="CPA Plus">CPA Plus</option>
 							<option value="Direct Mail">Direct Mail</option>
@@ -158,35 +158,33 @@
 
 		
 		<div data-role="collapsible" data-collapsed="true" >
-			<h3>
-				<a href="#" data-theme="b">Home Address</a>
-			</h3>
+			<h3>Home Address</h3>
 							
 			<div data-role="fieldcontain">
-				<div>
+				<div class="ui-body ui-body-d">
 					<label for="contact[address1_line1]" class="fieldLabel">Address Line 1:</label>
-					<input maxlength="200" type="text" name="contact[address1_line1]" value="" />
+					<input maxlength="200" type="text" id="contact_address1_line1" name="contact[address1_line1]" value="" />
 				</div>
 			</div>
 			
 			<div data-role="fieldcontain">
-				<div>
+				<div class="ui-body ui-body-d">
 					<label for="contact[address1_line2]" class="fieldLabel">Address Line 2:</label>
-					<input maxlength="255" type="text" name="contact[address1_line2]" value="" />
+					<input maxlength="255" type="text" id="contact_address1_line2" name="contact[address1_line2]" value="" />
 				</div>
 			</div>
 
 			<div data-role="fieldcontain">
-				<div>
+				<div class="ui-body ui-body-d">
 					<label for="contact[address1_city]" class="fieldLabel">City:</label>
-					<input maxlength="50" type="text" name="contact[address1_city]" value="" />
+					<input maxlength="50" type="text" id="contact_address1_city" name="contact[address1_city]" value="" />
 				</div>
 			</div>
 
 			<div data-role="fieldcontain">
-				<div>
+				<div class="ui-body ui-body-d">
 					<label for="contact[cssi_state1id]" class="select">State:</label>
-					<select name="contact[cssi_state1id]" data-role="none">				
+					<select id="contact_address1_state" name="contact[cssi_state1id]" data-role="none">				
 						<option selected="true" value=""></option>
 						<option value="AL">Alabama</option>
 						<option value="AK">Alaska</option>
@@ -244,9 +242,9 @@
 			</div>
 
 			<div data-role="fieldcontain">
-				<div>
-					<label for="contact[address1_city]" class="fieldLabel">Zip:</label>
-					<input maxlength="10" type="text" name="contact[address1_city]" value="" />
+				<div class="ui-body ui-body-d">
+					<label for="contact[address1_postalcode]" class="fieldLabel">Zip:</label>
+					<input maxlength="10" type="text" id="contact_address1_zip" name="contact[address1_postalcode]" value="" />
 				</div>
 			</div>
 						
@@ -254,35 +252,33 @@
 
 
 		<div data-role="collapsible" data-collapsed="true" >
-			<h3>
-				<a href="#" data-theme="b">Business Address</a>
-			</h3>
+			<h3>Business Address</h3>
 		
 			<div data-role="fieldcontain">
-				<div>
-					<label for="contact[address1_line1]" class="fieldLabel">Address Line 1:</label>
-					<input maxlength="200" type="text" name="contact[address1_line1]" value="" />
+				<div class="ui-body ui-body-d">
+					<label for="contact[address2_line1]" class="fieldLabel">Address Line 1:</label>
+					<input maxlength="200" type="text" id="contact_address2_line1" name="contact[address2_line1]" value="" />
 				</div>
 			</div>
 			
 			<div data-role="fieldcontain">
-				<div>
-					<label for="contact[address1_line2]" class="fieldLabel">Address Line 2:</label>
-					<input maxlength="255" type="text" name="contact[address1_line2]" value="" />
+				<div class="ui-body ui-body-d">
+					<label for="contact[address2_line2]" class="fieldLabel">Address Line 2:</label>
+					<input maxlength="255" type="text" id="contact_address2_line2" name="contact[address2_line2]" value="" />
 				</div>
 			</div>
 
 			<div data-role="fieldcontain">
-				<div>
-					<label for="contact[address1_city]" class="fieldLabel">City:</label>
-					<input maxlength="50" type="text" name="contact[address1_city]" value="" />
+				<div class="ui-body ui-body-d">
+					<label for="contact[address2_city]" class="fieldLabel">City:</label>
+					<input maxlength="50" type="text" id="contact_address2_city" name="contact[address2_city]" value="" />
 				</div>
 			</div>
 
 			<div data-role="fieldcontain">
-				<div>
-					<label for="contact[cssi_state1id]" class="select">State:</label>
-					<select name="contact[cssi_state1id]" data-role="none">				
+				<div class="ui-body ui-body-d">
+					<label for="contact[cssi_state2id]" class="select">State:</label>
+					<select id="contact_address2_state" name="contact[cssi_state2id]" data-role="none">				
 						<option selected="true" value=""></option>
 						<option value="AL">Alabama</option>
 						<option value="AK">Alaska</option>
@@ -340,9 +336,9 @@
 			</div>
 
 			<div data-role="fieldcontain">
-				<div>
-					<label for="contact[address1_city]" class="fieldLabel">Zip:</label>
-					<input maxlength="10" type="text" name="contact[address1_city]" value="" />
+				<div class="ui-body ui-body-d">
+					<label for="contact[address2_postalcode]" class="fieldLabel">Zip:</label>
+					<input maxlength="10" type="text" id="contact_address2_zip" name="contact[address2_postalcode]" value="" />
 				</div>
 			</div>
 		
@@ -350,9 +346,9 @@
 
 
 		<div data-theme="b">
-			<input type="submit" href="#" onclick="goBack()" data-theme="b" data-direction="reverse" value="Done">	
+			<input type="submit" data-theme="b" class="standardButton validateContactOpp" value="Done"/>
 		</div>
 
 	</div>
-	
+  </form>
 </div>
