@@ -233,12 +233,12 @@
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
 								<label for="contact[cssi_state1id]" class="fieldLabel">State:</label> <select name="contact[cssi_state1id]" id="contact[cssi_state1id]" data-role="none" id="select-choice-2">
-									<option data-placeholder="true">
-										<%= @contact.cssi_state1id %>
-									</option><% Constants::STATE_CODES.each do |state_code| %>
-									<option value="<%=state_code[0]%>">
-										<%=state_code[1]%>
-									</option><% end %>
+									<option value="">--</option>
+									<% Constants::STATE_CODES.each do |state_code| %>
+										<option value="<%=state_code[0]%>" <% if @contact.cssi_state1id == state_code[0] %> selected="selected" <% end %>>
+											<%=state_code[1]%>
+										</option>
+									<% end %>
 								</select>
 							</div>
 						</div>
@@ -266,12 +266,12 @@
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
 								<label for="contact[cssi_state2id]" class="fieldLabel">State:</label> <select id="contact[cssi_state2id]" name="contact[cssi_state2id]" data-role="none" id="select-choice-3">
-									<option data-placeholder="true">
-										<%= @contact.cssi_state2id %>
-									</option><% Constants::STATE_CODES.each do |state_code| %>
-									<option value="<%=state_code[0]%>">
-										<%=state_code[1]%>
-									</option><% end %>
+									<option value="">--</option>
+									<% Constants::STATE_CODES.each do |state_code| %>
+										<option value="<%=state_code[0]%>" <% if @contact.cssi_state2id == state_code[0] %> selected="selected" <% end %>>
+											<%=state_code[1]%>
+										</option>
+									<% end %>
 								</select>
 							</div>
 						</div>
