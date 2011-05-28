@@ -112,7 +112,7 @@
 			<div data-role="fieldcontain">
 					<div class="ui-body ui-body-d">
 		            	<label for="contact[birthdate]" class="fieldLabel">Date of Birth:</label>
-						<input id="contact[birthdate]" type="text" name="contact[birthdate]" readonly value="<%= $choosed['0'] %>"  onClick="popupBirthDateAJPicker('1', 'Contact Birth Date', 'contact[birthdate]');"></input>
+						<input id="contact[birthdate]" type="text" name="contact[birthdate]" readonly value="<%= $choosed['0'] %>"  onClick="popupBirthDateAJPicker('1', 'Contact Birth Date', 'contact[birthdate]'); document.getElementById('opportunity_lineofbusiness').focus();"></input>
 			    	</div>
 			</div>				
 		</div>
