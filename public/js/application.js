@@ -1,6 +1,7 @@
 $(document).ready(function() {
   $('form').not('#dependent_form, #contact_new, #appdetail, #call_back_form, #appointment_form').submit(function() {
     if(typeof jQuery.data(this, "disabledOnSubmit") == 'undefined') {
+	  alert('button disabled');
       jQuery.data(this, "disabledOnSubmit", { submited: true });
       $('input[type=submit], input[type=button]', this).each(function() {
         $(this).attr("disabled", "disabled");
@@ -13,6 +14,15 @@ $(document).ready(function() {
     }
   });
 });
+
+// Disables a form if the form was valid (prevent duplicate submits)
+ $('form').live('submit', function(event) {
+     if ($(this).valid()) {
+         $('input[type="submit"]').attr('disabled', 'disabled');
+		}
+ });
+
+
 
 // Enable the phoneNumber text box so that it submits with the form
 function enablePhoneNumber(){

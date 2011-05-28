@@ -102,7 +102,8 @@ $('#dependent_new_page, #dependent_edit_page').live('pagecreate',function(event)
 	    },
 		'dependent[cssi_weight]' : {
 		  min: 0,
-		  max: 1000
+		  max: 1000,
+		  digits: true
 	    },
 		'dependent[cssi_comments]' : {
 		  maxlength: 250
@@ -124,7 +125,8 @@ $('#spouse_new_page, #spouse_edit_page').live('pagecreate',function(event){
 	    },
 		'contact[cssi_spouseweight]' : {
 		  min: 0,
-		  max: 1000
+		  max: 1000,
+		  digits: true
 	    }
 	  }
 	});	
@@ -156,7 +158,8 @@ $('#contact_edit_page').live('pagecreate',function(event){
 		},
 		'contact[cssi_weight]' : {
 		  min: 0,
-		  max: 1000		  
+		  max: 1000,
+		  digits: true		  
 		},
 		'contact[address1_line1]' : {
 		  maxlength: 200	
