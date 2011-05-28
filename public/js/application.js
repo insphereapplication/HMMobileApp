@@ -1,7 +1,6 @@
 $(document).ready(function() {
   $('form').not('#dependent_form, #contact_new, #appdetail, #call_back_form, #appointment_form').submit(function() {
     if(typeof jQuery.data(this, "disabledOnSubmit") == 'undefined') {
-	  alert('button disabled');
       jQuery.data(this, "disabledOnSubmit", { submited: true });
       $('input[type=submit], input[type=button]', this).each(function() {
         $(this).attr("disabled", "disabled");
