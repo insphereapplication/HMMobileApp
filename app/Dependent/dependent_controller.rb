@@ -84,6 +84,7 @@ class DependentController < Rho::RhoController
       @dependent = Dependent.find(@params['id'])
       contactid = @dependent.contact_id
       @dependent.destroy if @dependent
+      SyncEngine.dosync
       WebView.navigate(url_for :controller => :Contact, :action => :show, :id => contactid, :query => {:origin => @params['origin']})
     else
       WebView.navigate(url_for :controller => :Dependent, :action => :edit, :id => @params['id'], :query => {:origin => @params['origin']})
