@@ -41,6 +41,7 @@ class OpportunityController < Rho::RhoController
     $new_leads_nav_context = []
     $follow_ups_nav_context = []
     $appointments_nav_context = []
+    $first_render = true
     
   end
   
