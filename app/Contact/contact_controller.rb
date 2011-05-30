@@ -190,6 +190,16 @@ class ContactController < Rho::RhoController
     puts "CONTACT UPDATE: #{@params.inspect}"
     @contact = Contact.find(@params['id'])
     @contact.update_attributes(@params['contact']) if @contact
+    SyncEngine.dosync
+    redirect :action => :show, :back => 'callback:',
+              :id => @contact.object,
+              :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
+  end
+
+  def spouse_update
+    puts "SPOUSE UPDATE: #{@params.inspect}"
+    @contact = Contact.find(@params['id'])
+    @contact.update_attributes(@params['contact']) if @contact
     @contact.update_attributes(:cssi_spousebirthdate => DateUtil.birthdate_build(@contact.cssi_spousebirthdate))
     SyncEngine.dosync
     redirect :action => :show, :back => 'callback:',
