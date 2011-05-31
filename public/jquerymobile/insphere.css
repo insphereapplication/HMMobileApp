@@ -131,6 +131,20 @@ ul li a { display: block; padding: 1px 5px; text-decoration: none;}
     top: 20px;
 }
 
+.appt-icon {
+	position: absolute;
+	width: 30px;
+	right: 5px;
+    top: 25%;
+}
+
+.call-icon {
+	position: absolute;
+	width: 30px;
+	right: 5px;
+    top: 30%;
+}
+
 .ui-icon-mapopp {
 	background-image: url(/public/images/map_small_opp.jpg);
 }
