@@ -17,7 +17,7 @@ $('#contact_show').live('pagecreate',function(event){
 					<a href="<%=url_for(:controller=>:Opportunity, :action=>:show, :id => @params['opportunity'], :query=>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Opp</a>
 				<% end %>
 				<h1>Contact Detail</h1>
-				<a href="<%=url_for(:action=>:edit, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-direction="forward" data-icon="gear"> Edit </a>
+				<a href="<%=url_for(:action=>:edit, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-direction="forward" data-icon="edit"> Edit </a>
 	</div>
 			<div data-role="content">
 				<ul data-role="listview" data-theme="d" data-inset="true" > 
