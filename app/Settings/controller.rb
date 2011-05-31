@@ -501,12 +501,13 @@ class SettingsController < Rho::RhoController
   
   def new_opportunity_on_sync_ok(*args)
     if @params['source_name'] == 'Opportunity'
-      Alert.vibrate(2000)
+      #Alert.vibrate(200)
 
       Alert.show_popup({
         :title => 'View New Leads?',
         :message => "New lead(s) have been synced.\nWould you like to view them?", 
         :buttons => ["Cancel", "View"],
+        :vibrate => '2',
         :callback => url_for(:action => :on_dismiss_new_opportunity_popup, :back => 'callback:') 
       })
     end
