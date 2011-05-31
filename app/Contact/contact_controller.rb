@@ -255,7 +255,7 @@ class ContactController < Rho::RhoController
       @contact.update_attributes(:cssi_spouseheightin => "")
       @contact.update_attributes(:cssi_spouseweight => "")
       @contact.update_attributes(:cssi_spouseusetobacco => "")
-      @contact.update_attributes(:cssi_spousewecssi_spousegenderight => "")
+      @contact.update_attributes(:cssi_spousegender => "")
       SyncEngine.dosync
       WebView.navigate(url_for :controller => :Contact, :action => :show, :id => @contact.object, :query => {:origin => @params['origin']})
     else
