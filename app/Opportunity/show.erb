@@ -58,58 +58,71 @@
 					<li><div style="text-align:center"><i> (No Notes) </i></div></li>
 				<% end %>
 			</ul>
-			<ul data-role="listview" data-split-icon="mapopp"  data-filter="false" data-inset="true"> 
-				<li data-role="list-divider"> Scheduled Appointments</li> 
+		
+			<ul data-role="none" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-inset="true" data-filter="false" data-role="none" role="listbox">
+				<li class="ui-li ui-li-divider ui-bn- ui-bar-b ui-corner-top ui-btn-up-undefined" tabindex="0"> Scheduled Appointments</li>
+				
 				<% @opportunity.incomplete_appointments.each do |appointment| %>
-					<li> 	
-							<a style="background:transparent;" href="<%= url_for(:controller => :Activity, :action => :show_appt, :id => appointment.object, :query => {:origin => @params['origin']}) %>"> 
-							<p>
-								<div class="ui-grid-a">
-									<div class="ui-block-a" style="width: 90%;"><br/>
-										<p style="white-space: normal;"><b><%= "#{to_datetime(appointment.scheduledstart)} - #{to_endtime(appointment.scheduledend)}" %></b></p>
-										<p> <%= appointment.location %> </p>
-										<p> <%= appointment.description %> </p>
-									</div>
-									<div class="ui-block-b" align="right"></div>
-								</div>
-							</p>				
-							<% if System::get_property('platform') == 'APPLE'%>
-								<a onclick="hideSpin();" href=<%="maps:q=#{Rho::RhoSupport.url_encode(appointment.location)}"%>>
-								</a>
-							<%else%>			
-								<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(appointment.location)}"%>>
-								</a>
-							<%end%>	
-							</a>													
-					</li> 
-				<% end %>
-				<% if @opportunity.appointments.size == 0 %>
-					<li><div style="text-align:center"><i> (No Appointments) </i></div></li>
-				<% end %>
+				
+				<li class="ui-btn ui-btn-icon-right ui-li ui-corner-bottom ui-btn-up-c" data-icon="none" role="option" tabindex="-1" data-theme="c">
+					<div class="ui-btn-inner">
+						<div class="ui-btn-text">
+							<a class="ui-link-inherit" href="<%= url_for(:controller => :Activity, :action => :show_appt, :id => appointment.object, :query => {:origin => @params['origin']}) %>" style="background: none repeat scroll 0% 0% transparent;">
+								<br/>
+								<p class="ui-li-desc"><b><%= "#{to_datetime(appointment.scheduledstart)} - #{to_endtime(appointment.scheduledend)}" %></b></p>
+								<p class="ui-li-desc"> <%= appointment.location %> </p>
+								<p class="ui-li-desc"> <%= appointment.description %> </p>
+							</a>
+						</div>
+					</div>
+						<% if System::get_property('platform') == 'APPLE'%>
+							<a onclick="hideSpin();" href=<%="maps:q=#{Rho::RhoSupport.url_encode(appointment.location)}"%>>
+								<img class="appt-icon" src="/public/images/map_icon.png">
+							</a>
+						<%else%>			
+							<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(appointment.location)}"%>>
+								<img class="appt-icon" src="/public/images/map_icon.png">
+							</a>
+						<%end%>
+				</li>
+					<% end %>
+					<% if @opportunity.appointments.size == 0 %>
+					<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom" role="option" tabindex="0">
+					<div style="text-align: center;">
+					<i> (No Scheduled Appointments) </i>
+					</div></li>
+					<% end %>					
 			</ul>
-			<ul data-role="listview" data-split-icon="phoneopp" data-filter="false" data-inset="true">
-				<li data-role="list-divider">Scheduled Callbacks</li>
+			
+			<ul data-role="none" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-inset="true" data-filter="false" data-role="none" role="listbox">
+				<li class="ui-li ui-li-divider ui-bn- ui-bar-b ui-corner-top ui-btn-up-undefined" tabindex="0"> Scheduled Callbacks</li>
+				
 				<% @opportunity.open_phone_calls.each do |phonecall| %>
-				<li>
-					<a style="background:transparent;" href="<%= url_for(:controller => :Activity, :action => :show_callback, :id => phonecall.object, :query => {:origin => @params['origin']}) %>">
-						<p>
-							<div class="ui-grid-a">
-								<div class="ui-block-a" style="width: 90%;"><br/>
-									<p><b><%= "#{to_datetime(phonecall.scheduledend)}" %></b></p>
-									<p> <%= phonecall.phonenumber %> </p>
-								</div>
-								<div class="ui-block-b" align="right"></div>
-							</div>
-						</p>
-						<a onclick="hideSpin();" href=<%="http://www.google.com"%>>
-						</a>
-					</a>
+				
+				<li class="ui-btn ui-btn-icon-right ui-li ui-corner-bottom ui-btn-up-c" data-icon="none" role="option" tabindex="-1" data-theme="c">
+					<div class="ui-btn-inner">
+						<div class="ui-btn-text">
+							<a class="ui-link-inherit" href="<%= url_for(:controller => :Activity, :action => :show_callback, :id => phonecall.object, :query => {:origin => @params['origin']}) %>">
+								<br/>
+								<p class="ui-li-desc"><b><%= "#{to_datetime(phonecall.scheduledend)}" %></b></p>
+								<p class="ui-li-desc"> <%= phonecall.phonenumber %> </p>
+							</a>
+						</div>
+					</div>
+							<a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub!(/[^0-9]/, "") %>">
+								<img class="call-icon" src="/public/images/phone_black.png">
+							</a>
 				</li>
 				<% end %>
+				
 				<% if @opportunity.open_phone_calls.size == 0 %>
-					<li><div style="text-align:center"><i> (No Scheduled Callbacks) </i></div></li>
-				<% end %>
-			</ul>			
+					<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom" role="option" tabindex="0">
+					<div style="text-align: center;">
+					<i> (No Scheduled Callbacks) </i>
+					</div></li>
+				<% end %>				
+			</ul>
+			
 			<a href="<%= url_for(:action => :activity_summary, :id => @opportunity.object, :query => {:origin => @params['origin']}) %>" data-role="button" data-icon="arrow-r" rel="external" data-iconpos="right">Activity Summary</a> 
 		</div>
 </div>
