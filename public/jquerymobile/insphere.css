@@ -152,6 +152,11 @@ ul li a { display: block; padding: 1px 5px; text-decoration: none;}
 	background-size: 16px 16px;
 }
 
+.ui-icon-edit {
+	background-image: url(/public/images/edit.png);
+	background-size: 18px 18px;
+}
+
 .ui-offline-bar {
 	background: 			#CC0000;
 	color: 					#fff;
