@@ -41,6 +41,10 @@ class Contact
   property :cssi_allowcallsbusinessphone, :string
   property :cssi_allowcallshomephone, :string
   property :cssi_allowcallsmobilephone, :string
+  property :cssi_companydncalternatephone, :string
+  property :cssi_companydncbusinessphone, :string
+  property :cssi_companydnchomephone, :string
+  property :cssi_companydncmobilephone, :string
   property :cssi_spousename, :string #start contact spouse information
   property :cssi_spouselastname, :string
   property :cssi_spousebirthdate, :string
