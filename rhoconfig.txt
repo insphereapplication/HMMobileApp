@@ -64,10 +64,10 @@ LastVisitedPage = ''
 # syncserver = 'http://nrhrho102/application'
 
 #DEV
-# syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
+syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
 
 #LOCAL
-syncserver = 'http://localhost:9292/application'
+# syncserver = 'http://localhost:9292/application'
 
 #PRODUCTION !!!
 # syncserver = #'https://rhohub-insphere-b3789b06.heroku.com/application'
