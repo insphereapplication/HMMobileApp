@@ -57,18 +57,6 @@ class AppApplication < Rho::RhoApplication
       # @forbid_ui_operations = true
   end
 
-  def on_migrate_source(old_version, new_src)
-    puts "*!*!*!*!*!*! PERFORMING ON_MIGRATE_SOURCE !*!*!*!*!*!*!*!*!*"
-    puts "*!*!*!*!*!*! OLD VERSION IS: #{old_version} !*!*!*!*!*!*!*!*!*"
-    puts "*!*!*!*!*!*! new_src IS: #{new_src} !*!*!*!*!*!*!*!*!*"
-    Alert.show_popup({
-      :title => "ON_MIGRATE_SOURCE",
-      :message => "old version is #{old_version}; NEW VERSION IS: #{new_src}",
-      :buttons => ["OK"]
-    })
-    # ... do something like alert user ...
-    super
-  end  
   
   
   
