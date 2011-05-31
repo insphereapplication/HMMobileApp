@@ -156,12 +156,6 @@ class ContactController < Rho::RhoController
 
   # POST /Contact/create
   def create
-    
-    puts "Here's the Contact param:"
-    puts @params['contact']
-    puts "Here's the Opportunity param:"
-    puts @params['opportunity']
-    
     @contact = Contact.create(@params['contact'])
     @opp = Opportunity.create( {:contact_id => @contact.object,
                                 :statecode => 'Open',
@@ -173,12 +167,7 @@ class ContactController < Rho::RhoController
                                 :overriddencreatedon => Time.now.strftime("%Y-%m-%d %H:%M:%S"),
                                }.merge(@params['opportunity'])
                              )  
-      
-    puts "Here's the Contact:"
-    puts @contact
-    puts "Here's the Opportunity after:"
-    puts @opp
-  
+    SyncEngine.dosync
     redirect :action => :show, 
              :back => 'callback:',
              :id => @contact.object,
