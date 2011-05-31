@@ -67,13 +67,13 @@
 				<div class="ui-body ui-body-d">
 					<label for="tobaccoSlider" class="fieldLabel">Tobacco:</label>
 					<select name="contact[cssi_spouseusetobacco]" id="tobaccoSlider" data-role="slider">
-						<option value="False" <% if @contact.cssi_spouseusetobacco == "False" %> selected="selected" <% end %> > No</option>
+						<option value="False" <% if @contact.cssi_spouseusetobacco == "False" %> selected="selected" <% end %> >No</option>
 						<option value="True" <% if @contact.cssi_spouseusetobacco == "True" %> selected="selected" <% end %> >Yes</option>						
 					</select>
 				</div>
 			</div>			
 			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
-			<a href="<%= url_for(:controller => :Contact, :action => :confirm_spouse_delete, :query => {:id => @contact.object, :opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-theme="e" data-direction="reverse" data-role="button">Delete</a>
+			<a href="<%= url_for(:controller => :Contact, :action => :confirm_spouse_delete, :query => {:id => @contact.object, :opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-theme="f" data-direction="reverse" data-role="button">Delete</a>
 		</div>
 	</form>
 </div>
