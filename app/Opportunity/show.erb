@@ -68,7 +68,7 @@
 					<div class="ui-btn-inner">
 						<div class="ui-btn-text">
 							<a class="ui-link-inherit" href="<%= url_for(:controller => :Activity, :action => :show_appt, :id => appointment.object, :query => {:origin => @params['origin']}) %>" style="background: none repeat scroll 0% 0% transparent;">
-								<p class="ui-li-desc"><br/></p>
+								<br/>
 								<p class="ui-li-desc"><b><%= "#{to_datetime(appointment.scheduledstart)} - #{to_endtime(appointment.scheduledend)}" %></b></p>
 								<p class="ui-li-desc"> <%= appointment.location %> </p>
 								<p class="ui-li-desc"> <%= appointment.description %> </p>
@@ -77,17 +77,20 @@
 					</div>
 						<% if System::get_property('platform') == 'APPLE'%>
 							<a onclick="hideSpin();" href=<%="maps:q=#{Rho::RhoSupport.url_encode(appointment.location)}"%>>
-								<img class="opp-icon" src="/public/images/map_icon.png">
+								<img class="appt-icon" src="/public/images/map_icon.png">
 							</a>
 						<%else%>			
 							<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(appointment.location)}"%>>
-								<img class="opp-icon" src="/public/images/map_icon.png">
+								<img class="appt-icon" src="/public/images/map_icon.png">
 							</a>
 						<%end%>
 				</li>
 					<% end %>
 					<% if @opportunity.appointments.size == 0 %>
-						<li><div style="text-align:center"><i> (No Appointments) </i></div></li>
+					<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom" role="option" tabindex="0">
+					<div style="text-align: center;">
+					<i> (No Scheduled Appointments) </i>
+					</div></li>
 					<% end %>					
 			</ul>
 			
@@ -100,20 +103,23 @@
 					<div class="ui-btn-inner">
 						<div class="ui-btn-text">
 							<a class="ui-link-inherit" href="<%= url_for(:controller => :Activity, :action => :show_callback, :id => phonecall.object, :query => {:origin => @params['origin']}) %>">
-								<p class="ui-li-desc"><br/></p>
+								<br/>
 								<p class="ui-li-desc"><b><%= "#{to_datetime(phonecall.scheduledend)}" %></b></p>
 								<p class="ui-li-desc"> <%= phonecall.phonenumber %> </p>
 							</a>
 						</div>
 					</div>
 							<a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub!(/[^0-9]/, "") %>">
-								<img class="opp-icon" src="/public/images/phone_black.png">
+								<img class="call-icon" src="/public/images/phone_black.png">
 							</a>
 				</li>
 				<% end %>
 				
 				<% if @opportunity.open_phone_calls.size == 0 %>
-					<li><div style="text-align:center"><i> (No Scheduled Callbacks) </i></div></li>
+					<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom" role="option" tabindex="0">
+					<div style="text-align: center;">
+					<i> (No Scheduled Callbacks) </i>
+					</div></li>
 				<% end %>				
 			</ul>
 			
