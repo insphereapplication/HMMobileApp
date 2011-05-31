@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	
 	$('.validateContactOpp').click(function() { 
-			validateNewContactInfo();
+		return validateNewContactInfo();
 	});
 });
 	

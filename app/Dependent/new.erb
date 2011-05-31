@@ -59,15 +59,16 @@
 						<option value="Female">Female</option>
 					</select>
 				</div>
-			</div>
+			</div>	
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d"> 
-					 <fieldset data-role="controlgroup">
-						<input type="checkbox" name="dependent[cssi_usetobacco]" id="dependent[cssi_usetobacco]" />
-						<label for="dependent[cssi_usetobacco]">Use Tobacco</label>
-				    </fieldset>
+				<div class="ui-body ui-body-d">
+					<label for="tobaccoSlider" class="fieldLabel">Tobacco:</label>
+					<select name="dependent[cssi_usetobacco]" id="tobaccoSlider" data-role="slider">
+						<option value="False">No</option>
+						<option value="True">Yes</option>						
+					</select>
 				</div>
-			</div>			
+			</div>		
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="dependent[cssi_comments]" class="fieldLabel">Comments:</label>
