@@ -257,9 +257,7 @@ class ContactController < Rho::RhoController
       @contact.update_attributes(:cssi_spouseusetobacco => "")
       @contact.update_attributes(:cssi_spousewecssi_spousegenderight => "")
       SyncEngine.dosync
-      redirect :action => :show, :back => 'callback:',
-                :id => @contact.object,
-                :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
+      WebView.navigate(url_for :controller => :Contact, :action => :show, :id => @contact.object, :query => {:origin => @params['origin']})
     else
       WebView.navigate(url_for :controller => :Contact, :action => :spouse_edit, :id => @params['id'], :query => {:origin => @params['origin']})
     end
