@@ -114,13 +114,21 @@ module DateUtil
     end
     
     def date_build(date_string)
-      date = (DateTime.strptime(date_string, DATE_PICKER_TIME_FORMAT))
-      date.strftime(DEFAULT_TIME_FORMAT)
+      begin
+        date = (DateTime.strptime(date_string, DATE_PICKER_TIME_FORMAT))
+        date.strftime(DEFAULT_TIME_FORMAT)
+      rescue
+        puts "Unable to build date"
+      end
     end
 
     def birthdate_build(date_string)
-      date = (DateTime.strptime(date_string, BIRTHDATE_PICKER_TIME_FORMAT))
-      date.strftime(DEFAULT_TIME_FORMAT)
+      begin
+        date = (DateTime.strptime(date_string, BIRTHDATE_PICKER_TIME_FORMAT))
+        date.strftime(DEFAULT_TIME_FORMAT)
+      rescue
+        puts "Unable to build birthdate"
+      end
     end
 
     def end_date_time(date_string, duration)

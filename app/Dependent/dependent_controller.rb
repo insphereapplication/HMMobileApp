@@ -15,7 +15,7 @@ class DependentController < Rho::RhoController
     @dependent = Dependent.find(@params['id'])
     if @dependent
       @contact = @dependent.contact
-      render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
+      render :action => :show, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
     else
       redirect :action => :index
     end
@@ -25,14 +25,14 @@ class DependentController < Rho::RhoController
   def new
     @contact = Contact.find(@params['id'])
     @dependent = Dependent.new
-    render :action => :new, :back => 'callback:', :layout => 'layout_jquerymobile'
+    render :action => :new, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
   end
 
   # GET /Dependent/{1}/edit
   def edit
     @dependent = Dependent.find(@params['id'])
     if @dependent
-      render :action => :edit, :back => 'callback:', :layout => 'layout_jquerymobile'
+      render :action => :edit, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
     else
       redirect :action => :index
     end
@@ -41,21 +41,22 @@ class DependentController < Rho::RhoController
   # POST /Dependent/create
   def create
     puts "********** Calling DependentController.create **********"
-    puts "********** attributes = #{@params['dependent']}"
+    puts "********** origin = #{@params['origin']}"
     @dependent = Dependent.create(@params['dependent'])
     @dependent.update_attributes(:cssi_dateofbirth => DateUtil.birthdate_build(@dependent.cssi_dateofbirth))
     @dependent.update_attributes(:cssi_age => age(@dependent.cssi_dateofbirth))
     SyncEngine.dosync
-    redirect :controller => :Contact, :action => :show, :id => @dependent.contact_id
+    redirect :controller => :Contact, :action => :show, :origin => @params['origin'], :id => @dependent.contact_id
   end
 
   # POST /Dependent/{1}/update
   def update
     puts "********** Calling DependentController.update **********"
     puts "********** attributes = #{@params['dependent']}"
+    puts "********** id = #{@params['id']}"
     @dependent = Dependent.find(@params['id'])
     @dependent.update_attributes(@params['dependent']) if @dependent
-    redirect :action => :index
+    redirect :controller => :Contact, :action => :show, :origin => @params['origin'], :id => @dependent.contact_id
   end
 
 
