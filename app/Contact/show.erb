@@ -74,7 +74,7 @@ $('#contact_show').live('pagecreate',function(event){
 					<% end %>
 										
 					<% if @contact.cssi_usetobacco %>
-					<li data-icon="false"><a href="#">Tobacco: <%= @contact.use_tobacco_string %></a></li>
+					<li data-icon="false"><a href="#">Tobacco: <%= use_tobacco_string(@contact.cssi_usetobacco) %></a></li>
 					<% else %>
 					<li data-icon="false"><a href="#">Tobacco :</a></li>
 					<% end %>

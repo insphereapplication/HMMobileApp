@@ -13,7 +13,7 @@
 			</li> 
 			<li data-icon="false"><h3>Height:&nbsp;<%= @contact.cssi_spouseheightft %>'&nbsp;<%= @contact.cssi_spouseheightin %>"</h3></li>
 			<li data-icon="false"><h3>Weight:&nbsp;<%= @contact.cssi_spouseweight %>&nbsp;lbs</h3></li>
-			<li data-icon="false"><h3>Tobacco:&nbsp;<%= @contact.cssi_spouseusetobacco %></h3></li>
+			<li data-icon="false"><h3>Tobacco:&nbsp;<%= use_tobacco_string(@contact.cssi_spouseusetobacco) %></h3></li>
 		</ul>
 	</div>
 </div>
