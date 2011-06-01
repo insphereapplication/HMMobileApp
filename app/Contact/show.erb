@@ -28,13 +28,13 @@ $('#contact_show').live('pagecreate',function(event){
 					</li> 
 					
 					<% if @contact.mobilephone %>
-						<li <%= check_preferred_and_donotcall("Mobile", @contact.cssi_preferredphone, @contact.cssi_allowcallsmobilephone) %> ><a href="tel: <%= @contact.mobilephone.to_s %>"> Mobile: <%= @contact.mobilephone %></a></li>
+						<li <%= check_preferred_and_donotcall("Mobile", @contact.cssi_preferredphone, @contact.cssi_allowcallsmobilephone, @contact.cssi_companydncmobilephone) %> ><a href="tel: <%= @contact.mobilephone.to_s %>"> Mobile: <%= @contact.mobilephone %></a></li>
 					<% else %>
 						<li data-icon="false"><a href="#">Mobile:</a></li>
 					<% end %>
 					
 					<% if @contact.telephone1 %>
-						<li <%= check_preferred_and_donotcall("Business", @contact.cssi_preferredphone, @contact.cssi_allowcallsbusinessphone) %> ><a href="tel: <%= @contact.telephone1.to_s %>">Bus: <%= @contact.telephone1 %></a>
+						<li <%= check_preferred_and_donotcall("Business", @contact.cssi_preferredphone, @contact.cssi_allowcallsbusinessphone, @contact.cssi_companydncbusinessphone) %> ><a href="tel: <%= @contact.telephone1.to_s %>">Bus: <%= @contact.telephone1 %></a>
 							<% if (@contact.cssi_businessphoneext != nil || @contact.cssi_businessphoneext == "")%> 
 								<!-- <div align="center"><p> -->x<%= @contact.cssi_businessphoneext %><!-- </p></div> -->
 							<% end %>
@@ -44,13 +44,13 @@ $('#contact_show').live('pagecreate',function(event){
 					<% end %>
 					
 					<% if @contact.telephone2 %>
-						<li <%= check_preferred_and_donotcall("Home", @contact.cssi_preferredphone, @contact.cssi_allowcallshomephone) %> ><a href="tel: <%= @contact.telephone2.to_s %>">Home: <%= @contact.telephone2 %></a></li>
+						<li <%= check_preferred_and_donotcall("Home", @contact.cssi_preferredphone, @contact.cssi_allowcallshomephone, @contact.cssi_companydnchomephone) %> ><a href="tel: <%= @contact.telephone2.to_s %>">Home: <%= @contact.telephone2 %></a></li>
 					<% else %>
 						<li data-icon="false"><a href="#">Home:</a></li>
 					<% end %>
 					
 					<% if @contact.telephone3 %>
-						<li <%= check_preferred_and_donotcall("Alternate", @contact.cssi_preferredphone, @contact.cssi_allowcallsalternatephone) %> ><a href="tel: <%= @contact.telephone3.to_s %>">Alternate: <%= @contact.telephone3 %></a></li>
+						<li <%= check_preferred_and_donotcall("Alternate", @contact.cssi_preferredphone, @contact.cssi_allowcallsalternatephone, @contract.cssi_companydncalternatephone) %> ><a href="tel: <%= @contact.telephone3.to_s %>">Alternate: <%= @contact.telephone3 %></a></li>
 					<% else %>
 						<li data-icon="false"><a href="#">Alternate:</a></li>
 					<% end %>

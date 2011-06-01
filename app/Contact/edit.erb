@@ -29,7 +29,7 @@
 								<table width="100%">
 									<tr>
 										<td colspan="2">
-											<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsmobilephone) %> 
+											<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone) %> 
 										</td>
 									</tr>
 									<tr>
@@ -41,7 +41,7 @@
 											<% end %>
 										</td>	
 										<td>
-											<%= do_not_call_button(@contact.cssi_allowcallsmobilephone,"Mobile",@contact.mobilephone,@contact.object) %>
+											<%= do_not_call_button(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,"Mobile",@contact.mobilephone,@contact.object) %>
 										</td>
 									</tr>
 								</table>
@@ -52,7 +52,7 @@
 								<table width="100%">
 									<tr>
 										<td colspan="2">
-											<label for="contact[telephone1]" class="fieldLabel">Business Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsbusinessphone) %>
+											<label for="contact[telephone1]" class="fieldLabel">Business Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone) %>
 										</td>
 									</tr>
 									<tr>
@@ -64,7 +64,7 @@
 											<% end %>
 										</td>
 										<td>
-											<%= do_not_call_button(@contact.cssi_allowcallsbusinessphone,"Business",@contact.telephone1,@contact.object) %><%#  %>
+											<%= do_not_call_button(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,"Business",@contact.telephone1,@contact.object) %><%#  %>
 										</td>
 									</tr>
 								</table>
@@ -81,7 +81,7 @@
 								<table width="100%">
 									<tr>
 										<td colspan="2">
-											<label for="contact[telephone2]" class="fieldLabel">Home Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone) %> 
+											<label for="contact[telephone2]" class="fieldLabel">Home Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone) %> 
 										</td>
 									</tr>
 									<tr>
@@ -93,7 +93,7 @@
 											<% end %>
 										</td>
 										<td>
-											<%= do_not_call_button(@contact.cssi_allowcallshomephone,"Home",@contact.telephone2,@contact.object) %><%#  %>
+											<%= do_not_call_button(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,"Home",@contact.telephone2,@contact.object) %><%#  %>
 										</td>
 									</tr>
 								</table>
@@ -104,7 +104,7 @@
 								<table width="100%">
 									<tr>
 										<td colspan="2">
-											<label for="contact[telephone3]" class="fieldLabel">Alternate Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsalternatephone) %> 
+											<label for="contact[telephone3]" class="fieldLabel">Alternate Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone) %> 
 										</td>
 									</tr>
 									<tr>
@@ -116,7 +116,7 @@
 											<% end %>
 										</td>
 										<td>
-											<%= do_not_call_button(@contact.cssi_allowcallsalternatephone,"Alternative",@contact.telephone3,@contact.object) %><%#  %>
+											<%= do_not_call_button(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone,"Alternative",@contact.telephone3,@contact.object) %><%#  %>
 										</td>
 									</tr>
 								</table>

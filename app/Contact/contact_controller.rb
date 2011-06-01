@@ -49,34 +49,34 @@ class ContactController < Rho::RhoController
     end
   end
   
-  def check_preferred_and_donotcall(phone_type, preferred, allow_call)
+  def check_preferred_and_donotcall(phone_type, preferred, allow_call, company_dnc)
     is_preferred = phone_type == preferred
 
     # Special case where we need 2 icons side by side, and some jQuery/JavaScript tricks are needed
     # We look for the two-icons attribute in the .erb and substitute a formatted HTML string that will show both
-    if is_preferred && allow_call == 'False'
+    if is_preferred && (allow_call == 'False' || company_dnc == 'True')
       return 'data-icon="check" two-icons=""'
     end
     
     if phone_type == preferred
       'data-icon="check"'
-    elsif allow_call == 'False'
+    elsif (allow_call == 'False' || company_dnc == 'True')
       'data-icon="delete"'
     else
       'data-icon="false"'
     end    
   end
   
-  def show_edit_do_not_call_icon(allow_call)
-    if allow_call == 'False'
+  def show_edit_do_not_call_icon(allow_call, company_dnc)
+    if allow_call == 'False' || company_dnc == 'True'
       '<img src="/public/images/glyphish-icons/28-star.png" height="18" width="18" />'
     end
   end
   
-  def do_not_call_button(allow_call,phone_type,phone_number,contact)
-    if allow_call == 'True'
+  def do_not_call_button(allow_call,company_dnc,phone_type,phone_number,contact)
+    if allow_call == 'True' && company_dnc == 'False'
       %Q{
-          <a href="#{url_for(:controller => :Contact, :action => :do_not_call_press, :id => @contact.object, :query => {:phone_type => phone_type, :phone_number => phone_number, :contact => contact})}" data-role="button" data-theme="b">DNC</a>
+          <a href="#{url_for(:controller => :Contact, :action => :do_not_call_press, :id => @contact.object, :query => {:origin => @params['origin'], :phone_type => phone_type, :phone_number => phone_number, :contact => contact})}" data-role="button" data-theme="b">DNC</a>
         }
     end 
   end
@@ -92,7 +92,7 @@ class ContactController < Rho::RhoController
                   :title => "Mark as Do Not Call?",
                   :message => message,
                   :buttons => ["Confirm","Cancel"],
-                  :callback => url_for( :action => :do_not_call_press_callback, :query => {:phone_type => phone_type, :id => id} )
+                  :callback => url_for( :action => :do_not_call_press_callback, :query => {:phone_type => phone_type, :id => id, :origin => @params['origin']} )
                 })
   end
   
@@ -106,19 +106,21 @@ class ContactController < Rho::RhoController
     if button_id == 'Confirm' and contact
       case phone_type
         when "Mobile"
-          contact.update_attributes( { :cssi_allowcallsmobilephone => 'False' } )
+          contact.update_attributes( { :cssi_allowcallsmobilephone => 'False', :cssi_companydncmobilephone => 'True' } )
         when "Home"
-          contact.update_attributes( { :cssi_allowcallshomephone => 'False' } )
+          contact.update_attributes( { :cssi_allowcallshomephone => 'False', :cssi_companydnchomephone => 'True' } )
         when "Business"
-          contact.update_attributes( { :cssi_allowcallsbusinessphone => 'False' } )
+          contact.update_attributes( { :cssi_allowcallsbusinessphone => 'False', :cssi_companydncbusinessphone => 'True' } )
         when "Alternative"
-          contact.update_attributes( { :cssi_allowcallsalternatephone => 'False' } )
+          contact.update_attributes( { :cssi_allowcallsalternatephone => 'False', :cssi_companydncalternatephone => 'True' } )
       end
       
       SyncEngine.dosync
     end
     
-    WebView.navigate( url_for :controller => :Contact, :action => :show, :back => 'callback:', :id => id, :layout => 'layout_jquerymobile' )
+    puts "******************** origin = #{@params['origin']}********************"
+    
+    WebView.navigate( url_for :controller => :Contact, :action => :show, :back => 'callback:', :id => id, :query =>{:origin => @params['origin']}, :layout => 'layout_jquerymobile' )
   end
   
   def select_preferred(phone_type, preferred)
