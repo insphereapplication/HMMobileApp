@@ -16,7 +16,7 @@ class PolicyController < Rho::RhoController
     if @policy
       @contact = @policy.contact
       puts "*** @contact = " + @contact.inspect + " ***"
-      render :action => :show, :back => url_for(:action => :index)
+      render :action => :show, :back => 'callback:'
     else
       redirect :action => :index
     end
@@ -25,14 +25,14 @@ class PolicyController < Rho::RhoController
   # GET /Policy/new
   def new
     @policy = Policy.new
-    render :action => :new, :back => url_for(:action => :index)
+    render :action => :new, :back => 'callback:'
   end
 
   # GET /Policy/{1}/edit
   def edit
     @policy = Policy.find(@params['id'])
     if @policy
-      render :action => :edit, :back => url_for(:action => :index)
+      render :action => :edit, :back => 'callback:'
     else
       redirect :action => :index
     end

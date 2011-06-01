@@ -13,7 +13,7 @@
 			</li> 
 			<li data-icon="false"><h3>Height:&nbsp;<%= @dependent.cssi_heightft %>'&nbsp;<%= @dependent.cssi_heightin %>"</h3></li>
 			<li data-icon="false"><h3>Weight:&nbsp;<%= @dependent.cssi_weight %>&nbsp;lbs</h3></li>
-			<li data-icon="false"><h3>Tobacco:&nbsp;<%= @dependent.cssi_usetobacco %></h3></li>
+			<li data-icon="false"><h3>Tobacco:&nbsp;<%= use_tobacco_string(@dependent.cssi_usetobacco) %></h3></li>
 			<li data-icon="false"><h3>Comments:</h3><%= @dependent.cssi_comments %></li>
 		</ul>
 	</div>

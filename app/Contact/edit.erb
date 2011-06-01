@@ -29,7 +29,7 @@
 								<table width="100%">
 									<tr>
 										<td colspan="2">
-											<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone) %> 
+											<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone) %> 
 										</td>
 									</tr>
 									<tr>
@@ -52,7 +52,7 @@
 								<table width="100%">
 									<tr>
 										<td colspan="2">
-											<label for="contact[telephone1]" class="fieldLabel">Business Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone) %>
+											<label for="contact[telephone1]" class="fieldLabel">Business Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone) %>
 										</td>
 									</tr>
 									<tr>
@@ -81,7 +81,7 @@
 								<table width="100%">
 									<tr>
 										<td colspan="2">
-											<label for="contact[telephone2]" class="fieldLabel">Home Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone) %> 
+											<label for="contact[telephone2]" class="fieldLabel">Home Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone) %>
 										</td>
 									</tr>
 									<tr>
@@ -104,7 +104,7 @@
 								<table width="100%">
 									<tr>
 										<td colspan="2">
-											<label for="contact[telephone3]" class="fieldLabel">Alternate Phone:</label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone) %> 
+											<label for="contact[telephone3]" class="fieldLabel">Alternate Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone) %> 
 										</td>
 									</tr>
 									<tr>
@@ -189,11 +189,10 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
-								<label for="contact[cssi_usetobacco]" class="fieldLabel">Tobacco:</label><br />
-								<select name="tobacco-slider" id="tobacco-slider" data-role="slider">
-									<option data-placeholder="true"><%= @contact.cssi_usetobacco %></option>
-									<option value="False">No</option>
-									<option value="True">Yes</option>
+								<label for="tobaccoSlider" class="fieldLabel">Tobacco:</label>
+								<select name="contact[cssi_usetobacco]" id="tobaccoSlider" data-role="slider">
+									<option value="False" <% if @contact.cssi_usetobacco == "False" %> selected="selected" <% end %> >No</option>
+									<option value="True" <% if @contact.cssi_usetobacco == "True" %> selected="selected" <% end %>>Yes</option>						
 								</select>
 							</div>
 						</div>

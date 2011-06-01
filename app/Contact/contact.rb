@@ -1,4 +1,4 @@
-
+require 'helpers/browser_helper'
 
 class Contact
   include Rhom::FixedSchema
@@ -56,14 +56,6 @@ class Contact
   
   index :contact_pk_index, [:contactid]
   unique_index :unique_contact, [:contactid] 
-  
-  def use_tobacco_string
-    if cssi_usetobacco == 'True'
-      'Yes'
-    else
-      'No'
-    end
-  end
   
   def has_spouse_info?
     return cssi_spousename != "" || cssi_spouselastname != ""

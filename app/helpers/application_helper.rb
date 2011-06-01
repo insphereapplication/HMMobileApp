@@ -70,7 +70,7 @@ module ApplicationHelper
       value.gsub('\n', ' ')
     end
   end
-
+  
   def format_address_for_mapping(street, city, state, zip, tagforurl)
     # handle case where fields could be nil
     mystreet = !street.nil? ? street : ""

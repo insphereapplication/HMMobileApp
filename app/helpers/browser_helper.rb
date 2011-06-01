@@ -236,5 +236,14 @@ module BrowserHelper
   
   def format_for_mapping(location)
   end
+  
+  # converts True/False to Yes/No, used on contact/spouse/dependent for displaying tobacco use
+  def use_tobacco_string(value)
+    if value == 'True'
+      'Yes'
+    else
+      'No'
+    end
+  end
 
 end
