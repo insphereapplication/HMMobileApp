@@ -563,7 +563,16 @@ class SettingsController < Rho::RhoController
     # given versions are equal
     return false
   end
+
+  def quick_quote
+    WebView.navigate(WebView.current_location)
+    System.open_url("https://mobile-uat.ipipeline.com/?gaid=5242")
+  end
   
+  def resource_center
+    WebView.navigate(WebView.current_location)
+    System.open_url("http://www.insphereis.net")
+  end
 
   def check_force_upgrade
     min_required_version = AppInfo.instance[0].min_required_version

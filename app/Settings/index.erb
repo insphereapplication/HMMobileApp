@@ -4,54 +4,50 @@
 		<h1>Tools</h1>
 	</div>
 	<div id="contentDiv" data-role="content">
-		<div data-role="collapsible" data-collapsed="false">
-			<h3>Tools</h3>
-	 		<ul data-role="listview" data-inset="true">
-				<li>
-					<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
-					<h3><a href="http://www.insphereis.com">Term Life Quick Quote</a></h3>
-				</li>
-				<li>
-					<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
-					<h3><a href="http://www.insphereis.net">Resource Center</a></h3>
-				</li>
-				<li>
-					<img src="/public/images/phone_small.png" class="ui-li-icon" style="margin-top:8px">
-					<h3><a href="tel:8887314447">Call Support</a></h3>
-				</li> 
-				<li>
-					<img src="/public/images/email_icon.jpeg" class="ui-li-icon" style="margin-top:8px">
-					<h3><a href="mailto:InSiteMobile@insphereis.com">Email Support</a></h3>
-				</li>
-			</ul>
-		</div>
-		<div data-role="collapsible" data-collapsed="true">
-			<h3>Settings</h3>
-			<ul data-role="listview" data-inset="true">
-				<% if @msg %>
-	        		<li style="color: red; text-align: center"><%= @msg %></li>
-	    		<% end %>
-				<li>
-					<img src="/public/images/login-key.png" class="ui-li-icon" style="margin-top:8px">
-					<% if SyncEngine::logged_in > 0 %>
-					<h3><a href="<%= url_for :action => :do_logout %>">Logout <%= SyncEngine.get_user_name %></a></h3>
-	   				<% else %>
-					<h3><a href="<%= url_for :action => :login %>">Login</a></h3>
-					<% end %>
-				</li>
-				<li>
-					<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
-					<h3><a href="<%= url_for :action => :pin %>">Reset PIN</a></h3>
-				</li>
-				<li>
-					<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
-					<h3><a href="<%= url_for :action => :about %>">About</a></h3>
-				</li>
-	    		<!-- <li><a href="<%= url_for :action => :do_reset %>">Reset Database</a></li>
-	    		<li><a href="<%= url_for :action => :do_sync %>">Perform Sync</a></li>
-        		<li><a href="<%= url_for :action => :show_log %>">Show Log</a></li>
-        		<li><a href="<%= url_for :action => :test_exception %>">Test Log Exception</a></li> -->	
-	  		</ul>
-		</div>
+ 		<ul data-role="listview" data-inset="true">
+			<li data-role="list-divider">Tools</li>
+			<li>
+				<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
+				<h3><a href="<%= url_for :action => :quick_quote %>" rel="external">Term Life Quick Quote</a></h3>
+			</li>
+			<li>
+				<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
+				<h3><a href="<%= url_for :action => :resource_center %>" rel="external">Resource Center</a></h3>
+			</li>
+			<li>
+				<img src="/public/images/phone_small.png" class="ui-li-icon" style="margin-top:8px">
+				<h3><a href="tel:8887314447">Call Support</a></h3>
+			</li> 
+			<li>
+				<img src="/public/images/email_icon.jpeg" class="ui-li-icon" style="margin-top:8px">
+				<h3><a href="mailto:InSiteMobile@insphereis.com">Email Support</a></h3>
+			</li>
+		</ul>
+		<ul data-role="listview" data-inset="true">
+			<% if @msg %>
+        		<li style="color: red; text-align: center"><%= @msg %></li>
+    		<% end %>
+			<li data-role="list-divider">Settings</li>
+			<li>
+				<img src="/public/images/login-key.png" class="ui-li-icon" style="margin-top:8px">
+				<% if SyncEngine::logged_in > 0 %>
+				<h3><a href="<%= url_for :action => :do_logout %>">Logout <%= SyncEngine.get_user_name %></a></h3>
+   				<% else %>
+				<h3><a href="<%= url_for :action => :login %>">Login</a></h3>
+				<% end %>
+			</li>
+			<li>
+				<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
+				<h3><a href="<%= url_for :action => :pin %>">Reset PIN</a></h3>
+			</li>
+			<li>
+				<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
+				<h3><a href="<%= url_for :action => :about %>">About</a></h3>
+			</li>
+    		<!-- <li><a href="<%= url_for :action => :do_reset %>">Reset Database</a></li>
+    		<li><a href="<%= url_for :action => :do_sync %>">Perform Sync</a></li>
+       		<li><a href="<%= url_for :action => :show_log %>">Show Log</a></li>
+       		<li><a href="<%= url_for :action => :test_exception %>">Test Log Exception</a></li> -->	
+  		</ul>
 	</div>
 </div>
