@@ -159,21 +159,16 @@ class ContactController < Rho::RhoController
   # POST /Contact/create
   def create
     @contact = Contact.create(@params['contact'])
-    @opp = Opportunity.create( {:contact_id => @contact.object,
-                                :statecode => 'Open',
-                                :statuscode => 'New Opportunity',
-                                :cssi_statusdetail => 'New',
-                                :cssi_fromrhosync => 'True',
-                                :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"),
-                                :modifiedon => Time.now.strftime("%Y-%m-%d %H:%M:%S"),
-                                :overriddencreatedon => Time.now.strftime("%Y-%m-%d %H:%M:%S"),
-                               }.merge(@params['opportunity'])
-                             )  
+    @opp = Opportunity.create(@params['opportunity'])  
+    @opp.update_attributes( :contact_id =>  @contact.object)
+    @opp.update_attributes( :statecode => 'Open')
+    @opp.update_attributes( :statuscode => 'New Opportunity')
+    @opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))
     SyncEngine.dosync
     redirect :action => :show, 
              :back => 'callback:',
              :id => @contact.object,
-             :query =>{:origin => 'contact'}
+             :query =>{:origin => @params['origin'], :opportunity => @opp.object}
   end
 
   # POST /Contact/{1}/update
