@@ -56,6 +56,7 @@ class DependentController < Rho::RhoController
     puts "********** id = #{@params['id']}"
     @dependent = Dependent.find(@params['id'])
     @dependent.update_attributes(@params['dependent']) if @dependent
+    SyncEngine.dosync
     redirect :controller => :Contact, :action => :show, :origin => @params['origin'], :id => @dependent.contact_id
   end
 
