@@ -15,7 +15,7 @@ class DependentController < Rho::RhoController
     @dependent = Dependent.find(@params['id'])
     if @dependent
       @contact = @dependent.contact
-      render :action => :show, :back => url_for(:action => :index), :layout => 'layout_jquerymobile'
+      render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
       redirect :action => :index
     end
@@ -25,14 +25,14 @@ class DependentController < Rho::RhoController
   def new
     @contact = Contact.find(@params['id'])
     @dependent = Dependent.new
-    render :action => :new, :back => url_for(:action => :index), :layout => 'layout_jquerymobile'
+    render :action => :new, :back => 'callback:', :layout => 'layout_jquerymobile'
   end
 
   # GET /Dependent/{1}/edit
   def edit
     @dependent = Dependent.find(@params['id'])
     if @dependent
-      render :action => :edit, :back => url_for(:action => :index), :layout => 'layout_jquerymobile'
+      render :action => :edit, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
       redirect :action => :index
     end
