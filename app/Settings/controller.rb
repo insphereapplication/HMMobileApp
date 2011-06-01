@@ -7,6 +7,14 @@ require 'rho/rhotabbar'
 class SettingsController < Rho::RhoController
   include BrowserHelper
   
+  def sync_waiting
+    @@sync_waiting ||= false
+  end
+  
+  def sync_waiting=(sync_waiting)
+    @@sync_waiting = sync_waiting
+  end
+  
   def index
     $tab = 2
     @msg = @params['msg']
@@ -229,8 +237,25 @@ class SettingsController < Rho::RhoController
   end
   
   def push_notify
-    #setup callbacks to use new opportunity workflow, start sync
-    SyncUtil.restart_sync('new_opportunity')
+    puts "*"*80
+    #setup callbacks to use new opportunity workflow, start sync    
+    # SyncEngine.lock_sync_mutex
+    puts "In mutex, sync_waiting = #{sync_waiting}"
+    unless sync_waiting
+      puts "Sync isn't waiting"
+      sync_waiting = true
+      if SyncEngine.is_syncing == 0
+        sync_waiting = false
+        SyncUtil.start_sync('new_opportunity')
+      end
+      puts "Done"
+    else
+      puts "Sync is waiting"
+      # SyncEngine.unlock_sync_mutex
+      puts "Out of mutex"
+    end
+    
+    puts "&"*80
 
     if System::get_property('platform') == 'ANDROID'
       "rho_push"
@@ -265,7 +290,13 @@ class SettingsController < Rho::RhoController
     if status == "complete"
       if sourcename == 'AppInfo'
         check_force_upgrade
-      end   
+      end
+      
+      if sync_waiting
+        SyncUtil.start_sync('new_opportunity')
+        sync_waiting = false
+      end
+      
       @on_sync_complete.call
     elsif status == "ok"
       if sourcename == 'AppInfo'
