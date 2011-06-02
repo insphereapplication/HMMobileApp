@@ -57,8 +57,9 @@ class Contact
   index :contact_pk_index, [:contactid]
   unique_index :unique_contact, [:contactid] 
   
+  # If a contact has a spouse first or spouse last name we consider that the contact has a spouse.
   def has_spouse_info?
-    return cssi_spousename != "" || cssi_spouselastname != ""
+    return !cssi_spousename.blank? || !cssi_spouselastname.blank? 
   end
   
   def self.all_open(page=nil, page_size=DEFAULT_PAGE_SIZE)    

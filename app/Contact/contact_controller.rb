@@ -159,6 +159,7 @@ class ContactController < Rho::RhoController
   # POST /Contact/create
   def create
     @contact = Contact.create(@params['contact'])
+    @contact.update_attributes(:birthdate => DateUtil.birthdate_build(@contact.birthdate))
     @opp = Opportunity.create(@params['opportunity'])  
     @opp.update_attributes( :contact_id =>  @contact.object)
     @opp.update_attributes( :statecode => 'Open')
