@@ -39,35 +39,35 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 	        		<label for="contact[emailaddress1]" class="fieldLabel">Email Address:<font color="blue">  +</font></label>
-	        		<input maxlength="80" type="text" id="contact_emailaddress1" name="contact[emailaddress1]" <%= placeholder( "Email Address" ) %> />
+	        		<input type="email" maxlength="255" id="contact_emailaddress1" name="contact[emailaddress1]" <%= placeholder( "Email Address" ) %> />
 				</div>
 			</div>		
 		
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 	            	<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:<font color="blue">  +</font></label>
-					<input maxlength="20" type="text" id="contact_mobilephone" name="contact[mobilephone]" <%= placeholder( "Mobile Phone" ) %> />
+					<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" id="contact_mobilephone" name="contact[mobilephone]" <%= placeholder( "Mobile Phone" ) %> />
 		    	</div>
 			</div>
 				
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 	            	<label for="contact[telephone1]" class="fieldLabel">Business Phone:<font color="blue">  +</font></label>
-					<input maxlength="20" type="text" id="contact_telephone1" name="contact[telephone1]" <%= placeholder( "Business Phone" ) %> />
+					<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" id="contact_telephone1" name="contact[telephone1]" <%= placeholder( "Business Phone" ) %> />
 		    	</div>
 			</div>
 				
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 	            	<label for="contact[telephone2]" class="fieldLabel">Home Phone:<font color="blue">  +</font></label>
-					<input maxlength="20" type="text" id="contact_telephone2" name="contact[telephone2]" <%= placeholder( "Home Phone" ) %> />
+					<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" id="contact_telephone2" name="contact[telephone2]" <%= placeholder( "Home Phone" ) %> />
 		    	</div>
 			</div>
 
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 	            	<label for="contact[telephone3]" class="fieldLabel">Alternative Phone:<font color="blue">  +</font></label>
-					<input maxlength="20" type="text" id="contact_telephone3" name="contact[telephone3]" <%= placeholder( "Alternative Phone" ) %> />
+					<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" id="contact_telephone3" name="contact[telephone3]" <%= placeholder( "Alternative Phone" ) %> />
 		    	</div>
 			</div>
 
@@ -132,9 +132,9 @@
 
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-	        		<label for="opportunity[cssi_inputsource]" class="select">Source:</label>
+	        		<label for="opportunity[cssi_leadsourceid]" class="select">Source:</label>
 					<div>
-						<select id="opportunity_inputsource" name="opportunity[cssi_inputsource]">
+						<select id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]">
 							<option value="" selected="true"></option>
 							<option value="CPA Plus">CPA Plus</option>
 							<option value="Direct Mail">Direct Mail</option>

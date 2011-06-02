@@ -56,6 +56,14 @@ class DependentController < Rho::RhoController
     puts "********** id = #{@params['id']}"
     @dependent = Dependent.find(@params['id'])
     @dependent.update_attributes(@params['dependent']) if @dependent
+    @dependent.update_attributes(:contact_id => @dependent.contact_id) if @dependent
+    
+    # We need to always "update" these fields to make sure the date format gets changed correctly. Age needs to always
+    # be recalculated as well since we don't truly know if it changed or not.
+    @dependent.update_attributes(:cssi_dateofbirth => DateUtil.birthdate_build(@dependent.cssi_dateofbirth))
+    @dependent.update_attributes(:cssi_age => age(@dependent.cssi_dateofbirth))
+    
+    SyncEngine.dosync
     redirect :controller => :Contact, :action => :show, :origin => @params['origin'], :id => @dependent.contact_id
   end
 

@@ -23,7 +23,7 @@
     <div data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar%>
 		<div data-role="header">
-			<a href="/app/Settings/index" data-direction="reverse" data-icon="back">Settings</a>
+			<a href="/app/Settings/index" data-direction="reverse" data-icon="back">Tools</a>
 			<h1>About</h1>
 		</div>
 
@@ -38,10 +38,10 @@
 				<li><h3>Device Model:</h3><p><% if System.get_property('os_version') && System.get_property('os_version').length > 0 %><%= System.get_property('os_version') %><% else %>&nbsp;<% end %></p></li>
 				<li onclick="toggle('secret');"><h3>Client ID:</h3><p><%= Rhom::Rhom::client_id %></p></li>
 				<div id="secret" style="display: none">
-					<li><a href="<%= url_for :action => :do_reset %>">Reset Database</a></li>
-			    	<li><a href="<%= url_for :action => :do_sync %>">Perform Sync</a></li>
-		        	<li><a href="<%= url_for :action => :show_log %>">Show Log</a></li>
-					<li><a href="<%= url_for :action => :configure_log %>">Configure Log</a></l>
+					<li><a href="<%= url_for :action => :do_reset %>"><h1>Reset Database</h1></a></li>
+			    	<li><a href="<%= url_for :action => :do_sync %>"><h1>Perform Sync</h1></a></li>
+		        	<li><a href="<%= url_for :action => :show_log %>"><h1>Show Log</h1></a></li>
+					<li><a href="<%= url_for :action => :configure_log %>"><h1>Configure Log</h1></a></l>
 				</div>
 			</ul>
 			<div>

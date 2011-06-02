@@ -40,7 +40,7 @@ class OpportunityController < Rho::RhoController
         :reload => true 
       },
       { 
-        :label => "Settings",  
+        :label => "Tools",  
         :action => '/app/Settings',  
         :icon => "/public/images/iphone/tabs/settings_tab_icon.png" 
       }
@@ -168,13 +168,41 @@ class OpportunityController < Rho::RhoController
   def past_due_appointments
     get_appointments('red', 'Past Due', Activity.past_due_appointments(@params['page'].to_i))
   end
+  
+  def check_preferred_and_donotcall(phone_type, contact)
+    preferred = contact.preferred_number
+    allow_call = 'True'
+    company_dnc = 'False'
+    
+    if preferred == contact.telephone2 # Home
+      allow_call = contact.cssi_allowcallshomephone
+      company_dnc = contact.cssi_companydnchomephone
+    elsif preferred == contact.mobilephone # Mobile
+      allow_call = contact.cssi_allowcallsmobilephone
+      company_dnc = contact.cssi_companydncmobilephone
+    elsif preferred == contact.telephone1 # Business
+      allow_call = contact.cssi_allowcallsbusinessphone
+      company_dnc = contact.cssi_companydncbusinessphone
+    elsif preferred == contact.telephone3 # Alternate
+      allow_call = contact.cssi_allowcallsalternatephone
+      company_dnc = contact.cssi_companydncalternatephone
+    end
+    
+    is_preferred = phone_type == preferred
 
-  def check_preferred(phone_type, preferred)
+    # Special case where we need 2 icons side by side, and some jQuery/JavaScript tricks are needed
+    # We look for the two-icons attribute in the .erb and substitute a formatted HTML string that will show both
+    if is_preferred && (allow_call == 'False' || company_dnc == 'True')
+      return %Q{ <span two-icons class="ui-icon ui-icon-check ui-icon-shadow"></span> }
+    end
+    
     if phone_type == preferred
       %Q{ <span class="ui-icon ui-icon-check ui-icon-shadow"></span> }
+    elsif (allow_call == 'False' || company_dnc == 'True')
+      %Q{ <span class="ui-icon ui-icon-delete ui-icon-shadow"></span> }
     else
       ""
-    end
+    end    
   end
   
   # GET /Opportunity/{1}

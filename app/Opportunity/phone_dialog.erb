@@ -1,3 +1,17 @@
+<script type="text/javascript" >
+$(document).ready(function(){
+  	var replace = $('span[two-icons]');
+	if ( replace.length = 1 ) // We can only have 1 preferred number, so only one of these will have the attribute
+	{
+		replace.replaceWith('<span class="ui-icon ui-icon-delete ui-icon-shadow"></span><span class="ui-icon ui-icon-check ui-icon-shadow" style="float:right; right:33px;"></span>');
+	}
+	else
+	{
+		alert( "replace.length = " + replace.length )
+	}
+});
+</script>
+
 <div id="phone_dialog" data-role="none" class="ui-dialog ui-page ui-body-a ui-page-active">
 	
 		<div data-role="header" data-theme="d" data-position="inline" class="ui-corner-top ui-overlay-shadow ui-bar-d ui-header" role="banner">
@@ -13,10 +27,10 @@
 		<div data-role="content" data-theme="c" class="ui-content ui-body-c ui-corner-bottom ui-overlay-shadow" role="main">
 			<p>Choose a number to dial:</p>
 			<% @opportunity.contact.phone_numbers_full.each do |type, number| %>
-				<a href="<%= url_for(:action => :call_number, :query => {:phone_number => number, :opportunity => @opportunity.object, :origin => @params['origin']}) %>" data-role="button"  data-rel="back" data-theme="c" style="white-space:normal" class="ui-btn ui-btn-icon-left ui-btn-corner-all ui-shadow ui-btn-up-c">
+				<a href="<%= url_for(:action => :call_number, :query => {:phone_number => number, :opportunity => @opportunity.object, :origin => @params['origin']}) %>" data-role="button"  data-rel="back" data-theme="c" style="white-space:normal" class="ui-btn ui-btn-icon-right ui-btn-corner-all ui-shadow ui-btn-up-c">
 					<span class="ui-btn-inner ui-btn-corner-all" style="white-space:normal">
 						<span class="ui-btn-text" style="white-space:normal"><Cancel><%= type %></span>
-						<%= check_preferred(number, @opportunity.contact.preferred_number) %>
+						<%= check_preferred_and_donotcall(number, @opportunity.contact) %>
 					</span></a> 
 			<% end %>  
 			<% adhoc_nums=[] %>
