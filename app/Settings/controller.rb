@@ -7,15 +7,16 @@ require 'rho/rhotabbar'
 class SettingsController < Rho::RhoController
   include BrowserHelper
   
-  def sync_waiting
-    @@sync_waiting ||= false
+  def new_opportunity_sync_pending
+    @@new_opportunity_sync_pending ||= false
   end
   
-  def sync_waiting=(sync_waiting)
-    @@sync_waiting = sync_waiting
+  def new_opportunity_sync_pending=(new_opportunity_sync_pending)
+    @@new_opportunity_sync_pending = new_opportunity_sync_pending
   end
   
   def index
+    show_popup("SyncEngine","is_syncing=#{SyncEngine.is_syncing}, class=#{SyncEngine.is_syncing.class}")
     $tab = 2
     @msg = @params['msg']
     render :controller => :Setting, :back => 'callback:', :action => :index, :layout => 'layout_jquerymobile'
@@ -238,21 +239,21 @@ class SettingsController < Rho::RhoController
   
   def push_notify
     puts "*"*80
-    #setup callbacks to use new opportunity workflow, start sync    
-    # SyncEngine.lock_sync_mutex
-    puts "In mutex, sync_waiting = #{sync_waiting}"
-    unless sync_waiting
-      puts "Sync isn't waiting"
-      sync_waiting = true
-      if SyncEngine.is_syncing == 0
-        sync_waiting = false
+    #setup callbacks to use new opportunity workflow, start sync
+    puts "Starting push_notify, new_opportunity_sync_pending = #{new_opportunity_sync_pending}, is_syncing = #{SyncEngine.is_syncing}"
+    unless new_opportunity_sync_pending
+      puts "No pending syncs of type new_opportunity"
+      new_opportunity_sync_pending = true
+      unless SyncEngine.is_syncing
+        puts "Sync engine isn't currently syncing, starting new_opportunity sync"
+        new_opportunity_sync_pending = false
         SyncUtil.start_sync('new_opportunity')
+      else
+        puts "A sync is in progress, pending new_opportunity sync will be executed once the current sync completes."
       end
       puts "Done"
     else
-      puts "Sync is waiting"
-      # SyncEngine.unlock_sync_mutex
-      puts "Out of mutex"
+      puts "New opportunity sync is already pending"
     end
     
     puts "&"*80
@@ -292,9 +293,10 @@ class SettingsController < Rho::RhoController
         check_force_upgrade
       end
       
-      if sync_waiting
+      if new_opportunity_sync_pending
+        puts "Sync complete, starting pending new_opportunity sync."
         SyncUtil.start_sync('new_opportunity')
-        sync_waiting = false
+        new_opportunity_sync_pending = false
       end
       
       @on_sync_complete.call
