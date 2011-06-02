@@ -1,0 +1,38 @@
+<div data-role="page" data-theme="b">
+	<%= offline_bar%>
+	<div data-role="header" data-theme="d" data-position="inline">
+		<a href="<%=url_for(:action=>:show, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
+		<h1>Opportunity Won</h1>
+		<div style="text-align:center" class="ui-bar ui-bar-c"> 
+			<%= "#{@opportunity.contact.full_name} - #{to_date(@opportunity.createdon)}" %>
+		</div>
+	</div>
+	<div id="contentDiv" data-role="content">
+		<form name="won_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_won_status, :query => {:origin => @params['origin']} %>">		
+			<ul data-role="listview" data-filter="false" data-inset="true">
+				<li data-role="list-divider">Application Detail</li>
+				<li data-icon="plus"><a class="UpdateStatus" href="<%= url_for(:action => :app_detail_add, :id => @opportunity.object, :query =>{:test => "test", :origin => @params['origin']})%>" data-transition="slide">Add Application Detail</a></li>
+			
+
+			
+				<li>
+					<a href="<%= url_for(:action => :app_detail_show, :id => "appdetail.object", :query => {:origin => @params['origin']}) %>">
+					<br/><p>Carrier: Base 105</p>
+					<p>Apps Submitted: 3 </p> 
+					<p>Total AV: $1,200 </p> 
+					<p>App Date: 9/30/2011 </p> 
+					<p>LOB: Annuity </p>
+					</a>
+				</li> 
+			</ul>				
+				<div data-role="fieldcontain">
+					<input type="submit" data-theme="b" class="standardButton" onclick="return validate();" value="Mark as Won"/>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+
+

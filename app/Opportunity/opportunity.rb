@@ -138,6 +138,23 @@ class Opportunity
       })
   end
   
+  def get_application_details
+    
+  end
+  
+  def create_application_details
+    APPDetails.create({
+      :notetext => note_text, 
+      :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
+      :parent_id => self.object,
+      :parent_type => 'Opportunity' 
+    }) 
+  end
+  
+  def update_application_details
+    
+  end
+    
   def adhoc_numbers
    phone_calls.each do |phone_call|
      if @phonenumber

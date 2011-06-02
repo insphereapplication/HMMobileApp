@@ -1,0 +1,16 @@
+<div data-role="page" data-theme="b" data-cache="never">
+		<div data-role="header" data-backbtn="false">
+			<a href="<%= url_for(:action => :won, :id => @appdetail.opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>			
+			<h3>Application Details</h3>
+			<a data-icon="edit" href="<%=url_for(:action=>:app_detail_edit, :id => @appdetail.object, :query => {:origin => @params['origin']})%>" data-direction="forward"> Edit </a>
+		</div>
+	<div data-role="content">
+		<ul data-role="listview" data-theme="d" data-inset="true">
+			<li>Carrier: <%= @appdetail.carrier %></li>
+			<li>Apps Submitted: <%= @appdetail.appssubmitted %></li>
+			<li>Total AV: <%= @appdetail.totalav %></li>	
+			<li>App Date: <%= "#{to_date(@appdetail.appdate)}" %></li>	
+			<li>LOB: <%= @appdetail.lob %></li>			
+		</ul>
+	</div>
+</div>

@@ -249,6 +249,61 @@ class OpportunityController < Rho::RhoController
     end
   end
   
+  def app_detail_add
+      @opportunity = Opportunity.find(@params['id'])
+      if @opportunity
+        render :action => :application_details_add, :back => 'callback:', :layout => 'layout_jquerymobile'
+      else
+        redirect :action => :index, :back => 'callback:'
+      end
+    end
+    
+  def app_detail_show
+      # @appdetail = Opportunity.find(@params['id'])
+      # if @appdetail
+        render :action => :application_details_show, :back => 'callback:', :layout => 'layout_jquerymobile'
+      # else
+      #   redirect :action => :index, :back => 'callback:'
+      # end
+    end
+    
+  def app_detail_edit
+    @appdetail = Opportunity.find(@params['id'])
+    if @appdetail
+      render :action => :application_details_edit, :back => 'callback:', :layout => 'layout_jquerymobile'
+    else
+      redirect :action => :index, :back => 'callback:'
+    end
+  end
+    
+  def app_detail_create
+    opportunity = Opportunity.find(@params['opportunity_id'])
+    db = ::Rho::RHO.get_src_db('Opportunity')
+    db.start_transaction
+      begin
+        opportunity.create_note(@params['notetext'])
+        finished_note_create(opportunity, @params['origin'])
+        db.commit
+      rescue Exception => e
+        puts "Exception in update status call back requested, rolling back: #{e.inspect} -- #{@params.inspect}"
+        db.rollback
+      end
+  end
+  
+  def app_detail_update
+    opportunity = Opportunity.find(@params['opportunity_id'])
+    db = ::Rho::RHO.get_src_db('Opportunity')
+    db.start_transaction
+      begin
+        opportunity.create_note(@params['notetext'])
+        finished_note_create(opportunity, @params['origin'])
+        db.commit
+      rescue Exception => e
+        puts "Exception in update status call back requested, rolling back: #{e.inspect} -- #{@params.inspect}"
+        db.rollback
+      end
+  end
+  
   def appointment
     $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
@@ -270,6 +325,15 @@ class OpportunityController < Rho::RhoController
       redirect :action => :index, :back => 'callback:'
     end
   end
+  
+  def won
+      @opportunity = Opportunity.find(@params['id'])
+      if @opportunity
+        render :action => :mark_as_won, :back => 'callback:', :layout => 'layout_jquerymobile'
+      else
+        redirect :action => :index, :back => 'callback:'
+      end
+    end
   
   
   def contact_opp_new    
@@ -336,6 +400,16 @@ class OpportunityController < Rho::RhoController
       if ['0', '1', '2'].include?(flag)
         ttt = $choosed[flag]
           preset_time= Time.parse(@params['preset'])
+        DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
+      end
+      render :back => 'callback:'
+    end
+    
+    def appdatepopup
+      flag = @params['flag']
+      if ['0', '1', '2'].include?(flag)
+        ttt = $choosed[flag]
+          preset_time = Time.new
         DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
       end
       render :back => 'callback:'
