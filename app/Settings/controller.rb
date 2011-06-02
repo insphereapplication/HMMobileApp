@@ -16,7 +16,6 @@ class SettingsController < Rho::RhoController
   end
   
   def index
-    show_popup("SyncEngine","is_syncing=#{SyncEngine.is_syncing}, class=#{SyncEngine.is_syncing.class}")
     $tab = 2
     @msg = @params['msg']
     render :controller => :Setting, :back => 'callback:', :action => :index, :layout => 'layout_jquerymobile'
