@@ -37,7 +37,7 @@
 			<% end %>
 			<li><a class="UpdateStatus" href="<%= url_for(:action => :lost_other, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-transition="slide">Other</a></li>
 			<li data-role="list-divider">Won</li> 
-			<li><%= udpate_status_won_link(@opportunity)%></li> 
+			<li><a class="UpdateStatus" href="<%= url_for(:action => :won, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-transition="slide">Won</a></li> 
 		</ul>
 	</div>
 </div>

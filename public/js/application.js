@@ -405,6 +405,11 @@ function editpopupDateTimeAJPicker(flag, title, field_key, preset) {
   return false;
 }
 
+function popupAppDateAJPicker(flag, title, field_key) {
+  $.get('/app/Opportunity/appdatepopup', { flag: flag, title: title, field_key: field_key });
+  return false;
+}
+
 function showSpin(message){
 	$.mobile.savingMessage = message;
 	$.mobile.pageSaving();

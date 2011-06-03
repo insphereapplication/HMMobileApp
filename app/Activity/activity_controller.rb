@@ -250,9 +250,7 @@ class ActivityController < Rho::RhoController
         :statecode => 'Open',
         :type => 'PhoneCall'
       })
-    
-      phone_call.create_note(@params['notetext'])
-    
+        
       finished_update_status(opportunity, @params['origin'], @params['appointments'])
       db.commit
     rescue Exception => e
