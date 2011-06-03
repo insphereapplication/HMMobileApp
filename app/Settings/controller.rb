@@ -531,8 +531,8 @@ class SettingsController < Rho::RhoController
     update_login_sync_progress(@params['source_name'], 100)
   end
   
-  def new_opportunity_on_sync_ok(*args)
-    if @params['source_name'] == 'Opportunity'
+  def new_opportunity_on_sync_ok(*args) 
+    if @params['source_name'] == 'Opportunity' && Settings.has_verified_credentials?
 
       Alert.show_popup({
         :title => 'View New Leads?',
