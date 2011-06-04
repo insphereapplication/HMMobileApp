@@ -7,14 +7,6 @@ require 'rho/rhotabbar'
 class SettingsController < Rho::RhoController
   include BrowserHelper
   
-  def new_opportunity_sync_pending
-    @@new_opportunity_sync_pending ||= false
-  end
-  
-  def new_opportunity_sync_pending=(new_opportunity_sync_pending)
-    @@new_opportunity_sync_pending = new_opportunity_sync_pending
-  end
-  
   def index
     $tab = 2
     @msg = @params['msg']
@@ -239,22 +231,23 @@ class SettingsController < Rho::RhoController
   def push_notify
     puts "*"*80
     #setup callbacks to use new opportunity workflow, start sync
-    puts "Starting push_notify, new_opportunity_sync_pending = #{new_opportunity_sync_pending}, is_syncing = #{SyncEngine.is_syncing}"
-    unless new_opportunity_sync_pending
+    puts "Starting push_notify, new_opportunity_sync_pending = #{Settings.new_opportunity_sync_pending}, is_syncing = #{SyncEngine.is_syncing}"
+    unless Settings.new_opportunity_sync_pending
       puts "No pending syncs of type new_opportunity"
-      new_opportunity_sync_pending = true
+      Settings.new_opportunity_sync_pending = true
       unless SyncEngine.is_syncing
         puts "Sync engine isn't currently syncing, starting new_opportunity sync"
-        new_opportunity_sync_pending = false
+        Settings.new_opportunity_sync_pending = false
         SyncUtil.start_sync('new_opportunity')
       else
         puts "A sync is in progress, pending new_opportunity sync will be executed once the current sync completes."
+
       end
       puts "Done"
     else
       puts "New opportunity sync is already pending"
     end
-    
+    puts "new opp sync pending in push notify: " + Settings.new_opportunity_sync_pending.to_s
     puts "&"*80
 
     if System::get_property('platform') == 'ANDROID'
@@ -292,10 +285,13 @@ class SettingsController < Rho::RhoController
         check_force_upgrade
       end
       
-      if new_opportunity_sync_pending
+      puts "%"*80
+      puts "SYNC COMPLETE"
+      puts "new opp sync pending: " + Settings.new_opportunity_sync_pending.to_s
+      if Settings.new_opportunity_sync_pending
         puts "Sync complete, starting pending new_opportunity sync."
         SyncUtil.start_sync('new_opportunity')
-        new_opportunity_sync_pending = false
+        Settings.new_opportunity_sync_pending = false
       end
       
       @on_sync_complete.call

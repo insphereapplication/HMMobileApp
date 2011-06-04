@@ -67,6 +67,20 @@ class Settings
       instance.sync_type || 'background'
     end
     
+    def new_opportunity_sync_pending
+      result = instance.new_opportunity_sync_pending || false
+      
+      # use string comparison below because settings DB always stores & returns strings
+      # sometimes "instance" is in-memory and **not** fetched from db, which could return real boolean types instead of strings here
+      # to_s covers both cases
+      result.to_s == 'true'
+    end
+    
+    def new_opportunity_sync_pending=(new_opportunity_sync_pending)
+      instance.new_opportunity_sync_pending=new_opportunity_sync_pending
+      instance.save     
+    end
+    
     def login=(login)
       instance.login=login
       instance.save
