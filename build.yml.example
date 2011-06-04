@@ -17,7 +17,7 @@ android:
   android_title: 1
   push:
     sender: insphereapplication@insphereis.com
-    notifications: background
+    notifications: always
   capabilities: 
   - network_state
   - push
