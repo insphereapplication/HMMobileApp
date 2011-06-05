@@ -85,3 +85,36 @@ function checkEdit(myForm) {
 		break;
 	}
 }
+
+// SAMPLE CODE for setting a min and a max length on a text box using the jquery validation plugin. - twitty.6.14.11
+$('#dependent_add_page').live('pagecreate',function(event){
+	$("#dependent_add").validate({
+	  rules: {
+	    'dependent[cssi_name]' : {
+	      required: true,
+		  maxlength: 100
+	    },
+	    'dependent[cssi_lastname]' : {
+		  maxlength: 100
+	    },
+		'dependent[cssi_weight]' : {
+		  min: 0,
+		  max: 1000
+	    },
+		'dependent[cssi_comments]' : {
+		  maxlength: 250
+	    }
+	  }
+	});
+// SAMPLE CODE for creating a 'at least one from this group must be filled out' validation group. - twitty.6.14.11	
+//jQuery.validator.addMethod('required_group', function(val, el) {
+//	var $module = $(el).parents('div.panel');
+//	return $("#dependent_add").find('.required_group:filled').length;
+//	}, 'Please fill out at least one of these fields.');	
+});
+
+// HACK ATTACK! - This is a fix for a known issue with JQuery Mobile related to focus and loss of input issues. - twitty.6.14.11
+// Please check https://github.com/jquery/jquery-mobile/issues/756 to see if the issue has been addressed offically. - twitty.6.14.11
+$('#dependent_add_page').live('pageshow',function(event){
+	$('input').one('keypress',function(ev) { $('<div></div>').appendTo('body') });
+});
