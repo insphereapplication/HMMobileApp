@@ -112,8 +112,26 @@ $('#dependent_new_page, #dependent_edit_page').live('pagecreate',function(event)
 //	}, 'Please fill out at least one of these fields.');	
 });
 
+$('#spouse_new_page, #spouse_edit_page').live('pagecreate',function(event){
+	$("#spouse_form").validate({
+	  rules: {
+	    'contact[cssi_spousename]' : {
+	      required: true,
+		  maxlength: 100
+	    },
+	    'contact[cssi_spouselastname]' : {
+		  maxlength: 100
+	    },
+		'contact[cssi_spouseweight]' : {
+		  min: 0,
+		  max: 1000
+	    }
+	  }
+	});	
+});
+
 // HACK ATTACK! - This is a fix for a known issue with JQuery Mobile related to focus and loss of input issues. - twitty.6.14.11
 // Please check https://github.com/jquery/jquery-mobile/issues/756 to see if the issue has been addressed offically. - twitty.6.14.11
-$('#dependent_new_page, #dependent_edit_page').live('pageshow',function(event){
+$('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_page').live('pageshow',function(event){
 	$('input').one('keypress',function(ev) { $('<div></div>').appendTo('body') });
 });
