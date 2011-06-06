@@ -91,16 +91,18 @@ class ContactController < Rho::RhoController
     end    
   end
   
-  def show_edit_do_not_call_icon(allow_call, company_dnc)
+  def show_edit_do_not_call_icon(allow_call, company_dnc, phone_type)
     if allow_call == 'False' || company_dnc == 'True'
       '<img src="/public/images/glyphish-icons/28-star.png" height="18" width="18" />'
+    else
+      '<img src="/public/images/glyphish-icons/28-star.png" style="visibility:hidden;" id=' + phone_type + '_icon height="18" width="18" />'
     end
   end
   
   def do_not_call_button(allow_call,company_dnc,phone_type,phone_number,contact)
     if allow_call == 'True' && company_dnc == 'False' && !phone_number.blank?
       %Q{
-          <a href="#{url_for(:controller => :Contact, :action => :do_not_call_press, :id => @contact.object, :query => {:origin => @params['origin'], :phone_type => phone_type, :phone_number => phone_number, :contact => contact})}" data-role="button" data-theme="b">DNC</a>
+          <a href="#{url_for(:controller => :Contact, :action => :do_not_call_press, :id => @contact.object, :query => {:origin => @params['origin'], :phone_type => phone_type, :phone_number => phone_number, :contact => contact})}" id="#{phone_type}_button" data-role="button" data-theme="b">DNC</a>
         }
     end 
   end
@@ -139,14 +141,14 @@ class ContactController < Rho::RhoController
           contact.update_attributes( { :cssi_allowcallsbusinessphone => 'False', :cssi_companydncbusinessphone => 'True' } )
         when "Alternative"
           contact.update_attributes( { :cssi_allowcallsalternatephone => 'False', :cssi_companydncalternatephone => 'True' } )
-      end
-      
-      SyncEngine.dosync
+      end  
+      SyncEngine.dosync     
+      WebView.execute_js("$('##{phone_type}_icon').css('visibility','visible');$('##{phone_type}_button').hide();hideSpin();")
     end
     
-    puts "******************** origin = #{@params['origin']}********************"
+    # If the user selected 'Cancel'
+    WebView.execute_js("hideSpin();")
     
-    WebView.navigate( url_for :controller => :Contact, :action => :show, :back => 'callback:', :id => id, :query =>{:origin => @params['origin']}, :layout => 'layout_jquerymobile' )
   end
   
   def select_preferred(phone_type, preferred)
