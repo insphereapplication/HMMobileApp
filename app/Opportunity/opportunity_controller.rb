@@ -202,7 +202,7 @@ class OpportunityController < Rho::RhoController
   
   # GET /Opportunity/{1}
   def show
-    @opportunity = Opportunity.find(@params['id'])
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     if @opportunity
       @notes = @opportunity.notes
       current_nav_context.orient!(@opportunity.object)
@@ -228,7 +228,7 @@ class OpportunityController < Rho::RhoController
       opp_id = current_nav_context.send(direction)
     end
     
-    @opportunity = Opportunity.find(opp_id)
+    @opportunity = Opportunity.find_opportunity(opp_id)
     
     if @opportunity
       @notes = @opportunity.notes
@@ -239,7 +239,7 @@ class OpportunityController < Rho::RhoController
   end
   
   def status_update
-    @opportunity = Opportunity.find(@params['id'])
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     if @opportunity
       render :action => :status_update, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -248,7 +248,7 @@ class OpportunityController < Rho::RhoController
   end 
   
   def note_create
-    @opportunity = Opportunity.find(@params['id'])
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     if @opportunity
       render :action => :note_create, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -330,9 +330,13 @@ class OpportunityController < Rho::RhoController
   
   def appointment
     $choosed['0'] = ""
+<<<<<<< HEAD
     @opportunity = Opportunity.find(@params['id'])
     @opportunity.create_note(@params['notes'])
     
+=======
+    @opportunity = Opportunity.find_opportunity(@params['id'])
+>>>>>>> 14ead3320182aed75bd7918c9490cd6ec81255fd
     if @opportunity
       render :action => :appointment, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -344,9 +348,13 @@ class OpportunityController < Rho::RhoController
     @lost_reasons = Constants::OTHER_LOST_REASONS
     @competitors = Constants::COMPETITORS
     
+<<<<<<< HEAD
     @opportunity = Opportunity.find(@params['id'])
     @opportunity.create_note(@params['notes'])
     
+=======
+    @opportunity = Opportunity.find_opportunity(@params['id'])
+>>>>>>> 14ead3320182aed75bd7918c9490cd6ec81255fd
     if @opportunity
       render :action => :lost_other, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -373,7 +381,7 @@ class OpportunityController < Rho::RhoController
   
   # GET /Opportunity/{1}/activity_summary
   def activity_summary
-    @opportunity = Opportunity.find(@params['id'])
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     @activities = @opportunity.activities
     @activity_list = @opportunity.activity_list
     if @opportunity
@@ -384,7 +392,7 @@ class OpportunityController < Rho::RhoController
   end
 
   def phone_dialog
-    @opportunity = Opportunity.find(@params['id'])
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     render :action => :phone_dialog, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   

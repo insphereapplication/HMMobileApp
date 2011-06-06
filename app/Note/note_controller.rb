@@ -15,7 +15,7 @@ class NoteController < Rho::RhoController
 
   # GET /Note/{1}
   def show
-    @note = Note.find(@params['id'])
+    @note = Note.find_note(@params['id'])
     if @note
       render :action => :show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
     else
@@ -31,7 +31,7 @@ class NoteController < Rho::RhoController
 
   # GET /Note/{1}/edit
   def edit
-    @note = Note.find(@params['id'])
+    @note = Note.find_note(@params['id'])
     if @note
       render :action => :edit
     else
@@ -41,26 +41,26 @@ class NoteController < Rho::RhoController
 
   # POST /Note/create
   def create
-    @note = Note.create(@params['note'])
+    @note = Note.create_new(@params['note'])
     redirect :action => :index
   end
 
   # POST /Note/{1}/update
   def update
-    @note = Note.find(@params['id'])
+    @note = Note.find_note(@params['id'])
     @note.update_attributes(@params['note']) if @note
     redirect :action => :index
   end
 
   # POST /Note/{1}/delete
   def delete
-    @note = Note.find(@params['id'])
+    @note = Note.find_note(@params['id'])
     @note.destroy if @note
     redirect :action => :index
   end
   
   def note_submit
-    opportunity = Opportunity.find(@params['opportunity_id'])
+    opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
   
     db = ::Rho::RHO.get_src_db('Opportunity')
     db.start_transaction
