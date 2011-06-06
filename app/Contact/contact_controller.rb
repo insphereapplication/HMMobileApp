@@ -40,8 +40,8 @@ class ContactController < Rho::RhoController
   def show
     @contact = Contact.find_contact(@params['id'])
     if @contact
-      # @next_id = (@contact.object.to_i + 1).to_s
-      # @prev_id = (@contact.object.to_i - 1).to_s
+      @next_id = (@contact.object.to_i + 1).to_s
+      @prev_id = (@contact.object.to_i - 1).to_s
       render :action => :show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']     
     else
       redirect :action => :index, :back => 'callback:'
