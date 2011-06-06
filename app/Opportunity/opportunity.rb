@@ -48,7 +48,6 @@ class Opportunity
   end
   
   def self.create_new(params)
-      puts "*"*80 + " CALLING CREATE!"
       new_opportunity = Opportunity.create(params)
       new_opportunity.update_attributes( :temp_id => new_opportunity.object )
       new_opportunity
@@ -57,7 +56,6 @@ class Opportunity
   def self.find_opportunity(id)
     
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
-                  puts "*"*80 + "FINDING BY OLD FIND METHOD  OPPORTUNITY"
       @opportunity = Opportunity.find(id)
     else
       id.gsub!(/[{}]/,"")

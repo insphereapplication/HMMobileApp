@@ -35,13 +35,9 @@ class Note
   def self.find_note(id)
     
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
-                  puts "*"*80 + "FINDING BY OLD FIND METHOD"
       @note = Note.find(id)
     else
       id.gsub!(/[{}]/,"")
-   
-      puts "*"*80 + "FINDING BY SQL--------#{id}" 
-
       @note = Note.find_by_sql(%Q{
           select n.* from Note n where temp_id='#{id}'
         }).first
@@ -52,11 +48,9 @@ class Note
   def self.find_opportunity(id)
     
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
-                  puts "*"*80 + "FINDING BY OLD FIND METHOD  OPPORTUNITY"
       @opportunity = Opportunity.find(id)
     else
       id.gsub!(/[{}]/,"")
-
       @opportunity = Opportunity.find_by_sql(%Q{
           select o.* from Opportunity o where temp_id='#{id}'
         }).first

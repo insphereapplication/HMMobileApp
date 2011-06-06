@@ -34,7 +34,6 @@ class Policy
   end
   
   def self.create_new(params)
-      puts "*"*80 + " CALLING CREATE!"
       new_policy = Policy.create(params)
       new_policy.update_attributes( :temp_id => new_policy.object )
       new_policy
@@ -43,7 +42,6 @@ class Policy
   def self.find_policy(id)
     
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
-                  puts "*"*80 + "FINDING BY OLD FIND METHOD"
       @policy = Policy.find(id)
     else
       id.gsub!(/[{}]/,"")

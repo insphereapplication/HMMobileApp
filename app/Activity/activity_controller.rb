@@ -225,9 +225,7 @@ class ActivityController < Rho::RhoController
   
   def update_status_call_back_requested
     opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
-    
-    puts ")()()()"*100 + opportunity.inspect
-    
+  
     opp_attrs = {
       :cssi_statusdetail => 'Call Back Requested',
       :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
@@ -315,7 +313,6 @@ class ActivityController < Rho::RhoController
   end
   
   def finished_update_status(opportunity, origin, appointmentids=nil)
-    puts "*"*100
     complete_appointments(appointmentids)
     SyncEngine.dosync
     redirect :controller => :Opportunity, :action => :show, :back => 'callback:', :id => opportunity.object, :query => {:origin => origin}

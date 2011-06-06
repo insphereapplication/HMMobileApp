@@ -29,7 +29,6 @@ class Dependent
   end
   
   def self.create_new(params)
-      puts "*"*80 + " CALLING CREATE!"
       new_dependent = Dependent.create(params)
       new_dependent.update_attributes( :temp_id => new_dependent.object )
       new_dependent
@@ -57,7 +56,6 @@ class Dependent
       @contact = Contact.find_by_sql(%Q{
           select c.* from Contact c where temp_id='#{id}'
         }).first
-        puts "*"*80 + @contact.inspect
       @contact
       end
   end

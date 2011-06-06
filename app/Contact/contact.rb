@@ -64,7 +64,6 @@ class Contact
   end
   
   def self.create_new(params)
-      puts "*"*80 + " CALLING CREATE!"
       new_contact = Contact.create(params)
       new_contact.update_attributes( :temp_id => new_contact.object )
       new_contact

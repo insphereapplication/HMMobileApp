@@ -71,7 +71,6 @@ class Activity
   end
   
   def self.create_new(params)
-      puts "*"*80 + " CALLING CREATE!"
       new_activity = Activity.create(params)
       new_activity.update_attributes( :temp_id => new_activity.object )
       new_activity
