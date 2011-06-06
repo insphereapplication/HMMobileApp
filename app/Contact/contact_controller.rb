@@ -32,7 +32,6 @@ class ContactController < Rho::RhoController
   
   def get_contacts_page
     @contacts = Contact.all_open(@params['page'].to_i)
-    puts @contacts.inspect
     @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
     render :action => :contact_page, :back => 'callback:'
   end
@@ -159,6 +158,7 @@ class ContactController < Rho::RhoController
   # POST /Contact/create
   def create
     @contact = Contact.create(@params['contact'])
+    @contact.update_attributes(:birthdate => DateUtil.birthdate_build(@contact.birthdate))
     @opp = Opportunity.create(@params['opportunity'])  
     @opp.update_attributes( :contact_id =>  @contact.object)
     @opp.update_attributes( :statecode => 'Open')
@@ -176,7 +176,7 @@ class ContactController < Rho::RhoController
     puts "CONTACT UPDATE: #{@params.inspect}"
     @contact = Contact.find(@params['id'])
     @contact.update_attributes(@params['contact']) if @contact
-    SyncEngine.dosync
+    SyncUtil.start_sync
     redirect :action => :show, :back => 'callback:',
               :id => @contact.object,
               :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}

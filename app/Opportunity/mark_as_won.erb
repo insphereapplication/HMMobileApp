@@ -8,7 +8,7 @@
 		</div>
 	</div>
 	<div id="contentDiv" data-role="content">
-		<form name="won_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_won_status, :query => {:origin => @params['origin']} %>">		
+		<form name="won_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_won_status, :query => {:origin => @params['origin'], :opportunity_id => @opportunity.object} %>">		
 			<ul data-role="listview" data-filter="false" data-inset="true">
 				<li data-role="list-divider">Application Detail</li>
 				<li data-icon="plus"><a class="UpdateStatus" href="<%= url_for(:action => :app_detail_add, :id => @opportunity.object, :query =>{:test => "test", :origin => @params['origin']})%>" data-transition="slide">Add Application Detail</a></li>
