@@ -53,6 +53,7 @@ class Contact
   property :cssi_spouseweight, :string
   property :cssi_spouseusetobacco, :string
   property :cssi_spousegender, :string #end contact spouse information
+  property :temp_id, :string
   
   index :contact_pk_index, [:contactid]
   unique_index :unique_contact, [:contactid] 
@@ -61,6 +62,26 @@ class Contact
   def has_spouse_info?
     return !cssi_spousename.blank? || !cssi_spouselastname.blank? 
   end
+  
+  def self.create_new(params)
+      new_contact = Contact.create(params)
+      new_contact.update_attributes( :temp_id => new_contact.object )
+      new_contact
+  end
+  
+  def self.find_contact(id)
+    
+    if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+      @contact = Contact.find(id)
+    else
+      id.gsub!(/[{}]/,"")
+      @contact = Contact.find_by_sql(%Q{
+          select c.* from Contact c where temp_id='#{id}'
+        }).first
+      @contact
+      end
+  end
+
   
   def self.all_open(page=nil, page_size=DEFAULT_PAGE_SIZE)    
     Contact.find_by_sql(%Q{

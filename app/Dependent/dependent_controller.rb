@@ -6,13 +6,13 @@ class DependentController < Rho::RhoController
 
   #GET /Dependent
   def index
-    @dependents = Dependent.find(:all)
+    @dependents = Dependent.find_dependent(:all)
     render :back => '/app'
   end
 
   # GET /Dependent/{1}
   def show
-    @dependent = Dependent.find(@params['id'])
+    @dependent = Dependent.find_dependent(@params['id'])
     if @dependent
       @contact = @dependent.contact
       render :action => :show, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
@@ -23,14 +23,14 @@ class DependentController < Rho::RhoController
 
   # GET /Dependent/new
   def new
-    @contact = Contact.find(@params['id'])
+    @contact = Contact.find_contact(@params['id'])
     @dependent = Dependent.new
     render :action => :new, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
   end
 
   # GET /Dependent/{1}/edit
   def edit
-    @dependent = Dependent.find(@params['id'])
+    @dependent = Dependent.find_dependent(@params['id'])
     if @dependent
       render :action => :edit, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
     else
@@ -42,7 +42,7 @@ class DependentController < Rho::RhoController
   def create
     puts "********** Calling DependentController.create **********"
     puts "********** origin = #{@params['origin']}"
-    @dependent = Dependent.create(@params['dependent'])
+    @dependent = Dependent.create_new(@params['dependent'])
     @dependent.update_attributes(:cssi_dateofbirth => DateUtil.birthdate_build(@dependent.cssi_dateofbirth))
     @dependent.update_attributes(:cssi_age => age(@dependent.cssi_dateofbirth))
     SyncEngine.dosync
@@ -54,7 +54,7 @@ class DependentController < Rho::RhoController
     puts "********** Calling DependentController.update **********"
     puts "********** attributes = #{@params['dependent']}"
     puts "********** id = #{@params['id']}"
-    @dependent = Dependent.find(@params['id'])
+    @dependent = Dependent.find_dependent(@params['id'])
     @dependent.update_attributes(@params['dependent']) if @dependent
     @dependent.update_attributes(:contact_id => @dependent.contact_id) if @dependent
     
@@ -70,7 +70,7 @@ class DependentController < Rho::RhoController
 
   # POST /Dependent/{1}/delete
   def delete
-    @dependent = Dependent.find(@params['id'])
+    @dependent = Dependent.find_dependent(@params['id'])
     @dependent.destroy if @dependent
     redirect :action => :index
   end
@@ -90,7 +90,7 @@ class DependentController < Rho::RhoController
   
   def dependent_delete
     if @params['button_id'] == "Ok"
-      @dependent = Dependent.find(@params['id'])
+      @dependent = Dependent.find_dependent(@params['id'])
       contactid = @dependent.contact_id
       @dependent.destroy if @dependent
       SyncEngine.dosync

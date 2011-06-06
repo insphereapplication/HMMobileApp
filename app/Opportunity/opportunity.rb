@@ -30,6 +30,7 @@ class Opportunity
   property :overriddencreatedon, :string
   property :competitorid, :string
   property :actual_end, :string
+  property :temp_id, :string
   
   index :opportunity_pk_index, [:opportunityid]
   unique_index :unique_opp, [:opportunityid] 
@@ -43,7 +44,40 @@ class Opportunity
   belongs_to :contact_id, 'Contact'
     
   def contact
-    Contact.find(self.contact_id)
+    Contact.find_contact(self.contact_id)
+  end
+  
+  def self.create_new(params)
+      new_opportunity = Opportunity.create(params)
+      new_opportunity.update_attributes( :temp_id => new_opportunity.object )
+      new_opportunity
+  end
+  
+  def self.find_opportunity(id)
+    
+    if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+      @opportunity = Opportunity.find(id)
+    else
+      id.gsub!(/[{}]/,"")
+
+      @opportunity = Opportunity.find_by_sql(%Q{
+          select o.* from Opportunity o where temp_id='#{id}'
+        }).first
+      @opportunity
+      end
+  end
+
+  def self.find_contact(id)
+    
+    if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+      @contact = Contact.find(id)
+    else
+      id.gsub!(/[{}]/,"")
+      @contact = Contact.find_by_sql(%Q{
+          select c.* from Contact c where temp_id='#{id}'
+        }).first
+      @contact
+      end
   end
 
   def self.new_leads
@@ -162,7 +196,7 @@ class Opportunity
   
   def create_note(note_text)
     unless note_text.blank?
-      Note.create({
+      Note.create_new({
         :notetext => note_text, 
         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
         :parent_id => self.object,
@@ -183,7 +217,7 @@ class Opportunity
     if phone_call = most_recent_open_phone_call   
       phone_call.update_attributes(phone_call_attrs)
     else
-      phone_call = Activity.create(phone_call_attrs.merge({
+      phone_call = Activity.create_new(phone_call_attrs.merge({
         :parent_type => 'Opportunity', 
         :parent_id => self.object,
         :type => 'PhoneCall',

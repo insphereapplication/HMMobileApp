@@ -38,10 +38,10 @@ class ContactController < Rho::RhoController
 
   # GET /Contact/{1}
   def show
-    @contact = Contact.find(@params['id'])
+    @contact = Contact.find_contact(@params['id'])
     if @contact
-      @next_id = (@contact.object.to_i + 1).to_s
-      @prev_id = (@contact.object.to_i - 1).to_s
+      # @next_id = (@contact.object.to_i + 1).to_s
+      # @prev_id = (@contact.object.to_i - 1).to_s
       render :action => :show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']     
     else
       redirect :action => :index, :back => 'callback:'
@@ -100,7 +100,7 @@ class ContactController < Rho::RhoController
     id          = @params['id']
     phone_type  = @params['phone_type']
     
-    contact = Contact.find(id)
+    contact = Contact.find_contact(id)
     
     if button_id == 'Confirm' and contact
       case phone_type
@@ -147,7 +147,7 @@ class ContactController < Rho::RhoController
 
   # GET /Contact/{1}/edit
   def edit
-    @contact = Contact.find(@params['id'])
+    @contact = Contact.find_contact(@params['id'])
     if @contact
       render :action => :edit, :back => 'callback:'
     else
@@ -157,9 +157,9 @@ class ContactController < Rho::RhoController
 
   # POST /Contact/create
   def create
-    @contact = Contact.create(@params['contact'])
+    @contact = Contact.create_new(@params['contact'])
     @contact.update_attributes(:birthdate => DateUtil.birthdate_build(@contact.birthdate))
-    @opp = Opportunity.create(@params['opportunity'])  
+    @opp = Opportunity.create_new(@params['opportunity'])  
     @opp.update_attributes( :contact_id =>  @contact.object)
     @opp.update_attributes( :statecode => 'Open')
     @opp.update_attributes( :statuscode => 'New Opportunity')
@@ -174,7 +174,7 @@ class ContactController < Rho::RhoController
   # POST /Contact/{1}/update
   def update
     puts "CONTACT UPDATE: #{@params.inspect}"
-    @contact = Contact.find(@params['id'])
+    @contact = Contact.find_contact(@params['id'])
     @contact.update_attributes(@params['contact']) if @contact
     SyncUtil.start_sync
     redirect :action => :show, :back => 'callback:',
@@ -184,7 +184,7 @@ class ContactController < Rho::RhoController
 
   def spouse_update
     puts "SPOUSE UPDATE: #{@params.inspect}"
-    @contact = Contact.find(@params['id'])
+    @contact = Contact.find_contact(@params['id'])
     @contact.update_attributes(@params['contact']) if @contact
     @contact.update_attributes(:cssi_spousebirthdate => DateUtil.birthdate_build(@contact.cssi_spousebirthdate))
     SyncEngine.dosync
@@ -195,7 +195,7 @@ class ContactController < Rho::RhoController
 
   # POST /Contact/{1}/delete
   def delete
-    @contact = Contact.find(@params['id'])
+    @contact = Contact.find_contact(@params['id'])
     @contact.destroy if @contact
     redirect :action => :index, :back => 'callback:'
   end
@@ -214,17 +214,17 @@ class ContactController < Rho::RhoController
   end
   
   def spouse_show
-      @contact = Contact.find(@params['id'])
+      @contact = Contact.find_contact(@params['id'])
       render :action => :spouse_show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
   end
   
   def spouse_add
-      @contact = Contact.find(@params['id'])
+      @contact = Contact.find_contact(@params['id'])
       render :action => :spouse_add, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
   end
   
   def spouse_edit
-      @contact = Contact.find(@params['id'])
+      @contact = Contact.find_contact(@params['id'])
       render :action => :spouse_edit, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
   end
   
@@ -244,7 +244,7 @@ class ContactController < Rho::RhoController
   def spouse_delete
     if @params['button_id'] == "Ok"
       puts "CONTACT DELETE SPOUSE: #{@params.inspect}"
-      @contact = Contact.find(@params['id'])
+      @contact = Contact.find_contact(@params['id'])
       @contact.update_attributes(:cssi_spousename => "")
       @contact.update_attributes(:cssi_spouselastname => "")
       @contact.update_attributes(:cssi_spousebirthdate => "")
