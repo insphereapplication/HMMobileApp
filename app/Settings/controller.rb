@@ -20,7 +20,7 @@ class SettingsController < Rho::RhoController
   def init
     if can_skip_login?
       #login & sync in background
-      SyncEngine.login(Settings.login, Settings.password,  '/app/Settings/retry_login_callback')
+      SyncEngine.login(Settings.login, Settings.password,  '/app/Settings/background_login_callback')
       #go to opportunity index page
       goto_opportunity_init_notify
     else
@@ -40,13 +40,14 @@ class SettingsController < Rho::RhoController
       "No"
     end
   end
-
-  def has_connection?
-    if System.has_network
-      "Online"
-    else
-      "Offline"
-    end
+  
+  def get_connection_status
+    @connection_status = DeviceCapabilities.connection_status
+    render :action => :get_connection_status, :back => 'callback:', :layout => false
+  end
+  
+  def detailed_logging_enabled?
+    RhoConf.get_property_by_name('MinSeverity') == '1'
   end
   
   def login
@@ -72,10 +73,10 @@ class SettingsController < Rho::RhoController
     WebView.navigate ( url_for :action => :login, :query => {:msg => msg, :override_auto_login => true} )
   end
   
-  def retry_login
+  def background_login
     # if the user has stored successful login credentials, attempt to auto-login with them
     if Settings.has_verified_credentials?
-      SyncEngine.login(Settings.login, Settings.password,  '/app/Settings/retry_login_callback')
+      SyncEngine.login(Settings.login, Settings.password,  '/app/Settings/background_login_callback')
     else
       goto_login
     end
@@ -86,13 +87,10 @@ class SettingsController < Rho::RhoController
     httpErrCode = @params['error_message'].split[0]
 
     if errCode == 0
-      
-      #setup the sync event handlers for the application init sequence
-      set_sync_type('init')
-      
       Settings.credentials_verified = true
       SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
-      SyncEngine.dosync
+      #setup the sync event handlers for the application init sequence, start sync
+      SyncUtil.start_sync('init')
       update_login_wait_progress("Login successful, starting sync...")
     elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
@@ -110,6 +108,8 @@ class SettingsController < Rho::RhoController
       if httpErrCode == "403" # User is not authorized to use the mobile device, so we need to purge the local database
         @msg ||= "Sorry! The Insphere InSIte Mobile application is only available for download for authorized pilot users.  More to come regarding the Insphere InSite Mobile Program and roll-out schedule in July."
         Rhom::Rhom.database_fullclient_reset_and_logout
+      elsif errCode == Rho::RhoError::ERR_NETWORK
+        @msg ||= "Can't connect to the network. Please try again."
       else
         @msg ||= "The user name or password you entered is not valid"    
       end
@@ -118,13 +118,14 @@ class SettingsController < Rho::RhoController
     end
   end
   
-  def retry_login_callback
+  def background_login_callback
     errCode = @params['error_code'].to_i
     httpErrCode = @params['error_message'].split[0]
     
     if errCode == 0
       SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
-      SyncEngine.dosync
+      #perform a sync in the background
+      SyncUtil.start_sync
     elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
@@ -170,7 +171,7 @@ class SettingsController < Rho::RhoController
   end
   
   def do_logout
-    Rhom::Rhom.database_full_reset_and_logout
+    Settings.clear_credentials
     SyncEngine.set_pollinterval(0)
     Settings.flush_instance
     
@@ -255,39 +256,39 @@ class SettingsController < Rho::RhoController
   end
   
   def do_sync
-    SyncEngine.dosync
+    SyncUtil.start_sync('background')
     @msg =  "Sync has been triggered."
     redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
   end
   
-  def on_dismiss_notify_popup
-    if @params['button_id'] == 'View'
-      Opportunity.set_notification(
-        url_for(:controller => :Opportunity, :action => :sync_notify),
-        "sync_complete=true"
-      )
-      SyncEngine.dosync
-    end
-  end
-  
   def push_notify
-    Alert.vibrate(2000)
+    puts "*"*80
+    #setup callbacks to use new opportunity workflow, start sync
+    puts "Starting push_notify, new_opportunity_sync_pending = #{Settings.new_opportunity_sync_pending}, is_syncing = #{SyncEngine.is_syncing}"
+    unless Settings.new_opportunity_sync_pending
+      puts "No pending syncs of type new_opportunity"
+      Settings.new_opportunity_sync_pending = true
+      unless SyncEngine.is_syncing
+        puts "Sync engine isn't currently syncing, starting new_opportunity sync"
+        Settings.new_opportunity_sync_pending = false
+        SyncUtil.start_sync('new_opportunity')
+      else
+        puts "A sync is in progress, pending new_opportunity sync will be executed once the current sync completes."
 
-    Alert.show_popup({
-      :message => "You have new Opportunities", 
-      :title => 'New Opportunities', 
-      :buttons => ["Cancel", "View"],
-      :callback => url_for(:action => :on_dismiss_notify_popup) 
-    })
+      end
+      puts "Done"
+    else
+      puts "New opportunity sync is already pending"
+    end
+    puts "new opp sync pending in push notify: " + Settings.new_opportunity_sync_pending.to_s
+    puts "&"*80
+
     if System::get_property('platform') == 'ANDROID'
       "rho_push"
     else
       ""
     end
   end
-  
-  # this is the message returned from RhoSync when Rhodes is sending a token for a session that no longer exists (like after a Redis reset) 
-  SESSION_ERROR_MSG = "undefined method `user_id' for nil:NilClass"
   
   #sync_notify gets called whenever any sync is in progress, completed, or returns an error
   #this is registered in the initialize method in application.rb
@@ -315,7 +316,17 @@ class SettingsController < Rho::RhoController
     if status == "complete"
       if sourcename == 'AppInfo'
         check_force_upgrade
-      end   
+      end
+      
+      puts "%"*80
+      puts "SYNC COMPLETE"
+      puts "new opp sync pending: " + Settings.new_opportunity_sync_pending.to_s
+      if Settings.new_opportunity_sync_pending
+        puts "Sync complete, starting pending new_opportunity sync."
+        SyncUtil.start_sync('new_opportunity')
+        Settings.new_opportunity_sync_pending = false
+      end
+      
       @on_sync_complete.call
     elsif status == "ok"
       if sourcename == 'AppInfo'
@@ -357,17 +368,24 @@ class SettingsController < Rho::RhoController
         end
       end
 
-      @msg = rho_error.message unless @msg and @msg.length > 0   
+      @msg = rho_error.message unless @msg and @msg.length > 0
       
-      if (@params['error_message'].downcase == 'unknown client') or rho_error.unknown_client?(@params['error_message'])
+      # RhoSync 2.1.5 has fixes that will cause rho_error.unknown_client? to return true in the proper scenarios.
+      is_unknown_client_error = rho_error.unknown_client?(@params['error_message']) 
+      
+      # Legacy support for RhoSync versions before 2.1.5
+      is_unknown_client_error ||= (err_code == Rho::RhoError::ERR_REMOTESERVER && @params['error_message'] == "undefined method `user_id' for nil:NilClass")
+      
+      # Rhosync is not aware of this client's ID. Reset and force the user to the login screen.
+      if is_unknown_client_error
         log_error("Error: Unknown client", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         
         SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
         
-        full_reset_logout_keep_credentials
+        full_reset_logout
         
-        goto_login("Unknown client, logging in again.")
+        goto_login("Unknown client, please log in again.")
       elsif err_code == Rho::RhoError::ERR_NETWORK
         #leave ':send_to_exceptional => false' alone until infinite loop issue is fixed for clients without a network connection
         log_error("Network connectivity lost", Rho::RhoError.err_message(err_code) + " #{@params.inspect}", {:send_to_exceptional => false})
@@ -381,23 +399,13 @@ class SettingsController < Rho::RhoController
         log_error("RhoSync error: client is not logged in / unauthorized", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
-        retry_login
-      elsif err_code == Rho::RhoError::ERR_REMOTESERVER && @params['error_message'] == SESSION_ERROR_MSG
-        # Rhodes is sending the server a token for a non-existent session. Time to start over.
-        log_error("RhoSync error: unknown session", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        
-        SyncEngine.set_pollinterval(0)
-        SyncEngine.stop_sync
-                
-        full_reset_logout
-        
-        goto_login("Unknown session, please log in again.")
+        background_login
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/401 Unauthorized/].nil?
         #proxy returned a 401, need to re-login
         log_error("Error: 401 Unauthorized from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
-        retry_login
+        background_login
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/403 Forbidden/].nil?
         #proxy returned a 403, need to purge the database and log the user out
         log_error("Error: 403 Forbidden from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
@@ -451,6 +459,15 @@ class SettingsController < Rho::RhoController
     Rho::RhoConfig.show_log
   end
   
+  def toggle_log_level
+    new_log_level = detailed_logging_enabled? ? '3' : '1'
+    RhoConf.set_property_by_name('MinSeverity', new_log_level)
+    
+    log_level_message = "Detailed logging #{new_log_level == '3' ? 'disabled' : 'enabled'}."
+
+    redirect :action => :about, :back => 'callback:'
+  end
+  
   def save_log_config
     RhoConf.set_property_by_name('MinSeverity', @params['minSeverity'])
     RhoConf.set_property_by_name('MaxLogFileSize', @params['logFileSize'])
@@ -476,15 +493,11 @@ class SettingsController < Rho::RhoController
   def setup_sync_handlers
     if Settings.is_init_sync?
       set_init_sync_handlers
+    elsif Settings.is_new_opportunity_sync?
+      set_new_opportunity_sync_handlers
     else
       set_background_sync_handlers
     end
-  end
-  
-  def set_sync_type(type)
-    # show_popup("Setting sync type to #{type}", "")
-    Settings.sync_type = type
-    setup_sync_handlers
   end
   
   def set_background_sync_handlers
@@ -499,6 +512,13 @@ class SettingsController < Rho::RhoController
     @on_sync_complete = lambda {|*args| init_on_sync_complete(*args)}
     @on_sync_in_progress = lambda {|*args| init_on_sync_in_progress(*args)}
     @on_sync_ok = lambda {|*args| init_on_sync_ok(*args)}
+  end
+  
+  def set_new_opportunity_sync_handlers
+    @on_sync_error = lambda {|*args|}
+    @on_sync_complete = lambda {|*args| new_opportunity_on_sync_complete(*args)}
+    @on_sync_in_progress = lambda {|*args|}
+    @on_sync_ok = lambda {|*args| new_opportunity_on_sync_ok(*args)}
   end
   
   def init_on_sync_error(*args)
@@ -523,7 +543,7 @@ class SettingsController < Rho::RhoController
   
   def init_on_sync_complete(*args)
     #change sync handlers back to default
-    set_sync_type('background')
+    SyncUtil.set_sync_type('background')
     
     Settings.initial_sync_complete = true
     
@@ -538,6 +558,32 @@ class SettingsController < Rho::RhoController
   
   def init_on_sync_ok(*args)
     update_login_sync_progress(@params['source_name'], 100)
+  end
+  
+  def new_opportunity_on_sync_ok(*args) 
+    if @params['source_name'] == 'Opportunity' && Settings.has_verified_credentials?
+
+      Alert.show_popup({
+        :title => 'View New Leads?',
+        :message => "New lead(s) have been synced.\nWould you like to view them?", 
+        :buttons => ["Cancel", "View"],
+        :callback => url_for(:action => :on_dismiss_new_opportunity_popup, :back => 'callback:') 
+      })
+    end
+  end
+  
+  def new_opportunity_on_sync_complete(*args)
+    #change sync handlers back to background
+    SyncUtil.set_sync_type('background')
+  end
+  
+  def on_dismiss_new_opportunity_popup
+    if @params['button_id'] == 'View'
+      Rho::NativeTabbar.switch_tab(0) 
+      WebView.navigate( 
+        url_for(:controller => :Opportunity, :action => :index)
+      )
+    end
   end
   
   def needs_upgrade?(min_version, current_version) # returns true if current_version is less than min_version

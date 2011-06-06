@@ -13,8 +13,9 @@ class AppApplication < Rho::RhoApplication
       "View Log" => :log 
     }
     
-    SyncEngine.set_ssl_verify_peer(false)
+    #SyncEngine.set_ssl_verify_peer(false)
     SyncEngine.set_notification(-1, "/app/Settings/sync_notify", '') 
+    System.set_push_notification("/app/Settings/push_notify", '')
   end
   
   #wipe the database and force a resync if a different user logs in
@@ -32,9 +33,8 @@ class AppApplication < Rho::RhoApplication
       # Don't call any UI operations here, they'll be ignored
       # For example, WebView.refresh
   
-      # to increase sync polling interval 
-      SyncEngine.stop_sync
-      SyncEngine.set_pollinterval(0)
+      # to increase sync polling interval
+      SyncEngine.set_pollinterval(3600)
   
       # To stop local web server when application switched to 
       # background return "stop_local_server"
@@ -57,18 +57,6 @@ class AppApplication < Rho::RhoApplication
       # @forbid_ui_operations = true
   end
 
-  def on_migrate_source(old_version, new_src)
-    puts "*!*!*!*!*!*! PERFORMING ON_MIGRATE_SOURCE !*!*!*!*!*!*!*!*!*"
-    puts "*!*!*!*!*!*! OLD VERSION IS: #{old_version} !*!*!*!*!*!*!*!*!*"
-    puts "*!*!*!*!*!*! new_src IS: #{new_src} !*!*!*!*!*!*!*!*!*"
-    Alert.show_popup({
-      :title => "ON_MIGRATE_SOURCE",
-      :message => "old version is #{old_version}; NEW VERSION IS: #{new_src}",
-      :buttons => ["OK"]
-    })
-    # ... do something like alert user ...
-    super
-  end  
   
   
   
