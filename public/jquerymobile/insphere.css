@@ -257,3 +257,10 @@ input.ui-search-text {
 	overflow-y:hidden;
 	border-style:none;
 }
+
+/* styling used by JQuery Validation plug-in */
+label.error {
+	color: #FF0000;
+	text-decoration: italic;
+	font-size: 80%;
+}
