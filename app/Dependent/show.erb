@@ -1,8 +1,8 @@
 <div data-role="page" data-theme="b">
 	<div data-role="header">
-		<a href="<%=url_for(:controller=>:Contact, :action=>:show, :id => @dependent.contact.object, :query=>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
+		<a href="<%=url_for(:controller=>:Contact, :action=>:show, :id => @dependent.contact.object, :query=>{:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
 		<h1>Dependent Detail</h1>
-		<a href="<%=url_for(:controller=>:Dependent, :action=>:edit, :id => @dependent.object, :query=>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="edit">Edit</a>
+		<a href="<%=url_for(:controller=>:Dependent, :action=>:edit, :id => @dependent.object, :query=>{:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-direction="reverse" rel="external" data-icon="edit">Edit</a>
 	</div>
 	<div data-role="content">
 		<ul data-role="listview" data-filter="false" data-inset="true"> 

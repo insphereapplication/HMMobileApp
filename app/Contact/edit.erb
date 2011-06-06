@@ -9,7 +9,7 @@
 				<div data-inline="true">
 					<%= offline_bar %>
 					<div data-role="header" data-backbtn="false" data-theme="b">
-						<a href="<%= url_for :action => :show, :id => @contact.object, :query => {:origin => 'contact'} %>" data-direction="reverse" data-icon="back">Cancel</a>
+						<a href="<%= url_for :action => :show, :id => @contact.object, :opportunity => @params['opportunity'], :query => {:origin => 'contact'} %>" data-direction="reverse" data-icon="back">Cancel</a>
 						<h1>Edit</h1>
 						<span class="ui-btn-right">
 							<input type="submit" onClick="return checkEdit(contact_edit);" data-theme="b" data-direction="reverse" data-icon="false" value="Update"/>
