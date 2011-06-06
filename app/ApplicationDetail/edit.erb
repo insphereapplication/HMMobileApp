@@ -1,5 +1,5 @@
-<div data-role="page" data-theme="b">
-	<form method="post" id="appdetail_edit" action="<%= url_for(:action => :update, :id => @appdetail.object, :query => {:opportunity => @appdetail.opportunity_id, :origin => @params['origin']})%>" name="appdetail_edit">
+<div data-role="page" data-theme="b" id="appdetail_edit_page">
+	<form method="post" id="appdetail" action="<%= url_for(:action => :update, :id => @appdetail.object, :query => {:opportunity => @appdetail.opportunity_id, :origin => @params['origin']})%>" name="appdetail_edit">
 		<div data-role="header" data-backbtn="false" data-theme="b">
 			<a href="<%= url_for(:controller => :Opportunity, :action => :won, :id => @params['opportunity'], :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>			
 			<h1>Application Details</h1>
@@ -11,9 +11,9 @@
 			<input type="hidden" name="appdetail[opportunity_id]" value="<%= @appdetail.opportunity_id %>"/>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-					<label for="appdetail[cssi_carrierid]" class="fieldLabel">Carrier:<font color="red">  *</font></label>
+					<label for="appdetail[cssi_carrierid]" class="fieldLabel">Carrier:<font color="red">&nbsp;&nbsp;*</font></label>
 					<div>
-						<select id="cssi_carrierid" name="appdetail[cssi_carrierid]">
+						<select id="appdetail[cssi_carrierid]" name="appdetail[cssi_carrierid]" data-role="none">
 							<option data-placeholder="true" value="<%= @appdetail.cssi_carrierid %>" selected="true"><%= @appdetail.cssi_carrierid %></option>
 								<% StaticEntity.get_carrier_names.each do |carrier_name| %>
 									<option value="<%=carrier_name%>">
@@ -26,9 +26,9 @@
 			</div>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-	        		<label for="appdetail[cssi_lineofbusinessid]" class="fieldLabel">LOB:<font color="red">  *</font></label>
+	        		<label for="appdetail[cssi_lineofbusinessid]" class="fieldLabel">LOB:<font color="red">&nbsp;&nbsp;*</font></label>
 					<div>
-						<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]">
+						<select id="appdetail[cssi_lineofbusinessid]" name="appdetail[cssi_lineofbusinessid]" data-role="none">
 							<option data-placeholder="true" value="<%= @appdetail.cssi_lineofbusinessid %>" selected="true"><%= @appdetail.cssi_lineofbusinessid %></option>
 								<% StaticEntity.get_rawlead_lob_names.each do |lob_name| %>
 									<option value="<%=lob_name%>">
@@ -41,21 +41,21 @@
 			</div>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-					<label for="appdetail[cssi_applicationssubmitted]" class="fieldLabel">Apps Submitted:<font color="red">  *</font></label>
-					<input id="cssi_applicationssubmitted" name="appdetail[cssi_applicationssubmitted]" type="number" maxlength="50" name="appsub" value="<%= @appdetail.cssi_applicationssubmitted %>" />
+					<label for="appdetail[cssi_applicationssubmitted]" class="fieldLabel">Apps Submitted:<font color="red">&nbsp;&nbsp;*</font></label>
+					<input id="cssi_applicationssubmitted" name="appdetail[cssi_applicationssubmitted]" type="number" class="required" maxlength="50" name="appsub" value="<%= @appdetail.cssi_applicationssubmitted %>" />
 
 				</div>
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="appdetail[cssi_avforapplicationsubmitted]" class="fieldLabel">Total AV:<font color="red">  *</font></label>
-					<input id="cssi_avforapplicationsubmitted" name="appdetail[cssi_avforapplicationsubmitted]" type="number" min="0" name="totalav" value="<%= "%.2f"%@appdetail.cssi_avforapplicationsubmitted %>" />					
+				<div class="ui-body ui-body-dnbsp
+					<label for="appdetail[cssi_avforapplicationsubmitted]" class="fieldLabel">Total AV:<font color="red">&nbsp;&nbsp;*</font></label>
+					<input id="cssi_avforapplicationsubmitted" name="appdetail[cssi_avforapplicationsubmitted]" type="number" class="required" min="0" name="totalav" value="<%= "%.2f"%@appdetail.cssi_avforapplicationsubmitted %>" />					
 				</div>
 			</div>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-					<label for="cssi_applicationdate" class="fieldLabel">Application Date:<font color="red">  *</font></label>
-					<input id="cssi_applicationdate" type="text" name="cssi_applicationdate" readonly value="<%= to_date(@appdetail.cssi_applicationdate) %>"  onClick="popupAppDateAJPicker('1', 'Application Date', 'cssi_applicationdate', '<%= @appdetail.cssi_applicationdate %>');"></input>
+					<label for="cssi_applicationdate" class="fieldLabel">Application Date:<font color="red">&nbsp;&nbsp;*</font></label>
+					<input id="cssi_applicationdate" type="text" class="required" name="cssi_applicationdate" readonly value="<%= to_date(@appdetail.cssi_applicationdate) %>"  onClick="popupAppDateAJPicker('1', 'Application Date', 'cssi_applicationdate', '<%= @appdetail.cssi_applicationdate %>');"></input>
 				</div>
 			</div>
 			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
