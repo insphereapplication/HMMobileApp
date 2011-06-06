@@ -64,12 +64,6 @@ document.getElementById('appointment_duration').focus();
 						<div data-role="fieldcontain">
 							<input type="submit" class="standardButton" onclick="getLocationType();" value="Create Appointment"/>
 						</div>    
-						<% if not $saved.nil? %>
-						      Saved date/time values:<br/>
-						      <% $choosed.each do |k,v| %>
-						        <b>Format (<%=k%>): <%= v %></b><br/>
-						      <% end %>
-						    <% end %>
 					</div>
 				</form>
 			</div>
