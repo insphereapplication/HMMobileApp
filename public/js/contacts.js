@@ -6,7 +6,7 @@ $(document).ready(function() {
 });
 	
 function loadContactsAsync(page){
-	$.post('Contact/get_contacts_page', { page: page },
+	$.post('/app/Contact/get_contacts_page', { page: page },
 		function(contacts) {				
 			if (contacts && $.trim(contacts) != ""){
 				$('ul#contact-list').append(contacts);

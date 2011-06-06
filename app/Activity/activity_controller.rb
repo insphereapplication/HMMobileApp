@@ -91,7 +91,8 @@ class ActivityController < Rho::RhoController
           :statecode => 'Won', 
           :statuscode => 'Sale',
           :cssi_statusdetail => "",
-          :actual_end => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+          :actual_end => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
+          :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
         })
 
         appointmentids = get_appointment_ids(@params['appointments'])
@@ -143,7 +144,8 @@ class ActivityController < Rho::RhoController
             :statecode => 'Lost',
             :statuscode => @params['status_code'],
             :cssi_statusdetail => "",
-            :competitorid => @params['competitorid'] || ""
+            :competitorid => @params['competitorid'] || "",
+            :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
           })
       
           opportunity.record_phone_call_made_now
@@ -170,7 +172,8 @@ class ActivityController < Rho::RhoController
             :statecode => 'Lost',
             :statuscode => @params['status_code'],
             :cssi_statusdetail => "",
-            :competitorid => @params['competitorid'] || ""
+            :competitorid => @params['competitorid'] || "",
+            :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
           })
       
           opportunity.record_phone_call_made_now
@@ -314,13 +317,13 @@ class ActivityController < Rho::RhoController
   
   def finished_update_status(opportunity, origin, appointmentids=nil)
     complete_appointments(appointmentids)
-    SyncEngine.dosync
+    SyncUtil.start_sync
     redirect :controller => :Opportunity, :action => :show, :back => 'callback:', :id => opportunity.object, :query => {:origin => origin}
   end
   
   def finished_win_loss_status(opportunity, origin, appointmentids=nil)
     complete_appointments(appointmentids)
-    SyncEngine.dosync
+    SyncUtil.start_sync
     WebView.navigate(url_for :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin})
   end
   
