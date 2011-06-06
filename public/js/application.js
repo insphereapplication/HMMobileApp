@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $('form').not('#dependent_form, #contact_new').submit(function() {
+  $('form').not('#dependent_form, #contact_new, #appdetail').submit(function() {
     if(typeof jQuery.data(this, "disabledOnSubmit") == 'undefined') {
       jQuery.data(this, "disabledOnSubmit", { submited: true });
       $('input[type=submit], input[type=button]', this).each(function() {

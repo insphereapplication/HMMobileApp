@@ -1,4 +1,4 @@
-<div data-role="page" data-theme="b">
+<div data-role="page" data-theme="b" id="appdetail_add_page">
 	<form method="post" id="appdetail" action="<%= url_for(:action => :create, :query => {:opportunity => @opportunity.object, :origin => @params['origin']})%>" name="app_details_create">
 		<div data-role="header" data-backbtn="false" data-theme="b">
 			<a href="<%= url_for(:controller => :Opportunity, :action => :won, :id => @opportunity.object, :query =>{:opportunity => @opportunity.object, :origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>			
@@ -11,9 +11,9 @@
 			<input type="hidden" name="appdetail[opportunity_id]" value="<%= @opportunity.object %>"/>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-					<label for="appdetail[cssi_carrierid]" class="fieldLabel">Carrier:<font color="red">  *</font></label>
+					<label for="appdetail[cssi_carrierid]" class="fieldLabel">Carrier:<font color="red">&nbsp;&nbsp;*</font></label>
 					<div>
-						<select id="cssi_carrierid" name="appdetail[cssi_carrierid]">
+						<select id="appdetail[cssi_carrierid]" name="appdetail[cssi_carrierid]" data-role="none">
 							<option value="" selected="true"></option>
 								<% StaticEntity.get_carrier_names.each do |carrier_name| %>
 									<option value="<%=carrier_name%>">
@@ -26,9 +26,9 @@
 			</div>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-	        		<label for="appdetail[cssi_lineofbusinessid]" class="fieldLabel">LOB:<font color="red">  *</font></label>
+	        		<label for="appdetail[cssi_lineofbusinessid]" class="fieldLabel">LOB:<font color="red">&nbsp;&nbsp;*</font></label>
 					<div>
-						<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]">
+						<select id="appdetail[cssi_lineofbusinessid]" name="appdetail[cssi_lineofbusinessid]" data-role="none">
 							<option value="" selected="true"></option>
 								<% StaticEntity.get_lob_names.each do |lob_name| %>
 									<option value="<%=lob_name%>">
@@ -41,21 +41,21 @@
 			</div>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-					<label for="appdetail[cssi_applicationssubmitted]" class="fieldLabel">Apps Submitted:<font color="red">  *</font></label>
-					<input id="cssi_applicationssubmitted" name="appdetail[cssi_applicationssubmitted]" type="number" maxlength="50" name="appsub" value="1"/>
+					<label for="appdetail[cssi_applicationssubmitted]" class="fieldLabel">Apps Submitted:<font color="red">&nbsp;&nbsp;*</font></label>
+					<input id="appdetail[cssi_applicationssubmitted]" name="appdetail[cssi_applicationssubmitted]" class="required" type="number" maxlength="50" name="appsub" value="1"/>
 
 				</div>
 			</div>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-					<label for="appdetail[cssi_avforapplicationsubmitted]" class="fieldLabel">Total AV:<font color="red">  *</font></label>
-					<input id="cssi_avforapplicationsubmitted" name="appdetail[cssi_avforapplicationsubmitted]" type="number" min="0" name="totalav" />					
+					<label for="appdetail[cssi_avforapplicationsubmitted]" class="fieldLabel">Total AV:<font color="red">&nbsp;&nbsp;*</font></label>
+					<input id="appdetail[cssi_avforapplicationsubmitted]" name="appdetail[cssi_avforapplicationsubmitted]" class="required" type="number" min="0" name="totalav" />					
 				</div>
 			</div>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-					<label for="cssi_applicationdate" class="fieldLabel">Application Date:<font color="red">  *</font></label>
-					<input id="cssi_applicationdate" type="text" name="cssi_applicationdate" readonly value="<%= $choosed['0'] %>"  onClick="popupAppDateAJPicker('1', 'Application Date', 'cssi_applicationdate');"></input>
+					<label for="cssi_applicationdate" class="fieldLabel">Application Date:<font color="red">&nbsp;&nbsp;*</font></label>
+					<input id="cssi_applicationdate" type="text" name="cssi_applicationdate" readonly value="<%= $choosed['0'] %>" class="required" onClick="popupAppDateAJPicker('1', 'Application Date', 'cssi_applicationdate');"></input>
 				</div>
 			</div>
 			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
