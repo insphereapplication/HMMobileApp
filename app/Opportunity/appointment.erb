@@ -9,7 +9,7 @@ popupDateTimeAJPicker('0', 'Appointment Time', 'appointment_datetime');
 document.getElementById('appointment_duration').focus();
 }
 </script>
-	<div data-role="page" data-theme="b">
+	<div data-role="page" data-theme="b" id="appointment_add_page">
 		<%= offline_bar%>
 		<div data-role="header" data-theme="d" data-position="inline">
 			<a href="<%=url_for(:action=>:show, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
@@ -20,7 +20,7 @@ document.getElementById('appointment_duration').focus();
 		</div>
 		<div id="contentDiv" data-role="content">
 			<div class="ui-body ui-body-d">
-				<form name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_appointment_set, :query => {:origin => @params['origin']} %>">
+				<form id="appointment_form" name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_appointment_set, :query => {:origin => @params['origin']} %>">
 					<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
 					<% @params['appointments'].each do |appt| %>
 						<input type="hidden" name="appointments[]" value="<%= appt %>" />
@@ -31,7 +31,7 @@ document.getElementById('appointment_duration').focus();
 					<div data-role="fieldcontain">
 						<div data-role="fieldcontain">
 							<label for="appointment_datetime" class="fieldLabel">Appointment Start:</label>
-							<input id="appointment_datetime" type="text" name="appointment_datetime" readonly value="<%= $choosed['0'] %>"  onClick="PickDateAppointmentChangeFocus();"></input>
+							<input id="appointment_datetime" type="text" class="required" name="appointment_datetime" readonly value="<%= $choosed['0'] %>"  onClick="PickDateAppointmentChangeFocus();"></input>
 						</div>
 						<div data-role="fieldcontain">
 							<label for="appointment_duration" class="fieldLabel">Duration:</label>
