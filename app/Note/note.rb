@@ -8,6 +8,7 @@ class Note
   property :notetext, :string
   property :modifiedon, :string
   property :subject, :string
+  property :temp_id, :string
   
   set :schema_version, '1.0'
   enable :sync
@@ -31,9 +32,48 @@ class Note
     parent if parent && parent_type.downcase == "phonecall"
   end
   
+  def self.find_note(id)
+    
+    if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+                  puts "*"*80 + "FINDING BY OLD FIND METHOD"
+      @note = Note.find(id)
+    else
+      id.gsub!(/[{}]/,"")
+   
+      puts "*"*80 + "FINDING BY SQL--------#{id}" 
+
+      @note = Note.find_by_sql(%Q{
+          select n.* from Note n where temp_id='#{id}'
+        }).first
+      @note
+      end
+  end
+  
+  def self.find_opportunity(id)
+    
+    if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+                  puts "*"*80 + "FINDING BY OLD FIND METHOD  OPPORTUNITY"
+      @opportunity = Opportunity.find(id)
+    else
+      id.gsub!(/[{}]/,"")
+
+      @opportunity = Opportunity.find_by_sql(%Q{
+          select o.* from Opportunity o where temp_id='#{id}'
+        }).first
+      @opportunity
+      end
+  end
+  
+  def self.create_new(params)
+      puts "*"*80 + " CALLING CREATE!"
+      new_note = Note.create(params)
+      new_note.update_attributes( :temp_id => new_note.object )
+      new_note
+  end
+  
   def create_note(note_text)
     unless note_text.blank?
-      Note.create({
+      Note.create_new({
         :notetext => note_text, 
         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
         :parent_id => self.object,

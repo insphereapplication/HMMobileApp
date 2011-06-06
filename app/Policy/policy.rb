@@ -27,8 +27,43 @@ class Policy
   property :cssi_insuredtype, :string #
   
   property :modifiedon, :string
+  property :temp_id, :string
   
   def contact
-    Contact.find(self.contact_id)
+    Contact.find_contact(self.contact_id)
+  end
+  
+  def self.create_new(params)
+      puts "*"*80 + " CALLING CREATE!"
+      new_policy = Policy.create(params)
+      new_policy.update_attributes( :temp_id => new_policy.object )
+      new_policy
+  end
+  
+  def self.find_policy(id)
+    
+    if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+                  puts "*"*80 + "FINDING BY OLD FIND METHOD"
+      @policy = Policy.find(id)
+    else
+      id.gsub!(/[{}]/,"")
+      @policy = Policy.find_by_sql(%Q{
+          select p.* from Policy p where temp_id='#{id}'
+        }).first
+      @policy
+      end
+  end
+  
+  def self.find_contact(id)
+    
+    if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+      @contact = Contact.find(id)
+    else
+      id.gsub!(/[{}]/,"")
+      @contact = Contact.find_by_sql(%Q{
+          select c.* from Contact c where temp_id='#{id}'
+        }).first
+      @contact
+      end
   end
 end
