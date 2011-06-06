@@ -64,7 +64,7 @@ class DependentController < Rho::RhoController
     @dependent.update_attributes(:cssi_age => age(@dependent.cssi_dateofbirth))
     
     SyncEngine.dosync
-    render :controller => :Contact, :action => :show, :origin => @params['origin'], :id => @dependent.contact_id
+    render :controller => :Contact, :action => :show, :origin => @params['origin'], :id => @dependent.contact_id, :opportunity => @params['opportunity']
   end
 
 
