@@ -185,7 +185,7 @@ $('#contact_edit_page').live('pagecreate',function(event){
 	jQuery.validator.addMethod("phoneUS", function(phone_number, element) {
 	    phone_number = phone_number.replace(/\s+/g, ""); 
 		return this.optional(element) || phone_number.length > 9 &&
-			phone_number.match(/^(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
+			phone_number.match(/^(\([0-9]\d{2}\)|[0-9]\d{2})-?[0-9]\d{2}-?\d{4}$/);
 	}, "Please specify a valid phone number in format ### ### ####");
 	
 	// Creates an 'at least one of these are required' validator
@@ -254,7 +254,7 @@ $('#contact_new_page').live('pagecreate',function(event){
 		jQuery.validator.addMethod("phoneUS", function(phone_number, element) {
 		    phone_number = phone_number.replace(/\s+/g, ""); 
 			return this.optional(element) || phone_number.length > 9 &&
-				phone_number.match(/^(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
+				phone_number.match(/^(\([0-9]\d{2}\)|[0-9]\d{2})-?[0-9]\d{2}-?\d{4}$/);
 		}, "Please specify a valid phone number in format ### ### ####");
 
 		// Creates an 'at least one of these are required' validator
@@ -302,7 +302,7 @@ $('#callback_create, #callback_edit').live('pagecreate',function(event){
 	jQuery.validator.addMethod("phoneUS", function(phone_number, element) {
 	    phone_number = phone_number.replace(/\s+/g, ""); 
 		return this.optional(element) || phone_number.length > 9 &&
-			phone_number.match(/^(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
+			phone_number.match(/^(\([0-9]\d{2}\)|[0-9]\d{2})-?[0-9]\d{2}-?\d{4}$/);
 	}, "Please specify a valid phone number in format ### ### ####");
 });
 
