@@ -86,6 +86,7 @@ class ActivityController < Rho::RhoController
       db.start_transaction
       begin
         opportunity = Opportunity.find(@params['opportunity_id'])
+        opportunity.create_note(@params['notes'])
         opportunity.complete_most_recent_open_call
         opportunity.update_attributes({
           :statecode => 'Won', 
@@ -116,6 +117,7 @@ class ActivityController < Rho::RhoController
                                         :query => {
 				                                :opportunity_id => @params['opportunity_id'],
 				                                :origin => @params['origin'],
+				                                :notes => @params['notes'],
 				                                :appointments => @params['appointments']
 				                                })
 				                   })
@@ -127,6 +129,7 @@ class ActivityController < Rho::RhoController
                                 :query => {
                                 :opportunity_id => @params['opportunity_id'],
                                 :origin => @params['origin'],
+                                :notes => @params['notes'],
                                 :appointments => @params['appointments']})
                                 )
     end
@@ -138,6 +141,7 @@ class ActivityController < Rho::RhoController
         db.start_transaction
         begin
           opportunity = Opportunity.find(@params['opportunity_id'])
+          opportunity.create_note(@params['notes'])
           opportunity.complete_most_recent_open_call
           opportunity.update_attributes({
             :statecode => 'Lost',
@@ -193,13 +197,16 @@ class ActivityController < Rho::RhoController
 				                                :opportunity_id => @params['opportunity_id'],
 				                                :origin => @params['origin'],
 				                                :appointments => @params['appointments'],
+				                                :notes => @params['notes'],
 				                                :status_code => @params['status_code']
 				                                })
 				                   })
   end  
   def update_status_no_contact
     puts @params.inspect
+    
     opportunity = Opportunity.find(@params['opportunity_id'])
+    opportunity.create_note(@params['notes'])
     
     opp_attrs = {
       :cssi_statusdetail => @params['status_detail'],

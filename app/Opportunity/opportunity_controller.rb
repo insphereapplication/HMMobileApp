@@ -62,6 +62,12 @@ class OpportunityController < Rho::RhoController
     end
   end
   
+  def create_note
+    puts "*^*^*^*^*^*^*^*^*^*^*^ CREATE_NOTE ^*^*^*^*^*^*^*^*^*^*^*^*^*"
+    @opportunity = Opportunity.find(@params['id'])
+    @opportunity.create_note(@params['note_text'])
+  end
+  
   def intialize_nav_contexts
     $new_leads_nav_context = []
     $follow_ups_nav_context = []
@@ -270,6 +276,7 @@ class OpportunityController < Rho::RhoController
   def callback_request
     $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
+    @opportunity.create_note(@params['notes'])
     if @opportunity
       render :action => :callback_request, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -335,6 +342,8 @@ class OpportunityController < Rho::RhoController
   def appointment
     $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
+    @opportunity.create_note(@params['notes'])
+    
     if @opportunity
       render :action => :appointment, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -347,6 +356,8 @@ class OpportunityController < Rho::RhoController
     @competitors = Constants::COMPETITORS
     
     @opportunity = Opportunity.find(@params['id'])
+    @opportunity.create_note(@params['notes'])
+    
     if @opportunity
       render :action => :lost_other, :back => 'callback:', :layout => 'layout_jquerymobile'
     else

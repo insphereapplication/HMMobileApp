@@ -4,9 +4,10 @@ $(document).ready(function() {
 		var apptids = $('input:checkbox:checked.custom').map(function(){
 			return this.value
 		});
-
+		
+		notes = '&notes=' +  $('#status_note').val();
 		appointments = '&appointments[]=' + $.makeArray(apptids).join('&appointments[]=');
-		window.location.href = $(this).attr('href') + appointments;
+		window.location.href = $(this).attr('href') + appointments + notes;
 		return false;
 	});
 	$('.UpdateStatusWon').click(function() {
@@ -16,8 +17,9 @@ $(document).ready(function() {
 				return this.value
 			});
 			
+			notes = '&notes=' +  $('#status_note').val();
 			appointments = '&appointments[]=' + $.makeArray(apptids).join('&appointments[]=');
-			window.location.href = $(this).attr('href') + appointments;
+			window.location.href = $(this).attr('href') + appointments + notes;
 			return false;
 		// }
 		// else{
@@ -31,8 +33,9 @@ $(document).ready(function() {
 				return this.value
 			});
 	
+			notes = '&notes=' +  $('#status_note').val();
 			appointments = '&appointments[]=' + $.makeArray(apptids).join('&appointments[]=');
-			window.location.href = $(this).attr('href') + appointments;
+			window.location.href = $(this).attr('href') + appointments + notes;
 			return false;
 		// }
 		// 	else{
