@@ -86,6 +86,10 @@ function checkEdit(myForm) {
 	}
 }
 
+// Phone Number Validation
+
+
+// Dependent Add / Edit
 $('#dependent_new_page, #dependent_edit_page').live('pagecreate',function(event){
 	$("#dependent_form").validate({
 	  rules: {
@@ -104,14 +108,10 @@ $('#dependent_new_page, #dependent_edit_page').live('pagecreate',function(event)
 		  maxlength: 250
 	    }
 	  }
-	});
-// SAMPLE CODE for creating a 'at least one from this group must be filled out' validation group. - twitty.6.14.11	
-//jQuery.validator.addMethod('required_group', function(val, el) {
-//	var $module = $(el).parents('div.panel');
-//	return $("#dependent_add").find('.required_group:filled').length;
-//	}, 'Please fill out at least one of these fields.');	
+	});	
 });
 
+// Spouse Add / Edit
 $('#spouse_new_page, #spouse_edit_page').live('pagecreate',function(event){
 	$("#spouse_form").validate({
 	  rules: {
@@ -130,8 +130,71 @@ $('#spouse_new_page, #spouse_edit_page').live('pagecreate',function(event){
 	});	
 });
 
+$('#contact_edit_page').live('pagecreate',function(event){
+	jQuery.validator.addMethod("phoneUS", function(phone_number, element) {
+	    phone_number = phone_number.replace(/\s+/g, ""); 
+		return this.optional(element) || phone_number.length > 9 &&
+			phone_number.match(/^(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
+	}, "Please specify a valid phone number in format ### ### ####");
+	
+	$("#contact_edit").validate({
+	  rules: {
+	    'contact[mobilephone]' : {
+		  phoneUS: true
+	    },
+		'contact[telephone1]' : {
+		  phoneUS: true
+		},
+		'contact[telephone2]' : {
+		  phoneUS: true
+		},
+		'contact[telephone3]' : {
+		  phoneUS: true
+		},
+		'contact[emailaddress1]' : {
+		  email: true,
+		  maxlength: 255
+		},
+		'contact[cssi_weight]' : {
+		  min: 0,
+		  max: 1000		  
+		},
+		'contact[address1_line1]' : {
+		  maxlength: 200	
+		},
+		'contact[address1_line2]' : {
+		  maxlength: 255	
+		},
+		'contact[address1_city]' : {
+		  maxlength: 50	
+		},
+		'contact[address1_postalcode]' : {
+		  maxlength: 20	
+		},
+		'contact[address2_line1]' : {
+		  maxlength: 200	
+		},
+		'contact[address2_line2]' : {
+		  maxlength: 200	
+		},
+		'contact[address2_city]' : {
+		  maxlength: 50	
+		},
+		'contact[address2_postalcode]' : {
+		  maxlength: 20	
+		}
+		
+	  }
+	});
+	jQuery.validator.addMethod('required_group', function(val, el) {
+		var $module = $(el).parents('div.panel');
+		return $("#contact_edit").find('.required_group:filled').length;
+		}, 'Please fill out at least one of these fields.');
+});
+
+
 // HACK ATTACK! - This is a fix for a known issue with JQuery Mobile related to focus and loss of input issues. - twitty.6.14.11
 // Please check https://github.com/jquery/jquery-mobile/issues/756 to see if the issue has been addressed offically. - twitty.6.14.11
-$('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_page').live('pageshow',function(event){
+$('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_page, #contact_edit_page').live('pageshow',function(event){
 	$('input').one('keypress',function(ev) { $('<div></div>').appendTo('body') });
 });
