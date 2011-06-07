@@ -461,7 +461,7 @@ class OpportunityController < Rho::RhoController
       formatted_result = Time.at(@params['result'].to_i).strftime(format)
       $choosed[datetime_vars[:flag]] = formatted_result
       WebView.execute_js('setFieldValue("'+datetime_vars[:field_key]+'","'+formatted_result+'");')
-      $choosed = {}
+      $choosed = {} #Need to clear these out so that the fields don't populate with values previously selected.
       $saved = {}
       render :back => 'callback:'
     end
@@ -489,5 +489,28 @@ class OpportunityController < Rho::RhoController
             System.open_url("http://maps.google.com/?q=#{@params['location'].strip.gsub(/ /,'+')}")
         end
         #WebView.refresh
+  end
+  
+  def new
+    Settings.record_activity
+    @contact = Contact.find_contact(@params['id'])
+    render :action => :new, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
+  end
+  
+  def create
+    @contact = Contact.find_contact(@params['id'])
+    @opp = Opportunity.create_new(@params['opportunity'])  
+    Settings.record_activity
+    @opp.update_attributes( :contact_id =>  @contact.object)
+    @opp.update_attributes( :statecode => 'Open')
+    @opp.update_attributes( :statuscode => 'New Opportunity')
+    @opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))
+
+    SyncEngine.dosync
+    redirect  :controller => :Contact,
+            :action => :show, 
+             :back => 'callback:',
+             :id => @contact.object,
+             :query =>{:origin => @params['origin'], :opportunity => @opp.object}
   end
 end
