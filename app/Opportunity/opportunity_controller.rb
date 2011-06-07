@@ -51,6 +51,12 @@ class OpportunityController < Rho::RhoController
     end
   end
   
+  def create_note
+    puts "*^*^*^*^*^*^*^*^*^*^*^ CREATE_NOTE ^*^*^*^*^*^*^*^*^*^*^*^*^*"
+    @opportunity = Opportunity.find(@params['id'])
+    @opportunity.create_note(@params['note_text'])
+  end
+  
   def intialize_nav_contexts
     $new_leads_nav_context = []
     $follow_ups_nav_context = []
@@ -196,7 +202,8 @@ class OpportunityController < Rho::RhoController
   
   # GET /Opportunity/{1}
   def show
-    @opportunity = Opportunity.find(@params['id'])
+    Settings.record_activity
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     if @opportunity
       @notes = @opportunity.notes
       current_nav_context.orient!(@opportunity.object)
@@ -222,7 +229,7 @@ class OpportunityController < Rho::RhoController
       opp_id = current_nav_context.send(direction)
     end
     
-    @opportunity = Opportunity.find(opp_id)
+    @opportunity = Opportunity.find_opportunity(opp_id)
     
     if @opportunity
       @notes = @opportunity.notes
@@ -233,7 +240,8 @@ class OpportunityController < Rho::RhoController
   end
   
   def status_update
-    @opportunity = Opportunity.find(@params['id'])
+    Settings.record_activity
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     if @opportunity
       render :action => :status_update, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -242,7 +250,8 @@ class OpportunityController < Rho::RhoController
   end 
   
   def note_create
-    @opportunity = Opportunity.find(@params['id'])
+    Settings.record_activity
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     if @opportunity
       render :action => :note_create, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -257,8 +266,10 @@ class OpportunityController < Rho::RhoController
   end
   
   def callback_request
+    Settings.record_activity
     $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
+    @opportunity.create_note(@params['notes'])
     if @opportunity
       render :action => :callback_request, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -267,6 +278,7 @@ class OpportunityController < Rho::RhoController
   end
   
   def app_detail_add
+    Settings.record_activity
       @opportunity = Opportunity.find(@params['id'])
       if @opportunity
         render :action => :application_details_add, :back => 'callback:', :layout => 'layout_jquerymobile'
@@ -285,6 +297,7 @@ class OpportunityController < Rho::RhoController
     end
     
   def app_detail_edit
+    Settings.record_activity
     @appdetail = Opportunity.find(@params['id'])
     if @appdetail
       render :action => :application_details_edit, :back => 'callback:', :layout => 'layout_jquerymobile'
@@ -324,6 +337,7 @@ class OpportunityController < Rho::RhoController
   def appointment
     $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
+    @opportunity.create_note(@params['notes'])
     if @opportunity
       render :action => :appointment, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -334,8 +348,8 @@ class OpportunityController < Rho::RhoController
   def lost_other
     @lost_reasons = Constants::OTHER_LOST_REASONS
     @competitors = Constants::COMPETITORS
-    
     @opportunity = Opportunity.find(@params['id'])
+    @opportunity.create_note(@params['notes'])
     if @opportunity
       render :action => :lost_other, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -362,7 +376,8 @@ class OpportunityController < Rho::RhoController
   
   # GET /Opportunity/{1}/activity_summary
   def activity_summary
-    @opportunity = Opportunity.find(@params['id'])
+    Settings.record_activity
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     @activities = @opportunity.activities
     @activity_list = @opportunity.activity_list
     if @opportunity
@@ -373,7 +388,7 @@ class OpportunityController < Rho::RhoController
   end
 
   def phone_dialog
-    @opportunity = Opportunity.find(@params['id'])
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     render :action => :phone_dialog, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
@@ -446,6 +461,8 @@ class OpportunityController < Rho::RhoController
       formatted_result = Time.at(@params['result'].to_i).strftime(format)
       $choosed[datetime_vars[:flag]] = formatted_result
       WebView.execute_js('setFieldValue("'+datetime_vars[:field_key]+'","'+formatted_result+'");')
+      $choosed = {}
+      $saved = {}
       render :back => 'callback:'
     end
   end

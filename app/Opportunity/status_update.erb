@@ -17,11 +17,17 @@
 					<input type="checkbox" name="<%= appointment.object %>" class="custom" id="<%= appointment.object %>" value="<%= appointment.object %>" />
 					<label for="<%= appointment.object %>"> Appt <%= to_datetime(appointment.scheduledstart) %> </label> 
 				<% end %>
-				</fieldset> 
-			</div> 	
+				</fieldset>
+				<input id="confirm_complete_button" class="UpdateStatus" type="submit" href="<%= url_for(:controller => :Activity, :action => :update_status_no_contact, :query => {:opportunity_id => @opportunity.object, :status_detail => '', :origin => @params['origin']}) %>" data-theme="b" data-direction="reverse" value="Done"/> 
+			</div>
 		<% end %> 
 		</form>
 	<div>
+	<div data-role="fieldcontain">
+		<label for="status_note" class="fieldLabel">Add Note:</label>
+		<input maxlength="200" type="text" id="status_note" value="" onkeypress="if(event.keyCode == 13){return false;}" />
+		<input type="hidden" id="status_note_opp_id" value="<%= @opportunity.object %>">
+	</div>
 		<ul data-role="listview" data-inset="true"> 
 			<li data-role="list-divider">Follow-Up</li> 
 			<% ['Left Message','No Answer'].each do |status_detail| %>
@@ -37,7 +43,7 @@
 			<% end %>
 			<li><a class="UpdateStatus" href="<%= url_for(:action => :lost_other, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-transition="slide">Other</a></li>
 			<li data-role="list-divider">Won</li> 
-			<li><a class="UpdateStatus" href="<%= url_for(:action => :won, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-transition="slide">Won</a></li> 
+			<li><%= udpate_status_won_link(@opportunity)%></li> 
 		</ul>
 	</div>
 </div>
