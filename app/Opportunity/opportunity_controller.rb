@@ -461,6 +461,8 @@ class OpportunityController < Rho::RhoController
       formatted_result = Time.at(@params['result'].to_i).strftime(format)
       $choosed[datetime_vars[:flag]] = formatted_result
       WebView.execute_js('setFieldValue("'+datetime_vars[:field_key]+'","'+formatted_result+'");')
+      $choosed = {}
+      $saved = {}
       render :back => 'callback:'
     end
   end

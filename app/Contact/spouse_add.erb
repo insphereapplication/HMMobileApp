@@ -1,7 +1,7 @@
 <div data-role="page" data-theme="b">
 	<form method="post" id="spouse_add" action="<%= url_for(:controller => :Contact, :action => :spouse_update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" name="spouse_add">
 		<div data-role="header" data-backbtn="false" data-theme="b">
-			<a href="<%=url_for(:controller=>:Contact, :action=>:show, :id => @contact.object, :query=>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
+			<a href="<%=url_for(:controller=>:Contact, :action=>:show, :id => @contact.object, :query=>{:origin => @params['origin'], :opportunity => @params['opportunity'] })%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
 			<h1>Add Spouse</h1>
 			<span class="ui-btn-right">
 				<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
@@ -32,7 +32,7 @@
 					</select>'&nbsp;
 					<select name="contact[cssi_spouseheightin]" data-role="none" id="contact[cssi_spouseheightin]">
 						<option value=""></option>
-						<% (0..12).each do |i| %>
+						<% (0..11).each do |i| %>
 							<option value="<%= i %>"><%= i %></option>
 						<% end %>
 					</select>"

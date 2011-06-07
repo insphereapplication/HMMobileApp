@@ -43,9 +43,9 @@ class ContactController < Rho::RhoController
     Settings.record_activity
     @contact = Contact.find_contact(@params['id'])
     if @contact
-            @next_id = (@contact.object.to_i + 1).to_s
-            @prev_id = (@contact.object.to_i - 1).to_s
-            render :action => :show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
+      @next_id = (@contact.object.to_i + 1).to_s
+      @prev_id = (@contact.object.to_i - 1).to_s
+      render :action => :show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']     
     else
       redirect :action => :index, :back => 'callback:'
     end
@@ -193,12 +193,22 @@ class ContactController < Rho::RhoController
   def create
     @contact = Contact.create_new(@params['contact'])
     @contact.update_attributes(:birthdate => DateUtil.birthdate_build(@contact.birthdate))
+    @contact.update_attributes(:cssi_allowcallsalternatephone => "True")
+    @contact.update_attributes(:cssi_allowcallshomephone => "True")
+    @contact.update_attributes(:cssi_allowcallsbusinessphone => "True")
+    @contact.update_attributes(:cssi_allowcallsmobilephone => "True")
+    @contact.update_attributes(:cssi_companydncbusinessphone => "False")
+    @contact.update_attributes(:cssi_companydncmobilephone => "False")
+    @contact.update_attributes(:cssi_companydnchomephone => "False")
+    @contact.update_attributes(:cssi_companydncalternatephone => "False")
+        
     @opp = Opportunity.create_new(@params['opportunity'])  
     Settings.record_activity
     @opp.update_attributes( :contact_id =>  @contact.object)
     @opp.update_attributes( :statecode => 'Open')
     @opp.update_attributes( :statuscode => 'New Opportunity')
     @opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))
+
     SyncEngine.dosync
     redirect :action => :show, 
              :back => 'callback:',
