@@ -11,6 +11,7 @@ $('#contact_show').live('pagecreate',function(event){
 <div id="contact_show" data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar%>
 	<div data-role="header" data-backbtn="false">
+		<% puts @params.inspect%>
 				<% if @params['origin'] == "contact"%>
 					<a href="<%=url_for(:action => :index)%>" data-direction="reverse" rel="external" data-icon="back">Contacts</a>
 				<% else %>
@@ -169,12 +170,36 @@ $('#contact_show').live('pagecreate',function(event){
 						<% end %>
 					</ul>
 				</div>
-				<ul data-role="listview" data-filter="false" data-inset="true">
-					<li data-role="list-divider">Policies</li>
-					<% puts @contact.policies.inspect %>
-					<% if @contact.policies.size == 0 %>
+
+
+								<%puts "************************"+ Settings.pin%>
+								<%puts "************************"+ Settings.pin_last_activity_time.to_s%>
+								<%puts "************************"+ Settings.pin_confirmed.to_s%>
+								<%puts "************************"+ pin_is_current?(Settings.pin_last_activity_time).to_s%>
+								
+			
+				
+				<% if @contact.policies.size == 0 %>	
+
+					<ul data-role="listview" data-filter="false" data-inset="true">
+						<li data-role="list-divider">Policies - 0</li>
 						<li><div style="text-align:center"><i> (No Policies) </i></div></li>
-					<% end %>
+					</ul>			
+				
+				<% elsif Settings.pin == "" %>
+				
+					<ul data-role="none" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-filter="false" data-inset="true">
+						<li class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">Policies - <%= @contact.policies.size %></li>
+						<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom">
+								<a type="button" data-theme="b" value="Submit" href="<%= url_for(:controller => :Settings, :action => :pin, :query => {:origin => @params['origin'], :contact => @contact.object}) %>">Create PIN to view Policies</a>
+						</li>						
+					</ul>
+								
+				<% elsif Settings.pin_confirmed == true && pin_is_current?(Settings.pin_last_activity_time) %>
+				
+				<ul data-role="listview" data-filter="false" data-inset="true">
+					<li data-role="list-divider">Policies - <%= @contact.policies.size %></li>
+
 					<% @contact.policies.each do |policy| %>
 					<li>
 						<a href="<%= url_for(:controller => :Policy, :action => :show, :id => policy.object, :query => {:origin => @params['origin']}) %>">
@@ -185,6 +210,26 @@ $('#contact_show').live('pagecreate',function(event){
 					</li>
 					<% end %>
 				</ul>
+				
+				<% else %>
+				
+				<form name="pin_form" method="POST" action="<%= url_for :action => :verify_pin, :id => @contact.object, :query => {:origin => @params['origin']} %>">
+					<ul data-role="none" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-filter="false" data-inset="true">
+						<li class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">Policies - <%= @contact.policies.size %></li>
+						<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom">
+							<label class="fieldLabel ui-input-text" for="PIN" class="fieldLabel">Please Enter PIN:</label>
+							<input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-b" maxlength="4" type="password" id="PIN" name="PIN" value=""/>
+							<fieldset class="ui-grid-a">
+								<div class="ui-block-a"><input type="submit" class="standardButton" data-theme="b" value="Submit"/></div>	
+								<div class="ui-block-b"><a type="button"  data-theme="b" value="Reset PIN" href="<%= url_for(:controller => :Settings, :action => :pin, :query => {:origin => @params['origin'], :contact => @contact.object}) %>">Reset PIN</a></div>
+						    </fieldset>
+						</li>						
+					</ul>				
+				</form>
+
+
+				<% end %>	
+				
 				<% if @params['origin'] == "contact" %>
 				 <ul data-role="listview" data-filter="false" data-inset="true">
 					<li data-role="list-divider">Opportunities</li>

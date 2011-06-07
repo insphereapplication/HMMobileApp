@@ -12,6 +12,7 @@ class DependentController < Rho::RhoController
 
   # GET /Dependent/{1}
   def show
+    Settings.record_activity
     @dependent = Dependent.find_dependent(@params['id'])
     if @dependent
       @contact = @dependent.contact
@@ -23,6 +24,7 @@ class DependentController < Rho::RhoController
 
   # GET /Dependent/new
   def new
+    Settings.record_activity
     @contact = Contact.find_contact(@params['id'])
     @dependent = Dependent.new
     render :action => :new, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
@@ -30,6 +32,7 @@ class DependentController < Rho::RhoController
 
   # GET /Dependent/{1}/edit
   def edit
+    Settings.record_activity
     @dependent = Dependent.find_dependent(@params['id'])
     if @dependent
       render :action => :edit, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
@@ -40,6 +43,7 @@ class DependentController < Rho::RhoController
 
   # POST /Dependent/create
   def create
+    Settings.record_activity
     puts "********** Calling DependentController.create **********"
     puts "********** origin = #{@params['origin']}"
     @dependent = Dependent.create_new(@params['dependent'])
@@ -51,6 +55,7 @@ class DependentController < Rho::RhoController
 
   # POST /Dependent/{1}/update
   def update
+    Settings.record_activity
     puts "********** Calling DependentController.update **********"
     puts "********** attributes = #{@params['dependent']}"
     puts "********** id = #{@params['id']}"
@@ -70,6 +75,7 @@ class DependentController < Rho::RhoController
 
   # POST /Dependent/{1}/delete
   def delete
+    Settings.record_activity
     @dependent = Dependent.find_dependent(@params['id'])
     @dependent.destroy if @dependent
     redirect :action => :index

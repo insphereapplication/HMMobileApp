@@ -12,6 +12,7 @@ class PolicyController < Rho::RhoController
 
   # GET /Policy/{1}
   def show
+    Settings.record_activity
     @policy = Policy.find_policy(@params['id'])
     if @policy
       @contact = @policy.contact

@@ -202,6 +202,7 @@ class OpportunityController < Rho::RhoController
   
   # GET /Opportunity/{1}
   def show
+    Settings.record_activity
     @opportunity = Opportunity.find_opportunity(@params['id'])
     if @opportunity
       @notes = @opportunity.notes
@@ -239,6 +240,7 @@ class OpportunityController < Rho::RhoController
   end
   
   def status_update
+    Settings.record_activity
     @opportunity = Opportunity.find_opportunity(@params['id'])
     if @opportunity
       render :action => :status_update, :back => 'callback:', :layout => 'layout_jquerymobile'
@@ -248,6 +250,7 @@ class OpportunityController < Rho::RhoController
   end 
   
   def note_create
+    Settings.record_activity
     @opportunity = Opportunity.find_opportunity(@params['id'])
     if @opportunity
       render :action => :note_create, :back => 'callback:', :layout => 'layout_jquerymobile'
@@ -263,6 +266,7 @@ class OpportunityController < Rho::RhoController
   end
   
   def callback_request
+    Settings.record_activity
     $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
     @opportunity.create_note(@params['notes'])
@@ -274,6 +278,7 @@ class OpportunityController < Rho::RhoController
   end
   
   def app_detail_add
+    Settings.record_activity
       @opportunity = Opportunity.find(@params['id'])
       if @opportunity
         render :action => :application_details_add, :back => 'callback:', :layout => 'layout_jquerymobile'
@@ -292,6 +297,7 @@ class OpportunityController < Rho::RhoController
     end
     
   def app_detail_edit
+    Settings.record_activity
     @appdetail = Opportunity.find(@params['id'])
     if @appdetail
       render :action => :application_details_edit, :back => 'callback:', :layout => 'layout_jquerymobile'
@@ -370,6 +376,7 @@ class OpportunityController < Rho::RhoController
   
   # GET /Opportunity/{1}/activity_summary
   def activity_summary
+    Settings.record_activity
     @opportunity = Opportunity.find_opportunity(@params['id'])
     @activities = @opportunity.activities
     @activity_list = @opportunity.activity_list
