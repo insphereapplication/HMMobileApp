@@ -51,8 +51,11 @@ LastVisitedPage = ''
 #MODEL_RHOHUB -- for UAT/QA of new features from master
 # syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
 
+#PRODUCTION ONSITE
+# syncserver = 'https://rhosync.insphereis.net/application'
+
 #MODEL ONSITE
-#syncserver = 'https://rhosync.insphereis.net/application'
+syncserver = 'https://rhosync.model.insphereis.net/application'
 
 #MODEL ONSITE IP
 # syncserver = 'https://199.102.216.25/application'
