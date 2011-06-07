@@ -1,18 +1,23 @@
 sdk: "/Library/ParivedaInsite/rhodes"
 sdkversion: 2.3.0
-name: InSite UAT
-version: 1.1.1
-vendor: rhomobile
+name: InSite Mobile
+version: 1.2.2
+vendor: Insphere
 build: debug
 bbver: 4.6
 capabilities:
     - push
 android: 
+  package_name: 'com.insphere.insite' 
+  production:
+    certificate: /full/path/to/insphere_insite.keystore
+    password: "5zW8e3ZuS7DWY0TsnCTyyWnpGSDUqUgj"
+    alias: "Insite"
   emulator: rhoandroid
   android_title: 1
   push:
     sender: insphereapplication@insphereis.com
-    notifications: background
+    notifications: always
   capabilities: 
   - network_state
   - push
@@ -22,14 +27,14 @@ wmsdk: "Windows Mobile 6 Professional SDK (ARMV4I)"
 applog: rholog.txt
 encrypt_database: '1'
 iphone:
-  configuration: Debug
-  sdk: 4.2
-  # configuration: release
-  # sdk: iphoneos4.3
-  provisionprofile: 5CE89095-3DE6-4278-8A96-E91A203E94AE
-  codesignidentity: "iPhone Developer: Kyle Norton (ZVB8LA9NV2)"
+  # configuration: Debug
+  # sdk: 4.2
+  configuration: release
+  sdk: iphoneos4.3
+  BundleIdentifier: com.insphere.insite
+  codesignidentity: GET YOURS FROM THE INSPHERE ENTERPRISE APPLE DEV ACCOUNT
+  provisionprofile: GET LATEST FROM INSPHERE ENTERPRISE APPLE DEV ACCOUNT
   entitlements:
-  BundleIdentifier: com.insphere.insitemobile
   BundleURLScheme: insite
   capabilities:
   - push

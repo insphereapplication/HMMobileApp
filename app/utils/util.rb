@@ -4,11 +4,28 @@ module ExceptionUtil
       exception = new Exception(exception)
     end
     
-    ClientException.create({
+    exception_data = {
       :message => exception.message,
       :backtrace => exception.backtrace,
       :exception_id => Time.now.to_i.to_s
-    });
+    }
+    
+    begin
+      exception_data.merge!({
+        :device_id => System.get_property('device_id'),
+        :rho_device_id => Rhom::Rhom::client_id, 
+        :client_platform => System.get_property('platform'),
+        :has_network => System.get_property('has_network'),
+        :device_name => System.get_property('device_name'),
+        :os_version => System.get_property('os_version')
+      })
+    rescue
+      exception_data.merge!({:device_data_error => "Error while extracting device-specific data."})
+    end
+    
+    puts exception_data.inspect
+    
+    ClientException.create(exception_data)
   end
 end
 

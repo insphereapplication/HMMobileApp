@@ -466,3 +466,37 @@ if (!Array.prototype.reduce)
     return rv;
   };
 }
+
+function updateConnectionStatusIndicator()
+{
+	offline_bar_selector = '.ui-offline-bar'
+	if( $(offline_bar_selector).length>0 )
+	{
+		$.post('/app/Settings/get_connection_status', 
+			function(connection_status) {				
+				if(connection_status == "Offline")
+				{
+					$(offline_bar_selector).show();
+				}
+				else
+				{
+					$(offline_bar_selector).hide();
+				}
+			}
+		);
+	}
+}
+
+function pollConnectionStatus(interval_ms)
+{
+	updateConnectionStatusIndicator();
+	setTimeout("pollConnectionStatus("+ interval_ms +")",interval_ms);
+}
+
+$(document).ready(function() {
+	$.ajaxSetup ({  
+		cache: false  
+	});
+	//update connection status every 5000 ms. declared in application.js.
+	pollConnectionStatus(5000);
+});
