@@ -15,6 +15,7 @@ class NoteController < Rho::RhoController
 
   # GET /Note/{1}
   def show
+    Settings.record_activity
     @note = Note.find_note(@params['id'])
     if @note
       render :action => :show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
@@ -25,6 +26,7 @@ class NoteController < Rho::RhoController
 
   # GET /Note/new
   def new
+    Settings.record_activity
     @note = Note.new
     render :action => :new
   end
@@ -41,6 +43,7 @@ class NoteController < Rho::RhoController
 
   # POST /Note/create
   def create
+    Settings.record_activity
     @note = Note.create_new(@params['note'])
     redirect :action => :index
   end
@@ -60,8 +63,9 @@ class NoteController < Rho::RhoController
   end
   
   def note_submit
+    Settings.record_activity
     opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
-  
+
     db = ::Rho::RHO.get_src_db('Opportunity')
     db.start_transaction
     begin

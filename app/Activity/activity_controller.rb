@@ -9,6 +9,7 @@ class ActivityController < Rho::RhoController
   def show_appt
     @appt = Activity.find_activity(@params['id'])
     if @appt
+      Settings.record_activity
       render :action => :show_appt, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
     else
       redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
@@ -19,6 +20,7 @@ class ActivityController < Rho::RhoController
   def edit_appt
     @appt = Activity.find_activity(@params['id'])
     if @appt
+      Settings.record_activity
       render :action => :edit_appt, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
     else
       redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
@@ -31,6 +33,7 @@ class ActivityController < Rho::RhoController
 
     if @callback
       @notes = @callback.notes
+      Settings.record_activity
       render :action => :show_callback, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
     else
       redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
@@ -41,6 +44,7 @@ class ActivityController < Rho::RhoController
   def edit_callback
     @callback = Activity.find_activity(@params['id'])
     if @callback
+      Settings.record_activity
       render :action => :edit_callback, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
     else
       redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
@@ -53,6 +57,7 @@ class ActivityController < Rho::RhoController
   
   def update_appt
     puts "APPOINTMENT UPDATE: #{@params.inspect}"
+    Settings.record_activity
     @appointment = Activity.find_activity(@params['id'])
     @appointment.update_attributes({
       :scheduledstart => DateUtil.date_build(@params['appointment_datetime']),
@@ -70,6 +75,7 @@ class ActivityController < Rho::RhoController
   def update_callback
     puts "CALLBACK UPDATE: #{@params.inspect}"
     @callback = Activity.find_activity(@params['id'])
+    Settings.record_activity
     @callback.update_attributes({
         :scheduledend => DateUtil.date_build(@params['callback_datetime']),
         :phonenumber => @params['phone_number'] 
@@ -81,7 +87,7 @@ class ActivityController < Rho::RhoController
   end
   
   def update_won_status
-    if @params['button_id'] == "Ok"
+      Settings.record_activity
       db = ::Rho::RHO.get_src_db('Opportunity')
       db.start_transaction
       begin
@@ -96,17 +102,13 @@ class ActivityController < Rho::RhoController
           :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
         })
 
-        appointmentids = get_appointment_ids(@params['appointments'])
-        finished_win_loss_status(opportunity, @params['origin'], appointmentids)
+        finished_win_loss_status(opportunity, @params['origin'])
 
         db.commit
       rescue Exception => e
         puts "Exception in update won status, rolling back: #{e.inspect} -- #{@params.inspect}"
         db.rollback
       end
-    else
-      WebView.navigate(url_for :controller => :Opportunity, :action => :status_update, :id => @params['opportunity_id'], :query => {:origin => @params['origin']})
-    end
   end
   
   def confirm_win_status
@@ -138,10 +140,11 @@ class ActivityController < Rho::RhoController
 
   def udpate_lost_status
     if @params['button_id'] == "Ok"
+        Settings.record_activity
         db = ::Rho::RHO.get_src_db('Opportunity')
         db.start_transaction
         begin
-          opportunity = Opportunity.find(@params['opportunity_id'])
+          opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
           opportunity.create_note(@params['notes'])
           opportunity.complete_most_recent_open_call
           opportunity.update_attributes({
@@ -167,6 +170,7 @@ class ActivityController < Rho::RhoController
   end
   
   def update_lost_other_status
+        Settings.record_activity
         db = ::Rho::RHO.get_src_db('Opportunity')
         db.start_transaction
         begin
@@ -207,8 +211,8 @@ class ActivityController < Rho::RhoController
   end  
   def update_status_no_contact
     puts @params.inspect
-    
-    opportunity = Opportunity.find(@params['opportunity_id'])
+    Settings.record_activity
+    opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
     opportunity.create_note(@params['notes'])
     
     opp_attrs = {
@@ -235,7 +239,7 @@ class ActivityController < Rho::RhoController
   
   def update_status_call_back_requested
     opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
-  
+    Settings.record_activity
     opp_attrs = {
       :cssi_statusdetail => 'Call Back Requested',
       :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
@@ -271,6 +275,7 @@ class ActivityController < Rho::RhoController
   
   def update_status_appointment_set
     opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
+    Settings.record_activity
     contact = opportunity.contact
     
     opp_attrs = {
@@ -333,6 +338,7 @@ class ActivityController < Rho::RhoController
   end
   
   def complete_appointments(appointmentids)
+    Settings.record_activity
     if appointmentids
       appointmentids.each do |id|
         appointment = Activity.find(id, :conditions => {:type => 'Appointment'})

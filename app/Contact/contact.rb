@@ -246,6 +246,4 @@ class Contact
         puts "Could not generate home_map map string; Value is #{}"
     end
   end
-  
-  
 end

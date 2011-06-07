@@ -158,6 +158,8 @@ class SettingsController < Rho::RhoController
       begin
         SyncEngine.login(Settings.login, Settings.password, (url_for :action => :login_callback) )
         update_login_wait_progress("Logging in...")
+        Settings.pin_last_activity_time = Time.new
+        Settings.pin_confirmed=false
       rescue Rho::RhoError => e
         Settings.clear_credentials
         @msg = e.message
@@ -190,8 +192,13 @@ class SettingsController < Rho::RhoController
         if ( password == Settings.password )
           @msg = nil
           Settings.pin = verify_pin
+          Settings.pin_confirmed = false
           @msg =  "Your PIN has been reset."
-          redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
+          if (@params['origin'] == "contact")
+            redirect :controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :verified => 'unverified'}
+          else
+              redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
+          end
           # Alert.show_popup(
           #           {
           #             :message => "Your PIN has been reset.",
@@ -611,11 +618,13 @@ class SettingsController < Rho::RhoController
   end
 
   def quick_quote
+    Settings.record_activity
     WebView.navigate(WebView.current_location)
     System.open_url("https://mobile-uat.ipipeline.com/?gaid=5242")
   end
   
   def resource_center
+    Settings.record_activity
     WebView.navigate(WebView.current_location)
     System.open_url("http://www.insphereis.net")
   end

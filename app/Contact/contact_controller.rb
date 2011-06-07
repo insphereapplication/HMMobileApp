@@ -12,6 +12,7 @@ class ContactController < Rho::RhoController
   #GET /Contact
   def index
     $tab = 1
+    Settings.record_activity
     render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
@@ -31,6 +32,7 @@ class ContactController < Rho::RhoController
   end
   
   def get_contacts_page
+    Settings.record_activity
     @contacts = Contact.all_open(@params['page'].to_i)
     @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
     render :action => :contact_page, :back => 'callback:'
@@ -38,6 +40,7 @@ class ContactController < Rho::RhoController
 
   # GET /Contact/{1}
   def show
+    Settings.record_activity
     @contact = Contact.find_contact(@params['id'])
     if @contact
       @next_id = (@contact.object.to_i + 1).to_s
@@ -49,6 +52,7 @@ class ContactController < Rho::RhoController
   end
   
   def check_preferred_and_donotcall(phone_type, preferred, allow_call, company_dnc)
+    Settings.record_activity
     is_preferred = phone_type == preferred
 
     # Special case where we need 2 icons side by side, and some jQuery/JavaScript tricks are needed
@@ -81,6 +85,7 @@ class ContactController < Rho::RhoController
   end
   
   def do_not_call_press
+    Settings.record_activity
     phone_type = @params['phone_type']
     phone_number = @params['phone_number']
     id = @params['id']
@@ -96,6 +101,7 @@ class ContactController < Rho::RhoController
   end
   
   def do_not_call_press_callback
+    Settings.record_activity
     button_id   = @params['button_id']
     id          = @params['id']
     phone_type  = @params['phone_type']
@@ -138,15 +144,43 @@ class ContactController < Rho::RhoController
       puts "Invalid date parameter in age calculation method; no age returned"
     end
   end
+  
+  def verify_pin
+    @contact= Contact.find(@params['id'])
+    if @params['PIN'] == Settings.pin
+      puts @params.inspect
+      Settings.pin_last_activity_time = Time.new
+      Settings.pin_confirmed= true
+      render :action => :show, :id => @params['id'], :query => {:origin => @params['origin']}
+    else
+      Alert.show_popup({
+        :message => "Invalid PIN Entered", 
+        :title => 'Invalid PIN', 
+        :buttons => ["OK"]
+      })
+      @pinverified="false"
+      render :action => :show, :id => @params['id'], :query => {:origin => @params['origin']}
+    end    
+  end
+  
+  def pin_is_current?(last_activity)
+    if Time.new - last_activity < 900
+      return true
+    else
+      return false
+    end
+  end
 
   # GET /Contact/new
   def new
+    Settings.record_activity
     @contact = Contact.new
     render :action => :new, :back => 'callback:', :layout => 'layout_jquerymobile'
   end
 
   # GET /Contact/{1}/edit
   def edit
+    Settings.record_activity
     @contact = Contact.find_contact(@params['id'])
     if @contact
       render :action => :edit, :back => 'callback:'
@@ -169,6 +203,7 @@ class ContactController < Rho::RhoController
     @contact.update_attributes(:cssi_companydncalternatephone => "False")
         
     @opp = Opportunity.create_new(@params['opportunity'])  
+    Settings.record_activity
     @opp.update_attributes( :contact_id =>  @contact.object)
     @opp.update_attributes( :statecode => 'Open')
     @opp.update_attributes( :statuscode => 'New Opportunity')
@@ -183,6 +218,7 @@ class ContactController < Rho::RhoController
 
   # POST /Contact/{1}/update
   def update
+    Settings.record_activity
     puts "CONTACT UPDATE: #{@params.inspect}"
     @contact = Contact.find_contact(@params['id'])
     @contact.update_attributes(@params['contact']) if @contact
@@ -193,6 +229,7 @@ class ContactController < Rho::RhoController
   end
 
   def spouse_update
+    Settings.record_activity
     puts "SPOUSE UPDATE: #{@params.inspect}"
     @contact = Contact.find_contact(@params['id'])
     @contact.update_attributes(@params['contact']) if @contact
@@ -224,16 +261,19 @@ class ContactController < Rho::RhoController
   end
   
   def spouse_show
+    Settings.record_activity
       @contact = Contact.find_contact(@params['id'])
       render :action => :spouse_show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
   end
   
   def spouse_add
+    Settings.record_activity
       @contact = Contact.find_contact(@params['id'])
       render :action => :spouse_add, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
   end
   
   def spouse_edit
+    Settings.record_activity
       @contact = Contact.find_contact(@params['id'])
       render :action => :spouse_edit, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
   end
@@ -252,6 +292,7 @@ class ContactController < Rho::RhoController
   end
  
   def spouse_delete
+    Settings.record_activity
     if @params['button_id'] == "Ok"
       puts "CONTACT DELETE SPOUSE: #{@params.inspect}"
       @contact = Contact.find_contact(@params['id'])
