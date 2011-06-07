@@ -163,11 +163,17 @@ class ContactController < Rho::RhoController
     @contact.update_attributes(:cssi_allowcallshomephone => "True")
     @contact.update_attributes(:cssi_allowcallsbusinessphone => "True")
     @contact.update_attributes(:cssi_allowcallsmobilephone => "True")
+    @contact.update_attributes(:cssi_companydncbusinessphone => "False")
+    @contact.update_attributes(:cssi_companydncmobilephone => "False")
+    @contact.update_attributes(:cssi_companydnchomephone => "False")
+    @contact.update_attributes(:cssi_companydncalternatephone => "False")
+        
     @opp = Opportunity.create_new(@params['opportunity'])  
     @opp.update_attributes( :contact_id =>  @contact.object)
     @opp.update_attributes( :statecode => 'Open')
     @opp.update_attributes( :statuscode => 'New Opportunity')
     @opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))
+
     SyncEngine.dosync
     redirect :action => :show, 
              :back => 'callback:',
