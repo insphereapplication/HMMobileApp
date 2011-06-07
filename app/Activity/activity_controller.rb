@@ -169,7 +169,25 @@ class ActivityController < Rho::RhoController
     end
   end
   
+  def confirm_lost_other_status
+    unless @params['status_code'].blank?
+      puts "STATUS CODE IS #{@params['status_code']}"
+      WebView.navigate(url_for :action => :update_lost_other_status, 
+              :query => {:opportunity_id => @params['opportunity_id'], 
+                          :status_code => @params['status_code'],
+                          :competitorid => @params['competitorid'] || "",
+                          :origin => @params['origin'],
+                          :appointments => @params['appointments']
+                        })
+    else
+      puts "VALIDATION FAILED -- PLEASE CHOOSE A LOST REASON"
+      Alert.show_popup "Please choose a lost reason."
+    end
+  end
+  
+  
   def update_lost_other_status
+    unless @params['status_code'].blank?
         Settings.record_activity
         db = ::Rho::RHO.get_src_db('Opportunity')
         db.start_transaction
@@ -192,6 +210,11 @@ class ActivityController < Rho::RhoController
           puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
           db.rollback
       end
+    else
+      puts "VALIDATION FAILED -- PLEASE CHOOSE A LOST REASON"
+      Alert.show_popup "Please choose a lost reason."
+      WebView.refresh
+    end
   end
 
   def confirm_lost_status
