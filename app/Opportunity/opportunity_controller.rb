@@ -330,13 +330,8 @@ class OpportunityController < Rho::RhoController
   
   def appointment
     $choosed['0'] = ""
-<<<<<<< HEAD
     @opportunity = Opportunity.find(@params['id'])
     @opportunity.create_note(@params['notes'])
-    
-=======
-    @opportunity = Opportunity.find_opportunity(@params['id'])
->>>>>>> 14ead3320182aed75bd7918c9490cd6ec81255fd
     if @opportunity
       render :action => :appointment, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -347,14 +342,8 @@ class OpportunityController < Rho::RhoController
   def lost_other
     @lost_reasons = Constants::OTHER_LOST_REASONS
     @competitors = Constants::COMPETITORS
-    
-<<<<<<< HEAD
     @opportunity = Opportunity.find(@params['id'])
     @opportunity.create_note(@params['notes'])
-    
-=======
-    @opportunity = Opportunity.find_opportunity(@params['id'])
->>>>>>> 14ead3320182aed75bd7918c9490cd6ec81255fd
     if @opportunity
       render :action => :lost_other, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
