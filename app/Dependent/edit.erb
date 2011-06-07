@@ -1,7 +1,7 @@
 <div data-role="page" data-theme="b">
-	<form method="post" id="dependent_update" action="<%= url_for(:action => :update, :query => {:id => @dependent.object, :opportunity => @params['opportunity'], :origin => @params['origin']})%>" name="dependent_update">
+	<form method="post" id="dependent_update" action="<%= url_for(:action => :update, :id => @dependent.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" name="dependent_update">
 		<div data-role="header" data-backbtn="false" data-theme="b">
-			<a href="<%=url_for(:controller=>:Dependent, :action=>:show, :id => @dependent.object, :query=>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
+			<a href="<%=url_for(:controller=>:Dependent, :action=>:show, :id => @dependent.object, :query=>{:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
 			<h1>Edit Dependent</h1>
 			<span class="ui-btn-right">
 				<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
@@ -35,7 +35,7 @@
 					<select name="dependent[cssi_heightin]" data-role="none" id="dependent[cssi_heightin]">
 						<option data-placeholder="true"> <%= @dependent.cssi_heightin %> </option>
 						<option value=""></option>
-						<% (0..12).each do |i| %>
+						<% (0..11).each do |i| %>
 							<option value="<%= i %>"><%= i %></option>
 						<% end %>
 					</select>"

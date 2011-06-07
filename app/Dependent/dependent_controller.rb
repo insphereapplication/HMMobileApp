@@ -46,7 +46,7 @@ class DependentController < Rho::RhoController
     @dependent.update_attributes(:cssi_dateofbirth => DateUtil.birthdate_build(@dependent.cssi_dateofbirth))
     @dependent.update_attributes(:cssi_age => age(@dependent.cssi_dateofbirth))
     SyncEngine.dosync
-    redirect :controller => :Contact, :action => :show, :origin => @params['origin'], :id => @dependent.contact_id
+    render :controller => :Contact, :action => :show, :origin => @params['origin'], :id => @dependent.contact_id
   end
 
   # POST /Dependent/{1}/update
@@ -64,7 +64,7 @@ class DependentController < Rho::RhoController
     @dependent.update_attributes(:cssi_age => age(@dependent.cssi_dateofbirth))
     
     SyncEngine.dosync
-    redirect :controller => :Contact, :action => :show, :origin => @params['origin'], :id => @dependent.contact_id
+    render :controller => :Contact, :action => :show, :origin => @params['origin'], :id => @dependent.contact_id, :opportunity => @params['opportunity']
   end
 
 

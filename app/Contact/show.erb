@@ -136,14 +136,14 @@ $('#contact_show').live('pagecreate',function(event){
 						<li data-role="list-divider">Spouse</li>
 						<% if @contact.has_spouse_info? %>
 							<li>
-								<a href="<%= url_for(:controller => :Contact, :action => :spouse_show, :id => @contact.object, :query => {:origin => @params['origin']}) %>"></a>
+								<a href="<%= url_for(:controller => :Contact, :action => :spouse_show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>"></a>
 								<p></p><p><b><%= @contact.cssi_spousename %>&nbsp;<%= @contact.cssi_spouselastname%></b></p>
 								<p><%= @contact.cssi_spousegender %>, <%= @contact.spouse_age %></p>
 								<p>DOB: <%= to_date(@contact.cssi_spousebirthdate) %></p>
 							</li>
 						<% else %>
 							<li data-icon="add">
-								<a href="<%= url_for(:controller => :Contact, :action => :spouse_add, :id => @contact.object, :query => {:origin => @params['origin']}) %>">Add Spouse</a>
+								<a href="<%= url_for(:controller => :Contact, :action => :spouse_add, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>">Add Spouse</a>
 							</li>
 						<% end %>
 					</ul>
@@ -157,11 +157,11 @@ $('#contact_show').live('pagecreate',function(event){
 					<ul data-role="listview" data-filter="false" data-inset="true">
 						<li data-role="list-divider">Dependents</li>
 						<li data-icon="add">
-							<a href="<%= url_for(:controller => :Dependent, :action => :new, :id => @contact.object, :query => {:origin => @params['origin']}) %>">Add Dependent</a>
+							<a href="<%= url_for(:controller => :Dependent, :action => :new, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>">Add Dependent</a>
 						</li>
 						<% @contact.dependents.each do |dependent| %>
 						<li>
-							<a href="<%= url_for(:controller => :Dependent, :action => :show, :id => dependent.object, :query => {:origin => @params['origin']}) %>"></a>
+							<a href="<%= url_for(:controller => :Dependent, :action => :show, :id => dependent.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>"></a>
 							<p></p><p><b><%= dependent.cssi_name %>&nbsp;<%= dependent.cssi_lastname %></b></p>
 							<p><%= dependent.cssi_gender %>, Age <%= dependent.cssi_age %></p>
 							<p>DOB: <%= to_date(dependent.cssi_dateofbirth) %></p>
