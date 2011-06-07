@@ -12,7 +12,7 @@
 						<a href="<%= url_for :action => :show, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" data-direction="reverse" data-icon="back">Cancel</a>
 						<h1>Edit</h1>
 						<span class="ui-btn-right">
-							<input type="submit" onClick="return checkEdit(contact_edit);" data-theme="b" data-direction="reverse" data-icon="false" value="Update"/>
+							<input type="submit" onClick="return checkEdit(contact_edit);" data-theme="b" data-direction="reverse" data-icon="false" value="Done"/>
 						</span>
 					</div>
 					<div class="toolbar">
@@ -274,6 +274,9 @@
 							<div class="ui-body ui-body-d">
 								<label for="contact[address2_postalcode]" class="fieldLabel">ZIP:</label> <input maxlength="20" type="number" name="contact[address2_postalcode]" value="<%= @contact.address2_postalcode %>" <%= placeholder( "Business ZIP" ) %>>
 							</div>
+						</div>
+						<div data-theme="b">
+							<input type="submit" onClick="return checkEdit(contact_edit);" data-theme="b" data-direction="reverse" data-icon="false" value="Done"/>
 						</div>
 					</div>
 				</div>
