@@ -159,6 +159,10 @@ class ContactController < Rho::RhoController
   def create
     @contact = Contact.create_new(@params['contact'])
     @contact.update_attributes(:birthdate => DateUtil.birthdate_build(@contact.birthdate))
+    @contact.update_attributes(:cssi_allowcallsalternatephone => "True")
+    @contact.update_attributes(:cssi_allowcallshomephone => "True")
+    @contact.update_attributes(:cssi_allowcallsbusinessphone => "True")
+    @contact.update_attributes(:cssi_allowcallsmobilephone => "True")
     @opp = Opportunity.create_new(@params['opportunity'])  
     @opp.update_attributes( :contact_id =>  @contact.object)
     @opp.update_attributes( :statecode => 'Open')
