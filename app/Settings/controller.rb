@@ -182,34 +182,47 @@ class SettingsController < Rho::RhoController
     goto_login(@msg)
   end
   
+  def pin
+    render :action => :pin 
+  end
+  
   def validate_pin
     enter_pin = @params['enter_pin']
     verify_pin = @params['verify_pin']
     password = @params['pin_password']
     
-    if enter_pin and verify_pin and password
-      if ( enter_pin == verify_pin )
-        if ( password == Settings.password )
-          @msg = nil
-          Settings.pin = verify_pin
-          Settings.pin_confirmed = false
-          @msg =  "Your PIN has been reset."
-          if (@params['origin'] == "contact")
-            redirect :controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :verified => 'unverified'}
+    if enter_pin.length < 4
+      redirect :action => :pin, :query => {:origin => @params['origin'], :contact => @params['contact']}
+      Alert.show_popup(
+        {
+          :message => "PIN must be 4 numbers.",
+          :buttons => ["OK"]
+        })
+    else  
+      if enter_pin and verify_pin and password
+        if ( enter_pin == verify_pin )
+          if ( password == Settings.password )
+            @msg = nil
+            Settings.pin = verify_pin
+            Settings.pin_confirmed = false
+            @msg =  "Your PIN has been reset."
+            if (@params['origin'] == "contact")
+              redirect :controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin']}
+            else
+                redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
+            end
+            # Alert.show_popup(
+            #           {
+            #             :message => "Your PIN has been reset.",
+            #             :buttons => ["OK"],
+            #             :callback => url_for( :action => :validate_pin_callback )
+            #           })
           else
-              redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
+            @msg = 'The password you entered is not valid.'
           end
-          # Alert.show_popup(
-          #           {
-          #             :message => "Your PIN has been reset.",
-          #             :buttons => ["OK"],
-          #             :callback => url_for( :action => :validate_pin_callback )
-          #           })
         else
-          @msg = 'The password you entered is not valid.'
+          @msg = 'Please enter matching PINs'
         end
-      else
-        @msg = 'Please enter matching PINs'
       end
     end
     

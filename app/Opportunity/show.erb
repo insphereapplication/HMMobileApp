@@ -24,7 +24,6 @@
 						<div class="ui-block-b"><a href="<%= url_for(:action => :status_update, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" rel="external" data-transition="none" data-role="button" data-icon="plus">Update</a></div> 
 			</div>
 		<a href="<%= url_for :action => :quick_quote, :id =>@opportunity.object%>" rel="external" data-transition="none" data-role="button" >Term Life Quick Quote</a>
-			</div>
 			<% end %> 
 			<ul data-role="listview" data-theme="d" data-inset="true"> 
 				<li>
@@ -111,9 +110,11 @@
 							</a>
 						</div>
 					</div>
+					<% if phonecall.phonenumber %>
 							<a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub!(/[^0-9]/, "") %>">
 								<img class="call-icon" src="/public/images/phone_black.png">
 							</a>
+					<% end %>
 				</li>
 				<% end %>
 				

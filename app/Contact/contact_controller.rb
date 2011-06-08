@@ -37,6 +37,34 @@ class ContactController < Rho::RhoController
     @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
     render :action => :contact_page, :back => 'callback:'
   end
+  
+  def get_contacts_with_active_page
+    Settings.record_activity
+    @contacts_with_active_policy = Contact.with_active_policy(@params['page'].to_i)
+    @grouped_with_active = @contacts_with_active_policy.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    render :action => :contact_with_active_page, :back => 'callback:'
+  end
+  
+  def get_contacts_with_pending_page
+    Settings.record_activity
+    @contacts_with_pending_policy = Contact.with_pending_policy(@params['page'].to_i)
+    @grouped_with_pending = @contacts_with_pending_policy.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    render :action => :contact_with_pending_page, :back => 'callback:'
+  end
+  
+  def get_contacts_with_open_opps_page
+    Settings.record_activity
+    @contacts_with_open_opps = Contact.with_open_opps(@params['page'].to_i)
+    @grouped_with_open_opps = @contacts_with_open_opps.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    render :action => :contact_with_open_opps_page, :back => 'callback:'
+  end
+  
+  def get_contacts_with_won_opps_page
+    Settings.record_activity
+    @contacts_with_won_opps = Contact.with_won_opps(@params['page'].to_i)
+    @grouped_with_won_opps = @contacts_with_won_opps.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    render :action => :contact_with_won_opps_page, :back => 'callback:'
+  end
 
   # GET /Contact/{1}
   def show

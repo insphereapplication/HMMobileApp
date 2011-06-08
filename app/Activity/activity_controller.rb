@@ -211,7 +211,6 @@ class ActivityController < Rho::RhoController
           db.rollback
       end
     else
-      puts "VALIDATION FAILED -- PLEASE CHOOSE A LOST REASON"
       Alert.show_popup "Please choose a lost reason."
       WebView.refresh
     end
@@ -261,17 +260,18 @@ class ActivityController < Rho::RhoController
   end
   
   def update_status_call_back_requested
-    opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
-    Settings.record_activity
-    opp_attrs = {
-      :cssi_statusdetail => 'Call Back Requested',
-      :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
-      :statuscode => 'Contact Made'
-    }
+    unless @params['callback_datetime'].blank?
+      opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
+      Settings.record_activity
+      opp_attrs = {
+        :cssi_statusdetail => 'Call Back Requested',
+        :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
+        :statuscode => 'Contact Made'
+      }
     
-    db = ::Rho::RHO.get_src_db('Opportunity')
-    db.start_transaction
-    begin
+      db = ::Rho::RHO.get_src_db('Opportunity')
+      db.start_transaction
+      begin
       opportunity.update_attributes(opp_attrs)
       opportunity.record_phone_call_made_now('Call Back Requested')
     
@@ -294,51 +294,60 @@ class ActivityController < Rho::RhoController
       puts "Exception in update status call back requested, rolling back: #{e.inspect} -- #{@params.inspect}"
       db.rollback
     end
+    else
+        Alert.show_popup "Please choose a callback date and time."
+        WebView.refresh
+      end
   end
   
   def update_status_appointment_set
-    opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
-    Settings.record_activity
-    contact = opportunity.contact
+    unless @params['appointment_datetime'].blank?
+      opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
+      Settings.record_activity
+      contact = opportunity.contact
     
-    opp_attrs = {
-      :cssi_statusdetail => 'Appointment Set',
-      :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-    }
+      opp_attrs = {
+        :cssi_statusdetail => 'Appointment Set',
+        :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+      }
     
-    if ['New Opportunity', 'No Contact Made', 'Contact Made'].include?(opportunity.statuscode)
-      opp_attrs.merge!({:statuscode => 'Appointment Set'})
-    end
+      if ['New Opportunity', 'No Contact Made', 'Contact Made'].include?(opportunity.statuscode)
+        opp_attrs.merge!({:statuscode => 'Appointment Set'})
+      end
     
-    db = ::Rho::RHO.get_src_db('Opportunity')
-    db.start_transaction
-    begin
-      opportunity.complete_most_recent_open_call('Appointment Set') 
-      opportunity.update_attributes(opp_attrs)
+      db = ::Rho::RHO.get_src_db('Opportunity')
+      db.start_transaction
+      begin
+        opportunity.complete_most_recent_open_call('Appointment Set') 
+        opportunity.update_attributes(opp_attrs)
     
-      # create the requested appointment
-      Activity.create_new({
-          :parent_type => 'Opportunity',
-          :parent_id => opportunity.object,
-          :statecode => "Scheduled",
-          :statuscode => "Busy",
-          :scheduledstart => DateUtil.date_build(@params['appointment_datetime']),
-          :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
-          :location => @params['location'],
-          :subject => "#{contact.firstname}, #{contact.lastname} - #{opportunity.createdon}",
-          :description => @params['description'],
-          :type => 'Appointment',
-          :cssi_location => @params['cssi_location'],
-          :parent_contact_id => opportunity.contact_id
-        }
-      )
+        # create the requested appointment
+        Activity.create_new({
+            :parent_type => 'Opportunity',
+            :parent_id => opportunity.object,
+            :statecode => "Scheduled",
+            :statuscode => "Busy",
+            :scheduledstart => DateUtil.date_build(@params['appointment_datetime']),
+            :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
+            :location => @params['location'],
+            :subject => "#{contact.firstname}, #{contact.lastname} - #{opportunity.createdon}",
+            :description => @params['description'],
+            :type => 'Appointment',
+            :cssi_location => @params['cssi_location'],
+            :parent_contact_id => opportunity.contact_id
+          }
+        )
   
-      finished_update_status(opportunity, @params['origin'], @params['appointments'])
-      db.commit
-    rescue Exception => e
-      puts "Exception in update status appointment set, rolling back: #{e.inspect} -- #{@params.inspect}"
-      db.rollback
-    end
+        finished_update_status(opportunity, @params['origin'], @params['appointments'])
+        db.commit
+      rescue Exception => e
+        puts "Exception in update status appointment set, rolling back: #{e.inspect} -- #{@params.inspect}"
+        db.rollback
+      end
+    else
+        Alert.show_popup "Please choose an appointment date and time."
+        WebView.refresh
+      end
   end
   
   private
