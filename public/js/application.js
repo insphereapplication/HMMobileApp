@@ -17,8 +17,7 @@ $(document).ready(function() {
 //status update validate datetime
 function validate(){
 	if ((document.getElementById('callback_datetime').value.length==0) || document.getElementById('callback_datetime').value==null) {
-      	alert('Please choose a callback date and time.');
-		return false;
+
    }
    else { document.getElementById('phoneNumber').disabled=false; return true; }	
 }

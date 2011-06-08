@@ -111,9 +111,11 @@
 							</a>
 						</div>
 					</div>
+					<% if phonecall.phonenumber %>
 							<a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub!(/[^0-9]/, "") %>">
 								<img class="call-icon" src="/public/images/phone_black.png">
 							</a>
+					<% end %>
 				</li>
 				<% end %>
 				
