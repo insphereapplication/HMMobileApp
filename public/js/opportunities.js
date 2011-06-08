@@ -61,11 +61,11 @@ function loadFollowUps(){
 	loadOpportunities(followUpBucket, 0);
 }
 
-function loadAppointments(){
+function loadScheduled(){
 	appointmentBucket = getLinkedBucketList([ 
-		{ opportunity_method: 'past_due_appointments', list_selector: 'span#past-due-appointments-list', next: null},
-		{ opportunity_method: 'todays_appointments',   list_selector: 'span#todays-appointments-list',   next: null},
-		{ opportunity_method: 'future_appointments',   list_selector: 'span#future-appointments-list',   next: null}
+		{ opportunity_method: 'past_due_scheduled',    list_selector: 'span#past-due-appointments-list', next: null},
+		{ opportunity_method: 'todays_scheduled',   list_selector: 'span#todays-appointments-list',   next: null},
+		{ opportunity_method: 'future_scheduled',   list_selector: 'span#future-appointments-list',   next: null}
 	]);
 											
 	loadOpportunities(appointmentBucket, 0);

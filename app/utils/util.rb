@@ -65,10 +65,13 @@ module SQLHelper
       )
   } 
   
-  SELECT_APPOINTMENT_SQL = "select a.* from Activity a, Opportunity o where a.type='Appointment'"
+  SELECT_SCHEDULED_SQL = "select ifnull(a.scheduledstart, a.scheduledend) as scheduledtime, a.* from Activity a, Opportunity o where (a.type='Appointment' or a.type='PhoneCall')"
   
   SCHEDULED_END_SQL = "date(scheduledend)"
   SCHEDULED_START_SQL = "date(scheduledstart)"
+  SCHEDULED_TIME_SQL = "date(scheduledtime)"
+  SCHEDULED_OPEN_SQL = "a.statecode in ('Open', 'Scheduled')"
+  
   CREATED_ON_SQL = "and date(o.createdon)"
   NOW_SQL = "date('now', 'localtime')"
   ORDER_BY_CREATED_ON_DESC_SQL = "order by datetime(o.createdon) desc"
@@ -77,8 +80,6 @@ module SQLHelper
     select o.opportunityid from Opportunity o where statuscode = 'New Opportunity' and
     #{NO_ACTIVITIES_FOR_OPPORTUNITY_SQL}
   }
-  
-  APPOINTMENT_OPEN_SQL = "a.statecode in ('Open', 'Scheduled')"
     
   SELECT_FIRST_PER_OPPORTUNITY_SQL = "group by o.object order by datetime(a.scheduledend)"
   
