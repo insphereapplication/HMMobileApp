@@ -1,0 +1,48 @@
+<div data-role="page" data-theme="b" data-cache="never">
+	<form method="post" id="opp_add" action="<%= url_for(:action => :create, :query => {:id => @contact.object, :origin => @params['origin']})%>" name="opp_add">
+		<div data-role="header" data-backbtn="false" data-theme="b">
+			<a href="<%=url_for(:controller => :Contact, :action => :show, :id => @contact.object, :query=> {:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
+			<h1>Create Opportunity</h1>
+			<span class="ui-btn-right">
+				<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+			</span>
+		</div>	
+		<div data-role="content">
+			<ul data-role="listview" data-filter="false" data-inset="true"> 
+				<li data-role="list-divider">Opportunity Information</li>
+				<li>
+					<h3><%= @contact.full_name %></h3>
+					<p><%= @contact.gendercode %>, Age <%= (@contact.age).to_s %> </p>
+					<p>DOB: <%= to_date(@contact.birthdate) %></p>		
+				</li>
+				<li>
+					<label for="opportunity[cssi_lineofbusiness]" class="select">LOB:</label>
+					<div>
+						<select data-theme="d" id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]">
+							<option value="" selected="true"></option>
+								<% StaticEntity.get_lob_names.each do |lob_name| %>
+									<option value="<%=lob_name%>">
+										<%=lob_name%>
+									</option>
+								<% end %>
+						</select>
+					</div>
+				</li>
+				<li>
+					<label for="opportunity[cssi_leadsourceid]" class="select">Source:</label>
+					<div>
+						<select data-theme="d" id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]">
+							<option value="" selected="true"></option>
+								<% StaticEntity.get_lead_source_names.each do |lead_source_name| %>
+									<option value="<%=lead_source_name%>">
+										<%=lead_source_name%>
+									</option>
+								<% end %>					
+						</select>
+					</div>
+				</li>
+			</ul>
+			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+		</div>
+	</form>
+</div>

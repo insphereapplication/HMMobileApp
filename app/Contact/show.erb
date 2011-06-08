@@ -233,6 +233,9 @@ $('#contact_show').live('pagecreate',function(event){
 				<% if @params['origin'] == "contact" %>
 				 <ul data-role="listview" data-filter="false" data-inset="true">
 					<li data-role="list-divider">Opportunities</li>
+					<li data-icon="add">
+						<a href="<%= url_for(:controller => :Opportunity, :action => :new, :id => @contact.object, :query => {:origin => @params['origin']}) %>">Add Opportunity</a>
+					</li>
 					<% if @contact.opportunities.size == 0 %>
 						<li><div style="text-align:center"><i> (No Opportunities) </i></div></li>
 					<% end %>
