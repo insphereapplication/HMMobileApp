@@ -62,7 +62,7 @@ document.getElementById('appointment_duration').focus();
 							<textarea cols="40" rows="8" name="description" id="notetext"></textarea>
 						</div>
 						<div data-role="fieldcontain">
-							<input type="submit" class="standardButton" onclick="getLocationType(); return validateAppt();" value="Create Appointment"/>
+							<input type="submit" class="standardButton" onclick="getLocationType();" value="Create Appointment"/>
 						</div>    
 						<% if not $saved.nil? %>
 						      Saved date/time values:<br/>
