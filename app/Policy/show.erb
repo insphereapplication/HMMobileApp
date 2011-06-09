@@ -1,20 +1,9 @@
 <div data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar %>
-	<% if @params['origin'] == "contact" %>
 		<div data-role="header" data-backbtn="false">
-			<a href="<%= url_for(:controller => :Contact, :action => :show, :id => @policy.contact.object, :query =>{:origin => @params['origin']}) %>" data-direction="reverse" data-icon="back">Contact</a>
-<%
-=begin %>
-			<a rel="external" href="<%= url_for(:controller => :Contact, :action => :index) %>" data-direction="reverse" data-icon="back">Contacts</a>
-<%
-=end %>
+			<a href="<%= url_for(:controller => :Contact, :action => :show, :id => @policy.contact.object, :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}) %>" data-direction="reverse" data-icon="back">Contact</a>
 			<h3>Policy Detail</h3
 		</div>
-	<% else %>
-		<div data-role="header" data-backbtn="false">
-			<h3>Policy Detail</h3>
-		</div>
-	<% end %>
 	<div data-role="content">
 		<ul data-role="listview" data-theme="d" data-inset="true">
 			<li data-role="list-divider">General Information</li>

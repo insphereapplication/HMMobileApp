@@ -183,7 +183,7 @@ class SettingsController < Rho::RhoController
   end
   
   def pin
-    render :action => :pin 
+    render :action => :pin
   end
   
   def validate_pin
@@ -192,7 +192,7 @@ class SettingsController < Rho::RhoController
     password = @params['pin_password']
     
     if enter_pin.length < 4
-      redirect :action => :pin, :query => {:origin => @params['origin'], :contact => @params['contact']}
+      redirect :action => :pin, :query => {:origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity']}
       Alert.show_popup(
         {
           :message => "PIN must be 4 numbers.",
@@ -206,10 +206,11 @@ class SettingsController < Rho::RhoController
             Settings.pin = verify_pin
             Settings.pin_confirmed = false
             @msg =  "Your PIN has been reset."
-            if (@params['origin'] == "contact")
-              redirect :controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin']}
-            else
+            
+            if (@params['origin'].nil?)
                 redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
+            else
+              redirect :controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
             end
             # Alert.show_popup(
             #           {
