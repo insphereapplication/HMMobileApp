@@ -5,7 +5,7 @@
     </div>
 
     <div data-role="content">
-	 <form method="POST" action="<%= url_for :action => :validate_pin, :query => {:origin => @params['origin'], :contact => @params['contact']} %>">
+	 <form method="POST" action="<%= url_for :action => :validate_pin, :query => {:origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity']} %>">
 	   <% if @msg %>
 		 <p style="color: red"><%= @msg %></p>
 	   <% end %>
@@ -14,7 +14,7 @@
 				Login: <%= Settings.login %>
            <li>
 				<div data-role="fieldcontain" style="border: none">
-	       			<label for="enter_pin" style="display: inline">Enter PIN</label>
+	       			<label for="enter_pin" style="display: inline">Enter PIN <small>(Should consist of 4 numbers)</small></label>
 	       			<input maxlength="4" type="password" pattern="[0-9]*" name="enter_pin" id="enter_pin" />
 				</div>
 			</li>
@@ -31,7 +31,14 @@
 				</div>
 			</li>
 	   </ul>
-	   <input type="submit" class="standardButton" value="Reset"/>
+		<fieldset class="ui-grid-a">
+			<div class="ui-block-a"><input type="submit" data-theme="b" class="standardButton" value="Reset"/></div>
+			<% if @params['contact'].nil?%>	
+				<div class="ui-block-b"><a type="button" data-theme="c" value="Cancel" href="<%= url_for(:action => :index, :query => {:origin => @params['origin']}) %>">Cancel</a></div>
+			<% else %>
+				<div class="ui-block-b"><a type="button" data-theme="c" value="Cancel" href="<%= url_for(:controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>">Cancel</a></div>
+			<% end %>
+	    </fieldset>
 	 </form>
 	</div>
 </div>

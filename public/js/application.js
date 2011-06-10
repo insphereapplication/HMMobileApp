@@ -225,6 +225,14 @@ function ParseChar(sStr, sChar)
   return sNewStr;
 }
 
+function toggleDiv(divid){
+  if(document.getElementById(divid).style.display == 'none'){
+    document.getElementById(divid).style.display = 'block';
+  }else{
+    document.getElementById(divid).style.display = 'none';
+  }
+}
+
 function toggle(showHideDiv) {
 	var ele = document.getElementById(showHideDiv);
 	if(ele.style.display == "block") {

@@ -16,6 +16,12 @@ class ContactController < Rho::RhoController
     render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
+  def index_filter
+    $tab = 1
+    Settings.record_activity
+    render :action => :index_filter, :back => 'callback:', :layout => 'layout_JQM_Lite'
+  end
+  
   def show_all_contacts
     puts "CONTACT LOCAL IS CHANGED: #{Contact.local_changed?}"
     if Contact.local_changed? || $first_render
@@ -37,6 +43,41 @@ class ContactController < Rho::RhoController
     @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
     render :action => :contact_page, :back => 'callback:'
   end
+  
+  def get_contacts_with_active_page
+    Settings.record_activity
+    @contacts_with_active_policy = Contact.with_active_policy(@params['page'].to_i)
+    @grouped_with_active = @contacts_with_active_policy.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    render :action => :contact_with_active_page, :back => 'callback:'
+  end
+  
+  def get_contacts_with_pending_page
+    Settings.record_activity
+    @contacts_with_pending_policy = Contact.with_pending_policy(@params['page'].to_i)
+    @grouped_with_pending = @contacts_with_pending_policy.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    render :action => :contact_with_pending_page, :back => 'callback:'
+  end
+  
+  def get_contacts_with_open_opps_page
+    Settings.record_activity
+    @contacts_with_open_opps = Contact.with_open_opps(@params['page'].to_i)
+    @grouped_with_open_opps = @contacts_with_open_opps.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    render :action => :contact_with_open_opps_page, :back => 'callback:'
+  end
+  
+  def get_contacts_with_won_opps_page
+    Settings.record_activity
+    @contacts_with_won_opps = Contact.with_won_opps(@params['page'].to_i)
+    @grouped_with_won_opps = @contacts_with_won_opps.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    render :action => :contact_with_won_opps_page, :back => 'callback:'
+  end
+  
+  def get_contacts_filter_page
+    Settings.record_activity
+    @contacts_filter = Contact.list_filter(@params['page'].to_i)
+    @grouped_filter = @contacts_filter.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    render :action => :contact_filter_page, :back => 'callback:'
+  end
 
   # GET /Contact/{1}
   def show
@@ -49,6 +90,13 @@ class ContactController < Rho::RhoController
     else
       redirect :action => :index, :back => 'callback:'
     end
+  end
+  
+  def filter_contact
+      Settings.record_activity
+      $search_input1, $search_input2 = @params['search_input'].split(' ', 2)
+      $filter = @params['contact_filter']
+      WebView.navigate(url_for :controller => :Contact, :action => :index_filter)
   end
   
   def check_preferred_and_donotcall(phone_type, preferred, allow_call, company_dnc)
