@@ -171,6 +171,7 @@ class ContactController < Rho::RhoController
     @opp = Opportunity.create_new(@params['opportunity'])  
     @opp.update_attributes( :contact_id =>  @contact.object)
     @opp.update_attributes( :statecode => 'Open')
+    @opp.update_attributes( :cssi_statusdetail => 'New')
     @opp.update_attributes( :statuscode => 'New Opportunity')
     @opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))
 
