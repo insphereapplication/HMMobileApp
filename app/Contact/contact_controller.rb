@@ -94,7 +94,7 @@ class ContactController < Rho::RhoController
   
   def filter_contact
       Settings.record_activity
-      $search_input = @params['search_input']
+      $search_input1, $search_input2 = @params['search_input'].split(' ', 2)
       $filter = @params['contact_filter']
       WebView.navigate(url_for :controller => :Contact, :action => :index_filter)
   end

@@ -85,7 +85,7 @@ jQuery(document).ready(function() {
 			<a href="javascript:;" onmousedown="toggleDiv('filter'); toggleDiv('minus'); toggleDiv('plus');" class="ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-b" data-theme="b">
 				<span class="ui-btn-inner ui-corner-all">
 					<span class="ui-btn-text" id="para">
-						<%= "#{$filter} - #{$search_input}" %>
+						<%= "#{$filter} - #{$search_input1} #{$search_input2}" %>
 						<span class="ui-collapsible-heading-status">click to expand contents</span>
 					</span>
 					<span data-theme="d" class="ui-btn ui-btn-up-d ui-btn-icon-left ui-btn-corner-all ui-shadow">
@@ -104,7 +104,7 @@ jQuery(document).ready(function() {
 			<a href="javascript:;" onmousedown="toggleDiv('filter'); toggleDiv('plus'); toggleDiv('minus');" class="ui-collapsible-heading-toggle ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-b" data-theme="b">
 				<span class="ui-btn-inner ui-corner-all">
 					<span class="ui-btn-text">
-						<%= "#{$filter} - #{$search_input}" %>
+						<%= "#{$filter} - #{$search_input1} #{$search_input2}" %>
 						<span class="ui-collapsible-heading-status">click to expand contents</span>
 					</span>
 					<span data-theme="d" class="ui-btn ui-btn-up-d ui-btn-icon-left ui-btn-corner-all ui-shadow">
@@ -138,7 +138,7 @@ jQuery(document).ready(function() {
 			<option class="ui-btn-text" value="With Won Opps">Contacts with Won Opportunities</option>
 		</select>
 		<label for="search_input" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Search: </label>
-		<input type="text" id="search_input" name="search_input" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%= $search_input %>"></input>
+		<input type="text" id="search_input" name="search_input" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%= $search_input1 %> <%= $search_input2 %>"></input>
 		<fieldset class="ui-grid-custom ui-grid-a">
 			<div class="ui-block-a">
 				<div data-theme="b" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">
