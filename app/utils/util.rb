@@ -42,6 +42,11 @@ module SQLHelper
     end
   end
   
+  SELECT_EMAILS_SQL = %Q{
+    select a.* from Opportunity o, Activity a
+    where a.type='Email' 
+  }
+  
   OPEN_STATE_CODES = ['Open', 'Scheduled']
     
   SELECT_OPEN_PHONE_CALL_SQL = %Q{

@@ -182,5 +182,12 @@ class Activity
       :cssi_disposition => 'Appointment Held'
     })
   end
-  
+
+# class Email < Activity
+
+  def self.emails
+    find_by_sql(%Q{
+        #{SELECT_EMAILS_SQL} 
+      })
+  end
 end
