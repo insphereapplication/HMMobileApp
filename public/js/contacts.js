@@ -4,6 +4,13 @@ $(document).ready(function() {
 		return validateNewContactInfo();
 	});
 });
+
+$(document).ready(function() {
+	
+	$('.validateSearchFilter').click(function() { 
+		return validateSearchFilter();
+	});
+});
 	
 function loadContactsAsync(page){
 	$.post('/app/Contact/get_contacts_page', { page: page },
@@ -95,6 +102,24 @@ function loadContactsWithWonOppsAsync(page){
 	);
 }
 
+function loadContactsFilterAsync(page){
+	$.post('/app/Contact/get_contacts_filter_page', { page: page },
+		function(contacts) {				
+			if (contacts && $.trim(contacts) != ""){
+				$('ul#contact6-list6').append(contacts);
+				
+				$('.group-divider6').each(function(){
+				  var ids = $('[id='+this.id+']');
+				  if(ids.length>1 && ids[0]==this)
+				    $(ids[1]).remove();
+				});
+				
+				loadContactsFilterAsync(page + 1);
+			} 
+		}
+	);
+}
+
 
 function validateNewContactInfo(){
 	
@@ -121,6 +146,16 @@ function validateNewContactInfo(){
 		alert('Please enter an email address or phone number');
 		return false;
 	}
+    
+	return true;
+}
+
+function validateSearchFilter(){
+	
+	if ( document.getElementById('search_input').value.length < 2 || document.getElementById('search').value==null ) {
+      	alert('Search must contain at least 2 characters');
+		return false;
+    }
     
 	return true;
 }

@@ -174,6 +174,7 @@ class OpportunityController < Rho::RhoController
     get_appointments('red', 'Past Due', Activity.past_due_scheduled(@params['page'].to_i, filter, search))
   end
   
+  
   def check_preferred_and_donotcall(phone_type, contact)
     preferred = contact.preferred_number
     allow_call = 'True'
@@ -304,7 +305,7 @@ class OpportunityController < Rho::RhoController
       # else
       #   redirect :action => :index, :back => 'callback:'
       # end
-    end
+  end
     
   def app_detail_edit
     Settings.record_activity
@@ -374,7 +375,7 @@ class OpportunityController < Rho::RhoController
       else
         redirect :action => :index, :back => 'callback:'
       end
-    end
+  end
   
   
   def contact_opp_new    
@@ -399,7 +400,19 @@ class OpportunityController < Rho::RhoController
 
   def phone_dialog
     @opportunity = Opportunity.find_opportunity(@params['id'])
-    render :action => :phone_dialog, :back => 'callback:', :layout => 'layout_JQM_Lite'
+    phone_number=''
+    if @opportunity.contact.phone_numbers.size == 1
+      @opportunity.contact.phone_numbers.each do |type, number|
+        phone_number = number
+      end
+      
+      redirect :action => :call_opp_number,
+              :id => @opportunity.object,
+              :query =>{:origin => @params['origin'],
+                        :phone_number => phone_number} 
+    else
+      render :action => :phone_dialog, :back => 'callback:', :layout => 'layout_JQM_Lite'
+    end
   end
   
   def save
@@ -408,13 +421,23 @@ class OpportunityController < Rho::RhoController
   end
   
   def call_number
-    puts "Calling number " + @params['phone_number']
+    puts "calling number: #{@params['phone_number']}"
     telephone = @params['phone_number']
     telephone.gsub!(/[^0-9]/, "")
-    redirect :action => :phone_dialog, :back => 'callback:',
-              :id => @params['opportunity'],
-              :query =>{:origin => @params['origin']}
-    System.open_url('tel:' + telephone)
+    redirect :action => :status_update, :back => 'callback:',
+              :id => @params['id'],
+              :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}
+    System.open_url("tel:#{telephone}")
+  end
+  
+  def call_opp_number
+    puts "calling number: #{@params['phone_number']}"
+    telephone = @params['phone_number']
+    telephone.gsub!(/[^0-9]/, "")
+    redirect :action => :show, :back => 'callback:',
+              :id => @params['id'],
+              :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}
+    System.open_url("tel:#{telephone}")
   end
 
   def birthpopup
@@ -445,7 +468,7 @@ class OpportunityController < Rho::RhoController
         DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
       end
       render :back => 'callback:'
-    end
+  end
     
     def appdatepopup
       flag = @params['flag']
@@ -531,6 +554,7 @@ class OpportunityController < Rho::RhoController
     @contact = Contact.find_contact(@params['id'])
     render :action => :new, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
   end
+  
   
   def create
     @contact = Contact.find_contact(@params['id'])

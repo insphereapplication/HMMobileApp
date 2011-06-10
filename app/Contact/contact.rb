@@ -131,6 +131,51 @@ class Contact
     })
   end
   
+  def self.list_filter(page=nil, page_size=DEFAULT_PAGE_SIZE)  
+    if $filter == "All"
+      Contact.find_by_sql(%Q{
+        select distinct c.contactid, c.* from Contact c, Opportunity o 
+              where o.contact_id=c.object and 
+              o.statecode not in ('Won', 'Lost') and (c.firstname like '%#{$search_input1}%' OR c.lastname like '%#{$search_input1}%' OR c.firstname like '%#{$search_input2}%' OR c.lastname like '%#{$search_input2}%')
+        union
+        select distinct c.contactid, c.* from Contact c, Policy p where c.object = p.contact_id
+        and (c.firstname like '%#{$search_input1}%' OR c.lastname like '%#{$search_input1}%' OR c.firstname like '%#{$search_input2}%' OR c.lastname like '%#{$search_input2}%')
+        order by lastname collate nocase
+        #{get_pagination_sql(page, page_size)}
+      })
+    elsif $filter == "With Active Policies"
+      Contact.find_by_sql(%Q{
+        select distinct c.contactid, c.* from Contact c, Policy p where c.object = p.contact_id and p.statuscode = 'Active'
+        and (c.firstname like '%#{$search_input1}%' OR c.lastname like '%#{$search_input1}%' OR c.firstname like '%#{$search_input2}%' OR c.lastname like '%#{$search_input2}%')
+        order by lastname collate nocase
+        #{get_pagination_sql(page, page_size)}
+      })
+    elsif $filter  == "With Pending Policies"
+      Contact.find_by_sql(%Q{
+        select distinct c.contactid, c.* from Contact c, Policy p where c.object = p.contact_id and p.statuscode = 'Pending'
+        and (c.firstname like '%#{$search_input1}%' OR c.lastname like '%#{$search_input1}%' OR c.firstname like '%#{$search_input2}%' OR c.lastname like '%#{$search_input2}%')
+        order by lastname collate nocase
+        #{get_pagination_sql(page, page_size)}
+      })
+    elsif $filter  == "With Open Opps"
+      Contact.find_by_sql(%Q{
+        select distinct c.contactid, c.* from Contact c, Opportunity o 
+              where o.contact_id=c.object and 
+              o.statecode not in ('Won', 'Lost') and (c.firstname like '%#{$search_input1}%' OR c.lastname like '%#{$search_input1}%' OR c.firstname like '%#{$search_input2}%' OR c.lastname like '%#{$search_input2}%')
+        order by lastname collate nocase
+        #{get_pagination_sql(page, page_size)}
+      })
+    else
+      Contact.find_by_sql(%Q{
+        select distinct c.contactid, c.* from Contact c, Opportunity o 
+              where o.contact_id=c.object and 
+              o.statecode = 'Won' and (c.firstname like '%#{$search_input1}%' OR c.lastname like '%#{$search_input1}%' OR c.firstname like '%#{$search_input2}%' OR c.lastname like '%#{$search_input2}%')
+        order by lastname collate nocase
+        #{get_pagination_sql(page, page_size)}
+      })
+    end
+  end
+  
   def full_name
     "#{firstname} #{lastname}"
   end
