@@ -145,14 +145,45 @@ class Activity
 
 # class Appointment < Activity
   
-  def self.past_due_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE)   
-    find_by_sql(%Q{
-        #{SELECT_SCHEDULED_SQL} and
+  def self.past_due_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE, filter, search)
+    puts "#"*80 + " filter = #{filter.inspect} || search = #{search.inspect}"
+    
+    case filter
+      when 'All'
+        type_where_clause = "where (a.type='Appointment' or a.type='PhoneCall')"
+      when 'ScheduledAppointments'
+        type_where_clause = "where a.type='Appointment'"
+      when 'ScheduledCallbacks'
+        type_where_clause = "where a.type='PhoneCall'"
+      else
+        type_where_clause = ''
+    end
+      
+      
+    
+    search_terms = search.split
+    
+    like_clause = ''
+    if search_terms.count > 0
+      like_clause << ' and ('
+      search_terms.each do |search_term|
+        like_clause << %Q{a.subject like '%#{search_term}%' or }
+      end
+      like_clause.chomp!(" or ")
+      like_clause << ')'
+    end
+
+    sql = %Q{
+        #{SELECT_SCHEDULED_NO_WHERE_SQL} #{type_where_clause} and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-        #{SCHEDULED_TIME_SQL} < #{NOW_SQL}and 
+        #{SCHEDULED_TIME_SQL} < #{NOW_SQL}and
         #{SCHEDULED_OPEN_SQL}
+        #{like_clause}
+        #{SCHEDULED_ORDERBY_SQL}
         #{get_pagination_sql(page, page_size)}
-      })
+      }
+      
+    find_by_sql(sql)
   end
   
   def self.future_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE)    
@@ -161,6 +192,7 @@ class Activity
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
         #{SCHEDULED_TIME_SQL} > #{NOW_SQL} and 
         #{SCHEDULED_OPEN_SQL} 
+        #{SCHEDULED_ORDERBY_SQL}
         #{get_pagination_sql(page, page_size)}
       })
   end
@@ -171,6 +203,7 @@ class Activity
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
         #{SCHEDULED_TIME_SQL} = #{NOW_SQL}and 
         #{SCHEDULED_OPEN_SQL}
+        #{SCHEDULED_ORDERBY_SQL}
         #{get_pagination_sql(page, page_size)}
       })
   end

@@ -65,12 +65,14 @@ module SQLHelper
       )
   } 
   
+  # SQL building blocks for the Scheduled tab on the Opportunities page
   SELECT_SCHEDULED_SQL = "select ifnull(a.scheduledstart, a.scheduledend) as scheduledtime, a.* from Activity a, Opportunity o where (a.type='Appointment' or a.type='PhoneCall')"
-  
+  SELECT_SCHEDULED_NO_WHERE_SQL = "select ifnull(a.scheduledstart, a.scheduledend) as scheduledtime, a.* from Activity a, Opportunity o"
   SCHEDULED_END_SQL = "date(scheduledend)"
   SCHEDULED_START_SQL = "date(scheduledstart)"
   SCHEDULED_TIME_SQL = "date(scheduledtime)"
   SCHEDULED_OPEN_SQL = "a.statecode in ('Open', 'Scheduled')"
+  SCHEDULED_ORDERBY_SQL = "order by datetime(scheduledtime)"
   
   CREATED_ON_SQL = "and date(o.createdon)"
   NOW_SQL = "date('now', 'localtime')"
@@ -80,7 +82,7 @@ module SQLHelper
     select o.opportunityid from Opportunity o where statuscode = 'New Opportunity' and
     #{NO_ACTIVITIES_FOR_OPPORTUNITY_SQL}
   }
-    
+  
   SELECT_FIRST_PER_OPPORTUNITY_SQL = "group by o.object order by datetime(a.scheduledend)"
   
   NEW_LEADS_SQL = %Q{

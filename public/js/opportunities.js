@@ -61,26 +61,32 @@ function loadFollowUps(){
 	loadOpportunities(followUpBucket, 0);
 }
 
-function loadScheduled(){
+function loadScheduled( scheduledSelectFilter, scheduledSearchInput )
+{
+	$('#past-due-appointments-list').empty();
+	$('#todays-appointments-list').empty();
+	$('#future-appointments-list').empty();
+	
 	appointmentBucket = getLinkedBucketList([ 
-		{ opportunity_method: 'past_due_scheduled',    list_selector: 'span#past-due-appointments-list', next: null},
+		{ opportunity_method: 'past_due_scheduled', list_selector: 'span#past-due-appointments-list', next: null},
 		{ opportunity_method: 'todays_scheduled',   list_selector: 'span#todays-appointments-list',   next: null},
 		{ opportunity_method: 'future_scheduled',   list_selector: 'span#future-appointments-list',   next: null}
 	]);
 											
-	loadOpportunities(appointmentBucket, 0);
+	loadOpportunities(appointmentBucket, 0, scheduledSelectFilter, scheduledSearchInput);
 }
 
- 				 
-
-function loadOpportunities(opportunityBucket, opportunity_page){
-	$.post('/app/Opportunity/' + opportunityBucket.opportunity_method, { page: opportunity_page },
+function loadOpportunities(opportunityBucket, opportunity_page, filter, search){
+	$.post('/app/Opportunity/' + opportunityBucket.opportunity_method, { page: opportunity_page, filter: filter, search: search },
 		function(opportunities) {				
-			if (opportunities && $.trim(opportunities) != ""){
+			if (opportunities && $.trim(opportunities) != "")
+			{
 				$(opportunityBucket.list_selector).append(opportunities);
-				loadOpportunities(opportunityBucket, opportunity_page + 1);
-			}else if (opportunityBucket.next != null){
-				loadOpportunities(opportunityBucket.next, 0);
+				loadOpportunities(opportunityBucket, opportunity_page + 1, filter, search);
+			}
+			else if (opportunityBucket.next != null)
+			{
+				loadOpportunities(opportunityBucket.next, 0, filter, search);
 			}
 		}
 	);

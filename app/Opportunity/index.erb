@@ -6,14 +6,68 @@
 </style>
 
 <script type='text/javascript'>
+	function toggleFollowUpFilterArea()
+	{
+		toggleDiv('followup_filter'); 
+		toggleDiv('followup_minus');
+		toggleDiv('followup_plus');
+	}
+	
+	function toggleScheduledFilterArea()
+	{
+		toggleDiv('appointments_filter');
+		toggleDiv('appointments_minus');
+		toggleDiv('appointments_plus');
+	}
+	
 	$(document).ready(function() {
 		// add the selected style to the selected tab button
 		$('a#<%= @params['selected_tab'] %>-button').addClass('ui-btn-active');
-		
+				
 		loadNewLeads(); 
 		loadFollowUps();
-		loadScheduled();
+		loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
 	});
+	
+	$(document).ready( function()
+	{
+		$('#followup_clear').click( function()
+		{
+			$('#followup_search_input').val('');
+			$('#followup_select_filter').val('All');
+			return false;
+		})
+	})
+	
+	$(document).ready( function()
+	{
+		$('#appointments_clear').click( function()
+		{
+			$('#appointments_search_input').val('');
+			$('#appointments_select_filter').val('All');
+			loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
+			return false;
+		})
+	})
+	
+	$(document).ready( function()
+	{
+		$('#followup_filter_button').click( function()
+		{
+			alert( "Applying follow-up filter" )
+			return false;
+		})
+	})
+	
+	$(document).ready( function()
+	{
+		$('#appointments_filter_button').click( function()
+		{
+			toggleScheduledFilterArea();
+			loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
+			return false;
+		})
+	})
 </script>
 
 <div class="ui-page ui-body-b ui-page-active" data-role="page">
@@ -24,9 +78,27 @@
 	</div>
 	<div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
 		<ul class="ui-grid-b">
-			<li class="ui-block-a"><a id="new-leads-button" class="tab-button ui-btn ui-btn-up-a " data-transition="none" data-theme="a"><span class="ui-btn-inner"><span class="ui-btn-text">New Leads</span></span></a></li>
-			<li class="ui-block-b"><a id="follow-ups-button" class="tab-button ui-btn ui-btn-up-a" data-transition="none" data-theme="a"><span class="ui-btn-inner"><span class="ui-btn-text">Follow-Up</span></span></a></li>
-			<li class="ui-block-c"><a id="appointments-button" class="tab-button ui-btn ui-btn-up-a" data-transition="none" data-theme="a"><span class="ui-btn-inner"><span class="ui-btn-text">Scheduled</span></span></a></li>
+			<li class="ui-block-a">
+				<a id="new-leads-button" class="tab-button ui-btn ui-btn-up-a " data-transition="none" data-theme="a">
+					<span class="ui-btn-inner">
+						<span class="ui-btn-text">New Leads</span>
+					</span>
+				</a>
+			</li>
+			<li class="ui-block-b">
+				<a id="follow-ups-button" class="tab-button ui-btn ui-btn-up-a" data-transition="none" data-theme="a">
+					<span class="ui-btn-inner">
+						<span class="ui-btn-text">Follow-Up</span>
+					</span>
+				</a>
+			</li>
+			<li class="ui-block-c">
+				<a id="appointments-button" class="tab-button ui-btn ui-btn-up-a" data-transition="none" data-theme="a">
+					<span class="ui-btn-inner">
+						<span class="ui-btn-text">Scheduled</span>
+					</span>
+				</a>
+			</li>
 		</ul>
 	</div>
 	<div id="new-leads" data-role="content" class="ui-content opp-tab" role="main">
@@ -37,6 +109,71 @@
 	</div>	
 	<div id="follow-ups" data-role="content" class="ui-content opp-tab" role="main">
 		<ul data-counttheme="e" data-split-theme="b" data-split-icon="phoneopp" data-role="listview" class="ui-listview" role="listbox">
+			<span>
+				<div id="followup_plus" data-collapsed="true" class="ui-collapsible-contain">
+					<h3 class="ui-collapsible-custom-heading ui-collapsible-heading-collapsed">
+						<a href="javascript:;" onmousedown="toggleFollowUpFilterArea();" class="ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-b" data-theme="b">
+							<span class="ui-btn-inner ui-corner-all">
+								<span class="ui-btn-text" id="followup_para">Filters
+									<span class="ui-collapsible-heading-status">click to expand contents</span>
+								</span>
+								<span data-theme="d" class="ui-btn ui-btn-up-d ui-btn-icon-left ui-btn-corner-all ui-shadow">
+									<span class="ui-btn-inner ui-btn-corner-all ui-corner-all">
+										<span class="ui-btn-text"/>
+										<span class="ui-icon ui-icon-plus ui-icon-shadow"/>
+									</span>
+								</span>
+							</span>
+						</a>
+					</h3>
+				</div>
+				<div id="followup_minus" style="display:none;" data-role="collapsible" data-collapsed="true" class="ui-collapsible-contain">
+					<h3 class="ui-collapsible-custom-heading ui-collapsible-heading-collapsed">
+						<a href="javascript:;" onmousedown="toggleFollowUpFilterArea();" class="ui-collapsible-heading-toggle ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-b" data-theme="b">
+							<span class="ui-btn-inner ui-corner-all">
+								<span class="ui-btn-text">Filters
+									<span class="ui-collapsible-heading-status">click to expand contents</span>
+								</span>
+								<span data-theme="d" class="ui-btn ui-btn-up-d ui-btn-icon-left ui-btn-corner-all ui-shadow">
+									<span class="ui-btn-inner ui-btn-corner-all ui-corner-all">
+										<span class="ui-btn-text"/>
+										<span class="ui-icon ui-icon-minus ui-icon-shadow"/>
+									</span>
+								</span>
+							</span>
+						</a>
+					</h3>
+				</div>
+				<div id="followup_filter" style="display:none;" data-role="none">
+					<select class="ui-custom-dropdown" name="followup_select_filter" id="followup_select_filter" tabindex="-1" onchange="addtext();">
+						<option class="ui-btn-text" selected="true" value="All">All</option>
+						<option class="ui-btn-text" value="Active">Contacts with Active Policies</option>
+						<option class="ui-btn-text" value="Pending">Contacts with Pending Policies</option>
+						<option class="ui-btn-text" value="Opps">Contacts with Open Opportunities</option>
+						<option class="ui-btn-text" value="WonOpps">Contacts with Won Opportunities</option>
+					</select>
+					<label for="search_input" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Search: </label>
+					<input type="text" id="followup_search_input" maxlength="30" class="ui-search-text ui-body-null ui-corner-all"></input>
+					<fieldset class="ui-grid-custom ui-grid-a">
+						<div class="ui-block-a">
+							<div data-theme="b" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">
+								<span class="ui-btn-inner ui-btn-corner-all">
+									<span class="ui-btn-text">Filter</span>
+								</span>
+								<input type="submit" class="standardButton ui-btn-hidden" data-theme="b" id="followup_filter_button" name="followup_filter_button"/>
+							</div>
+						</div>
+						<div class="ui-block-b">
+							<div data-theme="b" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">
+								<span class="ui-btn-inner ui-btn-corner-all">
+									<span class="ui-btn-text">Clear</span>
+								</span>
+								<a type="button" data-theme="b" href="" id="followup_clear" name="followup_clear" class="ui-btn-hidden ui-link"></a>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</span>
 			<span id="past-due-follow-ups-list"></span>
 			<span id="todays-follow-ups-list"></span>
 			<span id="by-last-activities-list"></span>
@@ -45,6 +182,71 @@
 	</div>
 	<div id="appointments" data-role="content" class="ui-content opp-tab" role="main">
 		<ul data-counttheme="e" data-split-theme="b" data-split-icon="phoneopp" data-role="listview" class="ui-listview" role="listbox">
+			<span>
+				<div id="appointments_plus" data-collapsed="true" class="ui-collapsible-contain">
+					<h3 class="ui-collapsible-custom-heading ui-collapsible-heading-collapsed">
+						<a href="javascript:;" onmousedown="toggleScheduledFilterArea();" class="ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-b" data-theme="b">
+							<span class="ui-btn-inner ui-corner-all">
+								<span class="ui-btn-text" id="appointments_para">
+									Filters
+									<span class="ui-collapsible-heading-status">click to expand contents</span>
+								</span>
+								<span data-theme="d" class="ui-btn ui-btn-up-d ui-btn-icon-left ui-btn-corner-all ui-shadow">
+									<span class="ui-btn-inner ui-btn-corner-all ui-corner-all">
+										<span class="ui-btn-text"/>
+										<span class="ui-icon ui-icon-plus ui-icon-shadow"/>
+									</span>
+								</span>
+							</span>
+						</a>
+					</h3>
+				</div>
+				<div id="appointments_minus" style="display:none;" data-role="collapsible" data-collapsed="true" class="ui-collapsible-contain">
+					<h3 class="ui-collapsible-custom-heading ui-collapsible-heading-collapsed">
+						<a href="javascript:;" onmousedown="toggleScheduledFilterArea();" class="ui-collapsible-heading-toggle ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-b" data-theme="b">
+							<span class="ui-btn-inner ui-corner-all">
+								<span class="ui-btn-text">
+									Filters
+									<span class="ui-collapsible-heading-status">click to expand contents</span>
+								</span>
+								<span data-theme="d" class="ui-btn ui-btn-up-d ui-btn-icon-left ui-btn-corner-all ui-shadow">
+									<span class="ui-btn-inner ui-btn-corner-all ui-corner-all">
+										<span class="ui-btn-text"/>
+										<span class="ui-icon ui-icon-minus ui-icon-shadow"/>
+									</span>
+								</span>
+							</span>
+						</a>
+					</h3>
+				</div>
+				<div id="appointments_filter" style="display:none;" data-role="none">
+					<select class="ui-custom-dropdown" name="appointments_select_filter" id="appointments_select_filter" tabindex="-1" onchange="addtext();">
+						<option class="ui-btn-text" selected="true" value="All">All</option>
+						<option class="ui-btn-text" value="ScheduledAppointments">Scheduled Appointments</option>
+						<option class="ui-btn-text" value="ScheduledCallbacks">Scheduled Callbacks</option>
+					</select>
+					<label for="search_input" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Search: </label>
+					<input type="text" id="appointments_search_input" maxlength="30" class="ui-search-text ui-body-null ui-corner-all"></input>
+					<fieldset class="ui-grid-custom ui-grid-a">
+						<div class="ui-block-a">
+							<div data-theme="b" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">
+								<span class="ui-btn-inner ui-btn-corner-all">
+									<span class="ui-btn-text">Filter</span>
+								</span>
+								<input type="submit" class="standardButton ui-btn-hidden" data-theme="b" id="appointments_filter_button" name="appointments_filter_button"/>
+							</div>
+						</div>
+						<div class="ui-block-b">
+							<div data-theme="b" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">
+								<span class="ui-btn-inner ui-btn-corner-all">
+									<span class="ui-btn-text">Clear</span>
+								</span>
+								<a type="button" data-theme="b" href="" id="appointments_clear" name="appointments_clear" class="ui-btn-hidden ui-link"></a>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</span>
 			<span id="past-due-appointments-list"></span>
 			<span id="todays-appointments-list"></span> 
 			<span id="future-appointments-list"></span>

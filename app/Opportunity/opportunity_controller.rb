@@ -149,19 +149,29 @@ class OpportunityController < Rho::RhoController
     @color = color
     @label = text
     @page = appointments
+    
     render :action => :appointments_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
   def future_scheduled
+    filter = @params['filter']
+    search = @params['search']
+    
     get_appointments('green', 'Future', Activity.future_scheduled(@params['page'].to_i))
   end
 
   def todays_scheduled
+    filter = @params['filter']
+    search = @params['search']
+    
     get_appointments('orange', 'Today', Activity.todays_scheduled(@params['page'].to_i))
   end
 
   def past_due_scheduled
-    get_appointments('red', 'Past Due', Activity.past_due_scheduled(@params['page'].to_i))
+    filter = @params['filter']
+    search = @params['search']
+    
+    get_appointments('red', 'Past Due', Activity.past_due_scheduled(@params['page'].to_i, filter, search))
   end
   
   def check_preferred_and_donotcall(phone_type, contact)
