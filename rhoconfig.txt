@@ -17,7 +17,7 @@ rhobundle_zip_pwd = nil
 # log level
 # 0-trace, 1-info(app level), 3-warnings, 4-errors
 # for production set to 3
-MinSeverity  = 1
+MinSeverity  = 3
 
 # enable copy log messages to standard output, useful for debugging
 LogToOutput = 1
@@ -56,6 +56,12 @@ LastVisitedPage = ''
 
 #MODEL ONSITE
 syncserver = 'https://rhosync.model.insphereis.net/application'
+<<<<<<< HEAD
+=======
+
+#PROD ONSITE
+#syncserver = 'https://rhosync.insphereis.net/application'
+>>>>>>> 2-0_iter1
 
 #MODEL ONSITE IP
 # syncserver = 'https://199.102.216.25/application'
@@ -67,7 +73,7 @@ syncserver = 'https://rhosync.model.insphereis.net/application'
 # syncserver = 'http://nrhrho102/application'
 
 #DEV
-syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
+#syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
 
 #LOCAL
 # syncserver = 'http://localhost:9292/application'

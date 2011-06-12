@@ -132,15 +132,15 @@ function validateNewContactInfo(){
 		return false;
     }
 	if (		
-		( document.getElementById('contact_emailaddress1').value.length==0 || document.getElementById('contact_emailaddress1').value==null )
+		(document.getElementById('contact_emailaddress1') == null || document.getElementById('contact_emailaddress1').value.length==0 || document.getElementById('contact_emailaddress1').value==null )
 		&&
-		(document.getElementById('contact_mobilephone').value.length==0 || document.getElementById('contact_mobilephone').value==null )
+		(document.getElementById('contact_mobilephone') == null || document.getElementById('contact_mobilephone').value.length==0 || document.getElementById('contact_mobilephone').value==null )
 		&&
-		(document.getElementById('contact_telephone1').value.length==0 || document.getElementById('contact_telephone1').value==null )
+		(document.getElementById('contact_telephone1') == null || document.getElementById('contact_telephone1').value.length==0 || document.getElementById('contact_telephone1').value==null )
 		&&
-		(document.getElementById('contact_telephone2').value.length==0 || document.getElementById('contact_telephone2').value==null )
+		(document.getElementById('contact_telephone2') == null || document.getElementById('contact_telephone2').value.length==0 || document.getElementById('contact_telephone2').value==null )
 		&&
-		(document.getElementById('contact_telephone3').value.length==0 || document.getElementById('contact_telephone3').value==null )
+		(document.getElementById('contact_telephone3') == null || document.getElementById('contact_telephone3').value.length==0 || document.getElementById('contact_telephone3').value==null )
 	){
 		// no phone numbers and no email address
 		alert('Please enter an email address or phone number');

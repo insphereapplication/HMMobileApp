@@ -89,7 +89,8 @@ class DependentController < Rho::RhoController
         :callback => url_for(:action => :dependent_delete, 
                                         :query => {
 				                                :id => @params['id'],
-				                                :origin => @params['origin']
+				                                :origin => @params['origin'],
+				                                :opportunity => @params['opportunity']
 				                                })
 				                   })
   end
@@ -100,9 +101,9 @@ class DependentController < Rho::RhoController
       contactid = @dependent.contact_id
       @dependent.destroy if @dependent
       SyncEngine.dosync
-      WebView.navigate(url_for :controller => :Contact, :action => :show, :id => contactid, :query => {:origin => @params['origin']})
+      WebView.navigate(url_for :controller => :Contact, :action => :show, :id => contactid, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})
     else
-      WebView.navigate(url_for :controller => :Dependent, :action => :edit, :id => @params['id'], :query => {:origin => @params['origin']})
+      WebView.navigate(url_for :controller => :Dependent, :action => :edit, :id => @params['id'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})
     end 
   end
   
