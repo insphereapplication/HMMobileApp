@@ -13,6 +13,11 @@ class StaticEntity
     lob = StaticEntity.find('line_of_business')
     lob_names = lob.names.split('||')
   end
+
+  def self.get_rawlead_lob_names
+    lob = StaticEntity.find('rawlead_lineofbusiness')
+    lob_names = lob.names.split('||')
+  end
   
   def self.get_lead_source_names
     lead_source = StaticEntity.find('lead_source')
