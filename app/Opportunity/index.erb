@@ -145,15 +145,25 @@
 					</h3>
 				</div>
 				<div id="followup_filter" style="display:none;" data-role="none">
-					<select class="ui-custom-dropdown" name="followup_select_filter" id="followup_select_filter" tabindex="-1" onchange="addtext();">
+					<label for="followup_status_reason_filter" class="fieldLabel ui-input-text">Status Reason:</label>
+					<select class="ui-custom-dropdown" name="followup_status_reason_filter" id="followup_status_reason_filter" tabindex="-1" onchange="addtext();">
 						<option class="ui-btn-text" selected="true" value="All">All</option>
-						<option class="ui-btn-text" value="Active">Contacts with Active Policies</option>
-						<option class="ui-btn-text" value="Pending">Contacts with Pending Policies</option>
-						<option class="ui-btn-text" value="Opps">Contacts with Open Opportunities</option>
-						<option class="ui-btn-text" value="WonOpps">Contacts with Won Opportunities</option>
+						<option class="ui-btn-text" value="NoContactMade">No Contact Made</option>
+						<option class="ui-btn-text" value="ContactMade">Contact Made</option>
+						<option class="ui-btn-text" value="AppointmentSet">Appointment Set</option>
+						<option class="ui-btn-text" value="DealInProgress">Deal in Progress</option>
 					</select>
-					<label for="search_input" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Search: </label>
-					<input type="text" id="followup_search_input" maxlength="30" class="ui-search-text ui-body-null ui-corner-all"></input>
+					<label for="followup_sort_by_filter" class="fieldLabel ui-input-text">Sort By:</label>
+					<select class="ui-custom-dropdown" name="followup_sort_by_filter" id="followup_sort_by_filter" tabindex="-1" onchange="addtext();">
+						<option class="ui-btn-text" selected="true" value="LastActivityDateAscending">Last Activity Date Ascending</option>
+						<option class="ui-btn-text" value="LastActivityDateDescending">Last Activity Date Descending</option>
+						<option class="ui-btn-text" value="CreateDateAscending">Create Date Ascending</option>
+						<option class="ui-btn-text" value="CreateDateDescending">Create Date Descending</option>
+					</select>
+					<label for="followup_created_filter" class="fieldLabel ui-input-text">Created:</label>
+					<select class="ui-custom-dropdown" name="followup_created_filter" id="followup_created_filter" tabindex="-1" onchange="addtext();">
+						<option class="ui-btn-text" selected="true" value="OneDayAgo">1 Day Ago</option>
+					</select>
 					<fieldset class="ui-grid-custom ui-grid-a">
 						<div class="ui-block-a">
 							<div data-theme="b" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">
@@ -174,10 +184,10 @@
 					</fieldset>
 				</div>
 			</span>
-			<span id="past-due-follow-ups-list"></span>
-			<span id="todays-follow-ups-list"></span>
+			<!-- <span id="past-due-follow-ups-list"></span> -->
+			<!-- <span id="todays-follow-ups-list"></span> -->
 			<span id="by-last-activities-list"></span>
-			<span id="future-follow-ups-list"></span>
+			<!-- <span id="future-follow-ups-list"></span> -->
 		</ul>
 	</div>
 	<div id="appointments" data-role="content" class="ui-content opp-tab" role="main">
@@ -225,7 +235,7 @@
 						<option class="ui-btn-text" value="ScheduledAppointments">Scheduled Appointments</option>
 						<option class="ui-btn-text" value="ScheduledCallbacks">Scheduled Callbacks</option>
 					</select>
-					<label for="search_input" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Search: </label>
+					<label for="appointments_search_input" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Search: </label>
 					<input type="text" id="appointments_search_input" maxlength="30" class="ui-search-text ui-body-null ui-corner-all"></input>
 					<fieldset class="ui-grid-custom ui-grid-a">
 						<div class="ui-block-a">

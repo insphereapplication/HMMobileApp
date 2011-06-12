@@ -159,8 +159,6 @@ class Activity
         type_where_clause = ''
     end
       
-      
-    
     search_terms = search.split
     
     like_clause = ''
