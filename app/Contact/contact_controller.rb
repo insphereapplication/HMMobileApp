@@ -246,7 +246,8 @@ class ContactController < Rho::RhoController
         :callback => url_for(:action => :spouse_delete, 
                                         :query => {
 				                                :id => @params['id'],
-				                                :origin => @params['origin']
+				                                :origin => @params['origin'], 
+				                                :opportunity => @params['opportunity']
 				                                })
 				                   })
   end
@@ -264,9 +265,9 @@ class ContactController < Rho::RhoController
       @contact.update_attributes(:cssi_spouseusetobacco => "")
       @contact.update_attributes(:cssi_spousegender => "")
       SyncEngine.dosync
-      WebView.navigate(url_for :controller => :Contact, :action => :show, :id => @contact.object, :query => {:origin => @params['origin']})
+      WebView.navigate(url_for :controller => :Contact, :action => :show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})
     else
-      WebView.navigate(url_for :controller => :Contact, :action => :spouse_edit, :id => @params['id'], :query => {:origin => @params['origin']})
+      WebView.navigate(url_for :controller => :Contact, :action => :spouse_edit, :id => @params['id'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})
     end
   end
   
