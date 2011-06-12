@@ -31,6 +31,7 @@ class Opportunity
   property :competitorid, :string
   property :actual_end, :string
   property :temp_id, :string
+  property :actualclosedate, :string
   
   index :opportunity_pk_index, [:opportunityid]
   unique_index :unique_opp, [:opportunityid] 
