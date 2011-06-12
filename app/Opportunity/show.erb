@@ -96,6 +96,17 @@ $('#opportunity_show').live('pagecreate',function(event){
 							</a>
 						</div>
 					</div>
+					<% if appointment.location.blank? %>
+						<% if System::get_property('platform') == 'APPLE'%>
+							<a onclick="hideSpin();" href=<%="maps:q="%>>
+								<img class="appt-icon" src="/public/images/map_icon.png">
+							</a>
+						<%else%>			
+							<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q="%>>
+								<img class="appt-icon" src="/public/images/map_icon.png">
+							</a>
+						<%end%>
+					<% else %>
 						<% if System::get_property('platform') == 'APPLE'%>
 							<a onclick="hideSpin();" href=<%="maps:q=#{Rho::RhoSupport.url_encode(appointment.location)}"%>>
 								<img class="appt-icon" src="/public/images/map_icon.png">
@@ -105,6 +116,7 @@ $('#opportunity_show').live('pagecreate',function(event){
 								<img class="appt-icon" src="/public/images/map_icon.png">
 							</a>
 						<%end%>
+					<% end %>
 				</li>
 					<% end %>
 					<% if @opportunity.appointments.size == 0 %>
@@ -130,10 +142,14 @@ $('#opportunity_show').live('pagecreate',function(event){
 							</a>
 						</div>
 					</div>
-					<% if phonecall.phonenumber %>
-							<a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub(/[^0-9]/, "") %>">
-								<img class="call-icon" src="/public/images/phone_black.png">
-							</a>
+					<% if phonecall.phonenumber.blank? %>
+						<a onclick="hideSpin()" rel="external" href="<%= url_for :action => :phone_dialog, :id=> @opportunity.object, :query =>{:opportunity => @opportunity.object, :origin => @params['origin']}%>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
+							<img class="call-icon" src="/public/images/phone_black.png">
+						</a>
+					<% else %>
+						<a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub(/[^0-9]/, "") %>">
+							<img class="call-icon" src="/public/images/phone_black.png">
+						</a>
 					<% end %>
 				</li>
 				<% end %>
