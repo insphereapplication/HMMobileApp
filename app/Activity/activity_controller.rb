@@ -59,7 +59,10 @@ class ActivityController < Rho::RhoController
       :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
       :location => @params['location'],
       :description => @params['description'],
-      :cssi_location => @params['cssi_location']     
+      :cssi_location => @params['cssi_location']  
+    }) if @appointment
+    @appointment.opportunity.update_attributes({
+      :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }) if @appointment
     SyncEngine.dosync
     redirect :action => :show_appt, :back => 'callback:',
@@ -73,6 +76,9 @@ class ActivityController < Rho::RhoController
     @callback.update_attributes({
         :scheduledend => DateUtil.date_build(@params['callback_datetime']),
         :phonenumber => @params['phone_number'] 
+    }) if @callback
+    @callback.opportunity.update_attributes({
+      :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }) if @callback
     SyncEngine.dosync
     redirect :action => :show_callback, :back => 'callback:',
