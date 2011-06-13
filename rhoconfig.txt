@@ -55,7 +55,7 @@ LastVisitedPage = ''
 # syncserver = 'https://rhosync.insphereis.net/application'
 
 #MODEL ONSITE
-syncserver = 'https://rhosync.model.insphereis.net/application'
+#syncserver = 'https://rhosync.model.insphereis.net/application'
 
 #PROD ONSITE
 #syncserver = 'https://rhosync.insphereis.net/application'
