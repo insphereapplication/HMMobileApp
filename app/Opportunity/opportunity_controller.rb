@@ -524,17 +524,18 @@ class OpportunityController < Rho::RhoController
        @dob = date.strftime('%m/%d/%Y')
      end     
      
-     @quote_param = "?gaid=5242&dob=#{@dob}&gender=#{@contact.gendercode}"
-     
+     @quote_param = ",dob=#{@dob},gender=#{@contact.gendercode}"
+   
      if (not (@contact.cssi_state1id.nil? || @contact.cssi_state1id.blank? || @contact.cssi_state1id == ''))   
-       @quote_param="#{@quote_param}&statecode=#{@contact.cssi_state1id}"
+       @quote_param="#{@quote_param},statecode=#{@contact.cssi_state1id}"
      else
-        @quote_param="#{@quote_param}&statecode=#{@contact.cssi_state2id}"
+        @quote_param="#{@quote_param},statecode=#{@contact.cssi_state2id}"
      end  
      
      #puts("The query parameters are: #{@quote_param}")    
+     quote_url="#{Rho::RhoConfig.quick_quote_url}#{@quote_param}"
      WebView.navigate(WebView.current_location)
-     System.open_url("https://mobile-uat.ipipeline.com/quote/#{@quote_param}")
+     System.open_url("#{quote_url}")
 
    end
   

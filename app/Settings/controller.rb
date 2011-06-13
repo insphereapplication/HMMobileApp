@@ -634,13 +634,15 @@ class SettingsController < Rho::RhoController
   def quick_quote
     Settings.record_activity
     WebView.navigate(WebView.current_location)
-    System.open_url("https://mobile-uat.ipipeline.com/?gaid=5242")
+    quote_url=Rho::RhoConfig.quick_quote_url
+    System.open_url("#{quote_url}")
   end
   
   def resource_center
     Settings.record_activity
     WebView.navigate(WebView.current_location)
-    System.open_url("http://www.insphereis.net")
+    resource_url=Rho::RhoConfig.resource_center_url
+    System.open_url("#{resource_url}")
   end
 
   def check_force_upgrade
