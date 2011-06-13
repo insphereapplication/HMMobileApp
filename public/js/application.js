@@ -17,8 +17,7 @@ $(document).ready(function() {
 //status update validate datetime
 function validate(){
 	if ((document.getElementById('callback_datetime').value.length==0) || document.getElementById('callback_datetime').value==null) {
-      	alert('Please choose a callback date and time.');
-		return false;
+
    }
    else { document.getElementById('phoneNumber').disabled=false; return true; }	
 }
@@ -226,6 +225,14 @@ function ParseChar(sStr, sChar)
   return sNewStr;
 }
 
+function toggleDiv(divid){
+  if(document.getElementById(divid).style.display == 'none'){
+    document.getElementById(divid).style.display = 'block';
+  }else{
+    document.getElementById(divid).style.display = 'none';
+  }
+}
+
 function toggle(showHideDiv) {
 	var ele = document.getElementById(showHideDiv);
 	if(ele.style.display == "block") {
@@ -395,8 +402,18 @@ function popupDateTimeAJPicker(flag, title, field_key) {
   return false;
 }
 
+function popupBirthDateAJPicker(flag, title, field_key) {
+  $.get('/app/Opportunity/birthpopup', { flag: flag, title: title, field_key: field_key });
+  return false;
+}
+
 function editpopupDateTimeAJPicker(flag, title, field_key, preset) {
   $.get('/app/Opportunity/edit_popup', { flag: flag, title: title, field_key: field_key, preset: preset });
+  return false;
+}
+
+function popupAppDateAJPicker(flag, title, field_key) {
+  $.get('/app/Opportunity/appdatepopup', { flag: flag, title: title, field_key: field_key });
   return false;
 }
 
@@ -456,3 +473,37 @@ if (!Array.prototype.reduce)
     return rv;
   };
 }
+
+function updateConnectionStatusIndicator()
+{
+	offline_bar_selector = '.ui-offline-bar'
+	if( $(offline_bar_selector).length>0 )
+	{
+		$.post('/app/Settings/get_connection_status', 
+			function(connection_status) {				
+				if(connection_status == "Offline")
+				{
+					$(offline_bar_selector).show();
+				}
+				else
+				{
+					$(offline_bar_selector).hide();
+				}
+			}
+		);
+	}
+}
+
+function pollConnectionStatus(interval_ms)
+{
+	updateConnectionStatusIndicator();
+	setTimeout("pollConnectionStatus("+ interval_ms +")",interval_ms);
+}
+
+$(document).ready(function() {
+	$.ajaxSetup ({  
+		cache: false  
+	});
+	//update connection status every 5000 ms. declared in application.js.
+	pollConnectionStatus(5000);
+});

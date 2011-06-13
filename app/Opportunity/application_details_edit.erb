@@ -1,0 +1,55 @@
+<div data-role="page" data-theme="b">
+	<form method="post" id="spouse_add" action="<%= url_for(:controller => :Contact, :action => :spouse_update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" name="spouse_add">
+		<div data-role="header" data-backbtn="false" data-theme="b">
+			<a href="<%= url_for(:action => :won, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>			
+			<h1>Add Application Details</h1>
+			<span class="ui-btn-right">
+				<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+			</span>
+		</div>
+		<div id="contentDiv" data-role="content">
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="carrier" class="fieldLabel">Carrier:<font color="red">  *</font></label>
+					<select name="carrier" data-role="none" id="carrier">
+						<option value=""></option>
+						<% (0..10).each do |i| %>
+							<option value="<%= i %>"><%= i %></option>
+						<% end %>				
+					</select>
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="lob" class="fieldLabel">LOB:<font color="red">  *</font></label>
+					<select name="lob" data-role="none" id="lob">
+						<option value=""></option>
+						<% (0..10).each do |i| %>
+							<option value="<%= i %>"><%= i %></option>
+						<% end %>				
+					</select>
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="appssub" class="fieldLabel">Apps Submitted:<font color="red">  *</font></label>
+					<input type="text" maxlength="50" name="appsub" value="1" />
+
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="totalav" class="fieldLabel">Total AV:<font color="red">  *</font></label>
+					<input type="number" min="0" max="2000" maxlength="4" name="totalav" value="<%=format_currency(1200);%>" />					
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="appdate" class="fieldLabel">Application Date:<font color="red">  *</font></label>
+					<input id="appdate" type="text" name="appdate" readonly value=""  onClick="popupAppDateAJPicker('1', 'Application Date', 'appdate');"></input>
+				</div>
+			</div>
+			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+		</div>
+	</form>
+</div>

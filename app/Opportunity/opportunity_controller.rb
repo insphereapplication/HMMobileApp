@@ -10,21 +10,9 @@ class OpportunityController < Rho::RhoController
   $saved = nil
   $choosed = {}
 
-  def sync_notify
-    if @params['status'] == 'ok' or @params['status'] == 'complete'
-      Rho::NativeTabbar.switch_tab(0) 
-      WebView.navigate( 
-        url_for(
-          :controller => 'Opportunity',
-          :action => :index
-        )
-      )
-    end
-  end
-	  
   # this callback is set once in the login_callback method of the Settings controller
   def init_notify
-    System.set_push_notification("/app/Settings/push_notify", '')
+    
     
     tabbar = [
       { 
@@ -40,7 +28,7 @@ class OpportunityController < Rho::RhoController
         :reload => true 
       },
       { 
-        :label => "Settings",  
+        :label => "Tools",  
         :action => '/app/Settings',  
         :icon => "/public/images/iphone/tabs/settings_tab_icon.png" 
       }
@@ -53,6 +41,7 @@ class OpportunityController < Rho::RhoController
     $new_leads_nav_context = []
     $follow_ups_nav_context = []
     $appointments_nav_context = []
+    $first_render = true
     
   end
   
@@ -60,6 +49,12 @@ class OpportunityController < Rho::RhoController
     if Opportunity.local_changed?
       WebView.navigate( url_for(:action => :index, :back => 'callback:', :query => {:selected_tab => @params['tab']}) )
     end
+  end
+  
+  def create_note
+    puts "*^*^*^*^*^*^*^*^*^*^*^ CREATE_NOTE ^*^*^*^*^*^*^*^*^*^*^*^*^*"
+    @opportunity = Opportunity.find(@params['id'])
+    @opportunity.create_note(@params['note_text'])
   end
   
   def intialize_nav_contexts
@@ -157,29 +152,59 @@ class OpportunityController < Rho::RhoController
     render :action => :appointments_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
-  def future_appointments
-    get_appointments('green', 'Future', Activity.future_appointments(@params['page'].to_i))
+  def future_scheduled
+    get_appointments('green', 'Future', Activity.future_scheduled(@params['page'].to_i))
   end
 
-  def todays_appointments
-    get_appointments('orange', 'Today', Activity.todays_appointments(@params['page'].to_i))
+  def todays_scheduled
+    get_appointments('orange', 'Today', Activity.todays_scheduled(@params['page'].to_i))
   end
 
-  def past_due_appointments
-    get_appointments('red', 'Past Due', Activity.past_due_appointments(@params['page'].to_i))
+  def past_due_scheduled
+    get_appointments('red', 'Past Due', Activity.past_due_scheduled(@params['page'].to_i))
   end
+  
+  
+  def check_preferred_and_donotcall(phone_type, contact)
+    preferred = contact.preferred_number
+    allow_call = 'True'
+    company_dnc = 'False'
+    
+    if preferred == contact.telephone2 # Home
+      allow_call = contact.cssi_allowcallshomephone
+      company_dnc = contact.cssi_companydnchomephone
+    elsif preferred == contact.mobilephone # Mobile
+      allow_call = contact.cssi_allowcallsmobilephone
+      company_dnc = contact.cssi_companydncmobilephone
+    elsif preferred == contact.telephone1 # Business
+      allow_call = contact.cssi_allowcallsbusinessphone
+      company_dnc = contact.cssi_companydncbusinessphone
+    elsif preferred == contact.telephone3 # Alternate
+      allow_call = contact.cssi_allowcallsalternatephone
+      company_dnc = contact.cssi_companydncalternatephone
+    end
+    
+    is_preferred = phone_type == preferred
 
-  def check_preferred(phone_type, preferred)
+    # Special case where we need 2 icons side by side, and some jQuery/JavaScript tricks are needed
+    # We look for the two-icons attribute in the .erb and substitute a formatted HTML string that will show both
+    if is_preferred && (allow_call == 'False' || company_dnc == 'True')
+      return %Q{ <span two-icons class="ui-icon ui-icon-check ui-icon-shadow"></span> }
+    end
+    
     if phone_type == preferred
       %Q{ <span class="ui-icon ui-icon-check ui-icon-shadow"></span> }
+    elsif (allow_call == 'False' || company_dnc == 'True')
+      %Q{ <span class="ui-icon ui-icon-delete ui-icon-shadow"></span> }
     else
       ""
-    end
+    end    
   end
   
   # GET /Opportunity/{1}
   def show
-    @opportunity = Opportunity.find(@params['id'])
+    Settings.record_activity
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     if @opportunity
       @notes = @opportunity.notes
       current_nav_context.orient!(@opportunity.object)
@@ -205,7 +230,7 @@ class OpportunityController < Rho::RhoController
       opp_id = current_nav_context.send(direction)
     end
     
-    @opportunity = Opportunity.find(opp_id)
+    @opportunity = Opportunity.find_opportunity(opp_id)
     
     if @opportunity
       @notes = @opportunity.notes
@@ -216,7 +241,8 @@ class OpportunityController < Rho::RhoController
   end
   
   def status_update
-    @opportunity = Opportunity.find(@params['id'])
+    Settings.record_activity
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     if @opportunity
       render :action => :status_update, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -225,19 +251,26 @@ class OpportunityController < Rho::RhoController
   end 
   
   def note_create
-    @opportunity = Opportunity.find(@params['id'])
+    Settings.record_activity
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     if @opportunity
       render :action => :note_create, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
       redirect :action => :index, :back => 'callback:'
     end
+  end  
+
+  def contact_opp_new    
+     redirect :action => :new,
+              :controller => "Contact",
+              :query =>{:origin => @params['origin']}
   end
   
-
-  
   def callback_request
+    Settings.record_activity
     $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
+    @opportunity.create_note(@params['notes'])
     if @opportunity
       render :action => :callback_request, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -245,9 +278,67 @@ class OpportunityController < Rho::RhoController
     end
   end
   
+  def app_detail_add
+    Settings.record_activity
+      @opportunity = Opportunity.find(@params['id'])
+      if @opportunity
+        render :action => :application_details_add, :back => 'callback:', :layout => 'layout_jquerymobile'
+      else
+        redirect :action => :index, :back => 'callback:'
+      end
+    end
+    
+  def app_detail_show
+      # @appdetail = Opportunity.find(@params['id'])
+      # if @appdetail
+        render :action => :application_details_show, :back => 'callback:', :layout => 'layout_jquerymobile'
+      # else
+      #   redirect :action => :index, :back => 'callback:'
+      # end
+  end
+    
+  def app_detail_edit
+    Settings.record_activity
+    @appdetail = Opportunity.find(@params['id'])
+    if @appdetail
+      render :action => :application_details_edit, :back => 'callback:', :layout => 'layout_jquerymobile'
+    else
+      redirect :action => :index, :back => 'callback:'
+    end
+  end
+    
+  def app_detail_create
+    opportunity = Opportunity.find(@params['opportunity_id'])
+    db = ::Rho::RHO.get_src_db('Opportunity')
+    db.start_transaction
+      begin
+        opportunity.create_note(@params['notetext'])
+        finished_note_create(opportunity, @params['origin'])
+        db.commit
+      rescue Exception => e
+        puts "Exception in update status call back requested, rolling back: #{e.inspect} -- #{@params.inspect}"
+        db.rollback
+      end
+  end
+  
+  def app_detail_update
+    opportunity = Opportunity.find(@params['opportunity_id'])
+    db = ::Rho::RHO.get_src_db('Opportunity')
+    db.start_transaction
+      begin
+        opportunity.create_note(@params['notetext'])
+        finished_note_create(opportunity, @params['origin'])
+        db.commit
+      rescue Exception => e
+        puts "Exception in update status call back requested, rolling back: #{e.inspect} -- #{@params.inspect}"
+        db.rollback
+      end
+  end
+  
   def appointment
     $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
+    @opportunity.create_note(@params['notes'])
     if @opportunity
       render :action => :appointment, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -258,8 +349,8 @@ class OpportunityController < Rho::RhoController
   def lost_other
     @lost_reasons = Constants::OTHER_LOST_REASONS
     @competitors = Constants::COMPETITORS
-    
     @opportunity = Opportunity.find(@params['id'])
+    @opportunity.create_note(@params['notes'])
     if @opportunity
       render :action => :lost_other, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -267,9 +358,27 @@ class OpportunityController < Rho::RhoController
     end
   end
   
+  def won
+      @opportunity = Opportunity.find(@params['id'])
+      if @opportunity
+        render :action => :mark_as_won, :back => 'callback:', :layout => 'layout_jquerymobile'
+      else
+        redirect :action => :index, :back => 'callback:'
+      end
+  end
+  
+  
+  def contact_opp_new    
+    redirect :action => :new,
+             :controller => "Contact",
+             :query =>{:origin => @params['origin']}
+  end
+  
+  
   # GET /Opportunity/{1}/activity_summary
   def activity_summary
-    @opportunity = Opportunity.find(@params['id'])
+    Settings.record_activity
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     @activities = @opportunity.activities
     @activity_list = @opportunity.activity_list
     if @opportunity
@@ -280,8 +389,20 @@ class OpportunityController < Rho::RhoController
   end
 
   def phone_dialog
-    @opportunity = Opportunity.find(@params['id'])
-    render :action => :phone_dialog, :back => 'callback:', :layout => 'layout_JQM_Lite'
+    @opportunity = Opportunity.find_opportunity(@params['id'])
+    phone_number=''
+    if @opportunity.contact.phone_numbers.size == 1
+      @opportunity.contact.phone_numbers.each do |type, number|
+        phone_number = number
+      end
+      
+      redirect :action => :call_opp_number,
+              :id => @opportunity.object,
+              :query =>{:origin => @params['origin'],
+                        :phone_number => phone_number} 
+    else
+      render :action => :phone_dialog, :back => 'callback:', :layout => 'layout_JQM_Lite'
+    end
   end
   
   def save
@@ -290,15 +411,35 @@ class OpportunityController < Rho::RhoController
   end
   
   def call_number
-    puts "Calling number " + @params['phone_number']
+    puts "calling number: #{@params['phone_number']}"
     telephone = @params['phone_number']
     telephone.gsub!(/[^0-9]/, "")
-    redirect :action => :phone_dialog, :back => 'callback:',
-              :id => @params['opportunity'],
-              :query =>{:origin => @params['origin']}
-    System.open_url('tel:' + telephone)
+    redirect :action => :status_update, :back => 'callback:',
+              :id => @params['id'],
+              :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}
+    System.open_url("tel:#{telephone}")
+  end
+  
+  def call_opp_number
+    puts "calling number: #{@params['phone_number']}"
+    telephone = @params['phone_number']
+    telephone.gsub!(/[^0-9]/, "")
+    redirect :action => :show, :back => 'callback:',
+              :id => @params['id'],
+              :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}
+    System.open_url("tel:#{telephone}")
   end
 
+  def birthpopup
+    flag = @params['flag']
+    if ['0', '1', '2'].include?(flag)
+      ttt = $choosed[flag]
+        preset_time = Time.new - 1157000000
+      DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
+    end
+    render :back => 'callback:'
+  end
+  
   def popup
     flag = @params['flag']
     if ['0', '1', '2'].include?(flag)
@@ -308,12 +449,22 @@ class OpportunityController < Rho::RhoController
     end
     render :back => 'callback:'
   end
-  
+
   def edit_popup
      flag = @params['flag']
       if ['0', '1', '2'].include?(flag)
         ttt = $choosed[flag]
           preset_time= Time.parse(@params['preset'])
+        DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
+      end
+      render :back => 'callback:'
+  end
+    
+    def appdatepopup
+      flag = @params['flag']
+      if ['0', '1', '2'].include?(flag)
+        ttt = $choosed[flag]
+          preset_time = Time.new
         DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
       end
       render :back => 'callback:'
@@ -325,7 +476,7 @@ class OpportunityController < Rho::RhoController
      datetime_vars = Marshal.load(@params['opaque'])
       format = case datetime_vars[:flag]
         when "0" then '%m/%d/%Y %I:%M %p'
-        when "1" then '%F'
+        when "1" then '%m/%d/%Y'
         when "2" then '%T'
         else '%F %T'
       end
@@ -333,6 +484,8 @@ class OpportunityController < Rho::RhoController
       formatted_result = Time.at(@params['result'].to_i).strftime(format)
       $choosed[datetime_vars[:flag]] = formatted_result
       WebView.execute_js('setFieldValue("'+datetime_vars[:field_key]+'","'+formatted_result+'");')
+      $choosed = {} #Need to clear these out so that the fields don't populate with values previously selected.
+      $saved = {}
       render :back => 'callback:'
     end
   end
@@ -350,6 +503,31 @@ class OpportunityController < Rho::RhoController
     end_date 
   end
   
+  def quick_quote
+     @opportunity = Opportunity.find(@params['id'])
+     @contact = @opportunity.contact
+    
+     if (@contact.birthdate.nil? || @contact.birthdate? || @contact.birthdate =="")
+       @dob='' 
+     else  
+       date = (Date.strptime(@contact.birthdate, '%Y-%m-%d %H:%M:%S'))
+       @dob = date.strftime('%m/%d/%Y')
+     end     
+     
+     @quote_param = "?gaid=5242&dob=#{@dob}&gender=#{@contact.gendercode}"
+     
+     if (not (@contact.cssi_state1id.nil? || @contact.cssi_state1id.blank? || @contact.cssi_state1id == ''))   
+       @quote_param="#{@quote_param}&statecode=#{@contact.cssi_state1id}"
+     else
+        @quote_param="#{@quote_param}&statecode=#{@contact.cssi_state2id}"
+     end  
+     
+     #puts("The query parameters are: #{@quote_param}")    
+     WebView.navigate(WebView.current_location)
+     System.open_url("https://mobile-uat.ipipeline.com/quote/#{@quote_param}")
+
+   end
+  
   def map
         # WebView.refresh
         WebView.navigate(WebView.current_location)
@@ -359,5 +537,29 @@ class OpportunityController < Rho::RhoController
             System.open_url("http://maps.google.com/?q=#{@params['location'].strip.gsub(/ /,'+')}")
         end
         #WebView.refresh
+  end
+  
+  def new
+    Settings.record_activity
+    @contact = Contact.find_contact(@params['id'])
+    render :action => :new, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
+  end
+  
+  
+  def create
+    @contact = Contact.find_contact(@params['id'])
+    @opp = Opportunity.create_new(@params['opportunity'])  
+    Settings.record_activity
+    @opp.update_attributes( :contact_id =>  @contact.object)
+    @opp.update_attributes( :statecode => 'Open')
+    @opp.update_attributes( :statuscode => 'New Opportunity')
+    @opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))
+
+    SyncEngine.dosync
+    redirect  :controller => :Contact,
+            :action => :show, 
+             :back => 'callback:',
+             :id => @contact.object,
+             :query =>{:origin => @params['origin'], :opportunity => @opp.object}
   end
 end

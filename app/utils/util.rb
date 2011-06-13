@@ -4,11 +4,28 @@ module ExceptionUtil
       exception = new Exception(exception)
     end
     
-    ClientException.create({
+    exception_data = {
       :message => exception.message,
       :backtrace => exception.backtrace,
       :exception_id => Time.now.to_i.to_s
-    });
+    }
+    
+    begin
+      exception_data.merge!({
+        :device_id => System.get_property('device_id'),
+        :rho_device_id => Rhom::Rhom::client_id, 
+        :client_platform => System.get_property('platform'),
+        :has_network => System.get_property('has_network'),
+        :device_name => System.get_property('device_name'),
+        :os_version => System.get_property('os_version')
+      })
+    rescue
+      exception_data.merge!({:device_data_error => "Error while extracting device-specific data."})
+    end
+    
+    puts exception_data.inspect
+    
+    ClientException.create(exception_data)
   end
 end
 
@@ -24,6 +41,11 @@ module SQLHelper
       "limit #{page_size} offset #{page * page_size}" if page
     end
   end
+  
+  SELECT_EMAILS_SQL = %Q{
+    select a.* from Opportunity o, Activity a
+    where a.type='Email' 
+  }
   
   OPEN_STATE_CODES = ['Open', 'Scheduled']
     
@@ -48,10 +70,13 @@ module SQLHelper
       )
   } 
   
-  SELECT_APPOINTMENT_SQL = "select a.* from Activity a, Opportunity o where a.type='Appointment'"
+  SELECT_SCHEDULED_SQL = "select ifnull(a.scheduledstart, a.scheduledend) as scheduledtime, a.* from Activity a, Opportunity o where (a.type='Appointment' or a.type='PhoneCall')"
   
   SCHEDULED_END_SQL = "date(scheduledend)"
   SCHEDULED_START_SQL = "date(scheduledstart)"
+  SCHEDULED_TIME_SQL = "date(scheduledtime)"
+  SCHEDULED_OPEN_SQL = "a.statecode in ('Open', 'Scheduled')"
+  
   CREATED_ON_SQL = "and date(o.createdon)"
   NOW_SQL = "date('now', 'localtime')"
   ORDER_BY_CREATED_ON_DESC_SQL = "order by datetime(o.createdon) desc"
@@ -60,8 +85,6 @@ module SQLHelper
     select o.opportunityid from Opportunity o where statuscode = 'New Opportunity' and
     #{NO_ACTIVITIES_FOR_OPPORTUNITY_SQL}
   }
-  
-  APPOINTMENT_OPEN_SQL = "a.statecode in ('Open', 'Scheduled')"
     
   SELECT_FIRST_PER_OPPORTUNITY_SQL = "group by o.object order by datetime(a.scheduledend)"
   
@@ -74,6 +97,8 @@ end
 module DateUtil
   DEFAULT_TIME_FORMAT = '%Y-%m-%d %H:%M:%S' # YYYY-MM-DD HH:MM:SS
   DATE_PICKER_TIME_FORMAT = '%m/%d/%Y %I:%M %p'
+  BIRTHDATE_PICKER_TIME_FORMAT = '%m/%d/%Y'
+  DEFAULT_BIRTHDATE_FORMAT = '%m/%d/%Y'
   HOUR_FORMAT = '%I:%M %p'
   NO_YEAR_FORMAT = '%m/%d %I:%M %p'
   
@@ -112,8 +137,21 @@ module DateUtil
     end
     
     def date_build(date_string)
-      date = (DateTime.strptime(date_string, DATE_PICKER_TIME_FORMAT))
-      date.strftime(DEFAULT_TIME_FORMAT)
+      begin
+        date = (DateTime.strptime(date_string, DATE_PICKER_TIME_FORMAT))
+        date.strftime(DEFAULT_TIME_FORMAT)
+      rescue
+        puts "Unable to build date"
+      end
+    end
+
+    def birthdate_build(date_string)
+      begin
+        date = (DateTime.strptime(date_string, BIRTHDATE_PICKER_TIME_FORMAT))
+        date.strftime(DEFAULT_TIME_FORMAT)
+      rescue
+        puts "Unable to build birthdate"
+      end
     end
 
     def end_date_time(date_string, duration)
@@ -266,5 +304,35 @@ module Constants
 		["WV","WV"],
 		["WI","WI"],
 		["WY","WY"]
+  ]
+  
+  HEIGHT_FEET = [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10"
+  ]
+  
+  HEIGHT_INCHES = [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12"
   ]
 end

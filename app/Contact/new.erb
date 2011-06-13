@@ -1,0 +1,264 @@
+<div data-role="page" data-theme="b">
+  <form method="POST" action="<%= url_for :action => :create %>">
+	<input type="hidden" name="origin" value="<%=@params['origin']%>">
+	<div data-inline="true">
+		<%= offline_bar%>
+		<div data-role="header" data-backbtn="false" data-theme="b">		
+			<%= cancelbutton_by_origin(@params['origin']) %>
+			<h1>Add Contact/Opp</h1>
+			<span class="ui-btn-right">
+				<input type="submit" data-theme="b" class="standardButton validateContactOpp" value="Done" />
+			</span>
+		</div>
+	</div>
+	
+	<div data-role="content">
+		
+		<div align="center">
+			<label class="fieldLabel"><b>Add Contact</b></label>
+		</div>
+		
+		<div>
+			<br />
+			<b>General Information</b>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+	        		<label for="contact[firstname]" class="fieldLabel">First Name:<font color="red">&nbsp;&nbsp;*</font></label>
+	        		<input id="contact_firstname" maxlength="50" type="text" name="contact[firstname]" <%= placeholder( "First Name" ) %> />
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+	        		<label for="contact[lastname]" class="fieldLabel">Last Name:<font color="red">&nbsp;&nbsp;*</font></label>
+	        		<input id="contact_lastname" maxlength="50" type="text" name="contact[lastname]" <%= placeholder( "Last Name" ) %> />
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+	        		<label for="contact[emailaddress1]" class="fieldLabel">Email Address:<font color="blue">&nbsp;&nbsp;+</font></label>
+	        		<input type="email" maxlength="255" id="contact_emailaddress1" name="contact[emailaddress1]" <%= placeholder( "Email Address" ) %> />
+				</div>
+			</div>		
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+	            	<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:<font color="blue">&nbsp;&nbsp;+</font></label>
+					<% if System::get_property('platform') == 'APPLE' %>
+						<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>> 
+					<% else %>
+						<input maxlength="14" type="tel" id="phoneNumber" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>><br>
+					<% end %>
+		    	</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+	            	<label for="contact[telephone1]" class="fieldLabel">Business Phone:<font color="blue">&nbsp;&nbsp;+</font></label>
+					<% if System::get_property('platform') == 'APPLE' %>
+						<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
+					<% else %>
+						<input type="tel" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
+					<% end %>
+		    	</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+	            	<label for="contact[telephone2]" class="fieldLabel">Home Phone:<font color="blue">&nbsp;&nbsp;+</font></label>
+					<% if System::get_property('platform') == 'APPLE' %>
+						<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
+					<% else %>
+						<input type="tel" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
+					<% end %>
+		    	</div>
+			</div>
+
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+	            	<label for="contact[telephone3]" class="fieldLabel">Alternative Phone:<font color="blue">&nbsp;&nbsp;+</font></label>
+					<% if System::get_property('platform') == 'APPLE' %>
+						<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>>
+					<% else %>
+						<input type="tel" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>>
+					<% end %>
+		    	</div>
+			</div>
+
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+	            	<label for="contact[cssi_preferredphone]" class="select">Preferred Phone:</label>
+					<div>
+						<select id="contact_preferredphone" name="contact[cssi_preferredphone]">
+							<option value="" selected="true"></option>
+							<option value="Business">Business</option>
+							<option value="Mobile">Mobile</option>
+							<option value="Home">Home</option>
+							<option value="Alternate">Alternate</option>
+						</select>
+					</div>
+		    	</div>
+			</div>				
+
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+	            	<label for="contact[gendercode]" class="select">Gender:</label>
+					<div>
+						<select id="contact_gendercode" name="contact[gendercode]">
+							<option value="" selected="true"></option>
+							<option value="Male">Male</option>
+							<option value="Female">Female</option>
+						</select>
+					</div>
+		    	</div>
+			</div>				
+
+			<div data-role="fieldcontain">
+					<div class="ui-body ui-body-d">
+		            	<label for="contact[birthdate]" class="fieldLabel">Date of Birth:</label>
+						<input id="contact[birthdate]" type="text" name="contact[birthdate]" readonly value="<%= $choosed['0'] %>"  onClick="popupBirthDateAJPicker('1', 'Contact Birth Date', 'contact[birthdate]');"></input>
+			    	</div>
+			</div>				
+		</div>
+			
+
+		<div data-role="collapsible" data-collapsed="false" >
+			<h3>Opportunity Details</h3>
+	
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+	        		<label for="opportunity[cssi_lineofbusiness]" class="select">LOB:</label>
+					<div>
+						<select id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]">
+							<option value="" selected="true"></option>
+								<% StaticEntity.get_lob_names.each do |lob_name| %>
+									<option value="<%=lob_name%>">
+										<%=lob_name%>
+									</option>
+								<% end %>
+						</select>
+					</div>
+				</div>
+			</div>		
+
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+	        		<label for="opportunity[cssi_leadsourceid]" class="select">Source:</label>
+					<div>
+						<select id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]">
+							<option value="" selected="true"></option>
+								<% StaticEntity.get_lead_source_names.each do |lead_source_name| %>
+									<option value="<%=lead_source_name%>">
+										<%=lead_source_name%>
+									</option>
+								<% end %>					
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		
+		<div data-role="collapsible" data-collapsed="true" >
+			<h3>Home Address</h3>
+							
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[address1_line1]" class="fieldLabel">Address Line 1:</label>
+					<input maxlength="200" type="text" id="contact_address1_line1" name="contact[address1_line1]" value="" />
+				</div>
+			</div>
+			
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[address1_line2]" class="fieldLabel">Address Line 2:</label>
+					<input maxlength="255" type="text" id="contact_address1_line2" name="contact[address1_line2]" value="" />
+				</div>
+			</div>
+
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[address1_city]" class="fieldLabel">City:</label>
+					<input maxlength="50" type="text" id="contact_address1_city" name="contact[address1_city]" value="" />
+				</div>
+			</div>
+
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[cssi_state1id]" class="select">State:</label>
+					<select name="contact[cssi_state1id]" data-role="none" id="contact[cssi_state1id]">
+						<option data-placeholder="true">
+							<%= @contact.cssi_state1id %>
+						</option>
+						<% Constants::STATE_CODES.each do |state_code| %>
+							<option value="<%=state_code[0]%>">
+								<%=state_code[1]%>
+							</option>
+						<% end %>
+					</select>
+				</div>				
+			</div>
+
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[address1_postalcode]" class="fieldLabel">Zip:</label>
+					<input maxlength="10" type="number" id="contact_address1_zip" name="contact[address1_postalcode]" value="" />
+				</div>
+			</div>
+						
+		</div>
+
+
+		<div data-role="collapsible" data-collapsed="true" >
+			<h3>Business Address</h3>
+		
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[address2_line1]" class="fieldLabel">Address Line 1:</label>
+					<input maxlength="200" type="text" id="contact_address2_line1" name="contact[address2_line1]" value="" />
+				</div>
+			</div>
+			
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[address2_line2]" class="fieldLabel">Address Line 2:</label>
+					<input maxlength="255" type="text" id="contact_address2_line2" name="contact[address2_line2]" value="" />
+				</div>
+			</div>
+
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[address2_city]" class="fieldLabel">City:</label>
+					<input maxlength="50" type="text" id="contact_address2_city" name="contact[address2_city]" value="" />
+				</div>
+			</div>
+
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[cssi_state2id]" class="select">State:</label>
+					<select name="contact[cssi_state2id]" data-role="none" id="contact[cssi_state2id]">
+						<option data-placeholder="true">
+							<%= @contact.cssi_state2id %>
+						</option>
+						<% Constants::STATE_CODES.each do |state_code| %>
+							<option value="<%=state_code[0]%>">
+								<%=state_code[1]%>
+							</option>
+						<% end %>
+					</select>
+				</div>				
+			</div>
+
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[address2_postalcode]" class="fieldLabel">Zip:</label>
+					<input maxlength="10" type="number" id="contact_address2_zip" name="contact[address2_postalcode]" value="" />
+				</div>
+			</div>
+		
+		</div>			
+
+
+		<div data-theme="b">
+			<input type="submit" data-theme="b" class="standardButton validateContactOpp" value="Done"/>
+		</div>
+
+	</div>
+  </form>
+</div>

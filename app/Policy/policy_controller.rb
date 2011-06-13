@@ -12,11 +12,12 @@ class PolicyController < Rho::RhoController
 
   # GET /Policy/{1}
   def show
-    @policy = Policy.find(@params['id'])
+    Settings.record_activity
+    @policy = Policy.find_policy(@params['id'])
     if @policy
       @contact = @policy.contact
       puts "*** @contact = " + @contact.inspect + " ***"
-      render :action => :show, :back => url_for(:action => :index)
+      render :action => :show, :back => 'callback:'
     else
       redirect :action => :index
     end
@@ -25,14 +26,14 @@ class PolicyController < Rho::RhoController
   # GET /Policy/new
   def new
     @policy = Policy.new
-    render :action => :new, :back => url_for(:action => :index)
+    render :action => :new, :back => 'callback:'
   end
 
   # GET /Policy/{1}/edit
   def edit
-    @policy = Policy.find(@params['id'])
+    @policy = Policy.find_policy(@params['id'])
     if @policy
-      render :action => :edit, :back => url_for(:action => :index)
+      render :action => :edit, :back => 'callback:'
     else
       redirect :action => :index
     end
@@ -40,20 +41,20 @@ class PolicyController < Rho::RhoController
 
   # POST /Policy/create
   def create
-    @policy = Policy.create(@params['policy'])
+    @policy = Policy.create_new(@params['policy'])
     redirect :action => :index
   end
 
   # POST /Policy/{1}/update
   def update
-    @policy = Policy.find(@params['id'])
+    @policy = Policy.find_policy(@params['id'])
     @policy.update_attributes(@params['policy']) if @policy
     redirect :action => :index
   end
 
   # POST /Policy/{1}/delete
   def delete
-    @policy = Policy.find(@params['id'])
+    @policy = Policy.find_policy(@params['id'])
     @policy.destroy if @policy
     redirect :action => :index  end
 end

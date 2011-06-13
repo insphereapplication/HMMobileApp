@@ -34,11 +34,11 @@ $(document).ready(function() {
  });
 
 function checkForChanges(tab){
-	$.post('Opportunity/refresh_if_changed', { tab: tab });
+	$.post('/app/Opportunity/refresh_if_changed', { tab: tab });
 }
 
 function setNavContext(context){
-	$.post('Opportunity/set_opportunities_nav_context', { context: context })
+	$.post('/app/Opportunity/set_opportunities_nav_context', { context: context })
 }
 
 function loadNewLeads(){
@@ -61,11 +61,11 @@ function loadFollowUps(){
 	loadOpportunities(followUpBucket, 0);
 }
 
-function loadAppointments(){
+function loadScheduled(){
 	appointmentBucket = getLinkedBucketList([ 
-		{ opportunity_method: 'past_due_appointments', list_selector: 'span#past-due-appointments-list', next: null},
-		{ opportunity_method: 'todays_appointments',   list_selector: 'span#todays-appointments-list',   next: null},
-		{ opportunity_method: 'future_appointments',   list_selector: 'span#future-appointments-list',   next: null}
+		{ opportunity_method: 'past_due_scheduled',    list_selector: 'span#past-due-appointments-list', next: null},
+		{ opportunity_method: 'todays_scheduled',   list_selector: 'span#todays-appointments-list',   next: null},
+		{ opportunity_method: 'future_scheduled',   list_selector: 'span#future-appointments-list',   next: null}
 	]);
 											
 	loadOpportunities(appointmentBucket, 0);
@@ -74,7 +74,7 @@ function loadAppointments(){
  				 
 
 function loadOpportunities(opportunityBucket, opportunity_page){
-	$.post('Opportunity/' + opportunityBucket.opportunity_method, { page: opportunity_page },
+	$.post('/app/Opportunity/' + opportunityBucket.opportunity_method, { page: opportunity_page },
 		function(opportunities) {				
 			if (opportunities && $.trim(opportunities) != ""){
 				$(opportunityBucket.list_selector).append(opportunities);

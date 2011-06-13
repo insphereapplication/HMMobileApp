@@ -1,0 +1,86 @@
+<div data-role="page" data-theme="b">
+	<form method="post" id="dependent_update" action="<%= url_for(:action => :update, :id => @dependent.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" name="dependent_update">
+		<div data-role="header" data-backbtn="false" data-theme="b">
+			<a href="<%=url_for(:controller=>:Dependent, :action=>:show, :id => @dependent.object, :query=>{:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
+			<h1>Edit Dependent</h1>
+			<span class="ui-btn-right">
+				<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+			</span>
+		</div>
+		<div id="contentDiv" data-role="content">
+			<input type="hidden" name="dependent[cssi_dependentsid]" value="<%= @dependent.cssi_dependentsid %>"/>
+			<input type="hidden" name="dependent[contact_id]" value="<%= @dependent.contact_id %>"/>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="dependent[cssi_name]" class="fieldLabel">First Name:<font color="red">  *</font></label>
+					<input type="email" maxlength="50" name="dependent[cssi_name]" value="<%= @dependent.cssi_name %>" />
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="dependent[cssi_lastname]" class="fieldLabel">Last Name:</label>
+					<input type="email" maxlength="50" name="dependent[cssi_lastname]" value="<%= @dependent.cssi_lastname %>" />
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="dependent[cssi_heightft]" class="fieldLabel">Height:</label>
+					<select name="dependent[cssi_heightft]" data-role="none" id="dependent[cssi_heightft]">
+						<option data-placeholder="true"> <%= @dependent.cssi_heightft %> </option>
+						<option value=""></option>
+						<% (0..10).each do |i| %>
+							<option value="<%= i %>"><%= i %></option>
+						<% end %>				
+					</select>'&nbsp;
+					<select name="dependent[cssi_heightin]" data-role="none" id="dependent[cssi_heightin]">
+						<option data-placeholder="true"> <%= @dependent.cssi_heightin %> </option>
+						<option value=""></option>
+						<% (0..11).each do |i| %>
+							<option value="<%= i %>"><%= i %></option>
+						<% end %>
+					</select>"
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="dependent[cssi_weight]" class="fieldLabel">Weight (lbs):</label>
+					<input type="number" min="0" max="2000" maxlength="4" name="dependent[cssi_weight]" value="<%= @dependent.cssi_weight %>" />					
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="dependent[cssi_dateofbirth]" class="fieldLabel">Date of Birth:</label>
+					<input id="dependent[cssi_dateofbirth]" type="text" name="dependent[cssi_dateofbirth]" readonly value="<%= to_date(@dependent.cssi_dateofbirth) %>" onClick="editpopupDateTimeAJPicker('1', 'Dependent Birth Date', 'dependent[cssi_dateofbirth]', '<%= @dependent.cssi_dateofbirth %>');"></input>
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="dependent[cssi_gender]" class="fieldLabel">Gender:</label>
+					<select name="dependent[cssi_gender]" data-role="none" id="dependent[cssi_gender]">
+						<option data-placeholder="true"> <%= @dependent.cssi_gender %> </option>
+						<option value=""></option>
+						<option value="Male">Male</option>
+						<option value="Female">Female</option>
+					</select>
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="tobaccoSlider" class="fieldLabel">Tobacco:</label>
+					<select name="dependent[cssi_usetobacco]" id="tobaccoSlider" data-role="slider">
+						<option value="False" <% if @dependent.cssi_usetobacco == "False" %> selected="selected" <% end %> >No</option>
+						<option value="True" <% if @dependent.cssi_usetobacco == "True" %> selected="selected" <% end %>>Yes</option>						
+					</select>
+				</div>
+			</div>			
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="dependent[cssi_comments]" class="fieldLabel">Comments:</label>
+					<input type="text" maxlength="255" name="dependent[cssi_comments]" value="<%= @dependent.cssi_comments %>" />
+				</div>
+			</div>
+			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+			<a href="<%= url_for(:controller => :Dependent, :action => :confirm_dependent_delete, :query => {:id => @dependent.object, :opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-theme="f" data-direction="reverse" data-role="button">Delete</a>
+		</div>
+	</form>
+</div>

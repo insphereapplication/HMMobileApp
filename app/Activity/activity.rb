@@ -2,8 +2,6 @@ class Activity
   include Rhom::FixedSchema
   include SQLHelper
   
-  set :schema_version, '1.1'
-  
   property :statecode, :string
   property :activityid, :string
   property :phonenumber, :string
@@ -23,6 +21,7 @@ class Activity
   property :cssi_dispositiondetail, :string
   property :parent_contact_id, :string
   property :createdon, :string
+  property :temp_id, :string
   
   index :activity_pk_index, [:activityid]
   unique_index :unique_activity, [:activityid] 
@@ -68,6 +67,26 @@ class Activity
       type
     end
   end
+  
+  def self.create_new(params)
+      new_activity = Activity.create(params)
+      new_activity.update_attributes( :temp_id => new_activity.object )
+      new_activity
+  end
+  
+  def self.find_activity(id)
+    
+    if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+      @activity = Activity.find(id)
+    else
+      id.gsub!(/[{}]/,"")
+      @activity = Activity.find_by_sql(%Q{
+          select a.* from Activity a where temp_id='#{id}'
+        }).first
+      @activity
+      end
+  end
+  
   
 # end
 
@@ -118,7 +137,7 @@ class Activity
         :notetext => note_text, 
         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
         :parent_id => self.object,
-        :parent_type => 'PhoneCall' 
+        :parent_type => 'PhoneCall'
       })
     end
   end
@@ -126,32 +145,32 @@ class Activity
 
 # class Appointment < Activity
   
-  def self.past_due_appointments(page=nil, page_size=DEFAULT_PAGE_SIZE)
+  def self.past_due_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE)   
     find_by_sql(%Q{
-        #{SELECT_APPOINTMENT_SQL} and
+        #{SELECT_SCHEDULED_SQL} and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-        #{SCHEDULED_START_SQL} < #{NOW_SQL}and 
-        #{APPOINTMENT_OPEN_SQL}
+        #{SCHEDULED_TIME_SQL} < #{NOW_SQL}and 
+        #{SCHEDULED_OPEN_SQL}
         #{get_pagination_sql(page, page_size)}
       })
   end
   
-  def self.future_appointments(page=nil, page_size=DEFAULT_PAGE_SIZE)    
+  def self.future_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE)    
     find_by_sql(%Q{
-        #{SELECT_APPOINTMENT_SQL} and
+        #{SELECT_SCHEDULED_SQL} and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-        #{SCHEDULED_START_SQL} > #{NOW_SQL} and 
-        #{APPOINTMENT_OPEN_SQL} 
+        #{SCHEDULED_TIME_SQL} > #{NOW_SQL} and 
+        #{SCHEDULED_OPEN_SQL} 
         #{get_pagination_sql(page, page_size)}
       })
   end
   
-  def self.todays_appointments(page=nil, page_size=DEFAULT_PAGE_SIZE)
+  def self.todays_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE)
     find_by_sql(%Q{
-        #{SELECT_APPOINTMENT_SQL} and
+        #{SELECT_SCHEDULED_SQL} and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-        #{SCHEDULED_START_SQL} = #{NOW_SQL}and 
-        #{APPOINTMENT_OPEN_SQL}
+        #{SCHEDULED_TIME_SQL} = #{NOW_SQL}and 
+        #{SCHEDULED_OPEN_SQL}
         #{get_pagination_sql(page, page_size)}
       })
   end
@@ -163,5 +182,12 @@ class Activity
       :cssi_disposition => 'Appointment Held'
     })
   end
-  
+
+# class Email < Activity
+
+  def self.emails
+    find_by_sql(%Q{
+        #{SELECT_EMAILS_SQL} 
+      })
+  end
 end

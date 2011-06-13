@@ -4,20 +4,12 @@
 		disablePhone(document.getElementById('phoneList'), document.getElementById('phoneNumber'));
 	});
 </script>
-<script type="text/javascript">
-function PickDateCallbackChangeFocus() {
-popupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime');
-document.getElementById('phoneList').focus();
-};
-</script>
-<script type="text/javascript">
-function ChangeSelected(){
-jQuery("select#phoneList option[value='1']").attr("selected", "selected");
-});
-</script>
+
+
 <div data-role="page" data-theme="b">
+	<form name="call_back_form" method="POST" action="<%= url_for :action => :update_callback, :id => @callback.object, :query => {:origin => @params['origin']} %>">
 	<%= offline_bar%>
-	<div data-role="header" data-position="inline">
+	<div data-role="header" data-theme="b" data-position="inline">
 		<a href="<%=url_for(:action=>:show_callback, :id => @callback.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
 		<h1>Edit Callback</h1>
 		<span class="ui-btn-right">
@@ -29,11 +21,11 @@ jQuery("select#phoneList option[value='1']").attr("selected", "selected");
 	</div>
 	<div id="contentDiv" data-role="content">
 		<div class="ui-body ui-body-d">
-			<form name="call_back_form" method="POST" action="<%= url_for :action => :update_callback, :id => @callback.object, :query => {:origin => @params['origin']} %>">
+
 				<div data-role="fieldcontain">
 					<div data-role="fieldcontain">
 		            	<label for="callback_datetime">Call Back Date and Time:</label>
-						<input id="callback_datetime" type="text" name="callback_datetime" readonly value="<%= to_datetime(@callback.scheduledend) %>"  onClick="editpopupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime', '<%= @callback.scheduledend %>');"></input>
+						<input id="callback_datetime" type="text" name="callback_datetime" readonly value="<%= to_datetime(@callback.scheduledend) %>"  onClick="editpopupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime', '<%= @callback.scheduledend %>'); document.getElementById('phoneList').focus();"></input>
 					</div>
 					<div data-role="fieldcontain">
 					    <label for="phonelist">Phone Type:</label>            

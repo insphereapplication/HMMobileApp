@@ -12,7 +12,14 @@ class ContactController < Rho::RhoController
   #GET /Contact
   def index
     $tab = 1
+    Settings.record_activity
     render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
+  end
+  
+  def index_filter
+    $tab = 1
+    Settings.record_activity
+    render :action => :index_filter, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
   def show_all_contacts
@@ -31,15 +38,51 @@ class ContactController < Rho::RhoController
   end
   
   def get_contacts_page
+    Settings.record_activity
     @contacts = Contact.all_open(@params['page'].to_i)
-    puts @contacts.inspect
     @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
     render :action => :contact_page, :back => 'callback:'
+  end
+  
+  def get_contacts_with_active_page
+    Settings.record_activity
+    @contacts_with_active_policy = Contact.with_active_policy(@params['page'].to_i)
+    @grouped_with_active = @contacts_with_active_policy.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    render :action => :contact_with_active_page, :back => 'callback:'
+  end
+  
+  def get_contacts_with_pending_page
+    Settings.record_activity
+    @contacts_with_pending_policy = Contact.with_pending_policy(@params['page'].to_i)
+    @grouped_with_pending = @contacts_with_pending_policy.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    render :action => :contact_with_pending_page, :back => 'callback:'
+  end
+  
+  def get_contacts_with_open_opps_page
+    Settings.record_activity
+    @contacts_with_open_opps = Contact.with_open_opps(@params['page'].to_i)
+    @grouped_with_open_opps = @contacts_with_open_opps.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    render :action => :contact_with_open_opps_page, :back => 'callback:'
+  end
+  
+  def get_contacts_with_won_opps_page
+    Settings.record_activity
+    @contacts_with_won_opps = Contact.with_won_opps(@params['page'].to_i)
+    @grouped_with_won_opps = @contacts_with_won_opps.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    render :action => :contact_with_won_opps_page, :back => 'callback:'
+  end
+  
+  def get_contacts_filter_page
+    Settings.record_activity
+    @contacts_filter = Contact.list_filter(@params['page'].to_i)
+    @grouped_filter = @contacts_filter.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    render :action => :contact_filter_page, :back => 'callback:'
   end
 
   # GET /Contact/{1}
   def show
-    @contact = Contact.find(@params['id'])
+    Settings.record_activity
+    @contact = Contact.find_contact(@params['id'])
     if @contact
       @next_id = (@contact.object.to_i + 1).to_s
       @prev_id = (@contact.object.to_i - 1).to_s
@@ -49,12 +92,88 @@ class ContactController < Rho::RhoController
     end
   end
   
-  def check_preferred(phone_type, preferred)
-    if phone_type == preferred
-      "check"
-    else
-      "false"
+  def filter_contact
+      Settings.record_activity
+      $search_input1, $search_input2 = @params['search_input'].split(' ', 2)
+      $filter = @params['contact_filter']
+      WebView.navigate(url_for :controller => :Contact, :action => :index_filter)
+  end
+  
+  def check_preferred_and_donotcall(phone_type, preferred, allow_call, company_dnc)
+    Settings.record_activity
+    is_preferred = phone_type == preferred
+
+    # Special case where we need 2 icons side by side, and some jQuery/JavaScript tricks are needed
+    # We look for the two-icons attribute in the .erb and substitute a formatted HTML string that will show both
+    if is_preferred && (allow_call == 'False' || company_dnc == 'True')
+      return 'data-icon="check" two-icons=""'
     end
+    
+    if phone_type == preferred
+      'data-icon="check"'
+    elsif (allow_call == 'False' || company_dnc == 'True')
+      'data-icon="delete"'
+    else
+      'data-icon="false"'
+    end    
+  end
+  
+  def show_edit_do_not_call_icon(allow_call, company_dnc)
+    if allow_call == 'False' || company_dnc == 'True'
+      '<img src="/public/images/glyphish-icons/28-star.png" height="18" width="18" />'
+    end
+  end
+  
+  def do_not_call_button(allow_call,company_dnc,phone_type,phone_number,contact)
+    if allow_call == 'True' && company_dnc == 'False'
+      %Q{
+          <a href="#{url_for(:controller => :Contact, :action => :do_not_call_press, :id => @contact.object, :query => {:origin => @params['origin'], :phone_type => phone_type, :phone_number => phone_number, :contact => contact})}" data-role="button" data-theme="b">DNC</a>
+        }
+    end 
+  end
+  
+  def do_not_call_press
+    Settings.record_activity
+    phone_type = @params['phone_type']
+    phone_number = @params['phone_number']
+    id = @params['id']
+    
+    message = "This will mark #{phone_number} as do not call."
+    Alert.show_popup(
+                {
+                  :title => "Mark as Do Not Call?",
+                  :message => message,
+                  :buttons => ["Confirm","Cancel"],
+                  :callback => url_for( :action => :do_not_call_press_callback, :query => {:phone_type => phone_type, :id => id, :origin => @params['origin']} )
+                })
+  end
+  
+  def do_not_call_press_callback
+    Settings.record_activity
+    button_id   = @params['button_id']
+    id          = @params['id']
+    phone_type  = @params['phone_type']
+    
+    contact = Contact.find_contact(id)
+    
+    if button_id == 'Confirm' and contact
+      case phone_type
+        when "Mobile"
+          contact.update_attributes( { :cssi_allowcallsmobilephone => 'False', :cssi_companydncmobilephone => 'True' } )
+        when "Home"
+          contact.update_attributes( { :cssi_allowcallshomephone => 'False', :cssi_companydnchomephone => 'True' } )
+        when "Business"
+          contact.update_attributes( { :cssi_allowcallsbusinessphone => 'False', :cssi_companydncbusinessphone => 'True' } )
+        when "Alternative"
+          contact.update_attributes( { :cssi_allowcallsalternatephone => 'False', :cssi_companydncalternatephone => 'True' } )
+      end
+      
+      SyncEngine.dosync
+    end
+    
+    puts "******************** origin = #{@params['origin']}********************"
+    
+    WebView.navigate( url_for :controller => :Contact, :action => :show, :back => 'callback:', :id => id, :query =>{:origin => @params['origin']}, :layout => 'layout_jquerymobile' )
   end
   
   def select_preferred(phone_type, preferred)
@@ -73,16 +192,44 @@ class ContactController < Rho::RhoController
       puts "Invalid date parameter in age calculation method; no age returned"
     end
   end
+  
+  def verify_pin
+    @contact= Contact.find(@params['id'])
+    if @params['PIN'] == Settings.pin
+      puts @params.inspect
+      Settings.pin_last_activity_time = Time.new
+      Settings.pin_confirmed= true
+      render :action => :show, :id => @params['id'], :query => {:origin => @params['origin']}
+    else
+      Alert.show_popup({
+        :message => "Invalid PIN Entered", 
+        :title => 'Invalid PIN', 
+        :buttons => ["OK"]
+      })
+      @pinverified="false"
+      render :action => :show, :id => @params['id'], :query => {:origin => @params['origin']}
+    end    
+  end
+  
+  def pin_is_current?(last_activity)
+    if Time.new - last_activity < 900
+      return true
+    else
+      return false
+    end
+  end
 
   # GET /Contact/new
   def new
+    Settings.record_activity
     @contact = Contact.new
-    render :action => :new, :back => 'callback:'
+    render :action => :new, :back => 'callback:', :layout => 'layout_jquerymobile'
   end
 
   # GET /Contact/{1}/edit
   def edit
-    @contact = Contact.find(@params['id'])
+    Settings.record_activity
+    @contact = Contact.find_contact(@params['id'])
     if @contact
       render :action => :edit, :back => 'callback:'
     else
@@ -92,15 +239,49 @@ class ContactController < Rho::RhoController
 
   # POST /Contact/create
   def create
-    @contact = Contact.create(@params['contact'])
-    redirect :action => :index, :back => 'callback:'
+    @contact = Contact.create_new(@params['contact'])
+    @contact.update_attributes(:birthdate => DateUtil.birthdate_build(@contact.birthdate))
+    @contact.update_attributes(:cssi_allowcallsalternatephone => "True")
+    @contact.update_attributes(:cssi_allowcallshomephone => "True")
+    @contact.update_attributes(:cssi_allowcallsbusinessphone => "True")
+    @contact.update_attributes(:cssi_allowcallsmobilephone => "True")
+    @contact.update_attributes(:cssi_companydncbusinessphone => "False")
+    @contact.update_attributes(:cssi_companydncmobilephone => "False")
+    @contact.update_attributes(:cssi_companydnchomephone => "False")
+    @contact.update_attributes(:cssi_companydncalternatephone => "False")
+        
+    @opp = Opportunity.create_new(@params['opportunity'])  
+    Settings.record_activity
+    @opp.update_attributes( :contact_id =>  @contact.object)
+    @opp.update_attributes( :statecode => 'Open')
+    @opp.update_attributes( :statuscode => 'New Opportunity')
+    @opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))
+
+    SyncEngine.dosync
+    redirect :action => :show, 
+             :back => 'callback:',
+             :id => @contact.object,
+             :query =>{:origin => @params['origin'], :opportunity => @opp.object}
   end
 
   # POST /Contact/{1}/update
   def update
+    Settings.record_activity
     puts "CONTACT UPDATE: #{@params.inspect}"
-    @contact = Contact.find(@params['id'])
+    @contact = Contact.find_contact(@params['id'])
     @contact.update_attributes(@params['contact']) if @contact
+    SyncUtil.start_sync
+    redirect :action => :show, :back => 'callback:',
+              :id => @contact.object,
+              :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
+  end
+
+  def spouse_update
+    Settings.record_activity
+    puts "SPOUSE UPDATE: #{@params.inspect}"
+    @contact = Contact.find_contact(@params['id'])
+    @contact.update_attributes(@params['contact']) if @contact
+    @contact.update_attributes(:cssi_spousebirthdate => DateUtil.birthdate_build(@contact.cssi_spousebirthdate))
     SyncEngine.dosync
     redirect :action => :show, :back => 'callback:',
               :id => @contact.object,
@@ -109,7 +290,7 @@ class ContactController < Rho::RhoController
 
   # POST /Contact/{1}/delete
   def delete
-    @contact = Contact.find(@params['id'])
+    @contact = Contact.find_contact(@params['id'])
     @contact.destroy if @contact
     redirect :action => :index, :back => 'callback:'
   end
@@ -127,5 +308,55 @@ class ContactController < Rho::RhoController
       System.open_url("maps:q=5918_capella_park_dr+houston+tx")
   end
   
+  def spouse_show
+    Settings.record_activity
+      @contact = Contact.find_contact(@params['id'])
+      render :action => :spouse_show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
+  end
+  
+  def spouse_add
+    Settings.record_activity
+      @contact = Contact.find_contact(@params['id'])
+      render :action => :spouse_add, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
+  end
+  
+  def spouse_edit
+    Settings.record_activity
+      @contact = Contact.find_contact(@params['id'])
+      render :action => :spouse_edit, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
+  end
+  
+  def confirm_spouse_delete
+    Alert.show_popup ({
+        :message => "Click OK to Delete this Spouse", 
+        :title => "Confirm Delete", 
+        :buttons => ["Cancel", "Ok",],
+        :callback => url_for(:action => :spouse_delete, 
+                                        :query => {
+				                                :id => @params['id'],
+				                                :origin => @params['origin']
+				                                })
+				                   })
+  end
+ 
+  def spouse_delete
+    Settings.record_activity
+    if @params['button_id'] == "Ok"
+      puts "CONTACT DELETE SPOUSE: #{@params.inspect}"
+      @contact = Contact.find_contact(@params['id'])
+      @contact.update_attributes(:cssi_spousename => "")
+      @contact.update_attributes(:cssi_spouselastname => "")
+      @contact.update_attributes(:cssi_spousebirthdate => "")
+      @contact.update_attributes(:cssi_spouseheightft => "")
+      @contact.update_attributes(:cssi_spouseheightin => "")
+      @contact.update_attributes(:cssi_spouseweight => "")
+      @contact.update_attributes(:cssi_spouseusetobacco => "")
+      @contact.update_attributes(:cssi_spousegender => "")
+      SyncEngine.dosync
+      WebView.navigate(url_for :controller => :Contact, :action => :show, :id => @contact.object, :query => {:origin => @params['origin']})
+    else
+      WebView.navigate(url_for :controller => :Contact, :action => :spouse_edit, :id => @params['id'], :query => {:origin => @params['origin']})
+    end
+  end
   
 end

@@ -1,0 +1,79 @@
+<div data-role="page" data-theme="b">
+	<form method="post" id="spouse_add" action="<%= url_for(:controller => :Contact, :action => :spouse_update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" name="spouse_edit">
+		<div data-role="header" data-backbtn="false" data-theme="b">
+			<a href="<%=url_for(:controller=>:Contact, :action => :show, :id => @contact.object, :query=> {:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
+			<h1>Edit Spouse</h1>
+			<span class="ui-btn-right">
+				<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+			</span>
+		</div>
+		<div id="contentDiv" data-role="content">
+			<input type="hidden" name="id" value="<%= @contact.object %>"/>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[cssi_spousename]" class="fieldLabel">First Name:<font color="red">  *</font></label>
+					<input type="text" maxlength="50" name="contact[cssi_spousename]" value="<%= @contact.cssi_spousename %>" />
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[cssi_spouselastname]" class="fieldLabel">Last Name:</label>
+					<input type="email" maxlength="50" name="contact[cssi_spouselastname]" value="<%= @contact.cssi_spouselastname %>" />
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[cssi_spouseheightft]" class="fieldLabel">Height:</label>
+					<select name="contact[cssi_spouseheightft]" data-role="none" id="contact[cssi_spouseheightft]">
+						<option data-placeholder="true"> <%= @contact.cssi_spouseheightft %> </option>
+						<option value=""></option>
+						<% (0..10).each do |i| %>
+							<option value="<%= i %>"><%= i %></option>
+						<% end %>				
+					</select>'&nbsp;
+					<select name="contact[cssi_spouseheightin]" data-role="none" id="contact[cssi_spouseheightin]">
+						<option data-placeholder="true"> <%= @contact.cssi_spouseheightin %> </option>
+						<option value=""></option>
+						<% (0..11).each do |i| %>
+							<option value="<%= i %>"><%= i %></option>
+						<% end %>
+					</select>"
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[cssi_spouseweight]" class="fieldLabel">Weight (lbs):</label>
+					<input type="number" min="0" max="2000" maxlength="4" name="contact[cssi_spouseweight]" value="<%= @contact.cssi_spouseweight %>" />					
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[cssi_spousebirthdate]" class="fieldLabel">Date of Birth:</label>
+					<input id="contact[cssi_spousebirthdate]" type="text" name="contact[cssi_spousebirthdate]" readonly value="<%= to_date(@contact.cssi_spousebirthdate) %>"  onClick="editpopupDateTimeAJPicker('1', 'Spouse Birth Date', 'contact[cssi_spousebirthdate]', '<%= @contact.cssi_spousebirthdate %>');"></input>
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="contact[cssi_spousegender]" class="fieldLabel">Gender:</label>
+					<select name="contact[cssi_spousegender]" data-role="none" id="contact[cssi_spousegender]">
+						<option data-placeholder="true"> <%= @contact.cssi_spousegender %> </option>
+						<option value=""></option>
+						<option value="Male">Male</option>
+						<option value="Female">Female</option>
+					</select>
+				</div>
+			</div>
+			<div data-role="fieldcontain">
+				<div class="ui-body ui-body-d">
+					<label for="tobaccoSlider" class="fieldLabel">Tobacco:</label>
+					<select name="contact[cssi_spouseusetobacco]" id="tobaccoSlider" data-role="slider">
+						<option value="False" <% if @contact.cssi_spouseusetobacco == "False" %> selected="selected" <% end %> >No</option>
+						<option value="True" <% if @contact.cssi_spouseusetobacco == "True" %> selected="selected" <% end %> >Yes</option>						
+					</select>
+				</div>
+			</div>			
+			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+			<a href="<%= url_for(:controller => :Contact, :action => :confirm_spouse_delete, :query => {:id => @contact.object, :opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-theme="f" data-direction="reverse" data-role="button">Delete</a>
+		</div>
+	</form>
+</div>

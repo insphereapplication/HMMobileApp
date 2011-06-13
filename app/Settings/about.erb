@@ -23,7 +23,7 @@
     <div data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar%>
 		<div data-role="header">
-			<a href="/app/Settings/index" data-direction="reverse" data-icon="back">Settings</a>
+			<a href="/app/Settings/index" data-direction="reverse" data-icon="back">Tools</a>
 			<h1>About</h1>
 		</div>
 
@@ -31,18 +31,22 @@
 			<ul data-role="listview" data-inset="true">
 				<li><h3>Version:</h3><p>InSite Mobile <% if Rho::RhoConfig.app_version && Rho::RhoConfig.app_version.length > 0 %><%= Rho::RhoConfig.app_version %><% else %>N/A<% end %></p></li> 
 				<li><h3>Last Sync:</h3><p> <%= Rhom::RhomSource.find('Contact').last_updated.to_s %></p></li>
-				<li><h3>Connection State:</h3><p> <%= has_connection? %></p></li> 
+				<li><h3>Connection State:</h3><p> <%= DeviceCapabilities.connection_status %></p></li> 
 				<li><h3>Local Changes?:</h3><p> <%= sync_state %></p></li>
 				<li><h3>Platform:</h3><p><%= System.get_property('platform') %></p></li>
 				<li><h3>Device Name:</h3><p><%= System.get_property('device_name') %></p></li>
 				<li><h3>Device Model:</h3><p><% if System.get_property('os_version') && System.get_property('os_version').length > 0 %><%= System.get_property('os_version') %><% else %>&nbsp;<% end %></p></li>
 				<li onclick="toggle('secret');"><h3>Client ID:</h3><p><%= Rhom::Rhom::client_id %></p></li>
 				<div id="secret" style="display: none">
-					<li><a href="<%= url_for :action => :do_reset %>">Reset Database</a></li>
-			    	<li><a href="<%= url_for :action => :do_sync %>">Perform Sync</a></li>
-		        	<li><a href="<%= url_for :action => :show_log %>">Show Log</a></li>
-					<li><a href="<%= url_for :action => :configure_log %>">Configure Log</a></l>
+					<li><a href="<%= url_for :action => :do_reset %>"><h1>Reset Database</h1></a></li>
+			    	<li><a href="<%= url_for :action => :do_sync %>"><h1>Perform Sync</h1></a></li>
+		        	<li><a href="<%= url_for :action => :show_log %>"><h1>Show Log</h1></a></li>
+					<li><a href="<%= url_for :action => :configure_log %>"><h1>Configure Log</h1></a></l>
 				</div>
+			</ul>
+			<ul data-role="listview" data-inset="true">
+				<li><h3><a href="<%= url_for :action => :show_log %>">Show Log</a></h3></li>
+				<li><h3><a href="<%= url_for :action => :toggle_log_level %>"><%= detailed_logging_enabled? ? 'Disable' : 'Enable' %> Detailed Logging</a></h3></li>
 			</ul>
 			<div>
 	</div>

@@ -35,12 +35,9 @@ module BrowserHelper
   end
   
   def offline_bar
-    if !System.has_network
-      #show connection state
-      %Q{
-        	<div data-nobackbtn="true" class="ui-offline-bar" role="banner"> Connection State: Offline </div>
-      }
-    end
+    %Q{
+      	<div data-nobackbtn="true" class="ui-offline-bar#{ DeviceCapabilities.is_connected? ? ' ui-hidden' : '' }" role="banner"> Connection State: Offline </div>
+    }
   end
   
   def udpate_status_lost_link(opportunity, text, status_code)
@@ -71,6 +68,22 @@ module BrowserHelper
   				#{statecode}
   			</a>
       }
+  end
+
+  def cancelbutton_by_origin(origin)
+    case origin
+      when "new-leads"
+        # we've removed the icon as it overlaps with the header text; to put it back, add 'data-icon="back"' to the tag
+        '<a href="/app/Opportunity?selected_tab=new-leads" data-direction="reverse" rel="external">Cancel</a>'
+      when "follow-ups"
+        '<a href="/app/Opportunity?selected_tab=follow-ups" data-direction="reverse" rel="external">Cancel</a>'
+      when "appointments"
+        '<a href="/app/Opportunity?selected_tab=appointments" data-direction="reverse" rel="external">Cancel</a>'
+      when "contact"
+         '<a href="/app/Contact" data-direction="reverse" rel="external">Cancel</a>'
+      else
+        '<a href="/app/Opportunity" data-direction="reverse" rel="external">Cancel</a>'
+    end
   end
   
   def opp_detail_backbutton(origin)
@@ -138,6 +151,17 @@ module BrowserHelper
     end
   end
   
+  def to_birthdate(input)
+    begin
+      date = (Date.strptime(input, DateUtil::DEFAULT_BIRTHDATE_FORMAT))
+      result = date.strftime('%m/%d/%Y')
+      result
+    rescue
+      puts "DATE !~!~!~!~!~ DATE ISSUE !~!~!!~!~!~!~!~!~!!~!"
+      puts "Could not parse date value: #{input}"
+    end
+  end
+  
   def to_date_noyear(input)
     begin
       date = (Date.strptime(input, DateUtil::DEFAULT_TIME_FORMAT))
@@ -192,6 +216,15 @@ module BrowserHelper
   end
   
   def format_for_mapping(location)
+  end
+  
+  # converts True/False to Yes/No, used on contact/spouse/dependent for displaying tobacco use
+  def use_tobacco_string(value)
+    if value == 'True'
+      'Yes'
+    else
+      'No'
+    end
   end
 
 end

@@ -2,14 +2,29 @@
 	<li id="todays-leads-header" data-role="list-divider" role="heading" tabindex="0" class="opportunity-item ui-li ui-li-divider ui-btn ui-bar-<%= @color %> ui-btn-up-undefined"><%= @label %></li>
 <% end %>
 <% @page.each do |appointment| %>
-	<%= render :partial =>"opportunity", :back => 'callback:', :locals => { 
-              :opportunity => appointment.opportunity , 
+	<%= # Defaults
+		scheduledtime = appointment.scheduledstart
+		icon = "mapopp"
+		launcher = :map
+		
+		if appointment.type == 'PhoneCall'
+			scheduledtime = appointment.scheduledend
+			icon = "phoneopp"
+			launcher = :phone_dialog
+		elsif appointment.type == 'Appointment'
+			scheduledtime = appointment.scheduledstart
+			icon = "mapopp"
+			launcher = :map
+		end
+		
+		render :partial =>"opportunity", :back => 'callback:', :locals => { 
+              :opportunity => appointment.opportunity, 
               :color => @color, 
-              :bottom_right_text => "Due #{DateUtil.days_calc_formatted(appointment.scheduledstart)}",
-              :top_right_text => to_datetime_noyear(appointment.scheduledstart),
+              :bottom_right_text => "Due #{DateUtil.days_calc_formatted(scheduledtime)}",
+              :top_right_text => to_datetime_noyear(scheduledtime),
               :origin => "appointments",
-              :launcher => :map,
-              :icon => "mapopp",
+              :launcher => launcher,
+              :icon => icon,
               :location => appointment.location
 		} if appointment.opportunity 
 	 %>

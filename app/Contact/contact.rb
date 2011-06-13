@@ -1,4 +1,4 @@
-
+require 'helpers/browser_helper'
 
 class Contact
   include Rhom::FixedSchema
@@ -32,27 +32,148 @@ class Contact
   property :cssi_state2id, :string #business address state
   property :address2_postalcode, :string 
   property :contactid, :string
+  property :cssi_heightft, :string
+  property :cssi_heightin, :string
+  property :cssi_weight, :string
+  property :cssi_usetobacco, :string
+  property :familystatuscode, :string
+  property :cssi_allowcallsalternatephone, :string
+  property :cssi_allowcallsbusinessphone, :string
+  property :cssi_allowcallshomephone, :string
+  property :cssi_allowcallsmobilephone, :string
+  property :cssi_companydncalternatephone, :string
+  property :cssi_companydncbusinessphone, :string
+  property :cssi_companydnchomephone, :string
+  property :cssi_companydncmobilephone, :string
+  property :cssi_spousename, :string #start contact spouse information
+  property :cssi_spouselastname, :string
+  property :cssi_spousebirthdate, :string
+  property :cssi_spouseheightft, :string
+  property :cssi_spouseheightin, :string
+  property :cssi_spouseweight, :string
+  property :cssi_spouseusetobacco, :string
+  property :cssi_spousegender, :string #end contact spouse information
+  property :temp_id, :string
   
   index :contact_pk_index, [:contactid]
   unique_index :unique_contact, [:contactid] 
   
+  # If a contact has a spouse first or spouse last name we consider that the contact has a spouse.
+  def has_spouse_info?
+    return !cssi_spousename.blank? || !cssi_spouselastname.blank? 
+  end
+  
+  def self.create_new(params)
+      new_contact = Contact.create(params)
+      new_contact.update_attributes( :temp_id => new_contact.object )
+      new_contact
+  end
+  
+  def self.find_contact(id)
+    
+    if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+      @contact = Contact.find(id)
+    else
+      id.gsub!(/[{}]/,"")
+      @contact = Contact.find_by_sql(%Q{
+          select c.* from Contact c where temp_id='#{id}'
+        }).first
+      @contact
+      end
+  end
+
+  
   def self.all_open(page=nil, page_size=DEFAULT_PAGE_SIZE)    
     Contact.find_by_sql(%Q{
-      select c.contactid, c.* from Contact c, Opportunity o 
-            where o.contact_id=c.contactid and 
+      select distinct c.contactid, c.* from Contact c, Opportunity o 
+            where o.contact_id=c.object and 
             o.statecode not in ('Won', 'Lost')
       union
-      select c.contactid, c.* from Contact c, Policy p where c.contactid = p.contact_id
+      select distinct c.contactid, c.* from Contact c, Policy p where c.object = p.contact_id
       order by lastname collate nocase
       #{get_pagination_sql(page, page_size)}
     })
-    # Contact.find_by_sql(%Q{
-    #       select distinct(c.contactid), c.* from Contact c, Opportunity o 
-    #       where o.contact_id=c.contactid and 
-    #       o.statecode not in ('Won', 'Lost')
-    #       order by LOWER(c.lastname)
-    #       #{get_pagination_sql(page, page_size)}
-    #     })
+  end
+  
+  def self.with_active_policy(page=nil, page_size=DEFAULT_PAGE_SIZE)    
+    Contact.find_by_sql(%Q{
+      select distinct c.contactid, c.* from Contact c, Policy p where c.object = p.contact_id and p.statuscode = 'Active'
+      order by lastname collate nocase
+      #{get_pagination_sql(page, page_size)}
+    })
+  end
+  
+  def self.with_pending_policy(page=nil, page_size=DEFAULT_PAGE_SIZE)    
+    Contact.find_by_sql(%Q{
+      select distinct c.contactid, c.* from Contact c, Policy p where c.object = p.contact_id and p.statuscode = 'Pending'
+      order by lastname collate nocase
+      #{get_pagination_sql(page, page_size)}
+    })
+  end
+  
+  def self.with_open_opps(page=nil, page_size=DEFAULT_PAGE_SIZE)    
+    Contact.find_by_sql(%Q{
+      select distinct c.contactid, c.* from Contact c, Opportunity o 
+            where o.contact_id=c.object and 
+            o.statecode not in ('Won', 'Lost')
+      order by lastname collate nocase
+      #{get_pagination_sql(page, page_size)}
+    })
+  end
+  
+  def self.with_won_opps(page=nil, page_size=DEFAULT_PAGE_SIZE)    
+    Contact.find_by_sql(%Q{
+      select distinct c.contactid, c.* from Contact c, Opportunity o 
+            where o.contact_id=c.object and 
+            o.statecode = 'Won'
+      order by lastname collate nocase
+      #{get_pagination_sql(page, page_size)}
+    })
+  end
+  
+  def self.list_filter(page=nil, page_size=DEFAULT_PAGE_SIZE)  
+    if $filter == "All"
+      Contact.find_by_sql(%Q{
+        select distinct c.contactid, c.* from Contact c, Opportunity o 
+              where o.contact_id=c.object and 
+              o.statecode not in ('Won', 'Lost') and (c.firstname like '%#{$search_input1}%' OR c.lastname like '%#{$search_input1}%' OR c.firstname like '%#{$search_input2}%' OR c.lastname like '%#{$search_input2}%')
+        union
+        select distinct c.contactid, c.* from Contact c, Policy p where c.object = p.contact_id
+        and (c.firstname like '%#{$search_input1}%' OR c.lastname like '%#{$search_input1}%' OR c.firstname like '%#{$search_input2}%' OR c.lastname like '%#{$search_input2}%')
+        order by lastname collate nocase
+        #{get_pagination_sql(page, page_size)}
+      })
+    elsif $filter == "With Active Policies"
+      Contact.find_by_sql(%Q{
+        select distinct c.contactid, c.* from Contact c, Policy p where c.object = p.contact_id and p.statuscode = 'Active'
+        and (c.firstname like '%#{$search_input1}%' OR c.lastname like '%#{$search_input1}%' OR c.firstname like '%#{$search_input2}%' OR c.lastname like '%#{$search_input2}%')
+        order by lastname collate nocase
+        #{get_pagination_sql(page, page_size)}
+      })
+    elsif $filter  == "With Pending Policies"
+      Contact.find_by_sql(%Q{
+        select distinct c.contactid, c.* from Contact c, Policy p where c.object = p.contact_id and p.statuscode = 'Pending'
+        and (c.firstname like '%#{$search_input1}%' OR c.lastname like '%#{$search_input1}%' OR c.firstname like '%#{$search_input2}%' OR c.lastname like '%#{$search_input2}%')
+        order by lastname collate nocase
+        #{get_pagination_sql(page, page_size)}
+      })
+    elsif $filter  == "With Open Opps"
+      Contact.find_by_sql(%Q{
+        select distinct c.contactid, c.* from Contact c, Opportunity o 
+              where o.contact_id=c.object and 
+              o.statecode not in ('Won', 'Lost') and (c.firstname like '%#{$search_input1}%' OR c.lastname like '%#{$search_input1}%' OR c.firstname like '%#{$search_input2}%' OR c.lastname like '%#{$search_input2}%')
+        order by lastname collate nocase
+        #{get_pagination_sql(page, page_size)}
+      })
+    else
+      Contact.find_by_sql(%Q{
+        select distinct c.contactid, c.* from Contact c, Opportunity o 
+              where o.contact_id=c.object and 
+              o.statecode = 'Won' and (c.firstname like '%#{$search_input1}%' OR c.lastname like '%#{$search_input1}%' OR c.firstname like '%#{$search_input2}%' OR c.lastname like '%#{$search_input2}%')
+        order by lastname collate nocase
+        #{get_pagination_sql(page, page_size)}
+      })
+    end
   end
   
   def full_name
@@ -131,6 +252,17 @@ class Contact
     end
   end
   
+  def spouse_age
+    begin
+      birthday = Date.strptime(cssi_spousebirthdate, DateUtil::DEFAULT_TIME_FORMAT)
+       day_diff = Date.today - birthday.day
+       month_diff = Date.today.month - birthday.month - (day_diff < 0 ? 1 : 0)
+        (Date.today.year - birthday.year - (month_diff < 0 ? 1 : 0)).to_s
+    rescue
+      puts "Invalid date parameter in spouse age calculation method; no spouse age returned"
+    end
+  end
+  
   def phone_numbers
     {'Home' => telephone2, 'Mobile' => mobilephone, 'Business' => telephone1, 'Alternate' => telephone3 }.reject{|type, number| number.blank? }
   end
@@ -174,7 +306,10 @@ class Contact
   
   def policies
     Policy.find(:all, :conditions => {"contact_id" => self.object})
-    #Policy.find(:all)
+  end
+  
+  def dependents
+    Dependent.find(:all, :conditions => {"contact_id" => self.object})
   end
   
   def business_map
@@ -192,6 +327,4 @@ class Contact
         puts "Could not generate home_map map string; Value is #{}"
     end
   end
-  
-  
 end

@@ -11,7 +11,7 @@ class Settings
     end
     
     def has_persisted_credentials?
-      !instance.login.blank? && !instance.password.blank? && !instance.pin.blank?
+      !instance.login.blank? && !instance.password.blank?
     end
     
     def has_verified_credentials?
@@ -30,10 +30,15 @@ class Settings
       sync_type == 'init'
     end
     
+    def is_new_opportunity_sync?
+      sync_type == 'new_opportunity'
+    end
+    
     def clear_credentials
       instance.login=nil
       instance.password=nil
-      instance.pin=nil
+      instance.pin_last_activity_time=nil
+      instance.pin_confirmed=false
       instance.credentials_verified=false
       instance.save
     end
@@ -48,6 +53,14 @@ class Settings
     
     def pin
       instance.pin || ''
+    end
+    
+    def pin_last_activity_time
+      instance.pin_last_activity_time || ''
+    end
+    
+    def pin_confirmed
+      instance.pin_confirmed|| ''
     end
     
     def credentials_verified
@@ -68,6 +81,20 @@ class Settings
       instance.sync_type || 'background'
     end
     
+    def new_opportunity_sync_pending
+      result = instance.new_opportunity_sync_pending || false
+      
+      # use string comparison below because settings DB always stores & returns strings
+      # sometimes "instance" is in-memory and **not** fetched from db, which could return real boolean types instead of strings here
+      # to_s covers both cases
+      result.to_s == 'true'
+    end
+    
+    def new_opportunity_sync_pending=(new_opportunity_sync_pending)
+      instance.new_opportunity_sync_pending=new_opportunity_sync_pending
+      instance.save     
+    end
+    
     def login=(login)
       instance.login=login
       instance.save
@@ -80,6 +107,16 @@ class Settings
     
     def pin=(pin)
       instance.pin=pin
+      instance.save
+    end
+    
+    def pin_last_activity_time=(pin_last_activity_time)
+      instance.pin_last_activity_time=pin_last_activity_time
+      instance.save
+    end
+    
+    def pin_confirmed=(pin_confirmed)
+      instance.pin_confirmed=pin_confirmed
       instance.save
     end
     
@@ -105,6 +142,23 @@ class Settings
     
     def flush_instance #populates @instance with settings from DB
       @instance = Settings.find(:first) || Settings.create({})
+    end
+    
+    def record_activity
+      puts  "*************************" + Settings.pin_last_activity_time.class.to_s
+      if Settings.pin_last_activity_time.class==String
+        Settings.pin_last_activity_time = Time.parse(Settings.pin_last_activity_time)
+      end
+      
+      if Settings.pin_last_activity_time.nil? || Settings.pin_last_activity_time==""
+        Settings.pin_last_activity_time=Time.new
+        Settings.pin_confirmed=false
+      elsif Time.new - Settings.pin_last_activity_time < 900
+          Settings.pin_last_activity_time=Time.new
+      else
+          Settings.pin_confirmed=false
+          Settings.pin_last_activity_time=Time.new
+      end
     end
   end
 end

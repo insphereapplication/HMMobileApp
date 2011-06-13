@@ -48,29 +48,24 @@ logname='InsiteMobile-rhodes'
 KeepTrackOfLastVisitedPage = 0 
 LastVisitedPage = ''
 
-#MODEL_RHOHUB -- for UAT/QA of new features from master
-syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
+# MODEL RHOHUB 
+# syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
 
-#MODEL ONSITE
-#syncserver = 'https://rhosync.insphereis.net/application'
+# PRODUCTION RHOHUB
+# syncserver = #'https://rhohub-insphere-b3789b06.heroku.com/application'
 
-#MODEL ONSITE IP
-# syncserver = 'https://199.102.216.25/application'
+# DEV RHOHUB
+# syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
 
-# 101 -- hit nrhrho101 directly
-# syncserver = 'http://nrhrho101/application'
+# MODEL ONSITE
+syncserver = 'https://rhosync.model.insphereis.net/application'
 
-# 102 -- hit nrhrho102 directly
-# syncserver = 'http://nrhrho102/application'
+# PRODUCTION ONSITE
+# syncserver = 'https://rhosync.insphereis.net/application'
 
-#DEV
-#syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
-
-#LOCAL
+# LOCAL
 # syncserver = 'http://localhost:9292/application'
 
-#PRODUCTION !!!
-# syncserver = 'https://rhohub-insphere-b3789b06.heroku.com/application'
 
 #sync_poll_interval=300
 

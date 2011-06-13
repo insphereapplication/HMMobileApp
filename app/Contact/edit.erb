@@ -1,169 +1,286 @@
-<div data-role="page" data-theme="b">
-	  <form method="post" id="contact_edit" action="<%= url_for :action => :update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" name="contact_edit" onSubmit="javascript:return checkEdit(this);">
-	<div data-inline="true">
-		<%= offline_bar%>	
-		<div data-role="header" data-backbtn="false" data-theme="b" >
-		
-			<a href="<%=url_for(:action=>:show, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-direction="reverse" data-icon="back">Cancel</a>
-			<h1>Edit</h1>
-			<span class="ui-btn-right">
-			<input type="submit" href="javascript:contact_edit.submit()" onClick="return checkEdit(contact_edit);" data-theme="b" data-direction="reverse" data-icon="gear" value="Update"/>	
-			</span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+	<head>
+		<title></title>
+	</head>
+	<body>
+		<div data-role="page" data-theme="b">
+			<form method="post" id="contact_edit" action="<%= url_for :action => :update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" name="contact_edit" onsubmit="javascript:return checkEdit(this);">
+				<div data-inline="true">
+					<%= offline_bar %>
+					<div data-role="header" data-backbtn="false" data-theme="b">
+						<a href="<%= url_for :action => :show, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" data-direction="reverse" data-icon="back">Cancel</a>
+						<h1>Edit</h1>
+						<span class="ui-btn-right">
+							<input type="submit" onClick="return checkEdit(contact_edit);" data-theme="b" data-direction="reverse" data-icon="false" value="Done"/>
+						</span>
+					</div>
+					<div class="toolbar">
+						<div class="leftItem backButton"></div>
+					</div>
+					<div data-role="content">
+						<input type="hidden" name="id" value="<%= @contact.object %>">
+						<div align="center">
+							<label class="fieldLabel"><b>Edit <%= @contact.full_name %></b></label><br>
+							<br>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<table width="100%">
+									<tr>
+										<td colspan="2">
+											<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone) %> 
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<% if System::get_property('platform') == 'APPLE' %>
+											<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>> 
+											<% else %>
+											<input maxlength="14" type="tel" id="phoneNumber" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>><br>
+											<% end %>
+										</td>	
+										<td>
+											<%= do_not_call_button(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,"Mobile",@contact.mobilephone,@contact.object) %>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<table width="100%">
+									<tr>
+										<td colspan="2">
+											<label for="contact[telephone1]" class="fieldLabel">Business Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone) %>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<% if System::get_property('platform') == 'APPLE' %>
+											<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
+											<% else %>
+											<input type="tel" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
+											<% end %>
+										</td>
+										<td>
+											<%= do_not_call_button(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,"Business",@contact.telephone1,@contact.object) %><%#  %>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="contact[cssi_businessphoneext]" class="fieldLabel">Business Extension:</label>
+								<input maxlength="10" type="tel" name="contact[cssi_businessphoneext]" value="<%= @contact.cssi_businessphoneext %>" <%= placeholder( "Business Ext" ) %>>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<table width="100%">
+									<tr>
+										<td colspan="2">
+											<label for="contact[telephone2]" class="fieldLabel">Home Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone) %>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<% if System::get_property('platform') == 'APPLE' %>
+											<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
+											<% else %>
+											<input type="tel" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
+											<% end %>
+										</td>
+										<td>
+											<%= do_not_call_button(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,"Home",@contact.telephone2,@contact.object) %><%#  %>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<table width="100%">
+									<tr>
+										<td colspan="2">
+											<label for="contact[telephone3]" class="fieldLabel">Alternate Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone) %> 
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<% if System::get_property('platform') == 'APPLE' %>
+											<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>>
+											<% else %>
+											<input type="tel" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>>
+											<% end %>
+										</td>
+										<td>
+											<%= do_not_call_button(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone,"Alternative",@contact.telephone3,@contact.object) %><%#  %>
+										</td>
+									</tr>
+								</table>
+								
+								
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="contact[cssi_preferredphone]" class="select">Preferred Phone:</label> 
+								<select name="contact[cssi_preferredphone]" id="select-choice-1">
+									<option data-placeholder="true">
+										<%= @contact.cssi_preferredphone %>
+									</option>
+									<option value="Mobile">
+										Mobile
+									</option>
+									<option value="Business">
+										Business
+									</option>
+									<option value="Home">
+										Home
+									</option>
+									<option value="Alternate">
+										Alternate
+									</option>
+								</select>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="contact[emailaddress1]" class="fieldLabel">Email Address:</label> 
+								<input type="email" maxlength="255" name="contact[emailaddress1]" value="<%= @contact.emailaddress1 %>" <%= placeholder( "Email Address" ) %>>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<table width="100%">
+									<tr>
+										<td colspan="2">
+											<label for="contact[cssi_heightft]" class="fieldLabel">Height:</label>
+										</td>
+									</tr>
+									<tr>
+										<td width="50%">
+											<select name="contact[cssi_heightft]" id="select-choice-heightft" width="50%">
+												<option data-placeholder="true"><%= @contact.cssi_heightft %></option>
+												<% Constants::HEIGHT_FEET.each do |height_feet| %>
+												<option value="<%=height_feet%>"><%=height_feet%></option>
+												<% end %>
+											</select>
+										</td>
+										<td width="50%">
+											<select name="contact[cssi_heightin]" id="select-choice-heightin">
+												<option data-placeholder="true"><%= @contact.cssi_heightin %></option>
+												<% Constants::HEIGHT_INCHES.each do |height_inches| %>
+												<option value="<%=height_inches%>"><%=height_inches%></option>
+												<% end %>
+											</select>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="contact[cssi_weight]" class="fieldLabel">Weight:</label> 
+								<input type="number" maxlength="4" name="contact[cssi_weight]" value="<%= @contact.cssi_weight %>" <%= placeholder( "Weight" ) %>>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="tobaccoSlider" class="fieldLabel">Tobacco:</label>
+								<select name="contact[cssi_usetobacco]" id="tobaccoSlider" data-role="slider">
+									<option value="False" <% if @contact.cssi_usetobacco == "False" %> selected="selected" <% end %> >No</option>
+									<option value="True" <% if @contact.cssi_usetobacco == "True" %> selected="selected" <% end %>>Yes</option>						
+								</select>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="contact[familystatuscode]" class="fieldLabel">Marital Status:</label> 
+								<select name="contact[familystatuscode]" id="select-choice-familystatuscode">
+									<option data-placeholder="true"><%= @contact.familystatuscode %></option>
+									<option value="Single">Single</option>
+									<option value="Married">Married</option>
+									<option value="Divorced">Divorced</option>
+									<option value="Widowed">Widowed</option>
+								</select>
+							</div>
+						</div>
+						<br>
+						<b>Home Address</b><br>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="contact[address1_line1]" class="fieldLabel">Address Line 1:</label> <input maxlength="200" type="text" name="contact[address1_line1]" value="<%= @contact.address1_line1 %>" <%= placeholder( "Home Address Line 1" ) %>>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="contact[address1_line2]" class="fieldLabel">Address Line 2:</label> <input maxlength="255" type="text" name="contact[address1_line2]" value="<%= @contact.address1_line2 %>" <%= placeholder( "Home Address Line 2" ) %>>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="contact[address1_city]" class="fieldLabel">City:</label> <input maxlength="50" type="text" name="contact[address1_city]" value="<%= @contact.address1_city %>" <%= placeholder( "Home City" ) %>>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="contact[cssi_state1id]" class="fieldLabel">State:</label> <select name="contact[cssi_state1id]" data-role="none" id="select-choice-2">
+									<option data-placeholder="true">
+										<%= @contact.cssi_state1id %>
+									</option><% Constants::STATE_CODES.each do |state_code| %>
+									<option value="<%=state_code[0]%>">
+										<%=state_code[1]%>
+									</option><% end %>
+								</select>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="contact[address1_postalcode]" class="fieldLabel">ZIP:</label> <input maxlength="20" type="number" name="contact[address1_postalcode]" value="<%= @contact.address1_postalcode %>" <%= placeholder( "Home ZIP" ) %>>
+							</div>
+						</div><b>Business Address</b><br>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="contact[address2_line1]" class="fieldLabel">Address Line 1:</label><br>
+								<input maxlength="200" type="text" name="contact[address2_line1]" value="<%= @contact.address2_line1 %>" <%= placeholder( "Business Address Line 1" ) %>>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="contact[address2_line2]" class="fieldLabel">Address Line 2:</label> <input maxlength="200" type="text" name="contact[address2_line2]" value="<%= @contact.address2_line2 %>" <%= placeholder( "Business Address Line 2" ) %>>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="contact[address2_city]" class="fieldLabel">City:</label> <input maxlength="50" type="text" name="contact[address2_city]" value="<%= @contact.address2_city %>" <%= placeholder( "Business City" ) %>>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="contact[cssi_state2id]" class="fieldLabel">State:</label> <select name="contact[cssi_state2id]" data-role="none" id="select-choice-3">
+									<option data-placeholder="true">
+										<%= @contact.cssi_state2id %>
+									</option><% Constants::STATE_CODES.each do |state_code| %>
+									<option value="<%=state_code[0]%>">
+										<%=state_code[1]%>
+									</option><% end %>
+								</select>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+								<label for="contact[address2_postalcode]" class="fieldLabel">ZIP:</label> <input maxlength="20" type="number" name="contact[address2_postalcode]" value="<%= @contact.address2_postalcode %>" <%= placeholder( "Business ZIP" ) %>>
+							</div>
+						</div>
+						<div data-theme="b">
+							<input type="submit" onClick="return checkEdit(contact_edit);" data-theme="b" data-direction="reverse" data-icon="false" value="Done"/>
+						</div>
+					</div>
+				</div>
+			</form>
 		</div>
-		
-	<div class="toolbar">
-	  <div class="leftItem backButton">
-
-	  </div>
-
-	</div>
-
-	<div data-role="content">
-	    <input type="hidden" name="id" value="<%= @contact.object %>"/>
-				<div align="center"><label class="fieldLabel"> <b>Edit <%= @contact.full_name %></b> </label> <br/> <br/></div>
-
-			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-	            <label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:</label>
-				<% if System::get_property('platform') == 'APPLE' %>
-	            	<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %> />
-				<% else %>
-					<input maxlength="14" type="tel" id="phoneNumber" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>/><br />
-				<% end %>
-		    	</div>
-		</div>
-	        <div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-	            <label for="contact[telephone1]" class="fieldLabel">Business Phone:</label>
-				<% if System::get_property('platform') == 'APPLE' %>
-	            	<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %> />
-				<% else %>
-					<input type="tel" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %> />
-				<% end %>
-				</div>
-			</div>
-			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-				<label for="contact[cssi_businessphoneext]" class="fieldLabel">Business Extension:</label>
-	            <input maxlength="10" type="tel" name="contact[cssi_businessphoneext]" value="<%= @contact.cssi_businessphoneext %>" <%= placeholder( "Business Ext" ) %> />
-		    	</div>
-		</div>
-			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-	            <label for="contact[telephone2]" class="fieldLabel">Home Phone:</label>
-	            <% if System::get_property('platform') == 'APPLE' %>	
-					<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %> />
-		    	<% else %>
-					<input type="tel" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %> />
-				<% end %>
-				</div>
-			</div>
-			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">	
-	            <label for="contact[telephone3]" class="fieldLabel">Alternate Phone:</label>
-				<% if System::get_property('platform') == 'APPLE' %>
-	            	<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %> />
-				<% else %>
-					<input type="tel" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %> />
-				<% end %>
-		    	</div>
-			</div>
-			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-			<label for="contact[cssi_preferredphone]" class="select">Preferred Phone:</label>
-				<select name="contact[cssi_preferredphone]"  id="select-choice-1">
-					<option data-placeholder="true"> <%= @contact.cssi_preferredphone %> </option>
-					<option value="Mobile">Mobile</option>
-					<option value="Business">Business</option>
-					<option value="Home">Home</option>
-					<option value="Alternate">Alternate</option>
-				</select>
-					</div>
-				</div>
-				<div data-role="fieldcontain">
-					<div class="ui-body ui-body-d">
-	            <label for="contact[emailaddress1]" class="fieldLabel">Email Address:</label>
-	            <input type="email" maxlength="255" name="contact[emailaddress1]" value="<%= @contact.emailaddress1 %>" <%= placeholder( "Email Address" ) %> />
-					</div>
-				</div>
-				<br/> 	
-			
-				<b>Home Address</b> <br/>
-				  <div data-role="fieldcontain">
-					<div class="ui-body ui-body-d">
-		            <label for="contact[address1_line1]" class="fieldLabel">Address Line 1:</label>
-		            <input maxlength="200" type="text" name="contact[address1_line1]" value="<%= @contact.address1_line1 %>" <%= placeholder( "Home Address Line 1" ) %> />
-						</div>
-					</div>
-					<div data-role="fieldcontain">
-						<div class="ui-body ui-body-d">
-		            <label for="contact[address1_line2]" class="fieldLabel">Address Line 2:</label>
-		            <input maxlength="255" type="text" name="contact[address1_line2]" value="<%= @contact.address1_line2 %>" <%= placeholder( "Home Address Line 2" ) %> />
-						</div>
-					</div>
-					<div data-role="fieldcontain">
-						<div class="ui-body ui-body-d">
-		            <label for="contact[address1_city]" class="fieldLabel">City:</label>
-		            <input maxlength="50" type="text" name="contact[address1_city]" value="<%= @contact.address1_city %>" <%= placeholder( "Home City" ) %> />
-						</div>
-					</div>
-					<div data-role="fieldcontain">
-						<div class="ui-body ui-body-d">
-		            <label for="contact[cssi_state1id]" class="fieldLabel">State:</label>
-		            <select name="contact[cssi_state1id]" data-role="none" id="select-choice-2">
-						<option data-placeholder="true"> <%= @contact.cssi_state1id %> </option>
-						<% Constants::STATE_CODES.each do |state_code| %>
-							<option value="<%=state_code[0]%>"><%=state_code[1]%></option>
-						<% end %>
-					</select>
-						</div>
-					</div>
-					<div data-role="fieldcontain">
-						<div class="ui-body ui-body-d">
-		            <label for="contact[address1_postalcode]" class="fieldLabel">ZIP:</label>
-		            <input maxlength="20"type="number" name="contact[address1_postalcode]" value="<%= @contact.address1_postalcode %>" <%= placeholder( "Home ZIP" ) %> />
-						</div>
-					</div>
-				
-			<b>Business Address</b> <br/> 
-			  <div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-	            <label for="contact[address2_line1]" class="fieldLabel">Address Line 1:</label> <br/>
-	            <input maxlength="200" type="text" name="contact[address2_line1]" value="<%= @contact.address2_line1 %>" <%= placeholder( "Business Address Line 1" ) %>/>
-				</div>
-			</div>
-				<div data-role="fieldcontain">
-					<div class="ui-body ui-body-d">
-	            <label for="contact[address2_line2]" class="fieldLabel">Address Line 2:</label>
-	            <input maxlength="200" type="text" name="contact[address2_line2]" value="<%= @contact.address2_line2 %>" <%= placeholder( "Business Address Line 2" ) %> />
-					</div>
-				</div>
-				<div data-role="fieldcontain">
-					<div class="ui-body ui-body-d">
-	            <label for="contact[address2_city]" class="fieldLabel">City:</label>
-	            <input maxlength="50" type="text" name="contact[address2_city]" value="<%= @contact.address2_city %>" <%= placeholder( "Business City" ) %> />
-					</div>
-				</div>
-				<div data-role="fieldcontain">
-					<div class="ui-body ui-body-d">
-	            <label for="contact[cssi_state2id]" class="fieldLabel">State:</label>
-	            <select name="contact[cssi_state2id]" data-role="none" id="select-choice-3">
-					<option data-placeholder="true"> <%= @contact.cssi_state2id %> </option>
-					
-					<% Constants::STATE_CODES.each do |state_code| %>
-						<option value="<%=state_code[0]%>"><%=state_code[1]%></option>
-					<% end %>
-				</select>
-					</div>
-				</div>
-				<div data-role="fieldcontain">
-					<div class="ui-body ui-body-d">
-	            <label for="contact[address2_postalcode]" class="fieldLabel">ZIP:</label>
-	            <input maxlength="20" type="number" name="contact[address2_postalcode]" value="<%= @contact.address2_postalcode %>" <%= placeholder( "Business ZIP" ) %> />
-	          		</div>
-				</div>
-	</div>
-	
-</form>
-
-</div>
+	</body>
+</html>

@@ -1,0 +1,20 @@
+<div data-role="page" data-theme="b">
+	<div data-role="header">
+		<a href="<%=url_for(:controller=>:Contact, :action=>:show, :id => @dependent.contact.object, :query=>{:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
+		<h1>Dependent Detail</h1>
+		<a href="<%=url_for(:controller=>:Dependent, :action=>:edit, :id => @dependent.object, :query=>{:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-direction="reverse" rel="external" data-icon="edit">Edit</a>
+	</div>
+	<div data-role="content">
+		<ul data-role="listview" data-filter="false" data-inset="true"> 
+			<li>
+					<h3><%= @dependent.cssi_name %>&nbsp;<%= @dependent.cssi_lastname %></h3>
+					<p><%= @dependent.cssi_gender%>, Age <%= @dependent.cssi_age %></p>
+					<p>DOB: <%= to_date(@dependent.cssi_dateofbirth) %></p>
+			</li> 
+			<li data-icon="false"><h3>Height:&nbsp;<%= @dependent.cssi_heightft %>'&nbsp;<%= @dependent.cssi_heightin %>"</h3></li>
+			<li data-icon="false"><h3>Weight:&nbsp;<%= @dependent.cssi_weight %>&nbsp;lbs</h3></li>
+			<li data-icon="false"><h3>Tobacco:&nbsp;<%= use_tobacco_string(@dependent.cssi_usetobacco) %></h3></li>
+			<li data-icon="false"><h3>Comments:</h3><%= @dependent.cssi_comments %></li>
+		</ul>
+	</div>
+</div>
