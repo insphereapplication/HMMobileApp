@@ -13,6 +13,7 @@ class ApplicationDetail
   property :cssi_applicationdate, :string
   property :cssi_lineofbusinessid, :string
   property :cssi_avforapplicationsubmitted, :string
+  property :cssi_fromrhosync, :string
   property :temp_id, :string
   
   belongs_to :opportunity_id, 'Opportunity'
