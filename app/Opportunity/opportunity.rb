@@ -32,6 +32,7 @@ class Opportunity
   property :actual_end, :string
   property :temp_id, :string
   property :actualclosedate, :string
+  property :opportunityratingcode, :string
   
   index :opportunity_pk_index, [:opportunityid]
   unique_index :unique_opp, [:opportunityid] 
@@ -156,13 +157,13 @@ class Opportunity
   
   def activity_list
     Activity.find_by_sql(%Q{
-        select type, scheduledstart as "displaytime", statuscode, cssi_disposition from Activity where #{is_owned_by_this_opportunity_sql}
+        select type, scheduledstart as "displaytime", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
         AND type = 'Appointment' AND scheduledstart IS NOT NULL
         UNION
-        select type, scheduledend as "displaytime", statuscode, cssi_disposition from Activity where #{is_owned_by_this_opportunity_sql}
+        select type, scheduledend as "displaytime", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
         AND type = 'PhoneCall' AND scheduledend IS NOT NULL
         UNION
-        select type, createdon as "displaytime", statuscode, cssi_disposition from Activity where #{is_owned_by_this_opportunity_sql}
+        select type, createdon as "displaytime", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
         AND scheduledstart IS NULL AND scheduledend IS NULL order by "displaytime" desc
       })
   end

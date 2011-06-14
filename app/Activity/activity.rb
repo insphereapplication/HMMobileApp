@@ -23,6 +23,19 @@ class Activity
   property :createdon, :string
   property :temp_id, :string
   
+  #######email properties########
+  property :torecipients, :string
+  property :actualstart, :string
+  property :prioritycode, :string
+  property :sender, :string
+  property :actualend, :string
+  property :ownerid, :string
+  property :email_to, :string
+  property :bcc, :string
+  property :cc, :string
+  property :email_from, :string
+  ################################
+  
   index :activity_pk_index, [:activityid]
   unique_index :unique_activity, [:activityid] 
   
