@@ -1,0 +1,16 @@
+<div data-role="page" data-theme="b" data-cache="never">
+		<div data-role="header" data-backbtn="false">
+			<a href="<%= url_for(:controller => :Opportunity, :action => :won, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>			
+			<h3>Application Details</h3>
+			<a data-icon="edit" href="<%=url_for(:action=>:edit, :id => @appdetail.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-direction="forward"> Edit </a>
+		</div>
+	<div data-role="content">
+		<ul data-role="listview" data-theme="d" data-inset="true">
+			<li>Carrier: <%= @appdetail.cssi_carrierid %></li>
+			<li>LOB: <%= @appdetail.cssi_lineofbusinessid %></li>	
+			<li>Apps Submitted: <%= @appdetail.cssi_applicationssubmitted %></li>
+			<li>Total AV: <%= format_currency(@appdetail.cssi_avforapplicationsubmitted) %></li>	
+			<li>App Date: <%= @appdetail.cssi_applicationdate %></li>			
+		</ul>
+	</div>
+</div>

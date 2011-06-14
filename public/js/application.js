@@ -412,8 +412,8 @@ function editpopupDateTimeAJPicker(flag, title, field_key, preset) {
   return false;
 }
 
-function popupAppDateAJPicker(flag, title, field_key) {
-  $.get('/app/Opportunity/appdatepopup', { flag: flag, title: title, field_key: field_key });
+function popupAppDateAJPicker(flag, title, field_key, preset) {
+  $.get('/app/Opportunity/appdatepopup', { flag: flag, title: title, field_key: field_key, preset: preset });
   return false;
 }
 
