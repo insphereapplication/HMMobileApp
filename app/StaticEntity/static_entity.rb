@@ -6,7 +6,7 @@ class StaticEntity
   
   def self.get_carrier_names
     carriers = StaticEntity.find('carriers')
-    carrier_names = carriers.names.split('||')
+    carrier_names = carriers.names.split('||').sort
   end
   
   def self.get_lob_names

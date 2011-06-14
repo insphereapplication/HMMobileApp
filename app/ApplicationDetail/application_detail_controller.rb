@@ -1,0 +1,101 @@
+require 'rho/rhocontroller'
+require 'helpers/browser_helper'
+
+class ApplicationDetailController < Rho::RhoController
+  include BrowserHelper
+
+
+  #GET /ApplicationDetail
+  def index
+    @appdetail = ApplicationDetail.find_application(:all)
+    render :back => '/app'
+  end
+
+  # GET /ApplicationDetail/{1}
+  def show
+    Settings.record_activity
+    @appdetail = ApplicationDetail.find_application(@params['id'])
+    if @appdetail
+      puts @appdetail.inspect
+      @opportunity = Opportunity.find_opportunity(@params['opportunity'])
+      render :action => :show, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
+    else
+      redirect :action => :index
+    end
+  end
+
+  # GET /ApplicationDetail/new
+  def new
+    Settings.record_activity
+    @opportunity = Opportunity.find_opportunity(@params['id'])
+    @appdetail = ApplicationDetail.new
+    render :action => :new, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
+  end
+
+  # GET /ApplicationDetail/{1}/edit
+  def edit
+    Settings.record_activity
+    @appdetail = ApplicationDetail.find_application(@params['id'])
+    if @appdetail
+      render :action => :edit, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
+    else
+      redirect :action => :index
+    end
+  end
+
+  # POST /ApplicationDetail/create
+  def create
+    Settings.record_activity
+    puts "********** Calling ApplicationDetailController.create **********"
+    puts "********** origin = #{@params['origin']}"
+    @appdetail = ApplicationDetail.create_new(@params['appdetail'])
+    SyncEngine.dosync
+    redirect :controller => :Opportunity, :action => :won, :origin => @params['origin'], :id => @appdetail.opportunity_id
+  end
+
+  # POST /ApplicationDetail/{1}/update
+  def update
+    Settings.record_activity
+    puts "********** Calling ApplicationDetailController.update **********"
+    puts "********** id = #{@params['id']}"
+    @appdetail = ApplicationDetail.find_application(@params['id'])
+    @appdetail.update_attributes(@params['appdetail']) if @appdetail    
+    SyncEngine.dosync
+    redirect :controller => :Opportunity, :action => :won, :origin => @params['origin'], :id => @appdetail.opportunity_id, :opportunity => @params['opportunity']
+  end
+
+
+  # POST /ApplicationDetail/{1}/delete
+  def delete
+    Settings.record_activity
+    @appdetail = ApplicationDetail.find_application(@params['id'])
+    @appdetail.destroy if @appdetail
+    redirect :action => :index
+  end
+  
+  def confirm_app_detail_delete
+    Alert.show_popup ({
+        :message => "Click OK to Delete this Application", 
+        :title => "Confirm Delete", 
+        :buttons => ["Cancel", "Ok",],
+        :callback => url_for(:action => :app_detail_delete, 
+                                        :query => {
+				                                :id => @params['id'],
+				                                :origin => @params['origin'],
+				                                :opportunity => @params['opportunity']
+				                                })
+				                   })
+  end
+  
+  def app_detail_delete
+    if @params['button_id'] == "Ok"
+      @appdetail = ApplicationDetail.find_application(@params['id'])
+      opportunityid = @appdetail.opportunity_id
+      @appdetail.destroy if @appdetail
+      SyncEngine.dosync
+      WebView.navigate(url_for :controller => :Opportunity, :action => :won, :id => opportunityid, :origin => @params['origin'], :opportunity => opportunityid)
+    else
+      WebView.navigate(url_for :action => :edit, :id => @params['id'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})
+    end 
+  end
+end

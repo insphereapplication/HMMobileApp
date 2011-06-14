@@ -47,6 +47,14 @@ module SQLHelper
     where a.type='Email' 
   }
   
+  LATEST_INTEGRATED_LEAD = %Q{
+    SELECT createdon
+    FROM Opportunity
+    WHERE cssi_inputsource='Integrated'
+    ORDER BY createdon DESC
+    LIMIT 1
+  }
+  
   OPEN_STATE_CODES = ['Open', 'Scheduled']
     
   SELECT_OPEN_PHONE_CALL_SQL = %Q{

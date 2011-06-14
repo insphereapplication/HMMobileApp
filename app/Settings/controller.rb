@@ -311,6 +311,33 @@ class SettingsController < Rho::RhoController
     end
   end
   
+  def set_last_integrated_lead
+    Opportunity.latest_integrated_lead.each do |opportunity|
+      Settings.last_integrated_lead = opportunity.createdon
+    end
+  end
+  
+  def new_integrated_leads?
+    former_last_lead = Settings.last_integrated_lead
+    set_last_integrated_lead
+    current_last_lead = Settings.last_integrated_lead
+    if Time.parse(current_last_lead)  > Time.parse(former_last_lead)
+      puts "NEW LEAD CREATED AT #{current_last_lead}"
+      new_leads_alert
+    end
+  end
+  
+  def new_leads_alert 
+    if Settings.has_verified_credentials?
+      Alert.show_popup({
+        :title => 'View New Leads?',
+        :message => "New lead(s) have been synced.\nWould you like to view them?", 
+        :buttons => ["Cancel", "View"],
+        :callback => url_for(:action => :on_dismiss_new_opportunity_popup, :back => 'callback:') 
+      })
+    end
+  end
+  
   #sync_notify gets called whenever any sync is in progress, completed, or returns an error
   #this is registered in the initialize method in application.rb
   def sync_notify
@@ -329,6 +356,8 @@ class SettingsController < Rho::RhoController
     #     ERR_GEOLOCATION = 12
 
     setup_sync_handlers
+    
+
     
     sourcename = @params['source_name'] ? @params['source_name'] : ""
   
@@ -349,6 +378,9 @@ class SettingsController < Rho::RhoController
       end
       
       @on_sync_complete.call
+      
+      #if latest integrated lead createdon is greater than before sync, display popup alert
+      new_integrated_leads?
     elsif status == "ok"
       if sourcename == 'AppInfo'
         check_force_upgrade
@@ -582,15 +614,15 @@ class SettingsController < Rho::RhoController
   end
   
   def new_opportunity_on_sync_ok(*args) 
-    if @params['source_name'] == 'Opportunity' && Settings.has_verified_credentials?
-
-      Alert.show_popup({
-        :title => 'View New Leads?',
-        :message => "New lead(s) have been synced.\nWould you like to view them?", 
-        :buttons => ["Cancel", "View"],
-        :callback => url_for(:action => :on_dismiss_new_opportunity_popup, :back => 'callback:') 
-      })
-    end
+    # if @params['source_name'] == 'Opportunity' && Settings.has_verified_credentials?
+    # 
+    #   Alert.show_popup({
+    #     :title => 'View New Leads?',
+    #     :message => "New lead(s) have been synced.\nWould you like to view them?", 
+    #     :buttons => ["Cancel", "View"],
+    #     :callback => url_for(:action => :on_dismiss_new_opportunity_popup, :back => 'callback:') 
+    #   })
+    # end
   end
   
   def new_opportunity_on_sync_complete(*args)

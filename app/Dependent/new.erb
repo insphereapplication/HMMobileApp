@@ -1,5 +1,5 @@
-<div data-role="page" data-theme="b" id="dependent_add_page">
-	<form method="post" id="dependent_add" action="<%= url_for :action => :create, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" name="dependent_add">
+<div data-role="page" data-theme="b" id="dependent_new_page">
+	<form method="post" id="dependent_form" action="<%= url_for :action => :create, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" name="dependent_add">
 		<div data-role="header" data-backbtn="false" data-theme="b">
 			<a href="<%=url_for(:controller=>:Contact, :action=>:show, :id => @contact.object, :query=>{:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
 			<h1>Add Dependent</h1>
@@ -18,7 +18,7 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="dependent[cssi_lastname]" class="fieldLabel">Last Name:</label>
-					<input type="text" maxlength="100" name="dependent[cssi_lastname]" class="required_group" value="" />
+					<input type="text" maxlength="100" name="dependent[cssi_lastname]" value="" />
 				</div>
 			</div>
 			<div data-role="fieldcontain">
@@ -64,7 +64,7 @@
 				<div class="ui-body ui-body-d">
 					<label for="tobaccoSlider" class="fieldLabel">Tobacco:</label>
 					<select name="dependent[cssi_usetobacco]" id="tobaccoSlider" data-role="slider">
-						<option value="False">No</optionpn>
+						<option value="False">No</option>
 						<option value="True">Yes</option>						
 					</select>
 				</div>
@@ -72,7 +72,7 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="dependent[cssi_comments]" class="fieldLabel">Comments:</label>
-					<input type="text" maxlength="250" name="dependent[cssi_comments]" id="dependent[cssi_comments]" class="required_group" value="" />
+					<input type="text" maxlength="250" name="dependent[cssi_comments]" id="dependent[cssi_comments]" value="" />
 				</div>
 			</div>
 			<input type="submit" data-theme="b" value="Done"/>

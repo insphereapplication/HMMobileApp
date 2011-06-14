@@ -11,19 +11,21 @@
 		<form name="won_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_won_status, :query => {:origin => @params['origin'], :opportunity_id => @opportunity.object} %>">		
 			<ul data-role="listview" data-filter="false" data-inset="true">
 				<li data-role="list-divider">Application Detail</li>
-				<li data-icon="plus"><a class="UpdateStatus" href="<%= url_for(:action => :app_detail_add, :id => @opportunity.object, :query =>{:test => "test", :origin => @params['origin']})%>" data-transition="slide">Add Application Detail</a></li>
+				<li data-icon="plus"><a class="UpdateStatus" href="<%= url_for(:controller => :ApplicationDetail, :action => :new, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-transition="slide">Add Application Detail</a></li>
 			
-
-			
+			<% if @opportunity.app_details.size > 0 %>
+			<% @opportunity.app_details.each do |appdetail| %>
 				<li>
-					<a href="<%= url_for(:action => :app_detail_show, :id => "appdetail.object", :query => {:origin => @params['origin']}) %>">
-					<br/><p>Carrier: Base 105</p>
-					<p>Apps Submitted: 3 </p> 
-					<p>Total AV: $1,200 </p> 
-					<p>App Date: 9/30/2011 </p> 
-					<p>LOB: Annuity </p>
+					<a href="<%= url_for(:controller => :ApplicationDetail, :action => :show, :id => appdetail.object, :query => {:origin => @params['origin'], :opportunity => @opportunity.object}) %>">
+					<br/><p>Carrier: <%= appdetail.cssi_carrierid %></p>
+					<p>LOB: <%= appdetail.cssi_lineofbusinessid%></p>					
+					<p>Apps Submitted: <%= appdetail.cssi_applicationssubmitted %></p> 
+					<p>Total AV: <%= format_currency(appdetail.cssi_avforapplicationsubmitted) %> </p> 
+					<p>App Date: <%= appdetail.cssi_applicationdate %> </p> 
 					</a>
 				</li> 
+			<% end %>
+			<% end %>
 			</ul>				
 				<div data-role="fieldcontain">
 					<input type="submit" data-theme="b" class="standardButton" onclick="return validate();" value="Mark as Won"/>

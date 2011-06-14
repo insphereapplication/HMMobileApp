@@ -56,7 +56,6 @@ class Opportunity
   end
   
   def self.find_opportunity(id)
-    
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
       @opportunity = Opportunity.find(id)
     else
@@ -85,6 +84,10 @@ class Opportunity
   def self.new_leads
     find_by_sql(NEW_LEADS_SQL)
   end 
+  
+  def self.latest_integrated_lead
+    find_by_sql(LATEST_INTEGRATED_LEAD)
+  end
   
   def self.open_opportunities
     find(:all, :conditions => "statecode not in ('Won', 'Lost')")
@@ -174,10 +177,14 @@ class Opportunity
       })
   end
   
-  def get_application_details
-    
+  def app_details
+    ApplicationDetail.find_by_sql(%Q{
+        select a.* 
+        from ApplicationDetail a 
+        where opportunity_id = '#{object}' 
+    })
   end
-  
+    
   def create_application_details
     APPDetails.create({
       :notetext => note_text, 
@@ -198,6 +205,8 @@ class Opportunity
      end
    end
   end
+  
+
   
   def notes
     Note.find_by_sql(%Q{
