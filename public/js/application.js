@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $('form').submit(function() {
+  $('form').not('#dependent_form').submit(function() {
     if(typeof jQuery.data(this, "disabledOnSubmit") == 'undefined') {
       jQuery.data(this, "disabledOnSubmit", { submited: true });
       $('input[type=submit], input[type=button]', this).each(function() {
@@ -412,8 +412,8 @@ function editpopupDateTimeAJPicker(flag, title, field_key, preset) {
   return false;
 }
 
-function popupAppDateAJPicker(flag, title, field_key) {
-  $.get('/app/Opportunity/appdatepopup', { flag: flag, title: title, field_key: field_key });
+function popupAppDateAJPicker(flag, title, field_key, preset) {
+  $.get('/app/Opportunity/appdatepopup', { flag: flag, title: title, field_key: field_key, preset: preset });
   return false;
 }
 

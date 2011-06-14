@@ -17,8 +17,7 @@
 					<input type="checkbox" name="<%= appointment.object %>" class="custom" id="<%= appointment.object %>" value="<%= appointment.object %>" />
 					<label for="<%= appointment.object %>"> Appt <%= to_datetime(appointment.scheduledstart) %> </label> 
 				<% end %>
-				</fieldset>
-				<input id="confirm_complete_button" class="UpdateStatus" type="submit" href="<%= url_for(:controller => :Activity, :action => :update_status_no_contact, :query => {:opportunity_id => @opportunity.object, :status_detail => '', :origin => @params['origin']}) %>" data-theme="b" data-direction="reverse" value="Done"/> 
+				</fieldset> 
 			</div>
 		<% end %> 
 		</form>
