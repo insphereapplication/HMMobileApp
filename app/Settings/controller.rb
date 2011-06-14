@@ -640,9 +640,11 @@ class SettingsController < Rho::RhoController
   
   def resource_center
     Settings.record_activity
-    WebView.navigate(WebView.current_location)
     resource_url=Rho::RhoConfig.resource_center_url
-    System.open_url("#{resource_url}")
+    resource_params = "?UserName=#{Settings.login}&pwd=#{Settings.password}"
+    puts "Resource URL parameters are: #{resource_params}"
+    WebView.navigate(WebView.current_location)
+    System.open_url("#{resource_url}#{resource_params}")
   end
 
   def check_force_upgrade
