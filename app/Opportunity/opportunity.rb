@@ -145,16 +145,16 @@ class Opportunity
       else
         sortByClause = "order by datetime(o.cssi_lastactivitydate) asc"
     end
-    
+        
     createdClause = ''
-    case createdFilter.to_i
-      when 1
-        createdClause = "date('createdon') <= date('now')"
+    case createdFilter # It should be a number unless "All" is selected
+      when 'All'
+        createdClause = "date(createdon) <= date('now')"
       else
-        createdClause = "date('createdon') <= date('now')"
+        createdClause = "date(createdon) = date('now', '-#{createdFilter.to_i} days')"
     end
     
-    find_by_sql( %Q{
+    sql = %Q{
       select * from Opportunity o 
         where o.statecode not in ('Won', 'Lost') 
         and (
@@ -175,7 +175,9 @@ class Opportunity
       and #{createdClause}
       #{sortByClause}
       #{get_pagination_sql(page, page_size)}
-    } )
+    }
+    
+    find_by_sql( sql )
   end
   
   def is_owned_by_this_opportunity_sql
