@@ -153,7 +153,7 @@ module BrowserHelper
   
   def to_birthdate(input)
     begin
-      date = (Date.strptime(input, DateUtil::DEFAULT_BIRTHDATE_FORMAT))
+      date = (Date.strptime(input, DateUtil::BIRTHDATE_PICKER_TIME_FORMAT))
       result = date.strftime('%m/%d/%Y')
       result
     rescue

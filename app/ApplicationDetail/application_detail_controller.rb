@@ -48,7 +48,8 @@ class ApplicationDetailController < Rho::RhoController
     Settings.record_activity
     puts "********** Calling ApplicationDetailController.create **********"
     puts "********** origin = #{@params['origin']}"
-    @appdetail = ApplicationDetail.create_new(@params['appdetail'])
+    appdatetime = DateTime.strptime(@params['cssi_applicationdate'].to_s, DateUtil::BIRTHDATE_PICKER_TIME_FORMAT)
+    @appdetail = ApplicationDetail.create_new(@params['appdetail'].merge({:cssi_applicationdate => appdatetime.strftime(DateUtil::DEFAULT_TIME_FORMAT)}))
     SyncEngine.dosync
     redirect :controller => :Opportunity, :action => :won, :origin => @params['origin'], :id => @appdetail.opportunity_id
   end
@@ -57,9 +58,11 @@ class ApplicationDetailController < Rho::RhoController
   def update
     Settings.record_activity
     puts "********** Calling ApplicationDetailController.update **********"
-    puts "********** id = #{@params['id']}"
+    puts "********** id = #{@params['appdetail'].inspect}"
+    puts @params['cssi_applicationdate'].inspect
+    appdatetime = DateTime.strptime(@params['cssi_applicationdate'].to_s, DateUtil::BIRTHDATE_PICKER_TIME_FORMAT)
     @appdetail = ApplicationDetail.find_application(@params['id'])
-    @appdetail.update_attributes(@params['appdetail']) if @appdetail    
+    @appdetail.update_attributes(@params['appdetail'].merge({:cssi_applicationdate => appdatetime.strftime(DateUtil::DEFAULT_TIME_FORMAT)})) if @appdetail    
     SyncEngine.dosync
     redirect :controller => :Opportunity, :action => :won, :origin => @params['origin'], :id => @appdetail.opportunity_id, :opportunity => @params['opportunity']
   end

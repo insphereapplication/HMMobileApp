@@ -20,8 +20,8 @@
 					<br/><p>Carrier: <%= appdetail.cssi_carrierid %></p>
 					<p>LOB: <%= appdetail.cssi_lineofbusinessid%></p>					
 					<p>Apps Submitted: <%= appdetail.cssi_applicationssubmitted %></p> 
-					<p>Total AV: <%= format_currency(appdetail.cssi_avforapplicationsubmitted) %> </p> 
-					<p>App Date: <%= appdetail.cssi_applicationdate %> </p> 
+					<p>Total AV: <%= format_currency("%.2f"%appdetail.cssi_avforapplicationsubmitted) %> </p> 
+					<p>App Date: <%= to_date(appdetail.cssi_applicationdate) %> </p> 
 					</a>
 				</li> 
 			<% end %>

@@ -49,13 +49,13 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="appdetail[cssi_avforapplicationsubmitted]" class="fieldLabel">Total AV:<font color="red">  *</font></label>
-					<input id="cssi_avforapplicationsubmitted" name="appdetail[cssi_avforapplicationsubmitted]" type="number" min="0" name="totalav" value="<%= @appdetail.cssi_avforapplicationsubmitted %>" />					
+					<input id="cssi_avforapplicationsubmitted" name="appdetail[cssi_avforapplicationsubmitted]" type="number" min="0" name="totalav" value="<%= "%.2f"%@appdetail.cssi_avforapplicationsubmitted %>" />					
 				</div>
 			</div>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-					<label for="appdetail[cssi_applicationdate]" class="fieldLabel">Application Date:<font color="red">  *</font></label>
-					<input id="appdetail[cssi_applicationdate]" type="text" name="appdetail[cssi_applicationdate]" readonly value="<%= @appdetail.cssi_applicationdate %>"  onClick="popupAppDateAJPicker('1', 'Application Date', 'appdetail[cssi_applicationdate]', '<%= to_datetime(@appdetail.cssi_applicationdate) %>');"></input>
+					<label for="cssi_applicationdate" class="fieldLabel">Application Date:<font color="red">  *</font></label>
+					<input id="cssi_applicationdate" type="text" name="cssi_applicationdate" readonly value="<%= to_date(@appdetail.cssi_applicationdate) %>"  onClick="popupAppDateAJPicker('1', 'Application Date', 'cssi_applicationdate', '<%= @appdetail.cssi_applicationdate %>');"></input>
 				</div>
 			</div>
 			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
