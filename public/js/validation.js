@@ -277,7 +277,7 @@ $('#appdetail_add_page, #appdetail_edit_page').live('pagecreate',function(event)
 		'appdetail[cssi_applicationssubmitted]' : {
 			required: true,
 			min: 1,
-			maxLength: 5
+			maxlength: 5
 		}
 	  }
 	});
