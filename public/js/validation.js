@@ -85,3 +85,224 @@ function checkEdit(myForm) {
 		break;
 	}
 }
+
+// Phone Number Validation
+
+
+// Dependent Add / Edit
+$('#dependent_new_page, #dependent_edit_page').live('pagecreate',function(event){
+	$("#dependent_form").validate({
+	  rules: {
+	    'dependent[cssi_name]' : {
+	      required: true,
+		  maxlength: 100
+	    },
+	    'dependent[cssi_lastname]' : {
+		  maxlength: 100
+	    },
+		'dependent[cssi_weight]' : {
+		  min: 0,
+		  max: 1000
+	    },
+		'dependent[cssi_comments]' : {
+		  maxlength: 250
+	    }
+	  }
+	});	
+});
+
+// Spouse Add / Edit
+$('#spouse_new_page, #spouse_edit_page').live('pagecreate',function(event){
+	$("#spouse_form").validate({
+	  rules: {
+	    'contact[cssi_spousename]' : {
+	      required: true,
+		  maxlength: 100
+	    },
+	    'contact[cssi_spouselastname]' : {
+		  maxlength: 100
+	    },
+		'contact[cssi_spouseweight]' : {
+		  min: 0,
+		  max: 1000
+	    }
+	  }
+	});	
+});
+
+// Contact Edit
+$('#contact_edit_page').live('pagecreate',function(event){
+	$("#contact_edit").validate({
+	  rules: {
+	    'contact[mobilephone]' : {
+		  phoneUS: true
+	    },
+		'contact[telephone1]' : {
+		  phoneUS: true
+		},
+		'contact[telephone2]' : {
+		  phoneUS: true
+		},
+		'contact[telephone3]' : {
+		  phoneUS: true
+		},
+		'contact[emailaddress1]' : {
+		  email: true,
+		  maxlength: 255
+		},
+		'contact[cssi_weight]' : {
+		  min: 0,
+		  max: 1000		  
+		},
+		'contact[address1_line1]' : {
+		  maxlength: 200	
+		},
+		'contact[address1_line2]' : {
+		  maxlength: 255	
+		},
+		'contact[address1_city]' : {
+		  maxlength: 50	
+		},
+		'contact[address1_postalcode]' : {
+		  maxlength: 20	
+		},
+		'contact[address2_line1]' : {
+		  maxlength: 200	
+		},
+		'contact[address2_line2]' : {
+		  maxlength: 200	
+		},
+		'contact[address2_city]' : {
+		  maxlength: 50	
+		},
+		'contact[address2_postalcode]' : {
+		  maxlength: 20	
+		}
+	  }
+	});
+	
+	// Creates a US phone number ('### ### ####') validator
+	jQuery.validator.addMethod("phoneUS", function(phone_number, element) {
+	    phone_number = phone_number.replace(/\s+/g, ""); 
+		return this.optional(element) || phone_number.length > 9 &&
+			phone_number.match(/^(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
+	}, "Please specify a valid phone number in format ### ### ####");
+	
+	// Creates an 'at least one of these are required' validator
+	jQuery.validator.addMethod('required_group', function(val, el) {
+		var $module = $(el).parents('div.panel');
+		return $("#contact_edit").find('.required_group:filled').length;
+		}, 'Please fill out at least one of these fields.');
+});
+
+// Contact Add
+$('#contact_new_page').live('pagecreate',function(event){
+	$("#contact_new").validate({
+		  rules: {
+			'contact[firstname]' : {
+			  required: true,
+			  maxlength: 50
+		    },
+			'contact[lastname]' : {
+			  required: true,
+			  maxlength: 50
+		    },
+		    'contact[mobilephone]' : {
+			  phoneUS: true
+		    },
+			'contact[telephone1]' : {
+			  phoneUS: true
+			},
+			'contact[telephone2]' : {
+			  phoneUS: true
+			},
+			'contact[telephone3]' : {
+			  phoneUS: true
+			},
+			'contact[emailaddress1]' : {
+			  email: true,
+			  maxlength: 255
+			},
+			'contact[address1_line1]' : {
+			  maxlength: 200	
+			},
+			'contact[address1_line2]' : {
+			  maxlength: 255	
+			},
+			'contact[address1_city]' : {
+			  maxlength: 50	
+			},
+			'contact[address1_postalcode]' : {
+			  maxlength: 20	
+			},
+			'contact[address2_line1]' : {
+			  maxlength: 200	
+			},
+			'contact[address2_line2]' : {
+			  maxlength: 200	
+			},
+			'contact[address2_city]' : {
+			  maxlength: 50	
+			},
+			'contact[address2_postalcode]' : {
+			  maxlength: 20	
+			}
+		  }
+		});
+
+		// Creates a US phone number ('### ### ####') validator
+		jQuery.validator.addMethod("phoneUS", function(phone_number, element) {
+		    phone_number = phone_number.replace(/\s+/g, ""); 
+			return this.optional(element) || phone_number.length > 9 &&
+				phone_number.match(/^(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
+		}, "Please specify a valid phone number in format ### ### ####");
+
+		// Creates an 'at least one of these are required' validator
+		jQuery.validator.addMethod('required_group', function(val, el) {
+			var $module = $(el).parents('div.panel');
+			return $("#contact_new").find('.required_group:filled').length;
+			}, 'Please fill out at least one of these fields.');
+});
+
+// AppDetail Add / Edit
+$('#appdetail_add_page, #appdetail_edit_page').live('pagecreate',function(event){
+	$("#appdetail").validate({
+	  rules: {
+	    'appdetail[cssi_carrierid]' : {
+	      notBlank: true
+	    },
+		'appdetail[cssi_lineofbusinessid]' : {
+	      notBlank: true
+	    }
+	  }
+	});
+	
+	jQuery.validator.addMethod('notBlank', function(val, el) {
+	        return (val != '');
+	    }, 'Please select an option.');	
+});
+
+// Callback Add / Edit
+$('#callback_create, #callback_edit').live('pagecreate',function(event){
+	$("#call_back_form").validate({
+	  rules: {
+	    'phone_number' : {
+	      phoneUS: true,
+		  required: true
+	    }
+	  }
+	});
+	
+	// Creates a US phone number ('### ### ####') validator
+	jQuery.validator.addMethod("phoneUS", function(phone_number, element) {
+	    phone_number = phone_number.replace(/\s+/g, ""); 
+		return this.optional(element) || phone_number.length > 9 &&
+			phone_number.match(/^(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
+	}, "Please specify a valid phone number in format ### ### ####");
+});
+
+// HACK ATTACK! - This is a fix for a known issue with JQuery Mobile related to focus and loss of input issues. - twitty.6.14.11
+// Please check https://github.com/jquery/jquery-mobile/issues/756 to see if the issue has been addressed offically. - twitty.6.14.11
+$('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_page, #contact_edit_page, #contact_new_page, #appdetail_add_page, #appdetail_edit_page, #callback_create, #callback_edit').live('pageshow',function(event){
+	$('input').one('keypress',function(ev) { $('<div></div>').appendTo('body') });
+});

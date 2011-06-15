@@ -265,6 +265,31 @@ class ActivityController < Rho::RhoController
     end
   end
   
+  def mark_appointment_complete
+    puts @params.inspect
+    Settings.record_activity
+    opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
+    
+    opp_attrs = {
+      :cssi_statusdetail => '',
+      :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+    }
+
+    db = ::Rho::RHO.get_src_db('Opportunity')
+    db.start_transaction
+    appointment = []
+    appointment.push(@params['appointments'])
+    
+    begin
+      opportunity.update_attributes(opp_attrs)
+      finished_update_status(opportunity, @params['origin'], appointment)
+      db.commit
+    rescue Exception => e
+      puts "Exception in setting appointment as complete: #{e.inspect} -- #{@params.inspect}"
+      db.rollback
+    end
+  end
+    
   def update_status_call_back_requested
     unless @params['callback_datetime'].blank?
       opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
@@ -372,7 +397,7 @@ class ActivityController < Rho::RhoController
   def finished_win_loss_status(opportunity, origin, appointmentids=nil)
     complete_appointments(appointmentids)
     SyncUtil.start_sync
-    WebView.navigate(url_for :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin})
+    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
   end
   
   def complete_appointments(appointmentids)

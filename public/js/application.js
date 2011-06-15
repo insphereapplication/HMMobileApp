@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $('form').submit(function() {
+  $('form').not('#dependent_form, #contact_new, #appdetail, #call_back_form').submit(function() {
     if(typeof jQuery.data(this, "disabledOnSubmit") == 'undefined') {
       jQuery.data(this, "disabledOnSubmit", { submited: true });
       $('input[type=submit], input[type=button]', this).each(function() {
@@ -14,12 +14,9 @@ $(document).ready(function() {
   });
 });
 
-//status update validate datetime
-function validate(){
-	if ((document.getElementById('callback_datetime').value.length==0) || document.getElementById('callback_datetime').value==null) {
-
-   }
-   else { document.getElementById('phoneNumber').disabled=false; return true; }	
+// Enable the phoneNumber text box so that it submits with the form
+function enablePhoneNumber(){
+	document.getElementById('phoneNumber').disabled=false; return true;
 }
 
 function validateAppt(){
@@ -412,8 +409,8 @@ function editpopupDateTimeAJPicker(flag, title, field_key, preset) {
   return false;
 }
 
-function popupAppDateAJPicker(flag, title, field_key) {
-  $.get('/app/Opportunity/appdatepopup', { flag: flag, title: title, field_key: field_key });
+function popupAppDateAJPicker(flag, title, field_key, preset) {
+  $.get('/app/Opportunity/appdatepopup', { flag: flag, title: title, field_key: field_key, preset: preset });
   return false;
 }
 

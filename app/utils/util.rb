@@ -47,6 +47,14 @@ module SQLHelper
     where a.type='Email' 
   }
   
+  LATEST_INTEGRATED_LEAD = %Q{
+    SELECT createdon
+    FROM Opportunity
+    WHERE cssi_inputsource='Integrated'
+    ORDER BY createdon DESC
+    LIMIT 1
+  }
+  
   OPEN_STATE_CODES = ['Open', 'Scheduled']
     
   SELECT_OPEN_PHONE_CALL_SQL = %Q{
@@ -100,7 +108,6 @@ module DateUtil
   DEFAULT_TIME_FORMAT = '%Y-%m-%d %H:%M:%S' # YYYY-MM-DD HH:MM:SS
   DATE_PICKER_TIME_FORMAT = '%m/%d/%Y %I:%M %p'
   BIRTHDATE_PICKER_TIME_FORMAT = '%m/%d/%Y'
-  DEFAULT_BIRTHDATE_FORMAT = '%m/%d/%Y'
   HOUR_FORMAT = '%I:%M %p'
   NO_YEAR_FORMAT = '%m/%d %I:%M %p'
   

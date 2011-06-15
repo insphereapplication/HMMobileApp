@@ -296,7 +296,7 @@ class OpportunityController < Rho::RhoController
     Settings.record_activity
       @opportunity = Opportunity.find(@params['id'])
       if @opportunity
-        render :action => :application_details_add, :back => 'callback:', :layout => 'layout_jquerymobile'
+        render :Controller => :ApplicationDetail, :action => :new, :back => 'callback:', :layout => 'layout_jquerymobile'
       else
         redirect :action => :index, :back => 'callback:'
       end
@@ -305,7 +305,7 @@ class OpportunityController < Rho::RhoController
   def app_detail_show
       # @appdetail = Opportunity.find(@params['id'])
       # if @appdetail
-        render :action => :application_details_show, :back => 'callback:', :layout => 'layout_jquerymobile'
+        render :Controller => :ApplicationDetail, :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
       # else
       #   redirect :action => :index, :back => 'callback:'
       # end
@@ -315,7 +315,7 @@ class OpportunityController < Rho::RhoController
     Settings.record_activity
     @appdetail = Opportunity.find(@params['id'])
     if @appdetail
-      render :action => :application_details_edit, :back => 'callback:', :layout => 'layout_jquerymobile'
+      render :Controller => :ApplicationDetail, :action => :edit, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
       redirect :action => :index, :back => 'callback:'
     end
@@ -474,15 +474,19 @@ class OpportunityController < Rho::RhoController
       render :back => 'callback:'
   end
     
-    def appdatepopup
+  def appdatepopup
       flag = @params['flag']
       if ['0', '1', '2'].include?(flag)
         ttt = $choosed[flag]
+        if @params['preset'].nil?
           preset_time = Time.new
+        else 
+          preset_time = Time.parse(@params['preset'])
+        end
         DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
       end
       render :back => 'callback:'
-    end
+  end
 
   def callback
     if @params['status'] == 'ok'
@@ -528,17 +532,18 @@ class OpportunityController < Rho::RhoController
        @dob = date.strftime('%m/%d/%Y')
      end     
      
-     @quote_param = "?gaid=5242&dob=#{@dob}&gender=#{@contact.gendercode}"
-     
+     @quote_param = ",dob=#{@dob},gender=#{@contact.gendercode}"
+   
      if (not (@contact.cssi_state1id.nil? || @contact.cssi_state1id.blank? || @contact.cssi_state1id == ''))   
-       @quote_param="#{@quote_param}&statecode=#{@contact.cssi_state1id}"
+       @quote_param="#{@quote_param},statecode=#{@contact.cssi_state1id}"
      else
-        @quote_param="#{@quote_param}&statecode=#{@contact.cssi_state2id}"
+        @quote_param="#{@quote_param},statecode=#{@contact.cssi_state2id}"
      end  
      
      #puts("The query parameters are: #{@quote_param}")    
+     quote_url="#{Rho::RhoConfig.quick_quote_url}#{@quote_param}"
      WebView.navigate(WebView.current_location)
-     System.open_url("https://mobile-uat.ipipeline.com/quote/#{@quote_param}")
+     System.open_url("#{quote_url}")
 
    end
   
