@@ -66,7 +66,7 @@ class SettingsController < Rho::RhoController
   end
   
   def goto_login(msg=nil)
-    WebView.navigate ( url_for :action => :login, :query => {:msg => msg} )
+    redirect :action => :login, :query => {:msg => msg} 
   end
   
   def goto_login_override_auto(msg=nil)
