@@ -25,7 +25,7 @@
 		$('a#<%= @params['selected_tab'] %>-button').addClass('ui-btn-active');
 				
 		loadNewLeads(); 
-		loadFollowUps();
+		loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val() );
 		loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
 	});
 	
@@ -33,8 +33,10 @@
 	{
 		$('#followup_clear').click( function()
 		{
-			$('#followup_search_input').val('');
-			$('#followup_select_filter').val('All');
+			$('#followup_status_reason_filter').val('All');
+			$('#followup_sort_by_filter').val('LastActivityDateAscending');
+			$('#followup_created_filter').val('All');
+			loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val() );
 			return false;
 		})
 	})
@@ -54,7 +56,8 @@
 	{
 		$('#followup_filter_button').click( function()
 		{
-			alert( "Applying follow-up filter" )
+			toggleFollowUpFilterArea();
+			loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val() );
 			return false;
 		})
 	})
@@ -162,7 +165,12 @@
 					</select>
 					<label for="followup_created_filter" class="fieldLabel ui-input-text">Created:</label>
 					<select class="ui-custom-dropdown" name="followup_created_filter" id="followup_created_filter" tabindex="-1" onchange="addtext();">
-						<option class="ui-btn-text" selected="true" value="OneDayAgo">1 Day Ago</option>
+						<option class="ui-btn-text" selected="true" value="All">All</option>
+						<option class="ui-btn-text" value="1">1 Day Ago</option>
+						<option class="ui-btn-text" value="2">2 Days Ago</option>
+						<option class="ui-btn-text" value="3">3 Days Ago</option>
+						<option class="ui-btn-text" value="4">4 Days Ago</option>
+						<option class="ui-btn-text" value="5">5 Days Ago</option>
 					</select>
 					<fieldset class="ui-grid-custom ui-grid-a">
 						<div class="ui-block-a">

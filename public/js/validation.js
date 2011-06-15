@@ -273,7 +273,12 @@ $('#appdetail_add_page, #appdetail_edit_page').live('pagecreate',function(event)
 	    },
 		'appdetail[cssi_lineofbusinessid]' : {
 	      notBlank: true
-	    }
+	    },
+		'appdetail[cssi_applicationssubmitted]' : {
+			required: true,
+			min: 1,
+			maxLength: 5
+		}
 	  }
 	});
 	
@@ -282,8 +287,32 @@ $('#appdetail_add_page, #appdetail_edit_page').live('pagecreate',function(event)
 	    }, 'Please select an option.');	
 });
 
+// Callback Add / Edit
+$('#callback_create, #callback_edit').live('pagecreate',function(event){
+	$("#call_back_form").validate({
+	  rules: {
+	    'phone_number' : {
+	      phoneUS: true,
+		  required: true
+	    }
+	  }
+	});
+	
+	// Creates a US phone number ('### ### ####') validator
+	jQuery.validator.addMethod("phoneUS", function(phone_number, element) {
+	    phone_number = phone_number.replace(/\s+/g, ""); 
+		return this.optional(element) || phone_number.length > 9 &&
+			phone_number.match(/^(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
+	}, "Please specify a valid phone number in format ### ### ####");
+});
+
+// Appointment Add / Edit
+$('#appointment_add_page, #appointment_edit_page').live('pagecreate',function(event){
+	$("#appointment_form").validate();
+});
+
 // HACK ATTACK! - This is a fix for a known issue with JQuery Mobile related to focus and loss of input issues. - twitty.6.14.11
 // Please check https://github.com/jquery/jquery-mobile/issues/756 to see if the issue has been addressed offically. - twitty.6.14.11
-$('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_page, #contact_edit_page, #contact_new_page, #appdetail_add_page, #appdetail_edit_page').live('pageshow',function(event){
+$('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_page, #contact_edit_page, #contact_new_page, #appdetail_add_page, #appdetail_edit_page, #callback_create, #callback_edit, #appointment_add_page, #appointment_edit_page').live('pageshow',function(event){
 	$('input').one('keypress',function(ev) { $('<div></div>').appendTo('body') });
 });

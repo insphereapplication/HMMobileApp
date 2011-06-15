@@ -5,9 +5,8 @@ unless File.exists? "build.yml"
   exit 1
 end
 
-
-$app_config = YAML::load_file("build.yml")
 $app_path = File.expand_path(File.dirname(__FILE__))
+$app_config = YAML::load_file("#{$app_path}/build.yml")
 
 if ENV["RHO_HOME"].nil?
   rakefilepath = "#{$app_config["sdk"]}/Rakefile"
@@ -25,6 +24,8 @@ unless File.exists? rakefilepath
 end
 
 load rakefilepath
+
+# Dir[File.join(File.dirname(__FILE__),'tasks','**','*.rb')].each { |file| load file }
 
 namespace :deploy do 
   task :persist_build_yml do 

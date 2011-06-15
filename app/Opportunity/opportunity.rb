@@ -112,15 +112,53 @@ class Opportunity
   end
   
   # TODO: not an optimal query. find a better one.
-  def self.by_last_activities(page=nil, page_size=DEFAULT_PAGE_SIZE)
+  def self.by_last_activities( page=nil, page_size=DEFAULT_PAGE_SIZE, statusReasonFilter, sortByFilter, createdFilter )
     #Find all opportunities that have activities of which none are open or scheduled
     #Also include opportunities that have no activities and have a status code != "New Opportunity"
     #Sort by the opportunity's last activity date
-    find_by_sql(%Q{
+    puts "#"*80 + " " + statusReasonFilter + " || " + sortByFilter + " || " + createdFilter
+    
+    statusReasonWhere = ''
+    case statusReasonFilter
+      when 'NoContactMade'
+        statusReasonWhere = "o.statuscode = 'No Contact Made'"
+      when 'ContactMade'
+        statusReasonWhere = "o.statuscode = 'Contact Made'"
+      when 'AppointmentSet'
+        statusReasonWhere = "o.statuscode = 'Appointment Set'"
+      when 'DealInProgress'
+        statusReasonWhere = "o.statuscode = 'Deal in Progress'"
+      else
+        statusReasonWhere = "o.statuscode <> 'New Opportunity'"
+    end
+    
+    sortByClause= ''
+    case sortByFilter
+      when 'LastActivityDateAscending'
+        sortByClause = "order by datetime(o.cssi_lastactivitydate) asc"
+      when 'LastActivityDateDescending'
+        sortByClause = "order by datetime(o.cssi_lastactivitydate) desc)"
+      when 'CreateDateAscending'
+        sortByClause = "order by datetime(o.createdon) asc)"
+      when 'CreateDateDescending'
+        sortByClause = "order by datetime(o.createdon) desc)"
+      else
+        sortByClause = "order by datetime(o.cssi_lastactivitydate) asc"
+    end
+        
+    createdClause = ''
+    case createdFilter # It should be a number unless "All" is selected
+      when 'All'
+        createdClause = "date(createdon) <= date('now')"
+      else
+        createdClause = "date(createdon) = date('now', '-#{createdFilter.to_i} days')"
+    end
+    
+    sql = %Q{
       select * from Opportunity o 
         where o.statecode not in ('Won', 'Lost') 
         and (
-          o.statuscode <> 'New Opportunity'
+          #{statusReasonWhere}
           or exists (
             select a1.object from Activity a1 where 
             a1.parent_type='Opportunity' and 
@@ -134,9 +172,12 @@ class Opportunity
           a2.parent_id=o.object and
           (a2.statecode in ('Open', 'Scheduled') and a2.scheduledend is not null and a2.scheduledend <> '')
         )
-      order by datetime(o.cssi_lastactivitydate) asc
+      and #{createdClause}
+      #{sortByClause}
       #{get_pagination_sql(page, page_size)}
-    })
+    }
+    
+    find_by_sql( sql )
   end
   
   def is_owned_by_this_opportunity_sql

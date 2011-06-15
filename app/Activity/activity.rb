@@ -159,8 +159,6 @@ class Activity
 # class Appointment < Activity
   
   def self.past_due_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE, filter, search)
-    puts "#"*80 + " filter = #{filter.inspect} || search = #{search.inspect}"
-    
     case filter
       when 'All'
         type_where_clause = "where (a.type='Appointment' or a.type='PhoneCall')"

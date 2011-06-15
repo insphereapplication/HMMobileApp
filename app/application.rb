@@ -12,8 +12,7 @@ class AppApplication < Rho::RhoApplication
       "Close" => :close, 
       "View Log" => :log 
     }
-    
-    #SyncEngine.set_ssl_verify_peer(false)
+
     SyncEngine.set_notification(-1, "/app/Settings/sync_notify", '') 
     System.set_push_notification("/app/Settings/push_notify", '')
   end

@@ -1,124 +1,117 @@
 $(document).ready(function() {
-	
-	$('.validateSearchFilter').click(function() { 
-		return validateSearchFilter();
+	$('.validateContactOpp').click(function() { 
+		return validateNewContactInfo();
 	});
+	
+	// $('input#load-more-button').live('click', function(){
+	// 	loadMore();
+	// })
+	
+	// TODO: may want to use scroll event to load ahead
+	$(window).scroll(function(){
+	   if ($(window).scrollTop()+200 >= ($(document).height() - ($(window).height()))){
+	   	loadMore();
+	   }
+	});
+	
+	$('#submit-search-button').click(function(){
+		searchTerm = $('input#search_input').val();
+		if ($.trim(searchTerm).length > 1) {
+			loadPage();
+		} 
+		else {
+			alert('Search must contain at least 2 characters');
+		}
+	})
+	
+  $("#contact_filter").change(function() {
+		loadPage();
+  });
 });
+
+function loadMore(){
+	filterType = $('#contact_filter').val();
+	searchTerms = $('input#search_input').val();
+	page = parseInt($('input#load-more-button').attr('page'));
+	$("div#load-more-div").remove();
+	loadContactsAsync(filterType, page, page, searchTerms, false);
+}
+
+function loadPage(){
+	filterType = $('#contact_filter').val();
+	searchTerms = $('input#search_input').val();
+	$("div#load-more-div").remove();
+	$('.contacts-list li').remove();
+	loadContactsAsync(filterType, 0, 0, searchTerms, false);
+}
+
+function loadContactsAsync(filterType, page, startPage, searchTerms, navToBottom){
+	var pageLimit = 10;
+	$.post("/app/Contact/get_contacts_page", { filter: filterType, page: page, search_terms: searchTerms },
+		function(contacts) {	
+			if (contacts.match(/Error/) == "Error"){
+					alert("There was a server error.");
+					return;
+			}
+			
+			if (contacts && $.trim(contacts) != "" && page < (startPage + pageLimit)){
+				$("ul#contact-list").append(contacts);
+
+				// remove any possible redundant letter-divider list items ('A', 'B', etc.)				
+				$(".group-divider").each(function(){
+				  var ids = $('[id='+this.id+']');
+				  if(ids.length>1 && ids[0]==this)
+				    $(ids[1]).remove();
+				});
+				
+				loadContactsAsync(filterType, page + 1, startPage, searchTerms, navToBottom);
+			} else {
+				if (navToBottom){
+					document.location.href='#bottom';
+				}
+				if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
+					$("ul#contact-list").append(getLoadMoreButton("Load More", page));
+				}
+			}
+		}
+	);
+}
+
+function getLoadMoreButton(text, page){
+	return '\
+	<div id="load-more-div" data-theme="b" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">											\
+		<span class="ui-btn-inner ui-btn-corner-all">																																			\
+			<span class="ui-btn-text">' + text + '</span>																																		\
+		</span>																																																						\
+		<input id="load-more-button" class="standardButton ui-btn-hidden" page="' + page + '" data-theme="b"/>						\
+	</div>'
+}
+
+function validateNewContactInfo(){
 	
-function loadContactsAsync(page){
-	$.post('/app/Contact/get_contacts_page', { page: page },
-		function(contacts) {				
-			if (contacts && $.trim(contacts) != ""){
-				$('ul#contact-list').append(contacts);
-				
-				$('.group-divider').each(function(){
-				  var ids = $('[id='+this.id+']');
-				  if(ids.length>1 && ids[0]==this)
-				    $(ids[1]).remove();
-				});
-				
-				loadContactsAsync(page + 1);
-			} 
-		}
-	);
-}
-
-function loadContactsWithActivePolsAsync(page){
-	$.post('/app/Contact/get_contacts_with_active_page', { page: page },
-		function(contacts) {				
-			if (contacts && $.trim(contacts) != ""){
-				$('ul#contact2-list2').append(contacts);
-				
-				$('.group2-divider2').each(function(){
-				  var ids = $('[id='+this.id+']');
-				  if(ids.length>1 && ids[0]==this)
-				    $(ids[1]).remove();
-				});
-				
-				loadContactsWithActivePolsAsync(page + 1);
-			} 
-		}
-	);
-}
-
-function loadContactsWithPendingPolsAsync(page){
-	$.post('/app/Contact/get_contacts_with_pending_page', { page: page },
-		function(contacts) {				
-			if (contacts && $.trim(contacts) != ""){
-				$('ul#contact3-list3').append(contacts);
-				
-				$('.group-divider3').each(function(){
-				  var ids = $('[id='+this.id+']');
-				  if(ids.length>1 && ids[0]==this)
-				    $(ids[1]).remove();
-				});
-				
-				loadContactsWithPendingPolsAsync(page + 1);
-			} 
-		}
-	);
-}
-
-function loadContactsWithOpenOppsAsync(page){
-	$.post('/app/Contact/get_contacts_with_open_opps_page', { page: page },
-		function(contacts) {				
-			if (contacts && $.trim(contacts) != ""){
-				$('ul#contact4-list4').append(contacts);
-				
-				$('.group-divider4').each(function(){
-				  var ids = $('[id='+this.id+']');
-				  if(ids.length>1 && ids[0]==this)
-				    $(ids[1]).remove();
-				});
-				
-				loadContactsWithOpenOppsAsync(page + 1);
-			} 
-		}
-	);
-}
-
-function loadContactsWithWonOppsAsync(page){
-	$.post('/app/Contact/get_contacts_with_won_opps_page', { page: page },
-		function(contacts) {				
-			if (contacts && $.trim(contacts) != ""){
-				$('ul#contact5-list5').append(contacts);
-				
-				$('.group-divider5').each(function(){
-				  var ids = $('[id='+this.id+']');
-				  if(ids.length>1 && ids[0]==this)
-				    $(ids[1]).remove();
-				});
-				
-				loadContactsWithWonOppsAsync(page + 1);
-			} 
-		}
-	);
-}
-
-function loadContactsFilterAsync(page){
-	$.post('/app/Contact/get_contacts_filter_page', { page: page },
-		function(contacts) {				
-			if (contacts && $.trim(contacts) != ""){
-				$('ul#contact6-list6').append(contacts);
-				
-				$('.group-divider6').each(function(){
-				  var ids = $('[id='+this.id+']');
-				  if(ids.length>1 && ids[0]==this)
-				    $(ids[1]).remove();
-				});
-				
-				loadContactsFilterAsync(page + 1);
-			} 
-		}
-	);
-}
-
-function validateSearchFilter(){
-	
-	if ( document.getElementById('search_input').value.length < 2 || document.getElementById('search').value==null ) {
-      	alert('Search must contain at least 2 characters');
+	if ( document.getElementById('contact_firstname').value.length==0 || document.getElementById('contact_firstname').value==null ) {
+      	alert('Please enter a first name');
 		return false;
     }
+	if ( document.getElementById('contact_lastname').value.length==0 || document.getElementById('contact_lastname').value==null ) {
+      	alert('Please enter a last name');
+		return false;
+    }
+	if (		
+		( document.getElementById('contact_emailaddress1').value.length==0 || document.getElementById('contact_emailaddress1').value==null )
+		&&
+		(document.getElementById('contact_mobilephone').value.length==0 || document.getElementById('contact_mobilephone').value==null )
+		&&
+		(document.getElementById('contact_telephone1').value.length==0 || document.getElementById('contact_telephone1').value==null )
+		&&
+		(document.getElementById('contact_telephone2').value.length==0 || document.getElementById('contact_telephone2').value==null )
+		&&
+		(document.getElementById('contact_telephone3').value.length==0 || document.getElementById('contact_telephone3').value==null )
+	){
+		// no phone numbers and no email address
+		alert('Please enter an email address or phone number');
+		return false;
+	}
     
 	return true;
 }

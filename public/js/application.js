@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $('form').not('#dependent_form, #contact_new, #appdetail').submit(function() {
+  $('form').not('#dependent_form, #contact_new, #appdetail, #call_back_form, #appointment_form').submit(function() {
     if(typeof jQuery.data(this, "disabledOnSubmit") == 'undefined') {
       jQuery.data(this, "disabledOnSubmit", { submited: true });
       $('input[type=submit], input[type=button]', this).each(function() {
@@ -14,20 +14,13 @@ $(document).ready(function() {
   });
 });
 
-//status update validate datetime
-function validate(){
-	if ((document.getElementById('callback_datetime').value.length==0) || document.getElementById('callback_datetime').value==null) {
-
-   }
-   else { document.getElementById('phoneNumber').disabled=false; return true; }	
+// Enable the phoneNumber text box so that it submits with the form
+function enablePhoneNumber(){
+	document.getElementById('phoneNumber').disabled=false; return true;
 }
 
-function validateAppt(){
-	if ((document.getElementById('appointment_datetime').value.length==0) || document.getElementById('appointment_datetime').value==null) {
-      	alert('Please choose an appointment date and time.');
-		return false;
-   }
-   else { document.getElementById('location').disabled=false; return true; }	
+function enableLocation(){
+	document.getElementById('location').disabled=false; return true;	
 }
 
 function validateLost(){
