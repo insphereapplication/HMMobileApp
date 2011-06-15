@@ -13,7 +13,7 @@
 				<div class="ui-body ui-body-d">
 					<label for="appdetail[cssi_carrierid]" class="fieldLabel">Carrier:<font color="red">&nbsp;&nbsp;*</font></label>
 					<div>
-						<select id="appdetail[cssi_carrierid]" name="appdetail[cssi_carrierid]" data-role="none">
+						<select id="cssi_carrierid" name="appdetail[cssi_carrierid]">
 							<option data-placeholder="true" value="<%= @appdetail.cssi_carrierid %>" selected="true"><%= @appdetail.cssi_carrierid %></option>
 								<% StaticEntity.get_carrier_names.each do |carrier_name| %>
 									<option value="<%=carrier_name%>">
@@ -28,7 +28,7 @@
 				<div class="ui-body ui-body-d">
 	        		<label for="appdetail[cssi_lineofbusinessid]" class="fieldLabel">LOB:<font color="red">&nbsp;&nbsp;*</font></label>
 					<div>
-						<select id="appdetail[cssi_lineofbusinessid]" name="appdetail[cssi_lineofbusinessid]" data-role="none">
+						<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]">
 							<option data-placeholder="true" value="<%= @appdetail.cssi_lineofbusinessid %>" selected="true"><%= @appdetail.cssi_lineofbusinessid %></option>
 								<% StaticEntity.get_rawlead_lob_names.each do |lob_name| %>
 									<option value="<%=lob_name%>">
@@ -47,9 +47,9 @@
 				</div>
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-dnbsp
+				<div class="ui-body ui-body-d">
 					<label for="appdetail[cssi_avforapplicationsubmitted]" class="fieldLabel">Total AV:<font color="red">&nbsp;&nbsp;*</font></label>
-					<input id="cssi_avforapplicationsubmitted" name="appdetail[cssi_avforapplicationsubmitted]" type="number" class="required" min="0" name="totalav" value="<%= "%.2f"%@appdetail.cssi_avforapplicationsubmitted %>" />					
+					<input id="cssi_avforapplicationsubmitted" name="appdetail[cssi_avforapplicationsubmitted]" type="number" class="required" min="0" name="totalav" value="<%= "%.2f"%@appdetail.cssi_avforapplicationsubmitted %>"/>					
 				</div>
 			</div>
 			<div data-role="fieldcontain">
