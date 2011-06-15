@@ -98,7 +98,7 @@ class ContactController < Rho::RhoController
   end
   
   def do_not_call_button(allow_call,company_dnc,phone_type,phone_number,contact)
-    if allow_call == 'True' && company_dnc == 'False'
+    if allow_call == 'True' && company_dnc == 'False' && !phone_number.blank?
       %Q{
           <a href="#{url_for(:controller => :Contact, :action => :do_not_call_press, :id => @contact.object, :query => {:origin => @params['origin'], :phone_type => phone_type, :phone_number => phone_number, :contact => contact})}" data-role="button" data-theme="b">DNC</a>
         }
