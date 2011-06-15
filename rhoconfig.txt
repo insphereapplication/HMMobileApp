@@ -51,9 +51,6 @@ LastVisitedPage = ''
 # MODEL RHOHUB 
 # syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
 
-# PRODUCTION RHOHUB
-# syncserver = #'https://rhohub-insphere-b3789b06.heroku.com/application'
-
 # DEV RHOHUB
 # syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
 
@@ -110,3 +107,18 @@ test_password = ""
 
 # High lead cost indicator threshold -- set the threshold lead cost to display a dollar sign indicating high lead cost
 lead_cost_threshold = 100
+
+Dev
+quick_quote_url = https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
+resource_center_url=https://m.dev.insphereis.net/InsiteMobile/rc/ResourceCenterSSO.aspx
+
+Model
+#quick_quote_url = #https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
+#resource_center_url=https://rc.model.insphereis.net
+
+Production
+#quick_quote_url = #https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
+#resource_center_url=https://rc.insphereis.net
+
+
+

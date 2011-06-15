@@ -122,46 +122,60 @@ class OpportunityController < Rho::RhoController
   end
 
   def by_last_activities
-    opportunities = Opportunity.by_last_activities(@params['page'].to_i)
+    statusReason = !@params['statusReason'].nil? ? @params['statusReason'] : 'All';
+    sortBy       = !@params['sortBy'].nil? ? @params['sortBy'] : 'LastActivityDateAscending';
+    created      = !@params['created'].nil? ? @params['created'] : 'All';
+    
+    opportunities = Opportunity.by_last_activities(@params['page'].to_i, statusReason, sortBy, created)
     get_activities(opportunities)
   end
 
-  def todays_follow_ups
-    date_proc = lambda {|phone_call| "Today #{phone_call.scheduledend.hour_string }" if phone_call.scheduledend }
-    phone_calls = Activity.todays_follow_ups(@params['page'].to_i)
-    get_follow_ups('orange', 'Today', date_proc, phone_calls)
-  end
+  # def todays_follow_ups
+  #   date_proc = lambda {|phone_call| "Today #{phone_call.scheduledend.hour_string }" if phone_call.scheduledend }
+  #   phone_calls = Activity.todays_follow_ups(@params['page'].to_i)
+  #   get_follow_ups('orange', 'Today', date_proc, phone_calls)
+  # end
 
-  def future_follow_ups
-    date_proc = lambda {|phone_call| "Last Act: -#{DateUtil.days_ago(phone_call.opportunity.cssi_lastactivitydate)}d" unless phone_call.opportunity.cssi_lastactivitydate.blank?}
-    phone_calls = Activity.future_follow_ups(@params['page'].to_i)
-    get_follow_ups('green', 'Future', date_proc, phone_calls)
-  end
-
-  def past_due_follow_ups
-    date_proc = lambda {|phone_call| "Due: #{DateUtil.days_from_now(phone_call.scheduledend)}d" }
-    phone_calls = Activity.past_due_follow_ups(@params['page'].to_i)
-    get_follow_ups('red', 'Past Due', date_proc, phone_calls)
-  end
+  # def future_follow_ups
+  #     date_proc = lambda {|phone_call| "Last Act: -#{DateUtil.days_ago(phone_call.opportunity.cssi_lastactivitydate)}d" unless phone_call.opportunity.cssi_lastactivitydate.blank?}
+  #     phone_calls = Activity.future_follow_ups(@params['page'].to_i)
+  #     get_follow_ups('green', 'Future', date_proc, phone_calls)
+  #   end
+  # 
+  #   def past_due_follow_ups
+  #     date_proc = lambda {|phone_call| "Due: #{DateUtil.days_from_now(phone_call.scheduledend)}d" }
+  #     phone_calls = Activity.past_due_follow_ups(@params['page'].to_i)
+  #     get_follow_ups('red', 'Past Due', date_proc, phone_calls)
+  #   end
 
   def get_appointments(color, text, appointments)
     $appointments_nav_context += appointments.map{|appointment| appointment.opportunity.opportunityid }
     @color = color
     @label = text
     @page = appointments
+    
     render :action => :appointments_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
   def future_scheduled
+    filter = !@params['filter'].nil? ? @params['filter'] : "All"
+    search = !@params['search'].nil? ? @params['search'] : ""
+    
     get_appointments('green', 'Future', Activity.future_scheduled(@params['page'].to_i))
   end
 
   def todays_scheduled
+    filter = !@params['filter'].nil? ? @params['filter'] : "All"
+    search = !@params['search'].nil? ? @params['search'] : ""
+        
     get_appointments('orange', 'Today', Activity.todays_scheduled(@params['page'].to_i))
   end
 
   def past_due_scheduled
-    get_appointments('red', 'Past Due', Activity.past_due_scheduled(@params['page'].to_i))
+    filter = !@params['filter'].nil? ? @params['filter'] : "All"
+    search = !@params['search'].nil? ? @params['search'] : ""
+    
+    get_appointments('red', 'Past Due', Activity.past_due_scheduled(@params['page'].to_i, filter, search))
   end
   
   
@@ -282,7 +296,7 @@ class OpportunityController < Rho::RhoController
     Settings.record_activity
       @opportunity = Opportunity.find(@params['id'])
       if @opportunity
-        render :action => :application_details_add, :back => 'callback:', :layout => 'layout_jquerymobile'
+        render :Controller => :ApplicationDetail, :action => :new, :back => 'callback:', :layout => 'layout_jquerymobile'
       else
         redirect :action => :index, :back => 'callback:'
       end
@@ -291,7 +305,7 @@ class OpportunityController < Rho::RhoController
   def app_detail_show
       # @appdetail = Opportunity.find(@params['id'])
       # if @appdetail
-        render :action => :application_details_show, :back => 'callback:', :layout => 'layout_jquerymobile'
+        render :Controller => :ApplicationDetail, :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
       # else
       #   redirect :action => :index, :back => 'callback:'
       # end
@@ -301,7 +315,7 @@ class OpportunityController < Rho::RhoController
     Settings.record_activity
     @appdetail = Opportunity.find(@params['id'])
     if @appdetail
-      render :action => :application_details_edit, :back => 'callback:', :layout => 'layout_jquerymobile'
+      render :Controller => :ApplicationDetail, :action => :edit, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
       redirect :action => :index, :back => 'callback:'
     end
@@ -460,15 +474,19 @@ class OpportunityController < Rho::RhoController
       render :back => 'callback:'
   end
     
-    def appdatepopup
+  def appdatepopup
       flag = @params['flag']
       if ['0', '1', '2'].include?(flag)
         ttt = $choosed[flag]
+        if @params['preset'].nil?
           preset_time = Time.new
+        else 
+          preset_time = Time.parse(@params['preset'])
+        end
         DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
       end
       render :back => 'callback:'
-    end
+  end
 
   def callback
     if @params['status'] == 'ok'
@@ -514,17 +532,18 @@ class OpportunityController < Rho::RhoController
        @dob = date.strftime('%m/%d/%Y')
      end     
      
-     @quote_param = "?gaid=5242&dob=#{@dob}&gender=#{@contact.gendercode}"
-     
+     @quote_param = ",dob=#{@dob},gender=#{@contact.gendercode}"
+   
      if (not (@contact.cssi_state1id.nil? || @contact.cssi_state1id.blank? || @contact.cssi_state1id == ''))   
-       @quote_param="#{@quote_param}&statecode=#{@contact.cssi_state1id}"
+       @quote_param="#{@quote_param},statecode=#{@contact.cssi_state1id}"
      else
-        @quote_param="#{@quote_param}&statecode=#{@contact.cssi_state2id}"
+        @quote_param="#{@quote_param},statecode=#{@contact.cssi_state2id}"
      end  
      
      #puts("The query parameters are: #{@quote_param}")    
+     quote_url="#{Rho::RhoConfig.quick_quote_url}#{@quote_param}"
      WebView.navigate(WebView.current_location)
-     System.open_url("https://mobile-uat.ipipeline.com/quote/#{@quote_param}")
+     System.open_url("#{quote_url}")
 
    end
   

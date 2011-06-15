@@ -160,5 +160,15 @@ class Settings
           Settings.pin_last_activity_time=Time.new
       end
     end
+    
+    def last_integrated_lead
+      instance.last_integrated_lead || ''
+    end
+    
+    def last_integrated_lead=(value)
+      instance.last_integrated_lead=value
+      instance.save
+    end
+    
   end
 end

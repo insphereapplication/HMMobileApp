@@ -1,7 +1,7 @@
-<div data-role="page" data-theme="b">
-	<form method="post" id="spouse_add" action="<%= url_for(:controller => :Contact, :action => :spouse_update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" name="spouse_edit">
+<div data-role="page" data-theme="b" id="spouse_edit_page">
+	<form method="post" id="spouse_form" action="<%= url_for(:controller => :Contact, :action => :spouse_update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" name="spouse_edit">
 		<div data-role="header" data-backbtn="false" data-theme="b">
-			<a href="<%=url_for(:controller=>:Contact, :action => :show, :id => @contact.object, :query=> {:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
+			<a href="<%=url_for(:controller=>:Contact, :action => :show, :id => @contact.object, :query=> {:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
 			<h1>Edit Spouse</h1>
 			<span class="ui-btn-right">
 				<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
@@ -12,13 +12,13 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="contact[cssi_spousename]" class="fieldLabel">First Name:<font color="red">  *</font></label>
-					<input type="text" maxlength="50" name="contact[cssi_spousename]" value="<%= @contact.cssi_spousename %>" />
+					<input type="text" maxlength="100" id="contact[cssi_spousename]" name="contact[cssi_spousename]" value="<%= @contact.cssi_spousename %>" />
 				</div>
 			</div>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="contact[cssi_spouselastname]" class="fieldLabel">Last Name:</label>
-					<input type="email" maxlength="50" name="contact[cssi_spouselastname]" value="<%= @contact.cssi_spouselastname %>" />
+					<input type="text" maxlength="100" id="contact[cssi_spouselastname]" name="contact[cssi_spouselastname]" value="<%= @contact.cssi_spouselastname %>" />
 				</div>
 			</div>
 			<div data-role="fieldcontain">
@@ -34,7 +34,7 @@
 					<select name="contact[cssi_spouseheightin]" data-role="none" id="contact[cssi_spouseheightin]">
 						<option data-placeholder="true"> <%= @contact.cssi_spouseheightin %> </option>
 						<option value=""></option>
-						<% (0..11).each do |i| %>
+						<% (0..12).each do |i| %>
 							<option value="<%= i %>"><%= i %></option>
 						<% end %>
 					</select>"
@@ -43,7 +43,7 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="contact[cssi_spouseweight]" class="fieldLabel">Weight (lbs):</label>
-					<input type="number" min="0" max="2000" maxlength="4" name="contact[cssi_spouseweight]" value="<%= @contact.cssi_spouseweight %>" />					
+					<input type="number" id="contact[cssi_spouseweight]" name="contact[cssi_spouseweight]" value="<%= @contact.cssi_spouseweight %>" />					
 				</div>
 			</div>
 			<div data-role="fieldcontain">

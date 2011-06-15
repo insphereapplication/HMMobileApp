@@ -31,6 +31,8 @@ class Opportunity
   property :competitorid, :string
   property :actual_end, :string
   property :temp_id, :string
+  property :actualclosedate, :string
+  property :opportunityratingcode, :string
   
   index :opportunity_pk_index, [:opportunityid]
   unique_index :unique_opp, [:opportunityid] 
@@ -54,7 +56,6 @@ class Opportunity
   end
   
   def self.find_opportunity(id)
-    
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
       @opportunity = Opportunity.find(id)
     else
@@ -84,6 +85,10 @@ class Opportunity
     find_by_sql(NEW_LEADS_SQL)
   end 
   
+  def self.latest_integrated_lead
+    find_by_sql(LATEST_INTEGRATED_LEAD)
+  end
+  
   def self.open_opportunities
     find(:all, :conditions => "statecode not in ('Won', 'Lost')")
   end
@@ -107,15 +112,53 @@ class Opportunity
   end
   
   # TODO: not an optimal query. find a better one.
-  def self.by_last_activities(page=nil, page_size=DEFAULT_PAGE_SIZE)
+  def self.by_last_activities( page=nil, page_size=DEFAULT_PAGE_SIZE, statusReasonFilter, sortByFilter, createdFilter )
     #Find all opportunities that have activities of which none are open or scheduled
     #Also include opportunities that have no activities and have a status code != "New Opportunity"
     #Sort by the opportunity's last activity date
-    find_by_sql(%Q{
+    puts "#"*80 + " " + statusReasonFilter + " || " + sortByFilter + " || " + createdFilter
+    
+    statusReasonWhere = ''
+    case statusReasonFilter
+      when 'NoContactMade'
+        statusReasonWhere = "o.statuscode = 'No Contact Made'"
+      when 'ContactMade'
+        statusReasonWhere = "o.statuscode = 'Contact Made'"
+      when 'AppointmentSet'
+        statusReasonWhere = "o.statuscode = 'Appointment Set'"
+      when 'DealInProgress'
+        statusReasonWhere = "o.statuscode = 'Deal in Progress'"
+      else
+        statusReasonWhere = "o.statuscode <> 'New Opportunity'"
+    end
+    
+    sortByClause= ''
+    case sortByFilter
+      when 'LastActivityDateAscending'
+        sortByClause = "order by datetime(o.cssi_lastactivitydate) asc"
+      when 'LastActivityDateDescending'
+        sortByClause = "order by datetime(o.cssi_lastactivitydate) desc)"
+      when 'CreateDateAscending'
+        sortByClause = "order by datetime(o.createdon) asc)"
+      when 'CreateDateDescending'
+        sortByClause = "order by datetime(o.createdon) desc)"
+      else
+        sortByClause = "order by datetime(o.cssi_lastactivitydate) asc"
+    end
+        
+    createdClause = ''
+    case createdFilter # It should be a number unless "All" is selected
+      when 'All'
+        createdClause = "date(createdon) <= date('now')"
+      else
+        createdClause = "date(createdon) = date('now', '-#{createdFilter.to_i} days')"
+    end
+    
+    sql = %Q{
       select * from Opportunity o 
         where o.statecode not in ('Won', 'Lost') 
         and (
-          o.statuscode <> 'New Opportunity'
+          #{statusReasonWhere}
           or exists (
             select a1.object from Activity a1 where 
             a1.parent_type='Opportunity' and 
@@ -129,9 +172,12 @@ class Opportunity
           a2.parent_id=o.object and
           (a2.statecode in ('Open', 'Scheduled') and a2.scheduledend is not null and a2.scheduledend <> '')
         )
-      order by datetime(o.cssi_lastactivitydate) asc
+      and #{createdClause}
+      #{sortByClause}
       #{get_pagination_sql(page, page_size)}
-    })
+    }
+    
+    find_by_sql( sql )
   end
   
   def is_owned_by_this_opportunity_sql
@@ -155,13 +201,13 @@ class Opportunity
   
   def activity_list
     Activity.find_by_sql(%Q{
-        select type, scheduledstart as "displaytime", statuscode, cssi_disposition from Activity where #{is_owned_by_this_opportunity_sql}
+        select type, scheduledstart as "displaytime", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
         AND type = 'Appointment' AND scheduledstart IS NOT NULL
         UNION
-        select type, scheduledend as "displaytime", statuscode, cssi_disposition from Activity where #{is_owned_by_this_opportunity_sql}
+        select type, scheduledend as "displaytime", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
         AND type = 'PhoneCall' AND scheduledend IS NOT NULL
         UNION
-        select type, createdon as "displaytime", statuscode, cssi_disposition from Activity where #{is_owned_by_this_opportunity_sql}
+        select type, createdon as "displaytime", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
         AND scheduledstart IS NULL AND scheduledend IS NULL order by "displaytime" desc
       })
   end
@@ -172,10 +218,14 @@ class Opportunity
       })
   end
   
-  def get_application_details
-    
+  def app_details
+    ApplicationDetail.find_by_sql(%Q{
+        select a.* 
+        from ApplicationDetail a 
+        where opportunity_id = '#{object}' 
+    })
   end
-  
+    
   def create_application_details
     APPDetails.create({
       :notetext => note_text, 
@@ -196,6 +246,8 @@ class Opportunity
      end
    end
   end
+  
+
   
   def notes
     Note.find_by_sql(%Q{

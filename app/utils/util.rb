@@ -47,6 +47,14 @@ module SQLHelper
     where a.type='Email' 
   }
   
+  LATEST_INTEGRATED_LEAD = %Q{
+    SELECT createdon
+    FROM Opportunity
+    WHERE cssi_inputsource='Integrated'
+    ORDER BY createdon DESC
+    LIMIT 1
+  }
+  
   OPEN_STATE_CODES = ['Open', 'Scheduled']
     
   SELECT_OPEN_PHONE_CALL_SQL = %Q{
@@ -70,12 +78,14 @@ module SQLHelper
       )
   } 
   
+  # SQL building blocks for the Scheduled tab on the Opportunities page
   SELECT_SCHEDULED_SQL = "select ifnull(a.scheduledstart, a.scheduledend) as scheduledtime, a.* from Activity a, Opportunity o where (a.type='Appointment' or a.type='PhoneCall')"
-  
+  SELECT_SCHEDULED_NO_WHERE_SQL = "select ifnull(a.scheduledstart, a.scheduledend) as scheduledtime, a.* from Activity a, Opportunity o"
   SCHEDULED_END_SQL = "date(scheduledend)"
   SCHEDULED_START_SQL = "date(scheduledstart)"
   SCHEDULED_TIME_SQL = "date(scheduledtime)"
   SCHEDULED_OPEN_SQL = "a.statecode in ('Open', 'Scheduled')"
+  SCHEDULED_ORDERBY_SQL = "order by datetime(scheduledtime)"
   
   CREATED_ON_SQL = "and date(o.createdon)"
   NOW_SQL = "date('now', 'localtime')"
@@ -85,7 +95,7 @@ module SQLHelper
     select o.opportunityid from Opportunity o where statuscode = 'New Opportunity' and
     #{NO_ACTIVITIES_FOR_OPPORTUNITY_SQL}
   }
-    
+  
   SELECT_FIRST_PER_OPPORTUNITY_SQL = "group by o.object order by datetime(a.scheduledend)"
   
   NEW_LEADS_SQL = %Q{
@@ -98,7 +108,6 @@ module DateUtil
   DEFAULT_TIME_FORMAT = '%Y-%m-%d %H:%M:%S' # YYYY-MM-DD HH:MM:SS
   DATE_PICKER_TIME_FORMAT = '%m/%d/%Y %I:%M %p'
   BIRTHDATE_PICKER_TIME_FORMAT = '%m/%d/%Y'
-  DEFAULT_BIRTHDATE_FORMAT = '%m/%d/%Y'
   HOUR_FORMAT = '%I:%M %p'
   NO_YEAR_FORMAT = '%m/%d %I:%M %p'
   
