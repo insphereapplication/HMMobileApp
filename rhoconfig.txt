@@ -52,10 +52,10 @@ LastVisitedPage = ''
 # syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
 
 # DEV RHOHUB
-# syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
+syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
 
 # MODEL ONSITE
-syncserver = 'https://rhosync.model.insphereis.net/application'
+# syncserver = 'https://rhosync.model.insphereis.net/application'
 
 # PRODUCTION ONSITE
 # syncserver = 'https://rhosync.insphereis.net/application'

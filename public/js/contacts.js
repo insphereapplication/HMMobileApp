@@ -70,7 +70,7 @@ function loadContactsAsync(filterType, page, startPage, searchTerms, navToBottom
 					document.location.href='#bottom';
 				}
 				if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
-				//	$("ul#contact-list").append(getLoadMoreButton("Load More", page));
+					$("ul#contact-list").append(getLoadMoreButton("Load More", page));
 				}
 			}
 		}
