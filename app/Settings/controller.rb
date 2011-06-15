@@ -317,7 +317,7 @@ class SettingsController < Rho::RhoController
     end
   end
   
-  def new_integrated_leads?
+  def handle_new_integrated_leads
     former_last_lead = Settings.last_integrated_lead
     set_last_integrated_lead
     current_last_lead = Settings.last_integrated_lead
@@ -380,7 +380,7 @@ class SettingsController < Rho::RhoController
       @on_sync_complete.call
       
       #if latest integrated lead createdon is greater than before sync, display popup alert
-      new_integrated_leads?
+      handle_new_integrated_leads
     elsif status == "ok"
       if sourcename == 'AppInfo'
         check_force_upgrade
@@ -729,7 +729,7 @@ class SettingsController < Rho::RhoController
     puts "*** Upgrade url = #{upgrade_url} ***"
     
     System.open_url( upgrade_url )
-    System.exit
+    #System.exit
   end
   
   def close_app

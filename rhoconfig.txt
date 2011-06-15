@@ -5,7 +5,7 @@ start_path = '/app/Settings/init'
 options_path = '/app/Settings'
 
 #app database version -- changing this value will wipe the entire db for an upgrade
-app_db_version = '1.0'
+app_db_version = '2.0'
 
 # location of bundle url (i.e. from rhohub.com); used by desktop win32 simulator
 rhobundle_zip_url = ''

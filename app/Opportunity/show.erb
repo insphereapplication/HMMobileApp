@@ -11,7 +11,7 @@ $('#opportunity_show').live('pagecreate',function(event){
 	<%= offline_bar%>
 	<% if @params['origin'] == "contact" %>
 	<div data-role="header" data-backbtn="false">
-		<a href="<%= url_for(:controller => :Contact, :action => :show, :id => @opportunity.contact.object, :query =>{:origin => @params['origin']}) %>" data-direction="reverse" data-icon="back">Contact</a>
+		<a data-transition="slideback" href="<%= url_for(:controller => :Contact, :action => :show, :id => @opportunity.contact.object, :query =>{:origin => @params['origin']}) %>" data-direction="reverse" data-icon="back">Contact</a>
 		<h3>Opportunity</h3>
 	</div>
 	<% else %>
@@ -19,7 +19,7 @@ $('#opportunity_show').live('pagecreate',function(event){
 		<%= opp_detail_backbutton(@params['origin']) %>
 		<h3>Opportunity</h3>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right" style="margin-top:-1px;">
-	       	<a href="<%= url_for(:action=>:show_previous, :id => @opportunity.object, :query =>{:origin => @params['origin']}) %>"  data-icon="arrow-l" data-iconpos="left" data-role="button">&nbsp;</a>
+	       	<a href="<%= url_for(:action=>:show_previous, :id => @opportunity.object, :query =>{:origin => @params['origin']}) %>"  data-icon="arrow-l" data-iconpos="left" data-transition="slideback" data-role="button">&nbsp;</a>
 	       	<a href="<%= url_for(:action=>:show_next, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>"  data-icon="arrow-r" data-iconpos="right" data-role="button">&nbsp;</a>
       </div>
 	</div>
