@@ -257,3 +257,13 @@ input.ui-search-text {
 	overflow-y:hidden;
 	border-style:none;
 }
+
+.slideback.in { -webkit-animation-name: slideinfromleft; z-index: 10; }
+.slideback.out { -webkit-animation-name: slideouttoright; z-index: 0; }
+.slideback.in.reverse { -webkit-animation-name: slideinfromright; z-index: 10; }
+.slideback.out.reverse { -webkit-animation-name: slideouttoleft; z-index: 0; }
+
+.slideforward.in {-webkit-animation-name: slideouttoright; z-index: 0; }
+.slideforward.out {  -webkit-animation-name: slideinfromleft; z-index: 10; }
+.slideforward.in.reverse { -webkit-animation-name: slideouttoleft; z-index: 0; }
+.slideforward.out.reverse { -webkit-animation-name: slideinfromright; z-index: 10; }
