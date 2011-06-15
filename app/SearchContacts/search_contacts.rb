@@ -1,5 +1,5 @@
 class SearchContacts
-  include Rhom::FixedSchema
+  include Rhom::PropertyBag
   include ChangedFlag
   include SQLHelper
   
