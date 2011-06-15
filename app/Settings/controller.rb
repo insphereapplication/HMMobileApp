@@ -729,7 +729,7 @@ class SettingsController < Rho::RhoController
     puts "*** Upgrade url = #{upgrade_url} ***"
     
     System.open_url( upgrade_url )
-    System.exit
+    #System.exit
   end
   
   def close_app
