@@ -13,8 +13,14 @@ class SearchContacts
     return Rho::JSON.parse(search.results) if search
   end
   
+  #returns the hash of contact details that the input id points to
   def self.find_by_id(id)
-
+    results[id]
+  end
+  
+  def self.last_search_terms
+    search = find(1).first
+    return Rho::JSON.parse(search.terms) if search
   end
   
 end

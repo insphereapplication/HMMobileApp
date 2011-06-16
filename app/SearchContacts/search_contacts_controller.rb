@@ -2,13 +2,15 @@ require 'helpers/browser_helper'
 
 class SearchContactsController < Rho::RhoController
   include BrowserHelper
+  
   def search_contacts
+    @last_search_terms = { 
+      :first_name => @params['first_name'],
+      :last_name => @params['last_name']
+    }
     SearchContacts.search({
       :from => 'search',
-      :search_params => { 
-        :first_name => @params['first_name'],
-        :last_name => @params['last_name']
-      },
+      :search_params => @last_search_terms,
       :callback => url_for(:action => :search_callback),
       :callback_param => ""
     })
@@ -25,11 +27,15 @@ class SearchContactsController < Rho::RhoController
   
   def search
     Settings.record_activity
-    puts "&"*80
+    puts "+"*80
     puts @params.inspect
-    puts SearchContacts.results
+    #puts SearchContacts.results
     
     if @params['show_results'] == 'true' && (results = SearchContacts.results)
+
+      @last_search_terms = SearchContacts.last_search_terms
+      puts @last_search_terms.inspect
+
       @parsed_search_results = results
       puts "PARSED RESULTS"
       puts @parsed_search_results.inspect
@@ -38,8 +44,14 @@ class SearchContactsController < Rho::RhoController
   end
   
   def show_search_contact
-    @contact = Contact.find_contact(@params['id'])
+    puts "-+"*50
+    contact = SearchContacts.find_by_id(@params['id'])
+    puts contact
     render :action => :show_AC, :back => 'callback:', :layout => 'layout_jquerymobile'
+  end
+  
+  def show_search_index
+    render :action => :search, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
 end

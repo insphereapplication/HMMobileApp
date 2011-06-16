@@ -15,9 +15,17 @@
 		<div id="filter" data-role="none">
 			<br/>
 			<label for="search_first_name" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;First Name: </label>
-			<input type="text" id="search_first_name" name="search_first_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all"></input>
+			  <% if @last_search_terms %>
+				<input type="text" id="search_first_name" name="search_first_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%=@last_search_terms['first_name'].to_s %>"></input>
+			  <% else %>
+				<input type="text" id="search_first_name" name="search_first_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all"></input>							  		
+			  <% end %>				
 			<label for="search_last_name" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Last Name: </label>
-			<input type="text" id="search_last_name" name="search_last_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all"></input>
+			  <% if @last_search_terms %>
+				<input type="text" id="search_last_name" name="search_last_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%=@last_search_terms['last_name'].to_s %>" ></input>
+			  <% else %>
+				<input type="text" id="search_last_name" name="search_last_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all"></input>							  		
+			  <% end %>
 			<fieldset class="ui-grid-custom ui-grid-a">
 				<div class="ui-block-a">
 					<div data-theme="b" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">
