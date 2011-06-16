@@ -120,15 +120,15 @@ class Opportunity
     statusReasonWhere = ''
     case statusReasonFilter
       when 'NoContactMade'
-        statusReasonWhere = "o.statuscode = 'No Contact Made'"
+        statusReasonWhere = "o.statuscode = 'No Contact Made' and"
       when 'ContactMade'
-        statusReasonWhere = "o.statuscode = 'Contact Made'"
+        statusReasonWhere = "o.statuscode = 'Contact Made' and"
       when 'AppointmentSet'
-        statusReasonWhere = "o.statuscode = 'Appointment Set'"
+        statusReasonWhere = "o.statuscode = 'Appointment Set' and"
       when 'DealInProgress'
-        statusReasonWhere = "o.statuscode = 'Deal in Progress'"
+        statusReasonWhere = "o.statuscode = 'Deal in Progress' and"
       else
-        statusReasonWhere = "o.statuscode <> 'New Opportunity'"
+        statusReasonWhere = "o.statuscode <> 'New Opportunity' or"
     end
     
     sortByClause= ''
@@ -158,7 +158,7 @@ class Opportunity
         where o.statecode not in ('Won', 'Lost') 
         and (
           #{statusReasonWhere}
-          or exists (
+          exists (
             select a1.object from Activity a1 where 
             a1.parent_type='Opportunity' and 
             a1.parent_id=o.object and 
