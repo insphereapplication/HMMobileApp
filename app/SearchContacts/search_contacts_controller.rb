@@ -12,9 +12,11 @@ class SearchContactsController < Rho::RhoController
   end
   
   def search_callback
-    puts "%"*80
-    puts @params.inspect
-    search = SearchContacts.find(:all).first
-    puts Rho::JSON.parse(search.results).inspect
-  end
+    status = @params["status"] 
+    if (status and status == "ok")
+      if results = SearchContacts.results
+        parsed = Rho::JSON.parse(results).inspect
+      end
+    end
+  end   
 end

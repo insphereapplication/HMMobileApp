@@ -3,15 +3,16 @@ class SearchContacts
   include ChangedFlag
   include SQLHelper
   
-  set :schema_version, '1.0'
   enable :sync
+  set :schema_version, '1.0'
   set :sync_priority, 20  
       
-    
-  def self.search_my_contacts(params=nil)
-    puts "****************************Searching contacts! #{params['first_name']}."
-    result = SearchContacts.create(params)
-    #SyncEngine.dosync
+  # returns the results of the last search. SearchContacts only keeps one "singleton" search object in the db.
+  def self.results
+    res = find(:all).first.results
+    puts "$"*80
+    puts res.inspect
+    res
   end
   
 end
