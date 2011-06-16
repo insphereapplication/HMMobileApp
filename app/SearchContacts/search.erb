@@ -24,7 +24,7 @@
 						<span class="ui-btn-inner ui-btn-corner-all">
 							<span class="ui-btn-text">Search AC</span>
 						</span>
-						<input id="submit-search-button" class="standardButton ui-btn-hidden" data-theme="b"/>
+						<span type="submit" id="submit-ac-search" class="standardButton ui-btn-hidden" data-theme="b"/>
 					</div>
 				</div>
 				<div class="ui-block-b">
@@ -38,8 +38,15 @@
 			</fieldset>
 		</div>
 	</form>	  	
-	<div class="ui-content contacts-list" data-role="none" role="main">
-		<ul id="contact-list" data-role="listview" data-counttheme="e" class="ui-listview" role="listbox"></ul>
+	<div class="ui-content search-results-list" data-role="none" role="main">
+		<% if @parsed_search_results %>
+			<ul id="search-results-list" data-role="listview" data-counttheme="e" class="ui-listview" role="listbox">
+				<% @parsed_search_results.each_with_index do |result, index| %>
+					<li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
+						<%= result[1]['firstname'] %>
+			    </li>
+				<% end %>
+			</ul>
+		<% end %>
 	</div>
-	<a name="bottom"></a>
 </div>

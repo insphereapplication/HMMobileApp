@@ -14,7 +14,7 @@
 			<span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Create</span><span class="ui-icon ui-icon-plus ui-icon-shadow"></span></span>
 		</a>
 		<h1 class="ui-title" tabindex="0" role="heading" aria-level="1">Contacts</h1>
-		<a href="<%=url_for(:action=>:search_AC, :query => {:origin => 'contact'})%>" data-direction="forward" class="ui-btn-right ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">
+		<a href="<%=url_for(:action=>:search, :controller => 'SearchContacts', :query => {:origin => 'contact'})%>" data-direction="forward" class="ui-btn-right ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">
 			<span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Search AC</span><span class="ui-icon ui-icon-shadow"></span></span>
 		</a> 
 	</div>

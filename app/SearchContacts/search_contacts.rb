@@ -9,10 +9,8 @@ class SearchContacts
       
   # returns the results of the last search. SearchContacts only keeps one "singleton" search object in the db.
   def self.results
-    res = find(:all).first.results
-    puts "$"*80
-    puts res.inspect
-    res
+    search = find(:all).first
+    return search.results if search
   end
   
 end
