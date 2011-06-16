@@ -22,6 +22,25 @@
 				<img src="/public/images/email_icon.jpeg" class="ui-li-icon" style="margin-top:8px">
 				<h3><a href="mailto:InSiteMobile@insphereis.com">Email Support</a></h3>
 			</li>
+			<%
+			  latest_version = AppInfo.instance[0].latest_version
+	    	  min_required_version = AppInfo.instance[0].min_required_version
+	    	  app_version = Rho::RhoConfig.app_version
+	
+			  platform = System.get_property('platform')
+
+	    	  if platform == 'APPLE'
+		        upgrade_url = AppInfo.instance[0].apple_upgrade_url
+		      elsif platform == 'ANDROID'
+		        upgrade_url = AppInfo.instance[0].android_upgrade_url
+		      end
+	
+			  if needs_upgrade?(latest_version, app_version) %>
+			<li>
+				<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
+				<h3><a href="<%= upgrade_url %>">Upgrade to v<%= AppInfo.instance[0].latest_version %></a></h3>
+			</li>
+			<% end %>
 		</ul>
 		<ul data-role="listview" data-inset="true">
 			<% if @msg %>

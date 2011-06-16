@@ -116,7 +116,6 @@ class Opportunity
     #Find all opportunities that have activities of which none are open or scheduled
     #Also include opportunities that have no activities and have a status code != "New Opportunity"
     #Sort by the opportunity's last activity date
-    puts "#"*80 + " " + statusReasonFilter + " || " + sortByFilter + " || " + createdFilter
     
     statusReasonWhere = ''
     case statusReasonFilter
@@ -137,11 +136,11 @@ class Opportunity
       when 'LastActivityDateAscending'
         sortByClause = "order by datetime(o.cssi_lastactivitydate) asc"
       when 'LastActivityDateDescending'
-        sortByClause = "order by datetime(o.cssi_lastactivitydate) desc)"
+        sortByClause = "order by datetime(o.cssi_lastactivitydate) desc"
       when 'CreateDateAscending'
-        sortByClause = "order by datetime(o.createdon) asc)"
+        sortByClause = "order by datetime(o.createdon) asc"
       when 'CreateDateDescending'
-        sortByClause = "order by datetime(o.createdon) desc)"
+        sortByClause = "order by datetime(o.createdon) desc"
       else
         sortByClause = "order by datetime(o.cssi_lastactivitydate) asc"
     end
@@ -176,6 +175,8 @@ class Opportunity
       #{sortByClause}
       #{get_pagination_sql(page, page_size)}
     }
+    
+    puts "#"*80 + " #{sql}"
     
     find_by_sql( sql )
   end
