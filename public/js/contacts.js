@@ -8,13 +8,7 @@ $(document).ready(function() {
 	})
 	
 	$('#submit-search-button').click(function(){
-		searchTerm = $('input#search_input').val();
-		if ($.trim(searchTerm).length > 1) {
-			loadPage();
-		} 
-		else {
-			alert('Search must contain at least 2 characters');
-		}
+		loadPage();
 	})
 });
 
