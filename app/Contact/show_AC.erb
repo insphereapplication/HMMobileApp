@@ -8,25 +8,120 @@ $('#contact_show').live('pagecreate',function(event){
 });
 </script>
 
-<div id="contact_show" data-role="page" data-theme="b" data-cache="never">
+<div id="ACcontact_show" data-role="page" data-theme="b" data-cache="never">
+	<form method="post" id="opp_add" action="<%= url_for(:action => :createAC, :query => {:id => "@contact_details.object", :origin => @params['origin']})%>" name="opp_add">
 	<%= offline_bar%>
-	<div data-role="header" data-backbtn="false">
-					<a href="<%=url_for(:action => :index)%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
+	<div data-role="header" data-theme="b" data-backbtn="false">
+					<a href="<%=url_for(:action => :index)%>" data-direction="reverse" rel="external" data-theme="b" data-icon="back">Back</a>
 				<h1>Contact Detail</h1>
 	</div>
 	<div style="text-align:center" class="ui-bar ui-bar-e"> 
 		Activity Center Contact
 	</div>
 	<div data-role="content">
-		
-	<div data-role="collapsible" data-collapsed="false" >
-		<h3>Opportunity Details</h3>
+		<ul data-role="listview" data-theme="d" data-inset="true" > 
+			
+			<%puts  @contact_details.each.inspect %>
+			<% @contact_details.each do |field, value| %>
+				<input type="hidden" name="<%= field %>" value="<%= value %>" />
+			<% end %>
+			<li>
+					<h3><%= @contact_details['firstname'] %> <%= @contact_details['lastname'] %></h3>
+					<p><%= @contact_details['gendercode'] %> </p>
+					<p>DOB: <%= to_date(@contact_details['birthdate']) %></p>		
+			</li> 
+			<% if @contact_details['mobilephone'] %>
+				<li <%= check_preferred_and_donotcall("Mobile", @contact_details['cssi_preferredphone'], @contact_details['cssi_allowcallsmobilephone'], @contact_details['cssi_companydncmobilephone']) %> ><a href="tel: <%= @contact_details['mobilephone'].to_s %>"> Mobile: <%= @contact_details['mobilephone'] %></a></li>
+			<% else %>
+				<li data-icon="false"><a href="#">Mobile:</a></li>
+			<% end %>
+			
+			<% if @contact_details['telephone1'] %>
+				<li <%= check_preferred_and_donotcall("Business", @contact_details['cssi_preferredphone'], @contact_details['cssi_allowcallsbusinessphone'], @contact_details['cssi_companydncbusinessphone']) %> ><a href="tel: <%= @contact_details['telephone1'].to_s %>">Bus: <%= @contact_details['telephone1'] %></a>
+					<% if (@contact_details['cssi_businessphoneext'] != nil || @contact_details['cssi_businessphoneext'] == "")%> 
+						<!-- <div align="center"><p> -->x<%= @contact_details['cssi_businessphoneext'] %><!-- </p></div> -->
+					<% end %>
+				</li>
+			<% else %>
+				<li data-icon="false"><a href="#">Bus:</a></li>
+			<% end %>
+			
+			<% if @contact_details['telephone2'] %>
+				<li <%= check_preferred_and_donotcall("Home", @contact_details['cssi_preferredphone'], @contact_details['cssi_allowcallshomephone'], @contact_details['cssi_companydnchomephone']) %> ><a href="tel: <%= @contact_details['telephone2'].to_s %>">Home: <%= @contact_details['telephone2'] %></a></li>
+			<% else %>
+				<li data-icon="false"><a href="#">Home:</a></li>
+			<% end %>
+			
+			<% if @contact_details['telephone3'] %>
+				<li <%= check_preferred_and_donotcall("Alternate", @contact_details['cssi_preferredphone'], @contact_details['cssi_allowcallsalternatephone'], @contact_details['cssi_companydncalternatephone']) %> ><a href="tel: <%= @contact_details['telephone3'].to_s %>">Alternate: <%= @contact_details['telephone3'] %></a></li>
+			<% else %>
+				<li data-icon="false"><a href="#">Alternate:</a></li>
+			<% end %>
+			
+			<% if @contact_details['emailaddress1'] %>
+			<li data-icon="false"><a href="mailto:<%= @contact_details['emailaddress1'].to_s %>"><%= "Email: #{@contact_details['emailaddress1'].to_s}" %></a></li>
+			<% else %>
+			<li data-icon="false"><a href="#">Email:</a></li>
+			<% end %>
+			
+			<% if @contact_details['cssi_heightft'] && @contact_details['cssi_heightin'] %>
+			<li data-icon="false"><a href="#">Height: <%= @contact_details['cssi_heightft'] + '\' ' + @contact_details['cssi_heightin'] + "\"" %></a></li>
+			<% else %>
+			<li data-icon="false"><a href="#">Height :</a></li>
+			<% end %>
+			
+			<% if @contact_details['cssi_weight'] %>
+			<li data-icon="false"><a href="#">Weight: <%= @contact_details['cssi_weight'] %>&nbsp;lbs</a></li>
+			<% else %>
+			<li data-icon="false"><a href="#">Weight :</a></li>
+			<% end %>
+								
+			<% if @contact_details['cssi_usetobacco'] %>
+			<li data-icon="false"><a href="#">Tobacco: <%= use_tobacco_string(@contact_details['cssi_usetobacco']) %></a></li>
+			<% else %>
+			<li data-icon="false"><a href="#">Tobacco :</a></li>
+			<% end %>
+			
+			<% if @contact_details['familystatuscode'] %>
+			<li data-icon="false"><a href="#">Marital Status: <%= @contact_details['familystatuscode'] %></a></li>
+			<% else %>
+			<li data-icon="false"><a href="#">Marital Status :</a></li>
+			<% end %>
+			
+			<li data-role="list-divider">Home Address</li>
+			<li data-icon="false">
+				<% if @contact_details['address1_city'] %>
+						<a onclick="hideSpin()" href=<%="maps:q=#{}"%>>
+								<%= @contact_details['address1_line1'] %>
+								<%= @contact_details['address1_line2'] %><br/>
+								<%= @contact_details['address1_city'] %>, <%= @contact_details['cssi_state1id'] %><br/>
+						</a>
+				<% else %>
+					<a href="#"> (None) </a>
+				<% end %>
+			</li>
+			<li data-role="list-divider">Business Address</li>
+			<li data-icon="false">
+				<% if @contact_details['address2_city'] %>
+						<a onclick="hideSpin()" href="#">
+							<%= @contact_details['address2_line1'] %>
+							<%= @contact_details['address2_line2'] %><br/>
+							<%= @contact_details['address2_city'] %>, <%= @contact_details['cssi_state2id'] %><br/>
+						</a>
+				<% else %>
+					<a href="#"> (None) </a>
+				<% end %>
+			</li>
+			
 
-		<div data-role="fieldcontain">
-			<div class="ui-body ui-body-d">
-        		<label for="opportunity_lineofbusiness" class="select">LOB:</label>
+		</ul>
+		
+		<ul data-role="listview" data-filter="false" data-inset="true"> 
+			<li data-role="list-divider">Add Opportunity</li>
+			<li>
+				<label for="opportunity_lineofbusiness" class="select">LOB:</label>
 				<div>
-					<select id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]">
+					<select data-theme="d" id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]">
 						<option value="" selected="true"></option>
 							<% StaticEntity.get_rawlead_lob_names.each do |lob_name| %>
 								<option value="<%=lob_name%>">
@@ -35,14 +130,11 @@ $('#contact_show').live('pagecreate',function(event){
 							<% end %>
 					</select>
 				</div>
-			</div>
-		</div>		
-
-		<div data-role="fieldcontain">
-			<div class="ui-body ui-body-d">
-        		<label for="opportunity_inputsource" class="select">Source:</label>
+			</li>
+			<li>
+				<label for="opportunity_inputsource" class="select">Source:</label>
 				<div>
-					<select id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]">
+					<select data-theme="d" id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]">
 						<option value="" selected="true"></option>
 							<% StaticEntity.get_lead_source_names.each do |lead_source_name| %>
 								<option value="<%=lead_source_name%>">
@@ -51,8 +143,8 @@ $('#contact_show').live('pagecreate',function(event){
 							<% end %>					
 					</select>
 				</div>
-			</div>
-		</div>
-		</div>
-	</div>		
-</div>
+			</li>
+		</ul>
+		<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+	</div>
+</form>
