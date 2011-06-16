@@ -336,4 +336,11 @@ class ContactController < Rho::RhoController
     end
   end
   
+  def show_AC_contact
+    puts "#"*40 << "AC Contacts search! " << @params['id']
+    @contact_details = SearchContacts.find_by_id(@params['id'])
+    puts @contact_details.inspect
+    render :action => :show_AC, :back => 'callback:', :id => @params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+  end
+  
 end
