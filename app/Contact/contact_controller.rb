@@ -193,6 +193,21 @@ class ContactController < Rho::RhoController
       return false
     end
   end
+  
+  def search_AC
+    Settings.record_activity
+    render :action => :search, :back => 'callback:', :layout => 'layout_JQM_Lite'
+  end
+  
+  def contact_search
+    @search_results = (@params['search_criteria'].split(' ',2))
+    render :action => :search_results
+  end
+  
+  def show_search_contact
+    @contact = Contact.find_contact(@params['id'])
+    render :action => :show_AC, :back => 'callback:', :layout => 'layout_jquerymobile'
+  end
 
   # GET /Contact/new
   def new

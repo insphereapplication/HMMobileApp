@@ -1,0 +1,58 @@
+<script type="text/javascript" >
+$('#contact_show').live('pagecreate',function(event){
+  	var replace = $('li[two-icons] div span');
+	if ( replace.length = 1 ) // We can only have 1 preferred number, so only one of these will have the attribute
+	{
+		replace.replaceWith('<span class="ui-icon ui-icon-delete"></span><span class="ui-icon ui-icon-check" style="float:right; right:33px;"></span>');
+	}
+});
+</script>
+
+<div id="contact_show" data-role="page" data-theme="b" data-cache="never">
+	<%= offline_bar%>
+	<div data-role="header" data-backbtn="false">
+					<a href="<%=url_for(:action => :index)%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
+				<h1>Contact Detail</h1>
+	</div>
+	<div style="text-align:center" class="ui-bar ui-bar-e"> 
+		Activity Center Contact
+	</div>
+	<div data-role="content">
+		
+	<div data-role="collapsible" data-collapsed="false" >
+		<h3>Opportunity Details</h3>
+
+		<div data-role="fieldcontain">
+			<div class="ui-body ui-body-d">
+        		<label for="opportunity_lineofbusiness" class="select">LOB:</label>
+				<div>
+					<select id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]">
+						<option value="" selected="true"></option>
+							<% StaticEntity.get_rawlead_lob_names.each do |lob_name| %>
+								<option value="<%=lob_name%>">
+									<%=lob_name%>
+								</option>
+							<% end %>
+					</select>
+				</div>
+			</div>
+		</div>		
+
+		<div data-role="fieldcontain">
+			<div class="ui-body ui-body-d">
+        		<label for="opportunity_inputsource" class="select">Source:</label>
+				<div>
+					<select id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]">
+						<option value="" selected="true"></option>
+							<% StaticEntity.get_lead_source_names.each do |lead_source_name| %>
+								<option value="<%=lead_source_name%>">
+									<%=lead_source_name%>
+								</option>
+							<% end %>					
+					</select>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>		
+</div>
