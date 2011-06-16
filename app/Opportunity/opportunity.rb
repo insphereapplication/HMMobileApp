@@ -116,20 +116,19 @@ class Opportunity
     #Find all opportunities that have activities of which none are open or scheduled
     #Also include opportunities that have no activities and have a status code != "New Opportunity"
     #Sort by the opportunity's last activity date
-    puts "#"*80 + " " + statusReasonFilter + " || " + sortByFilter + " || " + createdFilter
     
     statusReasonWhere = ''
     case statusReasonFilter
       when 'NoContactMade'
-        statusReasonWhere = "o.statuscode = 'No Contact Made'"
+        statusReasonWhere = "o.statuscode = 'No Contact Made' and"
       when 'ContactMade'
-        statusReasonWhere = "o.statuscode = 'Contact Made'"
+        statusReasonWhere = "o.statuscode = 'Contact Made' and"
       when 'AppointmentSet'
-        statusReasonWhere = "o.statuscode = 'Appointment Set'"
+        statusReasonWhere = "o.statuscode = 'Appointment Set' and"
       when 'DealInProgress'
-        statusReasonWhere = "o.statuscode = 'Deal in Progress'"
+        statusReasonWhere = "o.statuscode = 'Deal in Progress' and"
       else
-        statusReasonWhere = "o.statuscode <> 'New Opportunity'"
+        statusReasonWhere = "o.statuscode <> 'New Opportunity' or"
     end
     
     sortByClause= ''
@@ -137,11 +136,11 @@ class Opportunity
       when 'LastActivityDateAscending'
         sortByClause = "order by datetime(o.cssi_lastactivitydate) asc"
       when 'LastActivityDateDescending'
-        sortByClause = "order by datetime(o.cssi_lastactivitydate) desc)"
+        sortByClause = "order by datetime(o.cssi_lastactivitydate) desc"
       when 'CreateDateAscending'
-        sortByClause = "order by datetime(o.createdon) asc)"
+        sortByClause = "order by datetime(o.createdon) asc"
       when 'CreateDateDescending'
-        sortByClause = "order by datetime(o.createdon) desc)"
+        sortByClause = "order by datetime(o.createdon) desc"
       else
         sortByClause = "order by datetime(o.cssi_lastactivitydate) asc"
     end
@@ -159,7 +158,7 @@ class Opportunity
         where o.statecode not in ('Won', 'Lost') 
         and (
           #{statusReasonWhere}
-          or exists (
+          exists (
             select a1.object from Activity a1 where 
             a1.parent_type='Opportunity' and 
             a1.parent_id=o.object and 
@@ -176,6 +175,8 @@ class Opportunity
       #{sortByClause}
       #{get_pagination_sql(page, page_size)}
     }
+    
+    puts "#"*80 + " #{sql}"
     
     find_by_sql( sql )
   end

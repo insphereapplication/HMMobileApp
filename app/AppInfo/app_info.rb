@@ -7,6 +7,7 @@ class AppInfo
   set :schema_version, '1.0'
   
   property :min_required_version, :string
+  property :latest_version, :string
   property :apple_upgrade_url, :string
   property :android_upgrade_url, :string
   
