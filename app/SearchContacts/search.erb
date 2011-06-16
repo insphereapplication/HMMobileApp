@@ -1,11 +1,7 @@
-<script type="text/javascript" >
-
-</script>
-
 <div data-role="page" data-theme="b" data-url="" class="ui-page ui-body-b ui-page-active"> 
 	<%= offline_bar %>
 	<div data-role="header" data-backbtn="false" class="ui-bar-b ui-header" role="banner"> 
-				<a href="<%=url_for(:action => :index)%>" data-direction="reverse" rel="external" data-theme="b" data-icon="back" class="ui-btn-left ui-btn ui-btn-icon-left ui-btn-corner-all ui-shadow ui-btn-up-b">
+				<a href="<%=url_for( :controller => :Contact, :action=>:index)%>" data-direction="reverse" rel="external" data-theme="b" data-icon="back" class="ui-btn-left ui-btn ui-btn-icon-left ui-btn-corner-all ui-shadow ui-btn-up-b">
 			<span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Back</span><span class="ui-icon ui-icon-back ui-icon-shadow"></span></span>
 		</a>
 		<h1 class="ui-title" tabindex="0" role="heading" aria-level="1">Activity Center</h1>
@@ -32,7 +28,7 @@
 						<span class="ui-btn-inner ui-btn-corner-all">
 							<span class="ui-btn-text">Clear</span>
 						</span>
-						<a type="button" data-theme="b" href="<%=url_for(:action => :show_search_contact)%>" class="ui-btn-hidden ui-link"></a>
+						<a type="button" data-theme="b" href="<%=url_for(:action => :search)%>" class="ui-btn-hidden ui-link"></a>
 					</div>
 				</div>
 			</fieldset>
@@ -43,10 +39,17 @@
 			<ul id="search-results-list" data-role="listview" data-counttheme="e" class="ui-listview" role="listbox">
 				<% @parsed_search_results.each_with_index do |result, index| %>
 					<li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
-						<%= result[1]['firstname'] %>
+						<div class="ui-btn-inner">
+							<div class="ui-btn-text">
+						    	<h3 class="ui-li-heading"><a href="" class="ui-link-inherit"></a> <%= result[1]['lastname'] %>, <%= result[1]['firstname'] %></h3>
+							</div>
+							<span class="ui-icon ui-icon-arrow-r"></span>
+						</div>
 			    </li>
 				<% end %>
 			</ul>
 		<% end %>
+		
+
 	</div>
 </div>
