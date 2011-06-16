@@ -208,8 +208,8 @@ class SettingsController < Rho::RhoController
             Settings.pin_confirmed = false
             @msg =  "Your PIN has been reset."
             
-            if (@params['origin'].nil?)
-                redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
+            if (@params['origin'].nil? || @params['origin'].blank?)
+              redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
             else
               redirect :controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
             end
