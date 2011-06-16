@@ -38,9 +38,10 @@
 											<% if System::get_property('platform') == 'APPLE' %>
 											<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" class="required_group" id="contact[mobilephone]" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>> 
 											<% else %>
-											<input type="tel" class="required_group" id="contact[mobilephone]" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>><br>
+											<input type="tel" class="required_group" id="contact[mobilephone]" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>>
 											<% end %>
-										</td>	
+										</td>
+										<%= do_not_call_button_spacing(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,"Mobile",@contact.mobilephone,@contact.object) %>	
 										<td>
 											<%= do_not_call_button(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,"Mobile",@contact.mobilephone,@contact.object) %>
 										</td>
@@ -64,6 +65,7 @@
 											<input type="tel" id="contact[telephone1]" class="required_group" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
 											<% end %>
 										</td>
+										<%= do_not_call_button_spacing(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,"Business",@contact.telephone1,@contact.object) %><%#  %>
 										<td>
 											<%= do_not_call_button(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,"Business",@contact.telephone1,@contact.object) %><%#  %>
 										</td>
@@ -93,6 +95,7 @@
 											<input type="tel" class="required_group" id="contact[telephone2]" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
 											<% end %>
 										</td>
+										<%= do_not_call_button_spacing(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,"Home",@contact.telephone2,@contact.object) %><%#  %>
 										<td>
 											<%= do_not_call_button(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,"Home",@contact.telephone2,@contact.object) %><%#  %>
 										</td>
@@ -116,6 +119,7 @@
 											<input type="tel" class="required_group" id="contact[telephone3]" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>>
 											<% end %>
 										</td>
+										<%= do_not_call_button_spacing(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone,"Alternative",@contact.telephone3,@contact.object) %><%#  %>
 										<td>
 											<%= do_not_call_button(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone,"Alternative",@contact.telephone3,@contact.object) %><%#  %>
 										</td>
