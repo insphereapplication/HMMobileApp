@@ -30,7 +30,7 @@
 								<table width="100%">
 									<tr>
 										<td colspan="2">
-											<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone) %> 
+											<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,"Mobile") %> 
 										</td>
 									</tr>
 									<tr>
@@ -53,7 +53,7 @@
 								<table width="100%">
 									<tr>
 										<td colspan="2">
-											<label for="contact[telephone1]" class="fieldLabel">Business Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone) %>
+											<label for="contact[telephone1]" class="fieldLabel">Business Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,"Business") %>
 										</td>
 									</tr>
 									<tr>
@@ -82,7 +82,7 @@
 								<table width="100%">
 									<tr>
 										<td colspan="2">
-											<label for="contact[telephone2]" class="fieldLabel">Home Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone) %>
+											<label for="contact[telephone2]" class="fieldLabel">Home Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,"Home") %>
 										</td>
 									</tr>
 									<tr>
@@ -105,7 +105,7 @@
 								<table width="100%">
 									<tr>
 										<td colspan="2">
-											<label for="contact[telephone3]" class="fieldLabel">Alternate Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone) %> 
+											<label for="contact[telephone3]" class="fieldLabel">Alternate Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone, "Alternative") %> 
 										</td>
 									</tr>
 									<tr>

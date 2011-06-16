@@ -7,13 +7,6 @@ $(document).ready(function() {
 	// 	loadMore();
 	// })
 	
-	// TODO: may want to use scroll event to load ahead
-	$(window).scroll(function(){
-	   if ($(window).scrollTop()+200 >= ($(document).height() - ($(window).height()))){
-	   	loadMore();
-	   }
-	});
-	
 	$('#submit-search-button').click(function(){
 		searchTerm = $('input#search_input').val();
 		if ($.trim(searchTerm).length > 1) {
