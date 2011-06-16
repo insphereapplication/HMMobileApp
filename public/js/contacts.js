@@ -3,9 +3,9 @@ $(document).ready(function() {
 		return validateNewContactInfo();
 	});
 	
-	// $('input#load-more-button').live('click', function(){
-	// 	loadMore();
-	// })
+	$('input#load-more-button').live('click', function(){
+		loadMore();
+	})
 	
 	$('#submit-search-button').click(function(){
 		searchTerm = $('input#search_input').val();
