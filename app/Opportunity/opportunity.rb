@@ -120,15 +120,15 @@ class Opportunity
     statusReasonWhere = ''
     case statusReasonFilter
       when 'NoContactMade'
-        statusReasonWhere = "o.statuscode = 'No Contact Made' and"
+        statusReasonWhere = "o.statuscode = 'No Contact Made'"
       when 'ContactMade'
-        statusReasonWhere = "o.statuscode = 'Contact Made' and"
+        statusReasonWhere = "o.statuscode = 'Contact Made'"
       when 'AppointmentSet'
-        statusReasonWhere = "o.statuscode = 'Appointment Set' and"
+        statusReasonWhere = "o.statuscode = 'Appointment Set'"
       when 'DealInProgress'
-        statusReasonWhere = "o.statuscode = 'Deal in Progress' and"
+        statusReasonWhere = "o.statuscode = 'Deal in Progress'"
       else
-        statusReasonWhere = "o.statuscode <> 'New Opportunity' or"
+        statusReasonWhere = "o.statuscode <> 'New Opportunity'"
     end
     
     sortByClause= ''
@@ -156,15 +156,7 @@ class Opportunity
     sql = %Q{
       select * from Opportunity o 
         where o.statecode not in ('Won', 'Lost') 
-        and (
-          #{statusReasonWhere}
-          exists (
-            select a1.object from Activity a1 where 
-            a1.parent_type='Opportunity' and 
-            a1.parent_id=o.object and 
-            (a1.statecode not in ('Open', 'Scheduled') or a1.scheduledend = '' or a1.scheduledend is null)
-          )
-        )
+        and (#{statusReasonWhere})
         and not exists (
           select a2.object from Activity a2 where
           a2.parent_type='Opportunity' and 
@@ -176,7 +168,7 @@ class Opportunity
       #{get_pagination_sql(page, page_size)}
     }
     
-    puts "#"*80 + " #{sql}"
+    puts sql
     
     find_by_sql( sql )
   end
