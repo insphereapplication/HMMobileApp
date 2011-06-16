@@ -16,10 +16,6 @@ $(document).ready(function() {
 			alert('Search must contain at least 2 characters');
 		}
 	})
-	
-  $("#contact_filter").change(function() {
-		loadPage();
-  });
 });
 
 function loadMore(){
