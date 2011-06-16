@@ -33,7 +33,7 @@ function loadMore(){
 	searchTerms = $('input#search_input').val();
 	page = parseInt($('input#load-more-button').attr('page'));
 	$("div#load-more-div").remove();
-	loadContactsAsync(filterType, page, page, searchTerms, false);
+	loadContactsAsync(filterType, page, page, searchTerms);
 }
 
 function loadPage(){
@@ -41,10 +41,10 @@ function loadPage(){
 	searchTerms = $('input#search_input').val();
 	$("div#load-more-div").remove();
 	$('.contacts-list li').remove();
-	loadContactsAsync(filterType, 0, 0, searchTerms, false);
+	loadContactsAsync(filterType, 0, 0, searchTerms);
 }
 
-function loadContactsAsync(filterType, page, startPage, searchTerms, navToBottom){
+function loadContactsAsync(filterType, page, startPage, searchTerms){
 	var pageLimit = 10;
 	$.post("/app/Contact/get_contacts_page", { filter: filterType, page: page, search_terms: searchTerms },
 		function(contacts) {	
@@ -63,14 +63,9 @@ function loadContactsAsync(filterType, page, startPage, searchTerms, navToBottom
 				    $(ids[1]).remove();
 				});
 				
-				loadContactsAsync(filterType, page + 1, startPage, searchTerms, navToBottom);
-			} else {
-				if (navToBottom){
-					document.location.href='#bottom';
-				}
-				if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
+				loadContactsAsync(filterType, page + 1, startPage, searchTerms);
+			} else if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
 					$("ul#contact-list").append(getLoadMoreButton("Load More", page));
-				}
 			}
 		}
 	);
