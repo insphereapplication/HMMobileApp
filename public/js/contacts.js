@@ -10,7 +10,23 @@ $(document).ready(function() {
 	$('#submit-search-button').click(function(){
 		loadPage();
 	})
+	
+	$('#submit-ac-search').click(function(){
+		initializeSearchAC();
+	})
 });
+
+function initializeSearchAC(){
+	firstName = $('input#search_first_name').val();
+	lastName = $('input#search_last_name').val();
+	$.post("/app/SearchContacts/search_contacts", {first_name: firstName, last_name: lastName},
+		function(result) {	
+			if (result.match(/Error/) == "Error"){
+					alert("There was a server error.");
+					return;
+			}
+	});
+}
 
 function loadMore(){
 	filterType = $('#contact_filter').val();
