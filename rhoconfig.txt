@@ -17,7 +17,7 @@ rhobundle_zip_pwd = nil
 # log level
 # 0-trace, 1-info(app level), 3-warnings, 4-errors
 # for production set to 3
-MinSeverity  = 1
+MinSeverity  = 3
 
 # enable copy log messages to standard output, useful for debugging
 LogToOutput = 1
@@ -52,10 +52,10 @@ LastVisitedPage = ''
 # syncserver = 'https://rhohub-insphere-c3d43885.heroku.com/application'
 
 # DEV RHOHUB
-syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
+#syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
 
 # MODEL ONSITE
-# syncserver = 'https://rhosync.model.insphereis.net/application'
+syncserver = 'https://rhosync.model.insphereis.net/application'
 
 # PRODUCTION ONSITE
 # syncserver = 'https://rhosync.insphereis.net/application'
@@ -80,7 +80,7 @@ full_screen = 0
 # Port of the local (embedded) HTTP server. This parameter is mainly for debug purposes.
 # If not specified, application will use dynamically selected one.
 # WARNING!!! Remove this parameter before put application to production.
-local_server_port = 8080
+#local_server_port = 8080
 
 # show status bar on windows mobile. default 1
 #wm_show_statusbar = 1
@@ -109,12 +109,12 @@ test_password = ""
 lead_cost_threshold = 100
 
 Dev
-quick_quote_url = https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
-resource_center_url=https://m.dev.insphereis.net/InsiteMobile/rc/ResourceCenterSSO.aspx
+# quick_quote_url = https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
+# resource_center_url=https://m.dev.insphereis.net/InsiteMobile/rc/ResourceCenterSSO.aspx
 
 Model
-#quick_quote_url = #https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
-#resource_center_url=https://rc.model.insphereis.net
+quick_quote_url = https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
+resource_center_url=https://rc.model.insphereis.net
 
 Production
 #quick_quote_url = #https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
