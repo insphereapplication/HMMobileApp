@@ -135,16 +135,20 @@ $('#contact_edit_page').live('pagecreate',function(event){
 	$("#contact_edit").validate({
 	  rules: {
 	    'contact[mobilephone]' : {
-		  phoneUS: true
+		  phoneUS: true,
+		  preferredMobile: true
 	    },
 		'contact[telephone1]' : {
-		  phoneUS: true
+		  phoneUS: true,
+		  preferredBusiness: true
 		},
 		'contact[telephone2]' : {
-		  phoneUS: true
+		  phoneUS: true,
+		  preferredHome: true
 		},
 		'contact[telephone3]' : {
-		  phoneUS: true
+		  phoneUS: true,
+		  preferredAlternate: true
 		},
 		'contact[emailaddress1]' : {
 		  email: true,
@@ -193,6 +197,23 @@ $('#contact_edit_page').live('pagecreate',function(event){
 		var $module = $(el).parents('div.panel');
 		return $("#contact_edit").find('.required_group:filled').length;
 		}, 'Please fill out at least one of these fields.');
+		
+	jQuery.validator.addMethod("preferredMobile", function(phone_number, element) {
+		    return !($('#contact_preferredphone').val() == "Mobile" && phone_number == '');
+		}, "Please fill out preferred number");	
+		
+	jQuery.validator.addMethod("preferredBusiness", function(phone_number, element) {
+		    return !($('#contact_preferredphone').val() == "Business" && phone_number == '');
+		}, "Please fill out preferred number");
+			
+	jQuery.validator.addMethod("preferredHome", function(phone_number, element) {
+		    return !($('#contact_preferredphone').val() == "Home" && phone_number == '');
+		}, "Please fill out preferred number");
+				
+	jQuery.validator.addMethod("preferredAlternate", function(phone_number, element) {
+		    return !($('#contact_preferredphone').val() == "Alternate" && phone_number == '');
+		}, "Please fill out preferred number");
+	
 });
 
 // Contact Add
@@ -208,16 +229,20 @@ $('#contact_new_page').live('pagecreate',function(event){
 			  maxlength: 50
 		    },
 		    'contact[mobilephone]' : {
-			  phoneUS: true
+			  phoneUS: true,
+			  preferredMobile: true
 		    },
 			'contact[telephone1]' : {
-			  phoneUS: true
+			  phoneUS: true,
+			  preferredBusiness: true
 			},
 			'contact[telephone2]' : {
-			  phoneUS: true
+			  phoneUS: true,
+			  preferredHome: true
 			},
 			'contact[telephone3]' : {
-			  phoneUS: true
+			  phoneUS: true,
+			  preferredAlternate: true
 			},
 			'contact[emailaddress1]' : {
 			  email: true,
@@ -262,6 +287,22 @@ $('#contact_new_page').live('pagecreate',function(event){
 			var $module = $(el).parents('div.panel');
 			return $("#contact_new").find('.required_group:filled').length;
 			}, 'Please fill out at least one of these fields.');
+
+		jQuery.validator.addMethod("preferredMobile", function(phone_number, element) {
+			    return !($('#contact_preferredphone').val() == "Mobile" && phone_number == '');
+			}, "Please fill out preferred number");	
+
+		jQuery.validator.addMethod("preferredBusiness", function(phone_number, element) {
+			    return !($('#contact_preferredphone').val() == "Business" && phone_number == '');
+			}, "Please fill out preferred number");
+
+		jQuery.validator.addMethod("preferredHome", function(phone_number, element) {
+			    return !($('#contact_preferredphone').val() == "Home" && phone_number == '');
+			}, "Please fill out preferred number");
+
+		jQuery.validator.addMethod("preferredAlternate", function(phone_number, element) {
+			    return !($('#contact_preferredphone').val() == "Alternate" && phone_number == '');
+			}, "Please fill out preferred number");
 });
 
 // AppDetail Add / Edit
