@@ -10,7 +10,11 @@ class SearchContacts
   # returns the results of the last search. SearchContacts only keeps one "singleton" search object in the db.
   def self.results
     search = find(:all).first
-    return search.results if search
+    return Rho::JSON.parse(search.results) if search
+  end
+  
+  def self.find_by_id(id)
+
   end
   
 end

@@ -30,7 +30,7 @@ class SearchContactsController < Rho::RhoController
     puts SearchContacts.results
     
     if @params['show_results'] == 'true' && (results = SearchContacts.results)
-      @parsed_search_results = Rho::JSON.parse(results)
+      @parsed_search_results = results
       puts "PARSED RESULTS"
       puts @parsed_search_results.inspect
     end
