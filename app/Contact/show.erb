@@ -4,6 +4,8 @@
 		<% puts @params.inspect%>
 				<% if @params['origin'] == "contact"%>
 					<a href="<%=url_for(:action => :index)%>" data-direction="reverse" rel="external" data-icon="back">Contacts</a>
+				<% elsif @params['origin'] == "SearchContacts"%>
+				<a href="<%=url_for(:action => :show_search_index, :controller => :SearchContacts)%>" data-direction="reverse" rel="external" data-icon="back">Search</a>
 				<% else %>
 					<a href="<%=url_for(:controller=>:Opportunity, :action=>:show, :id => @params['opportunity'], :query=>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Opp</a>
 				<% end %>

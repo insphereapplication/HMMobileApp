@@ -49,14 +49,19 @@
 						<div class="ui-btn-inner">
 							<div class="ui-btn-text">
 								<% if @contacts_already_on_device.include?(result[0]) %>
-								   <h3 class="ui-li-heading"><a href="<%=url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })%>" class="ui-link-inherit"> <%= result[1]['lastname'] %>, <%= result[1]['firstname'] %> ++</a></h3>
+									<% puts result[0] %>
+								   <h3 class="ui-li-heading"><a href="<%=url_for(:action => :show, :controller => :Contact, :id => result[0], :query => {:origin =>'SearchContacts'})%>" class="ui-link-inherit"> <%= result[1]['lastname'] %>, <%= result[1]['firstname'] %></a></h3>
+											</div>
+										</div>
+										<img class="search-icon" src="/public/images/mobile_phone.png">
+							    </li>
 								<% else %>
 								   <h3 class="ui-li-heading"><a href="<%=url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })%>" class="ui-link-inherit"> <%= result[1]['lastname'] %>, <%= result[1]['firstname'] %></a></h3>
+											</div>
+										</div>
+										<img class="search-icon" src="/public/images/computer_icon.png">
+							    </li>
 								<%end%>
-							</div>
-							<span class="ui-icon ui-icon-arrow-r"></span>
-						</div>
-			    </li>
 				<% end %>
 			</ul>
 		<% end %>
