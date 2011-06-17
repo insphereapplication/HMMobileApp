@@ -71,6 +71,11 @@ function loadContactsAsync(filterType, page, startPage, searchTerms, navToBottom
 				if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
 					$("ul#contact-list").append(getLoadMoreButton("Load More", page));
 				}
+				
+				if ( $.trim(contacts) == "" )
+				{
+					$("ul#contact-list").append('<span id="no-contacts-found" style="display:block; margin-left:auto; margin-right:auto;">No contacts found with current filter</span>');
+				}
 			}
 		}
 	);

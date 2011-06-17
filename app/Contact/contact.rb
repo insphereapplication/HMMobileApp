@@ -86,7 +86,7 @@ class Contact
     Contact.find_by_sql(%Q{
       select distinct c.contactid, c.* from Contact c, Opportunity o 
             where o.contact_id=c.object and 
-            o.statecode not in ('Won', 'Lost') 
+            o.statecode not in ('Lost') 
             #{get_search_sql(terms)}
       union
       select distinct c.contactid, c.* from Contact c, Policy p where c.object = p.contact_id

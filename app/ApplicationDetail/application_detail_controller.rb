@@ -98,7 +98,7 @@ class ApplicationDetailController < Rho::RhoController
       SyncEngine.dosync
       WebView.navigate(url_for :controller => :Opportunity, :action => :won, :id => opportunityid, :origin => @params['origin'], :opportunity => opportunityid)
     else
-      WebView.navigate(url_for :action => :edit, :id => @params['id'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})
+      WebView.execute_js("hideSpin();")
     end 
   end
 end

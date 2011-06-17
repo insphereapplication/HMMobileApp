@@ -49,6 +49,7 @@ class ContactController < Rho::RhoController
     }.call
     
     @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    
     render :action => :contact_page, :back => 'callback:'
   end
 
@@ -103,6 +104,14 @@ class ContactController < Rho::RhoController
     if allow_call == 'True' && company_dnc == 'False' && !phone_number.blank?
       %Q{
           <a href="#{url_for(:controller => :Contact, :action => :do_not_call_press, :id => @contact.object, :query => {:origin => @params['origin'], :phone_type => phone_type, :phone_number => phone_number, :contact => contact})}" id="#{phone_type}_button" data-role="button" data-theme="b">DNC</a>
+        }
+    end 
+  end
+  
+  def do_not_call_button_spacing(allow_call,company_dnc,phone_type,phone_number,contact)
+    if allow_call == 'True' && company_dnc == 'False' && !phone_number.blank?
+      %Q{
+          <td width="20"></td>
         }
     end 
   end
@@ -332,7 +341,7 @@ class ContactController < Rho::RhoController
       SyncEngine.dosync
       WebView.navigate(url_for :controller => :Contact, :action => :show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})
     else
-      WebView.navigate(url_for :controller => :Contact, :action => :spouse_edit, :id => @params['id'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})
+      WebView.execute_js("hideSpin();")
     end
   end
   

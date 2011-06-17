@@ -57,10 +57,9 @@
 				<div class="ui-body ui-body-d">
 					<label for="dependent[cssi_gender]" class="fieldLabel">Gender:</label>
 					<select name="dependent[cssi_gender]" data-role="none" id="dependent[cssi_gender]">
-						<option data-placeholder="true"> <%= @dependent.cssi_gender %> </option>
 						<option value=""></option>
-						<option value="Male">Male</option>
-						<option value="Female">Female</option>
+						<option value="Male" <% if @dependent.cssi_gender == "Male" %> selected="selected" <% end %>>Male</option>
+						<option value="Female" <% if @dependent.cssi_gender == "Female" %> selected="selected" <% end %>>Female</option>
 					</select>
 				</div>
 			</div>
