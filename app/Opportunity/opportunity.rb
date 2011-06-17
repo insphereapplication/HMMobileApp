@@ -55,6 +55,17 @@ class Opportunity
       new_opportunity
   end
   
+  def self.create_for_new_contact(opportunity_params, contact_id) 
+    opp = create_new(opportunity_params)  
+    opp.update_attributes( :contact_id =>  contact_id)
+    opp.update_attributes( :statecode => 'Open')
+    opp.update_attributes( :cssi_statusdetail => 'New')
+    opp.update_attributes( :statuscode => 'New Opportunity')
+    opp.update_attributes( :opportunityratingcode => 'Warm')
+    opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))   
+    opp 
+  end
+  
   def self.find_opportunity(id)
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
       @opportunity = Opportunity.find(id)
