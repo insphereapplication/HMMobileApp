@@ -112,10 +112,33 @@ function loadOpportunities(opportunityBucket, opportunity_page, jsonParams)
 			}
 			else if (opportunityBucket.next != null)
 			{
+				checkForNoOpportunities( opportunityBucket.opportunity_method );
 				loadOpportunities(opportunityBucket.next, 0, jsonParams);
+			}
+			else
+			{
+				checkForNoOpportunities( opportunityBucket.opportunity_method );
 			}
 		}
 	);
+}
+
+function checkForNoOpportunities( opportunityMethod )
+{
+	if ( 'past_due_scheduled' == opportunityMethod && 1 == $('#past-due-appointments-list li').length )
+	{
+		$('#past-due-appointments-list').append( '<span id="no-past-due-found" style="display:block; margin-left:auto; margin-right:auto;">No past due opportunities found with current filter</span>' );
+	}
+	
+	if ( 'todays_scheduled' == opportunityMethod && 1 == $('#todays-appointments-list li').length )
+	{
+		$('#todays-appointments-list').append( '<span id="no-today-found" style="display:block; margin-left:auto; margin-right:auto;">No opportunities due today found with current filter</span>' );
+	}
+
+	if ( 'future_scheduled' == opportunityMethod && 1 == $('#future-appointments-list li').length )
+	{
+		$('#future-appointments-list').append( '<span id="no-future-found" style="display:block; margin-left:auto; margin-right:auto;">No future opportunities found with current filter</span>' );
+	}
 }
 
 // function loadOpportunities(opportunityBucket, opportunity_page, filter, search){

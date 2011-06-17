@@ -1,9 +1,5 @@
 <% if @params['page']=='0'%>
-	<% if 0 == @page.count %>
-	<span id="no-follow-ups-found" style="display:block; margin-left:auto; margin-right:auto;">No scheduled opportunities found with current filter</span>
-	<% else %>
 	<li id="todays-leads-header" data-role="list-divider" role="heading" tabindex="0" class="opportunity-item ui-li ui-li-divider ui-btn ui-bar-<%= @color %> ui-btn-up-undefined"><%= @label %></li>
-	<% end %>
 <% end %>
 <% @page.each do |appointment| %>
 	<%= # Defaults
