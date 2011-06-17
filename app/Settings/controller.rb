@@ -115,7 +115,7 @@ class SettingsController < Rho::RhoController
         @msg ||= "The user name or password you entered is not valid"    
       end
       
-      goto_login(@msg)
+      WebView.navigate ( url_for :action => :login, :query => {:msg => @msg} )
     end
   end
   
