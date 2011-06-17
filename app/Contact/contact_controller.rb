@@ -224,15 +224,9 @@ class ContactController < Rho::RhoController
     @contact.update_attributes(:cssi_companydncmobilephone => "False")
     @contact.update_attributes(:cssi_companydnchomephone => "False")
     @contact.update_attributes(:cssi_companydncalternatephone => "False")
-        
-    @opp = Opportunity.create_new(@params['opportunity'])
-    @opp.update_attributes( :contact_id =>  @contact.object)
-    @opp.update_attributes( :statecode => 'Open')
-    @opp.update_attributes( :cssi_statusdetail => 'New')
-    @opp.update_attributes( :statuscode => 'New Opportunity')
-    @opp.update_attributes( :opportunityratingcode => 'Warm')
-    @opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))
-
+    
+    @opp = Opportunity.create_for_new_contact(@params['opportunity'], @contact.object)
+    
     SyncEngine.dosync
     redirect :action => :show, 
              :back => 'callback:',
@@ -343,16 +337,8 @@ class ContactController < Rho::RhoController
   
   #creates a contact on the device that already exists in CRM
   def create_AC_contact
-    contact_handle = Contact.create_new(@params['contact'])
-    
-    opp = Opportunity.create_new(@params['opportunity'])    
-    opp.update_attributes( :contact_id =>  contact_handle.object)
-    opp.update_attributes( :statecode => 'Open')
-    opp.update_attributes( :cssi_statusdetail => 'New')
-    opp.update_attributes( :statuscode => 'New Opportunity')
-    @opp.update_attributes( :opportunityratingcode => 'Warm')
-    opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))
-    
+    contact = Contact.create_new(@params['contact'])    
+    opp = Opportunity.create_for_new_contact(@params['opportunity'], contact.object)
     SyncEngine.dosync
     redirect :controller => @params['origin'],
              :action => :show_search_index, 
