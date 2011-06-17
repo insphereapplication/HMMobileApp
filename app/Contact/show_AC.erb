@@ -9,11 +9,11 @@ $('#contact_show').live('pagecreate',function(event){
 </script>
 
 <div id="ACcontact_show" data-role="page" data-theme="b" data-cache="never">
-	<form method="post" id="opp_add" action="<%= url_for(:action => :createAC, :query => {:id => "@contact_details.object", :origin => @params['origin']})%>" name="opp_add">
+	<form method="post" id="opp_add" action="<%= url_for(:action => :create_AC_contact, :query => {:origin => @params['origin']})%>" name="opp_add">
 	<%= offline_bar%>
 	<div data-role="header" data-theme="b" data-backbtn="false">
-					<a href="<%=url_for(:action => :index)%>" data-direction="reverse" rel="external" data-theme="b" data-icon="back">Back</a>
-				<h1>Contact Detail</h1>
+		<a href="<%=url_for(:action => :show_search_index, :controller => :SearchContacts)%>" data-direction="reverse" rel="external" data-theme="b" data-icon="back">Back</a>
+		<h1>Contact Detail</h1>
 	</div>
 	<div style="text-align:center" class="ui-bar ui-bar-e"> 
 		Activity Center Contact
@@ -23,7 +23,7 @@ $('#contact_show').live('pagecreate',function(event){
 			
 			<%puts  @contact_details.each.inspect %>
 			<% @contact_details.each do |field, value| %>
-				<input type="hidden" name="<%= field %>" value="<%= value %>" />
+				<input type="hidden" name="contact[<%= field %>]" value="<%= value %>" />
 			<% end %>
 			<li>
 					<h3><%= @contact_details['firstname'] %> <%= @contact_details['lastname'] %></h3>

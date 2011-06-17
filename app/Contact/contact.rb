@@ -64,23 +64,28 @@ class Contact
   end
   
   def self.create_new(params)
-      new_contact = Contact.create(params)
-      new_contact.update_attributes( :temp_id => new_contact.object )
-      new_contact
+    new_contact = Contact.create(params)
+    new_contact.update_attributes( :temp_id => new_contact.object )
+    new_contact
   end
   
   def self.find_contact(id)
-    
-    if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
-      @contact = Contact.find(id)
-    else
-      id.gsub!(/[{}]/,"")
-      @contact = Contact.find_by_sql(%Q{
-          select c.* from Contact c where temp_id='#{id}'
-        }).first
-      @contact
-      end
+    id.gsub!(/[{}]/,"")
+    @contact = Contact.find_by_sql(%Q{
+        select c.* from Contact c where temp_id='#{id}'
+      }).first
+    @contact
   end
+  
+  #given an array of contact ids, returns the IDs that are currently on the device
+  def self.find_contacts_on_device(contact_ids=[])    
+    contacts_on_device = []
+    contacts_on_device = Contact.find_by_sql(%Q{
+        select distinct c.contactid from Contact c 
+        where c.contactid in ('#{contact_ids.join("', '")}')
+      }) unless contact_ids.empty?
+    contacts_on_device   
+  end  
   
   def self.all_open(page=nil, terms=nil, page_size=DEFAULT_PAGE_SIZE)  
     Contact.find_by_sql(%Q{

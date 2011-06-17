@@ -22,30 +22,43 @@ class SearchContactsController < Rho::RhoController
       WebView.navigate(url_for(:action => :search, :controller => :SearchContacts, :query => {:show_results => 'true'}))
     end
   end   
-  
-  def show_AC
-    render :action => :show_AC, :controller => :Contact, :layout => 'layout_jquerymobile'
-  end
-  
+    
+  # this method is called when you navigate to the search page
   def search
     Settings.record_activity    
+    puts "+"*80 << "Search!!!"    
     if @params['show_results'] == 'true' && (results = SearchContacts.results)
       @last_search_terms = SearchContacts.last_search_terms
-      @parsed_search_results = results
+      @parsed_search_results = flag_contacts_on_device(results)
     end
     render :action => :search, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
-  def show_search_contact
-    contact = SearchContacts.find_by_id(@params['id'])
-    puts contact
-    render :action => :show_AC, :back => 'callback:', :layout => 'layout_jquerymobile'
-  end
-  
-  def show_search_index
-    @last_search_terms = SearchContacts.last_search_terms
-    @parsed_search_results = SearchContacts.results
+  # this method is called when control returns to this page from the show_AC.erb page
+  def show_search_index    
     WebView.navigate(url_for(:action => :search, :controller => :SearchContacts, :query => {:show_results => 'true'}))
   end
+  
+  def flag_contacts_on_device(contacts_hash=nil)
+    puts "#"*50 << "Flagging contacts on device"
+    
+    searched_contact_ids = []
+    contacts_hash.each do |contact|
+      searched_contact_ids << contact[0]
+    end
+    
+    puts "#"*50 << "Searching for contacts on device"
+    puts searched_contact_ids
+    contacts_already_on = Contact.find_contacts_on_device(searched_contact_ids)
+    puts contacts_already_on
+    contacts_already_on.each do |contact_id|
+      puts contact_id.inspect
+    end
+    puts "#"*30 << "Contacts on device:"
+    puts contacts_already_on.inspect
+    
+    contacts_hash
+  end    
+    
   
 end

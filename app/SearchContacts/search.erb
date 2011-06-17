@@ -44,7 +44,7 @@
 	<div class="ui-content search-results-list" data-role="none" role="main">
 		<% if @parsed_search_results %>
 			<ul id="search-results-list" data-role="listview" data-counttheme="e" class="ui-listview" role="listbox">
-				<% @parsed_search_results.each_with_index do |result, index| %>
+				<% @parsed_search_results.each do |result| %>
 					<li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
 						<div class="ui-btn-inner">
 							<div class="ui-btn-text">

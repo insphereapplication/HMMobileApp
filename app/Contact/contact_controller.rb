@@ -225,12 +225,12 @@ class ContactController < Rho::RhoController
     @contact.update_attributes(:cssi_companydnchomephone => "False")
     @contact.update_attributes(:cssi_companydncalternatephone => "False")
         
-    @opp = Opportunity.create_new(@params['opportunity'])  
-    Settings.record_activity
+    @opp = Opportunity.create_new(@params['opportunity'])
     @opp.update_attributes( :contact_id =>  @contact.object)
     @opp.update_attributes( :statecode => 'Open')
     @opp.update_attributes( :cssi_statusdetail => 'New')
     @opp.update_attributes( :statuscode => 'New Opportunity')
+    @opp.update_attributes( :opportunityratingcode => 'Warm')
     @opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))
 
     SyncEngine.dosync
@@ -336,11 +336,27 @@ class ContactController < Rho::RhoController
     end
   end
   
-  def show_AC_contact
-    puts "#"*40 << "AC Contacts search! " << @params['id']
+  def show_AC_contact    
     @contact_details = SearchContacts.find_by_id(@params['id'])
-    puts @contact_details.inspect
     render :action => :show_AC, :back => 'callback:', :id => @params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+  end
+  
+  #creates a contact on the device that already exists in CRM
+  def create_AC_contact
+    contact_handle = Contact.create_new(@params['contact'])
+    
+    opp = Opportunity.create_new(@params['opportunity'])    
+    opp.update_attributes( :contact_id =>  contact_handle.object)
+    opp.update_attributes( :statecode => 'Open')
+    opp.update_attributes( :cssi_statusdetail => 'New')
+    opp.update_attributes( :statuscode => 'New Opportunity')
+    @opp.update_attributes( :opportunityratingcode => 'Warm')
+    opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))
+    
+    SyncEngine.dosync
+    redirect :controller => @params['origin'],
+             :action => :show_search_index, 
+             :back => 'callback:'
   end
   
 end
