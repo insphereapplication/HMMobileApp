@@ -9,8 +9,8 @@ class SearchContacts
       
   # returns the results of the last search. SearchContacts only keeps one "singleton" search object in the db.
   def self.results
-    search = find(:all).first
-    return Rho::JSON.parse(search.results) if search
+    search = find(:all).sort{ |a, b| a.object <=> b.object }.last
+    return Rho::JSON.parse(search.results) unless search.blank?
   end
   
   #returns the hash of contact details that the input id points to
@@ -19,8 +19,13 @@ class SearchContacts
   end
   
   def self.last_search_terms
-    search = find(1).first
-    return Rho::JSON.parse(search.terms) if search
+    search = find(:all).sort{ |a, b| a.object <=> b.object }.last
+    return Rho::JSON.parse(search.terms) unless search.blank?
+  end
+  
+  def self.clear_all_search_results
+    puts "Deleting previous search results"
+    SearchContacts.delete_all
   end
   
 end
