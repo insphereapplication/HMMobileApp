@@ -127,27 +127,10 @@ class OpportunityController < Rho::RhoController
     created      = !@params['created'].nil? ? @params['created'] : 'All';
     
     opportunities = Opportunity.by_last_activities(@params['page'].to_i, statusReason, sortBy, created)
+    
     get_activities(opportunities)
   end
-
-  # def todays_follow_ups
-  #   date_proc = lambda {|phone_call| "Today #{phone_call.scheduledend.hour_string }" if phone_call.scheduledend }
-  #   phone_calls = Activity.todays_follow_ups(@params['page'].to_i)
-  #   get_follow_ups('orange', 'Today', date_proc, phone_calls)
-  # end
-
-  # def future_follow_ups
-  #     date_proc = lambda {|phone_call| "Last Act: -#{DateUtil.days_ago(phone_call.opportunity.cssi_lastactivitydate)}d" unless phone_call.opportunity.cssi_lastactivitydate.blank?}
-  #     phone_calls = Activity.future_follow_ups(@params['page'].to_i)
-  #     get_follow_ups('green', 'Future', date_proc, phone_calls)
-  #   end
-  # 
-  #   def past_due_follow_ups
-  #     date_proc = lambda {|phone_call| "Due: #{DateUtil.days_from_now(phone_call.scheduledend)}d" }
-  #     phone_calls = Activity.past_due_follow_ups(@params['page'].to_i)
-  #     get_follow_ups('red', 'Past Due', date_proc, phone_calls)
-  #   end
-
+  
   def get_appointments(color, text, appointments)
     $appointments_nav_context += appointments.map{|appointment| appointment.opportunity.opportunityid }
     @color = color

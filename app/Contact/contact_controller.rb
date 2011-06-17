@@ -49,6 +49,7 @@ class ContactController < Rho::RhoController
     }.call
     
     @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    
     render :action => :contact_page, :back => 'callback:'
   end
 
