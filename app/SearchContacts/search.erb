@@ -10,17 +10,11 @@
 	<form name="contact_filter_form" id="contact_filter_form">	
 		<div id="filter" data-role="none">
 			<br/>
-			<% if @last_search_terms %>
 			  <label for="search_first_name" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;First Name: </label>
-			  <input type="text" id="search_first_name" name="search_first_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%=@last_search_terms['first_name'].to_s %>"></input>
+			  <input type="text" id="search_first_name" name="search_first_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%= @last_search.nil? ? "" : @last_search.search_terms['first_name'].to_s %>"></input>
 			  <label for="search_last_name" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Last Name: </label>
-			  <input type="text" id="search_last_name" name="search_last_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%=@last_search_terms['last_name'].to_s %>" ></input>
-			<% else %>
-			  <label for="search_first_name" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;First Name: </label>
-			  <input type="text" id="search_first_name" name="search_first_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all"></input>							  		
-			  <label for="search_last_name" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Last Name: </label>
-			  <input type="text" id="search_last_name" name="search_last_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all"></input>							  		
-			<% end %>
+			  <input type="text" id="search_last_name" name="search_last_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%= @last_search.nil? ? "" : @last_search.search_terms['last_name'].to_s %>" ></input>
+
 			<fieldset class="ui-grid-custom ui-grid-a">
 				<div class="ui-block-a">
 					<div data-theme="b" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">
@@ -42,14 +36,13 @@
 		</div>
 	</form>	  	
 	<div class="ui-content search-results-list" data-role="none" role="main">
-		<% if @search_results %>
+		<% if @last_search %>
 			<ul id="search-results-list" data-role="listview" data-counttheme="e" class="ui-listview" role="listbox">
-				<% @search_results.each do |result| %>
+				<% @last_search.search_results.each do |result| %>
 					<li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
 						<div class="ui-btn-inner">
 							<div class="ui-btn-text">
 								<% if @contacts_already_on_device.include?(result[0]) %>
-									<% puts result[0] %>
 								   <h3 class="ui-li-heading"><a href="<%=url_for(:action => :show, :controller => :Contact, :id => result[0], :query => {:origin =>'SearchContacts'})%>" class="ui-link-inherit"> <%= result[1]['lastname'] %>, <%= result[1]['firstname'] %></a></h3>
 											</div>
 										</div>
