@@ -340,9 +340,11 @@ class ContactController < Rho::RhoController
     contact = Contact.create_new(@params['contact'])    
     opp = Opportunity.create_for_new_contact(@params['opportunity'], contact.object)
     SyncEngine.dosync
-    redirect :controller => @params['origin'],
-             :action => :show_search_index, 
-             :back => 'callback:'
+    redirect :controller => :Contact,
+             :action => :show, 
+             :id => contact.object,
+             :query => { :origin => @params['origin'], :back => 'callback:'}
+             
   end
   
 end
