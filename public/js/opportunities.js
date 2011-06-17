@@ -141,22 +141,6 @@ function checkForNoOpportunities( opportunityMethod )
 	}
 }
 
-// function loadOpportunities(opportunityBucket, opportunity_page, filter, search){
-// 	$.post('/app/Opportunity/' + opportunityBucket.opportunity_method, { page: opportunity_page, filter: filter, search: search },
-// 		function(opportunities) {				
-// 			if (opportunities && $.trim(opportunities) != "")
-// 			{
-// 				$(opportunityBucket.list_selector).append(opportunities);
-// 				loadOpportunities(opportunityBucket, opportunity_page + 1, filter, search);
-// 			}
-// 			else if (opportunityBucket.next != null)
-// 			{
-// 				loadOpportunities(opportunityBucket.next, 0, filter, search);
-// 			}
-// 		}
-// 	);
-// }
-
 // link the buckets. 
 function getLinkedBucketList(bucketArray){
 	for(var i=0; i<bucketArray.length; i++){

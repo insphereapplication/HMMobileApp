@@ -158,21 +158,23 @@ class Activity
 
 # class Appointment < Activity
   
-  def self.past_due_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE, filter, search)
+  def self.appointment_type_where_clause(filter)
     case filter
       when 'All'
-        type_where_clause = "where (a.type='Appointment' or a.type='PhoneCall')"
+        "where (a.type='Appointment' or a.type='PhoneCall')"
       when 'ScheduledAppointments'
-        type_where_clause = "where a.type='Appointment'"
+        "where a.type='Appointment'"
       when 'ScheduledCallbacks'
-        type_where_clause = "where a.type='PhoneCall'"
+        "where a.type='PhoneCall'"
       else
-        type_where_clause = ''
+        ''
     end
-      
+  end
+  
+  def self.appointment_like_clause(search)
     search_terms = search.split
+    like_clause  = ''
     
-    like_clause = ''
     if search_terms.count > 0
       like_clause << ' and ('
       search_terms.each do |search_term|
@@ -181,11 +183,30 @@ class Activity
       like_clause.chomp!(" or ")
       like_clause << ')'
     end
-
+    
+    like_clause
+  end
+  
+  def self.appointment_time_compare(scheduled_time)
+    case scheduled_time
+      when 'past_due'
+        '<'
+      when 'future'
+        '>'
+      else
+        '='
+    end
+  end
+  
+  def self.appointment_list(page=nil, page_size=DEFAULT_PAGE_SIZE, filter, search, scheduled_time)
+    type_where_clause = appointment_type_where_clause(filter)  
+    like_clause       = appointment_like_clause(search)
+    time_compare      = appointment_time_compare(scheduled_time)
+    
     sql = %Q{
         #{SELECT_SCHEDULED_NO_WHERE_SQL} #{type_where_clause} and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-        #{SCHEDULED_TIME_SQL} < #{NOW_SQL}and
+        #{SCHEDULED_TIME_SQL} #{time_compare} #{NOW_SQL}and
         #{SCHEDULED_OPEN_SQL}
         #{like_clause}
         #{SCHEDULED_ORDERBY_SQL}
@@ -195,27 +216,48 @@ class Activity
     find_by_sql(sql)
   end
   
-  def self.future_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE)    
-    find_by_sql(%Q{
-        #{SELECT_SCHEDULED_SQL} and
-        #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-        #{SCHEDULED_TIME_SQL} > #{NOW_SQL} and 
-        #{SCHEDULED_OPEN_SQL} 
-        #{SCHEDULED_ORDERBY_SQL}
-        #{get_pagination_sql(page, page_size)}
-      })
-  end
-  
-  def self.todays_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE)
-    find_by_sql(%Q{
-        #{SELECT_SCHEDULED_SQL} and
-        #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-        #{SCHEDULED_TIME_SQL} = #{NOW_SQL}and 
-        #{SCHEDULED_OPEN_SQL}
-        #{SCHEDULED_ORDERBY_SQL}
-        #{get_pagination_sql(page, page_size)}
-      })
-  end
+  # def self.past_due_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE, filter, search)
+  #     type_where_clause = appointment_type_where_clause(filter)  
+  #     like_clause = appointment_like_clause(search)
+  #     
+  #     sql = %Q{
+  #         #{SELECT_SCHEDULED_NO_WHERE_SQL} #{type_where_clause} and
+  #         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
+  #         #{SCHEDULED_TIME_SQL} < #{NOW_SQL}and
+  #         #{SCHEDULED_OPEN_SQL}
+  #         #{like_clause}
+  #         #{SCHEDULED_ORDERBY_SQL}
+  #         #{get_pagination_sql(page, page_size)}
+  #       }
+  #       
+  #     find_by_sql(sql)
+  #   end
+  #   
+  #   def self.future_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE, filter, search)
+  #     type_where_clause = appointment_type_where_clause(filter)  
+  #     like_clause = appointment_like_clause(search)
+  #         
+  #     find_by_sql(%Q{
+  #         #{SELECT_SCHEDULED_SQL} #{type_where_clause} and
+  #         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
+  #         #{SCHEDULED_TIME_SQL} > #{NOW_SQL} and 
+  #         #{SCHEDULED_OPEN_SQL} 
+  #         #{like_clause}
+  #         #{SCHEDULED_ORDERBY_SQL}
+  #         #{get_pagination_sql(page, page_size)}
+  #       })
+  #   end
+  #   
+  #   def self.todays_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE, filter,search)
+  #     find_by_sql(%Q{
+  #         #{SELECT_SCHEDULED_SQL} and
+  #         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
+  #         #{SCHEDULED_TIME_SQL} = #{NOW_SQL}and 
+  #         #{SCHEDULED_OPEN_SQL}
+  #         #{SCHEDULED_ORDERBY_SQL}
+  #         #{get_pagination_sql(page, page_size)}
+  #       })
+  #   end
   
   def complete
     update_attributes({

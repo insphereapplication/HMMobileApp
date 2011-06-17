@@ -144,21 +144,21 @@ class OpportunityController < Rho::RhoController
     filter = !@params['filter'].nil? ? @params['filter'] : "All"
     search = !@params['search'].nil? ? @params['search'] : ""
     
-    get_appointments('green', 'Future', Activity.future_scheduled(@params['page'].to_i))
+    get_appointments('green', 'Future', Activity.appointment_list(@params['page'].to_i, filter, search, 'future'))
   end
 
   def todays_scheduled
     filter = !@params['filter'].nil? ? @params['filter'] : "All"
     search = !@params['search'].nil? ? @params['search'] : ""
         
-    get_appointments('orange', 'Today', Activity.todays_scheduled(@params['page'].to_i))
+    get_appointments('orange', 'Today', Activity.appointment_list(@params['page'].to_i, filter, search, 'today'))
   end
 
   def past_due_scheduled
     filter = !@params['filter'].nil? ? @params['filter'] : "All"
     search = !@params['search'].nil? ? @params['search'] : ""
     
-    get_appointments('red', 'Past Due', Activity.past_due_scheduled(@params['page'].to_i, filter, search))
+    get_appointments('red', 'Past Due', Activity.appointment_list(@params['page'].to_i, filter, search, 'past_due'))
   end
   
   

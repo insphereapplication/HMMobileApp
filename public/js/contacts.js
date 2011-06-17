@@ -64,10 +64,14 @@ function loadContactsAsync(filterType, page, startPage, searchTerms, navToBottom
 				});
 				
 				loadContactsAsync(filterType, page + 1, startPage, searchTerms, navToBottom);
-			} else {
-				if (navToBottom){
+			} 
+			else 
+			{
+				if (navToBottom)
+				{
 					document.location.href='#bottom';
 				}
+				
 				if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
 					$("ul#contact-list").append(getLoadMoreButton("Load More", page));
 				}
