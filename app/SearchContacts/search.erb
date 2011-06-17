@@ -42,13 +42,17 @@
 		</div>
 	</form>	  	
 	<div class="ui-content search-results-list" data-role="none" role="main">
-		<% if @parsed_search_results %>
+		<% if @search_results %>
 			<ul id="search-results-list" data-role="listview" data-counttheme="e" class="ui-listview" role="listbox">
-				<% @parsed_search_results.each do |result| %>
+				<% @search_results.each do |result| %>
 					<li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
 						<div class="ui-btn-inner">
 							<div class="ui-btn-text">
-						    	<h3 class="ui-li-heading"><a href="<%=url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })%>" class="ui-link-inherit"></a> <%= result[1]['lastname'] %>, <%= result[1]['firstname'] %></h3>
+								<% if @contacts_already_on_device.include?(result[0]) %>
+								   <h3 class="ui-li-heading"><a href="<%=url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })%>" class="ui-link-inherit"> <%= result[1]['lastname'] %>, <%= result[1]['firstname'] %> ++</a></h3>
+								<% else %>
+								   <h3 class="ui-li-heading"><a href="<%=url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })%>" class="ui-link-inherit"> <%= result[1]['lastname'] %>, <%= result[1]['firstname'] %></a></h3>
+								<%end%>
 							</div>
 							<span class="ui-icon ui-icon-arrow-r"></span>
 						</div>
