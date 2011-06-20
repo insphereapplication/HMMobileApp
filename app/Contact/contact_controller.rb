@@ -49,6 +49,7 @@ class ContactController < Rho::RhoController
     }.call
     
     @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
+    
     render :action => :contact_page, :back => 'callback:'
   end
 
@@ -232,15 +233,9 @@ class ContactController < Rho::RhoController
     @contact.update_attributes(:cssi_companydncmobilephone => "False")
     @contact.update_attributes(:cssi_companydnchomephone => "False")
     @contact.update_attributes(:cssi_companydncalternatephone => "False")
-        
-    @opp = Opportunity.create_new(@params['opportunity'])  
-    Settings.record_activity
-    @opp.update_attributes( :contact_id =>  @contact.object)
-    @opp.update_attributes( :statecode => 'Open')
-    @opp.update_attributes( :cssi_statusdetail => 'New')
-    @opp.update_attributes( :statuscode => 'New Opportunity')
-    @opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))
-
+    
+    @opp = Opportunity.create_for_new_contact(@params['opportunity'], @contact.object)
+    
     SyncEngine.dosync
     redirect :action => :show, 
              :back => 'callback:',
@@ -340,8 +335,25 @@ class ContactController < Rho::RhoController
       SyncEngine.dosync
       WebView.navigate(url_for :controller => :Contact, :action => :show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})
     else
-      WebView.navigate(url_for :controller => :Contact, :action => :spouse_edit, :id => @params['id'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})
+      WebView.execute_js("hideSpin();")
     end
+  end
+  
+  def show_AC_contact    
+    @contact_details = SearchContacts.find_by_id(@params['id'])
+    render :action => :show_AC, :back => 'callback:', :id => @params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+  end
+  
+  #creates a contact on the device that already exists in CRM
+  def create_AC_contact
+    contact = Contact.create_new(@params['contact'])    
+    opp = Opportunity.create_for_new_contact(@params['opportunity'], contact.object)
+    SyncEngine.dosync
+    redirect :controller => :Contact,
+             :action => :show, 
+             :id => contact.object,
+             :query => { :origin => @params['origin'], :back => 'callback:'}
+             
   end
   
 end

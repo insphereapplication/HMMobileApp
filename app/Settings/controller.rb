@@ -115,7 +115,7 @@ class SettingsController < Rho::RhoController
         @msg ||= "The user name or password you entered is not valid"    
       end
       
-      goto_login(@msg)
+      WebView.navigate ( url_for :action => :login, :query => {:msg => @msg} )
     end
   end
   
@@ -643,20 +643,22 @@ class SettingsController < Rho::RhoController
   def needs_upgrade?(min_version, current_version) # returns true if current_version is less than min_version
     # comparison is lexicographical, as in it reads from left to right and only proceeds to the 
     # next sub-version if a given sub-version in min_version and current_version is equal
-    min_version_split = min_version.split(".")
-    current_version_split = current_version.split(".")
+    unless min_version.nil?
+      min_version_split = min_version.split(".")
+      current_version_split = current_version.split(".")
     
-    puts "****Version check: min version = #{min_version_split}, current version = #{current_version_split}****"
+      puts "****Version check: min version = #{min_version_split}, current version = #{current_version_split}****"
     
-    # compare sub-versions from left to right
-    # if current_version has fewer version numbers than min_version, assume '0' for missing version numbers to the right 
-    (0...min_version_split.count).each do |i|
-      if min_version_split[i] > (current_version_split[i] || '0')
-        # current_version must be older, no need to continue checking
-        return true
-      elsif min_version_split[i] < (current_version_split[i] || '0')
-        # current_version must be newer, no need to continue checking
-        return false
+      # compare sub-versions from left to right
+      # if current_version has fewer version numbers than min_version, assume '0' for missing version numbers to the right 
+      (0...min_version_split.count).each do |i|
+        if min_version_split[i] > (current_version_split[i] || '0')
+          # current_version must be older, no need to continue checking
+          return true
+        elsif min_version_split[i] < (current_version_split[i] || '0')
+          # current_version must be newer, no need to continue checking
+          return false
+        end
       end
     end
     
@@ -681,12 +683,13 @@ class SettingsController < Rho::RhoController
   end
 
   def check_for_upgrade
-    latest_version = AppInfo.instance[0].latest_version
-    min_required_version = AppInfo.instance[0].min_required_version
+    latest_version = AppInfo.instance.latest_version
+    min_required_version = AppInfo.instance.min_required_version
     app_version = Rho::RhoConfig.app_version
     
     puts "*** Client should be running at least version #{min_required_version} ***"
     puts "*** Client is running #{app_version} ***"
+    puts "*** Latest version is #{latest_version.inspect} ***"
 
     puts '*** Version check -- AppInfo: ' + min_required_version + ' Curr ' + app_version + '***'
       
@@ -700,21 +703,21 @@ class SettingsController < Rho::RhoController
         :message => "Please upgrade to version #{min_required_version}",
         :title => 'Update Required!',
         :buttons => ["OK"],
-        :callback => url_for( :action => :on_dismiss_popup )
+        :callback => url_for( :action => :on_dismiss_popup, :query => {:upgrade_type => 'force'} )
       } )
       
       # take the user back to the login screen, don't let them skip it in the future
       # the roundabout way of preventing the skip is to say that the initial sync has not yet occurred
       Settings.initial_sync_complete = false
       goto_login_override_auto
-    elsif needs_upgrade?( latest_version, app_version ) && $prompted_for_upgrade == false
+    elsif !latest_version.nil? && needs_upgrade?( latest_version, app_version ) && $prompted_for_upgrade == false
       $prompted_for_upgrade = true
       Alert.show_popup(
       {
         :message => "A new version (#{latest_version}) is available. Would you like to upgrade now?",
         :title => 'Update Available!',
         :buttons => ["Yes", "No"],
-        :callback => url_for( :action => :on_dismiss_popup )
+        :callback => url_for( :action => :on_dismiss_popup, :query => {:upgrade_type => 'soft'} )
       } )
     else
       puts "*** Client does not need to upgrade *** "
@@ -725,15 +728,17 @@ class SettingsController < Rho::RhoController
     id = @params['button_id']
     title = @params['button_title']
     index = @params['button_index']
+    upgrade_type = @params['upgrade_type']
     
     platform = System.get_property('platform')
     
+    # upgrade_type options are currently 'force' and 'soft'; code below will have to change if we add other options
     if platform == 'APPLE'
-      upgrade_url = AppInfo.instance[0].apple_upgrade_url
+      upgrade_url = @params['upgrade_type'] == 'force' ? AppInfo.instance.apple_upgrade_url : AppInfo.instance.apple_soft_upgrade_url
     elsif platform == 'ANDROID'
-      upgrade_url = AppInfo.instance[0].android_upgrade_url
+      upgrade_url = @params['upgrade_type'] == 'force' ? AppInfo.instance.android_upgrade_url : AppInfo.instance.android_soft_upgrade_url
     end
-        
+    
     if ( id == 'OK' || id == 'Yes' ) # OK for force upgrade, Yes for optional upgrade
       System.open_url( upgrade_url )
     end

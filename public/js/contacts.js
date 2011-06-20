@@ -1,8 +1,4 @@
 $(document).ready(function() {
-	$('.validateContactOpp').click(function() { 
-		return validateNewContactInfo();
-	});
-	
 	$('input#load-more-button').live('click', function(){
 		loadMore();
 	})
@@ -19,6 +15,7 @@ $(document).ready(function() {
 function initializeSearchAC(){
 	firstName = $('input#search_first_name').val();
 	lastName = $('input#search_last_name').val();
+	// The callback function is empty except for error handling -- Rhosync's search method is asynchronous and will trigger a separate redirect 
 	$.post("/app/SearchContacts/search_contacts", {first_name: firstName, last_name: lastName},
 		function(result) {	
 			if (result.match(/Error/) == "Error"){
@@ -79,33 +76,4 @@ function getLoadMoreButton(text, page){
 		</span>																																																						\
 		<input id="load-more-button" class="standardButton ui-btn-hidden" page="' + page + '" data-theme="b"/>						\
 	</div>'
-}
-
-function validateNewContactInfo(){
-	
-	if ( document.getElementById('contact_firstname').value.length==0 || document.getElementById('contact_firstname').value==null ) {
-      	alert('Please enter a first name');
-		return false;
-    }
-	if ( document.getElementById('contact_lastname').value.length==0 || document.getElementById('contact_lastname').value==null ) {
-      	alert('Please enter a last name');
-		return false;
-    }
-	if (		
-		( document.getElementById('contact_emailaddress1').value.length==0 || document.getElementById('contact_emailaddress1').value==null )
-		&&
-		(document.getElementById('contact_mobilephone').value.length==0 || document.getElementById('contact_mobilephone').value==null )
-		&&
-		(document.getElementById('contact_telephone1').value.length==0 || document.getElementById('contact_telephone1').value==null )
-		&&
-		(document.getElementById('contact_telephone2').value.length==0 || document.getElementById('contact_telephone2').value==null )
-		&&
-		(document.getElementById('contact_telephone3').value.length==0 || document.getElementById('contact_telephone3').value==null )
-	){
-		// no phone numbers and no email address
-		alert('Please enter an email address or phone number');
-		return false;
-	}
-    
-	return true;
 }

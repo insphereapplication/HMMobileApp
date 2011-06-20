@@ -1,17 +1,20 @@
 class AppInfo
-  include Rhom::FixedSchema
+  include Rhom::PropertyBag
   
   enable :sync
   set :sync_priority, 1
   
-  set :schema_version, '1.0'
-  
   property :min_required_version, :string
   property :latest_version, :string
+  
+  # Force upgrade URLs, named to maintain backward compatability with older clients
   property :apple_upgrade_url, :string
   property :android_upgrade_url, :string
   
+  property :apple_soft_upgrade_url, :string
+  property :android_soft_upgrade_url, :string
+  
   def self.instance
-    AppInfo.find_by_sql("select * from AppInfo limit 1")
+    AppInfo.find(:all).first
   end
 end

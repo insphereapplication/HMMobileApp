@@ -112,27 +112,34 @@ function loadOpportunities(opportunityBucket, opportunity_page, jsonParams)
 			}
 			else if (opportunityBucket.next != null)
 			{
+				checkForNoOpportunities( opportunityBucket.opportunity_method );
 				loadOpportunities(opportunityBucket.next, 0, jsonParams);
+			}
+			else
+			{
+				checkForNoOpportunities( opportunityBucket.opportunity_method );
 			}
 		}
 	);
 }
 
-// function loadOpportunities(opportunityBucket, opportunity_page, filter, search){
-// 	$.post('/app/Opportunity/' + opportunityBucket.opportunity_method, { page: opportunity_page, filter: filter, search: search },
-// 		function(opportunities) {				
-// 			if (opportunities && $.trim(opportunities) != "")
-// 			{
-// 				$(opportunityBucket.list_selector).append(opportunities);
-// 				loadOpportunities(opportunityBucket, opportunity_page + 1, filter, search);
-// 			}
-// 			else if (opportunityBucket.next != null)
-// 			{
-// 				loadOpportunities(opportunityBucket.next, 0, filter, search);
-// 			}
-// 		}
-// 	);
-// }
+function checkForNoOpportunities( opportunityMethod )
+{
+	if ( 'past_due_scheduled' == opportunityMethod && 1 == $('#past-due-appointments-list li').length )
+	{
+		$('#past-due-appointments-list').append( '<span id="no-past-due-found" style="display:block; margin-left:auto; margin-right:auto; text-align: center;">No past due opportunities found with current filter</span>' );
+	}
+	
+	if ( 'todays_scheduled' == opportunityMethod && 1 == $('#todays-appointments-list li').length )
+	{
+		$('#todays-appointments-list').append( '<span id="no-today-found" style="display:block; margin-left:auto; margin-right:auto; text-align: center;">No opportunities due today found with current filter</span>' );
+	}
+
+	if ( 'future_scheduled' == opportunityMethod && 1 == $('#future-appointments-list li').length )
+	{
+		$('#future-appointments-list').append( '<span id="no-future-found" style="display:block; margin-left:auto; margin-right:auto; text-align: center;">No future opportunities found with current filter</span>' );
+	}
+}
 
 // link the buckets. 
 function getLinkedBucketList(bucketArray){
