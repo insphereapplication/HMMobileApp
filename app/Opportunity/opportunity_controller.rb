@@ -479,7 +479,6 @@ class OpportunityController < Rho::RhoController
       WebView.execute_js('setFieldValue("'+datetime_vars[:field_key]+'","'+formatted_result+'");')
       $choosed = {} #Need to clear these out so that the fields don't populate with values previously selected.
       $saved = {}
-      render :back => 'callback:'
     end
   end
   
