@@ -88,7 +88,7 @@ class Activity
   end
   
   def self.find_activity(id)
-    
+    #CR: Pull pattern strings into a constant
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
       @activity = Activity.find(id)
     else
@@ -99,11 +99,6 @@ class Activity
       @activity
       end
   end
-  
-  
-# end
-
-# class PhoneCall < Activity
   
   def self.todays_follow_ups(page=nil, page_size=DEFAULT_PAGE_SIZE) 
     find_by_sql(%Q{
@@ -154,10 +149,7 @@ class Activity
       })
     end
   end
-# end
 
-# class Appointment < Activity
-  
   def self.appointment_type_where_clause(filter)
     case filter
       when 'All'
@@ -216,49 +208,6 @@ class Activity
     find_by_sql(sql)
   end
   
-  # def self.past_due_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE, filter, search)
-  #     type_where_clause = appointment_type_where_clause(filter)  
-  #     like_clause = appointment_like_clause(search)
-  #     
-  #     sql = %Q{
-  #         #{SELECT_SCHEDULED_NO_WHERE_SQL} #{type_where_clause} and
-  #         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-  #         #{SCHEDULED_TIME_SQL} < #{NOW_SQL}and
-  #         #{SCHEDULED_OPEN_SQL}
-  #         #{like_clause}
-  #         #{SCHEDULED_ORDERBY_SQL}
-  #         #{get_pagination_sql(page, page_size)}
-  #       }
-  #       
-  #     find_by_sql(sql)
-  #   end
-  #   
-  #   def self.future_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE, filter, search)
-  #     type_where_clause = appointment_type_where_clause(filter)  
-  #     like_clause = appointment_like_clause(search)
-  #         
-  #     find_by_sql(%Q{
-  #         #{SELECT_SCHEDULED_SQL} #{type_where_clause} and
-  #         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-  #         #{SCHEDULED_TIME_SQL} > #{NOW_SQL} and 
-  #         #{SCHEDULED_OPEN_SQL} 
-  #         #{like_clause}
-  #         #{SCHEDULED_ORDERBY_SQL}
-  #         #{get_pagination_sql(page, page_size)}
-  #       })
-  #   end
-  #   
-  #   def self.todays_scheduled(page=nil, page_size=DEFAULT_PAGE_SIZE, filter,search)
-  #     find_by_sql(%Q{
-  #         #{SELECT_SCHEDULED_SQL} and
-  #         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-  #         #{SCHEDULED_TIME_SQL} = #{NOW_SQL}and 
-  #         #{SCHEDULED_OPEN_SQL}
-  #         #{SCHEDULED_ORDERBY_SQL}
-  #         #{get_pagination_sql(page, page_size)}
-  #       })
-  #   end
-  
   def complete
     update_attributes({
       :statuscode => 'Completed',
@@ -266,8 +215,6 @@ class Activity
       :cssi_disposition => 'Appointment Held'
     })
   end
-
-# class Email < Activity
 
   def self.emails
     find_by_sql(%Q{

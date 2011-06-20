@@ -145,11 +145,11 @@ class Settings
     end
     
     def record_activity
-      puts  "*************************" + Settings.pin_last_activity_time.class.to_s
       if Settings.pin_last_activity_time.class==String
         Settings.pin_last_activity_time = Time.parse(Settings.pin_last_activity_time)
       end
       
+      #CR: can use 'blank?' here
       if Settings.pin_last_activity_time.nil? || Settings.pin_last_activity_time==""
         Settings.pin_last_activity_time=Time.new
         Settings.pin_confirmed=false

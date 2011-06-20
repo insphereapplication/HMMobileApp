@@ -55,6 +55,9 @@ class ActivityController < Rho::RhoController
     duration = (Time.parse(time2) - Time.parse(time1))/60
   end
   
+  #CR: remove puts statements before committing
+  #CR: use inline 'if's carefully. Here there should be an if clause and an 'else' to handle negative paths. What happens if we don't have an appointment?
+  #CR: Wrap all database operations in transactions -- Note here that if the first update fails, the second update is now inaccurate.
   def update_appt
     puts "APPOINTMENT UPDATE: #{@params.inspect}"
     Settings.record_activity
@@ -66,15 +69,18 @@ class ActivityController < Rho::RhoController
       :description => @params['description'],
       :cssi_location => @params['cssi_location']  
     }) if @appointment
+    
     @appointment.opportunity.update_attributes({
       :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }) if @appointment
+    
     SyncEngine.dosync
     redirect :action => :show_appt, :back => 'callback:',
               :id => @appointment.object,
               :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
   end
   
+  #CR: careful with the inline 'if's; remove crufty old output; needs a transaction
   def update_callback
     puts "CALLBACK UPDATE: #{@params.inspect}"
     @callback = Activity.find_activity(@params['id'])
@@ -146,29 +152,29 @@ class ActivityController < Rho::RhoController
 
   def udpate_lost_status
     if @params['button_id'] == "Ok"
-        Settings.record_activity
-        db = ::Rho::RHO.get_src_db('Opportunity')
-        db.start_transaction
-        begin
-          opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
-          opportunity.create_note(@params['notes'])
-          opportunity.complete_most_recent_open_call
-          opportunity.update_attributes({
-            :statecode => 'Lost',
-            :statuscode => @params['status_code'],
-            :cssi_statusdetail => "",
-            :competitorid => @params['competitorid'] || "",
-            :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-          })
-      
-          opportunity.record_phone_call_made_now
-          appointmentids = get_appointment_ids(@params['appointments'])
-          
-          finished_win_loss_status(opportunity, @params['origin'], appointmentids)
-          db.commit
-        rescue Exception => e
-          puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
-          db.rollback
+      Settings.record_activity
+      db = ::Rho::RHO.get_src_db('Opportunity')
+      db.start_transaction
+      begin
+        opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
+        opportunity.create_note(@params['notes'])
+        opportunity.complete_most_recent_open_call
+        opportunity.update_attributes({
+          :statecode => 'Lost',
+          :statuscode => @params['status_code'],
+          :cssi_statusdetail => "",
+          :competitorid => @params['competitorid'] || "",
+          :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+        })
+    
+        opportunity.record_phone_call_made_now
+        appointmentids = get_appointment_ids(@params['appointments'])
+        
+        finished_win_loss_status(opportunity, @params['origin'], appointmentids)
+        db.commit
+      rescue Exception => e
+        puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
+        db.rollback
       end
     else
       WebView.navigate(url_for :controller => :Opportunity, :action => :status_update, :id => @params['opportunity_id'], :query => {:origin => @params['origin']})
@@ -237,6 +243,7 @@ class ActivityController < Rho::RhoController
 				                                })
 				                   })
   end  
+  
   def update_status_no_contact
     puts @params.inspect
     Settings.record_activity
@@ -254,6 +261,7 @@ class ActivityController < Rho::RhoController
     
     db = ::Rho::RHO.get_src_db('Opportunity')
     db.start_transaction
+    
     begin
       opportunity.update_attributes(opp_attrs)
       opportunity.record_phone_call_made_now(@params['status_detail'])

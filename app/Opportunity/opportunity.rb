@@ -326,21 +326,9 @@ class Opportunity
   def is_new?
     statuscode == "New Opportunity"
   end
-
-  def has_open_activities?
-    activities && activities.any?{|a| a.open? }
-  end
   
   def has_activities?
     activities && activities.size > 0
-  end
-  
-  def has_scheduled_activities?
-    activities && activities.any?{|a| a.open? && !a.scheduledend.blank? }
-  end
-  
-  def scheduled_activities
-    activities.select{|activity| activity.open? && !activity.scheduledend.blank? } if activities
   end
   
   def incomplete_appointments
