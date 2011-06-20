@@ -79,13 +79,19 @@ class ActivityController < Rho::RhoController
     puts "CALLBACK UPDATE: #{@params.inspect}"
     @callback = Activity.find_activity(@params['id'])
     Settings.record_activity
-    @callback.update_attributes({
-        :scheduledend => DateUtil.date_build(@params['callback_datetime']),
-        :phonenumber => @params['phone_number'] 
-    }) if @callback
-    @callback.opportunity.update_attributes({
-      :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-    }) if @callback
+    if @callback
+      @callback.update_attributes({
+          :scheduledend => DateUtil.date_build(@params['callback_datetime']),
+          :phonenumber => @params['phone_number'] 
+      })
+      @callback.opportunity.update_attributes({
+        :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+      })
+      
+      if @params['phoneList'] == 'ad-hoc'
+        @callback.update_attributes({:cssi_phonetype => "Ad Hoc"})
+      end      
+    end
     SyncEngine.dosync
     redirect :action => :show_callback, :back => 'callback:',
               :id => @callback.object,
@@ -318,6 +324,10 @@ class ActivityController < Rho::RhoController
         :statecode => 'Open',
         :type => 'PhoneCall'
       })
+      
+      if @params['phoneList'] == 'ad-hoc'
+        phone_call.update_attributes({:cssi_phonetype => "Ad Hoc"})
+      end
         
       finished_update_status(opportunity, @params['origin'], @params['appointments'])
       db.commit
