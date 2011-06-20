@@ -27,7 +27,7 @@ class SearchContacts
   
   def search_results
     Rho::JSON.parse(results).sort do |a,b|
-      comp = (a[1]['lastname'] <=> b[1]['lastname'])
+      comp = (a[1]['lastname'].downcase <=> b[1]['lastname'].downcase)
       comp.zero? ? (a[1]['firstname'] <=> b[1]['firstname'] ) : comp
     end
   end
