@@ -246,8 +246,7 @@ class SettingsController < Rho::RhoController
     Rhom::Rhom.database_fullclient_reset_and_logout
     Settings.flush_instance
     SyncEngine.set_pollinterval(0)
-    @msg = "Database has been reset."
-    redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
+    redirect :action => :login, :back => 'callback:', :query => {:msg => "Database has been reset."}
   end
   
   def full_reset_logout_keep_device_id
