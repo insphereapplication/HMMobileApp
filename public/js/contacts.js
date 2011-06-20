@@ -10,6 +10,14 @@ $(document).ready(function() {
 	$('#submit-ac-search').click(function(){
 		initializeSearchAC();
 	})
+	
+	$('#contact_filter_clear').click( function()
+	{
+		$('#contact_filter').val('all');
+		$('#search_input').val('');
+		loadPage();
+		return false;
+	})
 });
 
 function initializeSearchAC(){
