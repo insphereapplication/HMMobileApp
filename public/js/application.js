@@ -270,7 +270,7 @@ function populatePhone(dropdown)
         break;
       }
     }
-	if (selected.length < 6){
+	if (selected == 'ad-hoc'){
 		document.getElementById("phoneNumber").value=''
 		document.getElementById("phoneNumber").disabled = false
 	}
@@ -337,7 +337,7 @@ function disablePhone(dropdown, phoneText)
       }
     }
 
-	if (selected.length > 1){
+	if (selected != 'ad-hoc'){
 		phoneText.disabled='true';
 	}
 	return true;
@@ -354,7 +354,7 @@ function enablePhone()
       }
     }
 
-	if (selected.length <= 1){
+	if (selected == 'ad-hoc'){
 		phoneText.disabled=false;
 	}
 	else
