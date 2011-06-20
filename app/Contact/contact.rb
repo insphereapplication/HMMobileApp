@@ -138,7 +138,7 @@ class Contact
   
   def self.get_search_sql(terms)
     terms_ary = terms.split(/[\s,]/).reject{|term| term.blank? }
-    terms_ary.blank? ? '' : "and (#{terms_ary.map{|term| "c.firstname like '%#{term}%' OR c.lastname like '%#{term}%'" }.join(' OR ')})"
+    terms_ary.blank? ? '' : "and (#{terms_ary.map{|term| "c.firstname like '#{term}%' OR c.lastname like '#{term}%'" }.join(' OR ')})"
   end
   
   def full_name
