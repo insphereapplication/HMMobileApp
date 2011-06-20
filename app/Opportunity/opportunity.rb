@@ -179,8 +179,6 @@ class Opportunity
       #{get_pagination_sql(page, page_size)}
     }
     
-    puts sql
-    
     find_by_sql( sql )
   end
   
