@@ -1,8 +1,4 @@
 $(document).ready(function() {
-	$('.validateContactOpp').click(function() { 
-		return validateNewContactInfo();
-	});
-	
 	$('input#load-more-button').live('click', function(){
 		loadMore();
 	})
@@ -14,11 +10,20 @@ $(document).ready(function() {
 	$('#submit-ac-search').click(function(){
 		initializeSearchAC();
 	})
+	
+	$('#contact_filter_clear').click( function()
+	{
+		$('#contact_filter').val('all');
+		$('#search_input').val('');
+		loadPage();
+		return false;
+	})
 });
 
 function initializeSearchAC(){
 	firstName = $('input#search_first_name').val();
 	lastName = $('input#search_last_name').val();
+	// The callback function is empty except for error handling -- Rhosync's search method is asynchronous and will trigger a separate redirect 
 	$.post("/app/SearchContacts/search_contacts", {first_name: firstName, last_name: lastName},
 		function(result) {	
 			if (result.match(/Error/) == "Error"){
@@ -33,7 +38,7 @@ function loadMore(){
 	searchTerms = $('input#search_input').val();
 	page = parseInt($('input#load-more-button').attr('page'));
 	$("div#load-more-div").remove();
-	loadContactsAsync(filterType, page, page, searchTerms, false);
+	loadContactsAsync(filterType, page, page, searchTerms);
 }
 
 function loadPage(){
@@ -41,10 +46,10 @@ function loadPage(){
 	searchTerms = $('input#search_input').val();
 	$("div#load-more-div").remove();
 	$('.contacts-list li').remove();
-	loadContactsAsync(filterType, 0, 0, searchTerms, false);
+	loadContactsAsync(filterType, 0, 0, searchTerms);
 }
 
-function loadContactsAsync(filterType, page, startPage, searchTerms, navToBottom){
+function loadContactsAsync(filterType, page, startPage, searchTerms){
 	var pageLimit = 10;
 	$.post("/app/Contact/get_contacts_page", { filter: filterType, page: page, search_terms: searchTerms },
 		function(contacts) {	
@@ -63,23 +68,9 @@ function loadContactsAsync(filterType, page, startPage, searchTerms, navToBottom
 				    $(ids[1]).remove();
 				});
 				
-				loadContactsAsync(filterType, page + 1, startPage, searchTerms, navToBottom);
-			} 
-			else 
-			{
-				if (navToBottom)
-				{
-					document.location.href='#bottom';
-				}
-				
-				if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
+				loadContactsAsync(filterType, page + 1, startPage, searchTerms);
+			} else if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
 					$("ul#contact-list").append(getLoadMoreButton("Load More", page));
-				}
-				
-				if ( $.trim(contacts) == "" )
-				{
-					$("ul#contact-list").append('<span id="no-contacts-found" style="display:block; margin-left:auto; margin-right:auto; text-align: center;">No contacts found with current filter</span>');
-				}
 			}
 		}
 	);
@@ -93,33 +84,4 @@ function getLoadMoreButton(text, page){
 		</span>																																																						\
 		<input id="load-more-button" class="standardButton ui-btn-hidden" page="' + page + '" data-theme="b"/>						\
 	</div>'
-}
-
-function validateNewContactInfo(){
-	
-	if ( document.getElementById('contact_firstname').value.length==0 || document.getElementById('contact_firstname').value==null ) {
-      	alert('Please enter a first name');
-		return false;
-    }
-	if ( document.getElementById('contact_lastname').value.length==0 || document.getElementById('contact_lastname').value==null ) {
-      	alert('Please enter a last name');
-		return false;
-    }
-	if (		
-		( document.getElementById('contact_emailaddress1').value.length==0 || document.getElementById('contact_emailaddress1').value==null )
-		&&
-		(document.getElementById('contact_mobilephone').value.length==0 || document.getElementById('contact_mobilephone').value==null )
-		&&
-		(document.getElementById('contact_telephone1').value.length==0 || document.getElementById('contact_telephone1').value==null )
-		&&
-		(document.getElementById('contact_telephone2').value.length==0 || document.getElementById('contact_telephone2').value==null )
-		&&
-		(document.getElementById('contact_telephone3').value.length==0 || document.getElementById('contact_telephone3').value==null )
-	){
-		// no phone numbers and no email address
-		alert('Please enter an email address or phone number');
-		return false;
-	}
-    
-	return true;
 }

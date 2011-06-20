@@ -138,7 +138,7 @@ class Contact
   
   def self.get_search_sql(terms)
     terms_ary = terms.split(/[\s,]/).reject{|term| term.blank? }
-    terms_ary.blank? ? '' : "and (#{terms_ary.map{|term| "c.firstname like '%#{term}%' OR c.lastname like '%#{term}%'" }.join(' OR ')})"
+    terms_ary.blank? ? '' : "and (#{terms_ary.map{|term| "c.firstname like '#{term}%' OR c.lastname like '#{term}%'" }.join(' OR ')})"
   end
   
   def full_name
@@ -203,6 +203,22 @@ class Contact
   def business_city
     if address2_city
       "#{address2_city}, #{cssi_state2id} #{address2_postalcode}"
+    end
+  end
+  
+  def show_home_address
+    if !address1_line1.blank? || !address1_line2.blank? || !address1_city.blank? || !cssi_state1id.blank? || !address1_postalcode.blank?
+      true
+    else
+      false
+    end
+  end
+
+  def show_business_address
+    if !address2_line1.blank? || !address2_line2.blank? || !address2_city.blank? || !cssi_state2id.blank? || !address2_postalcode.blank?
+      true
+    else
+      false
     end
   end
   

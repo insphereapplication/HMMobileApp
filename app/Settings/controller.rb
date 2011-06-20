@@ -67,7 +67,7 @@ class SettingsController < Rho::RhoController
   end
   
   def goto_login(msg=nil)
-    redirect :action => :login, :query => {:msg => msg} 
+    WebView.navigate ( url_for :action => :login, :query => {:msg => msg} )
   end
   
   def goto_login_override_auto(msg=nil)
@@ -115,7 +115,7 @@ class SettingsController < Rho::RhoController
         @msg ||= "The user name or password you entered is not valid"    
       end
       
-      WebView.navigate ( url_for :action => :login, :query => {:msg => @msg} )
+      goto_login(@msg)
     end
   end
   
@@ -179,8 +179,7 @@ class SettingsController < Rho::RhoController
     Settings.flush_instance
     
     Rho::NativeTabbar.remove
-    @msg = "You have been logged out."
-    goto_login(@msg)
+    redirect :action => :login, :query => {:msg => "You have been logged out."}
   end
   
   def pin

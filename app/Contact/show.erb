@@ -80,7 +80,7 @@
 					
 					<li data-role="list-divider">Home Address</li>
 					<li data-icon="false">
-						<% if @contact.home_city %>
+						<% if @contact.show_home_address %>
 							<% if System::get_property('platform') == 'APPLE'%>
 								<a onclick="hideSpin()" href=<%="maps:q=#{@contact.home_map}"%>>
 										<%= @contact.address1_line1 %>
@@ -100,7 +100,7 @@
 					</li>
 					<li data-role="list-divider">Business Address</li>
 					<li data-icon="false">
-						<% if @contact.business_city %>
+						<% if @contact.show_business_address %>
 							<% if System::get_property('platform') == 'APPLE'%>
 								<a onclick="hideSpin()" href=<%="maps:q=#{@contact.business_map}"%>>
 									<%= @contact.address2_line1 %>

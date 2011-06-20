@@ -4,7 +4,7 @@ class SearchContactsController < Rho::RhoController
   include BrowserHelper
   
   def search_contacts
-    ### We are making a specific architectural decision that at a given time, you can only have one set of search results in the property bag
+    ### At a given time, you can only have one set of search results in the database.
     ### When a new Contact Search is initiated, it deletes the old search data and replaces it with the results of the new search
 
     #TODO: remove last search activity

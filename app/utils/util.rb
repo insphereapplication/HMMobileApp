@@ -7,7 +7,7 @@ module ExceptionUtil
     exception_data = {
       :message => exception.message,
       :backtrace => exception.backtrace,
-      :exception_id => Time.now.to_i.to_s
+      :exception_id => Time.now.to_f.to_s.gsub(/\./,'')
     }
     
     begin

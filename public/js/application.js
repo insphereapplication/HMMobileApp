@@ -14,6 +14,15 @@ $(document).ready(function() {
   });
 });
 
+// Disables a form if the form was valid (prevent duplicate submits)
+ $('form').live('submit', function(event) {
+     if ($(this).valid()) {
+         $('input[type="submit"]').attr('disabled', 'disabled');
+		}
+ });
+
+
+
 // Enable the phoneNumber text box so that it submits with the form
 function enablePhoneNumber(){
 	document.getElementById('phoneNumber').disabled=false; return true;
