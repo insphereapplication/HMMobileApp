@@ -90,16 +90,17 @@ module SQLHelper
   CREATED_ON_SQL = "and date(o.createdon)"
   NOW_SQL = "date('now', 'localtime')"
   ORDER_BY_CREATED_ON_DESC_SQL = "order by datetime(o.createdon) desc"
+
   NEW_OPPORTUNITY_SQL = "select * from Opportunity o where statuscode='New Opportunity'"
   NEW_OPPORTUNITY_IDS_SQL = %Q{ 
     select o.opportunityid from Opportunity o where statuscode = 'New Opportunity' and
     #{NO_ACTIVITIES_FOR_OPPORTUNITY_SQL}
   }
   
-  
   SELECT_FIRST_PER_OPPORTUNITY_SQL = "group by o.object order by datetime(a.scheduledend)"
   
   NEW_LEADS_SQL = "select * from Opportunity o where statuscode='New Opportunity'"
+
 
 end
 
