@@ -55,8 +55,7 @@
 				</span>
 			</a>
 		</h3>
-	</div>
-	<form name="contact_filter_form" id="contact_filter_form">	
+	</div>	
 		<div id="filter" style="display:none;" data-role="none">
 			<select style="-webkit-backface-visibility:visible" class="ui-custom-dropdown" name="contact_filter" id="contact_filter" tabindex="-1">
 				<option class="ui-btn-text" data-placeholder="true" selected="true" value="all">All</option>
@@ -81,12 +80,11 @@
 						<span class="ui-btn-inner ui-btn-corner-all">
 							<span class="ui-btn-text">Clear</span>
 						</span>
-						<a type="button" data-theme="b" href="" class="ui-btn-hidden ui-link"></a>
+						<span id="contact_filter_clear" name="contact_filter_clear" class="standardButton ui-btn-hidden"></span>
 					</div>
 				</div>
 			</fieldset>
-		</div>
-	</form>	  	
+		</div>	  	
 	<div class="ui-content contacts-list" data-role="none" role="main">
 		<ul id="contact-list" data-role="listview" data-counttheme="e" class="ui-listview" role="listbox">
 		</ul>
