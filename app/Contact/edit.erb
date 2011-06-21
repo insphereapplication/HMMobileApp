@@ -27,6 +27,12 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
+								<label for="contact[emailaddress1]" class="fieldLabel">Email Address:</label> 
+								<input type="email" maxlength="255" class="required_group" name="contact[emailaddress1]" id="contact[emailaddress1]" value="<%= @contact.emailaddress1 %>" <%= placeholder( "Email Address" ) %>>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
 								<table width="100%">
 									<tr>
 										<td colspan="2">
@@ -153,9 +159,22 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
-								<label for="contact[emailaddress1]" class="fieldLabel">Email Address:</label> 
-								<input type="email" maxlength="255" class="required_group" name="contact[emailaddress1]" id="contact[emailaddress1]" value="<%= @contact.emailaddress1 %>" <%= placeholder( "Email Address" ) %>>
-							</div>
+				            	<label for="contact_gendercode" class="select">Gender:</label>
+								<div>
+									<select id="contact_gendercode" name="contact[gendercode]">
+										<option data-placeholder="true" value="<%= @contact.gendercode %>"><%= @contact.gendercode %></option>
+										<option value="Male">Male</option>
+										<option value="Female">Female</option>
+									</select>
+								</div>
+					    	</div>
+						</div>				
+
+						<div data-role="fieldcontain">
+								<div class="ui-body ui-body-d">
+					            	<label for="contact[birthdate]" class="fieldLabel">Date of Birth:</label>
+									<input id="contact[birthdate]" type="text" name="contact[birthdate]" readonly value="<%= to_date(@contact.birthdate) %>"  onClick="popupAppDateAJPicker('1', 'Contact Birth Date', 'contact[birthdate]', '<%= @contact.birthdate %>'); document.getElementById('select-choice-heightft').focus();"></input>
+						    	</div>
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
