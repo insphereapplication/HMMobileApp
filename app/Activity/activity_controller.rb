@@ -407,7 +407,7 @@ class ActivityController < Rho::RhoController
   def finished_win_loss_status(opportunity, origin, appointmentids=nil)
     complete_appointments(appointmentids)
     SyncUtil.start_sync
-    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => origin}
+    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :back => 'callback:', :query => {:origin => origin})) 
   end
   
   def complete_appointments(appointmentids)
