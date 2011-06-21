@@ -4,6 +4,9 @@ $(document).ready(function() {
 	})
 	
 	$('#submit-search-button').click(function(){
+		toggleDiv('filter'); 
+		toggleDiv('plus'); 
+		toggleDiv('minus');
 		loadPage();
 	})
 	
