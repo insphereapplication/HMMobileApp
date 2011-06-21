@@ -78,8 +78,14 @@ function loadContactsAsync(filterType, page, startPage, searchTerms){
 				});
 				
 				loadContactsAsync(filterType, page + 1, startPage, searchTerms);
-			} else if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
+			} 
+			else if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
 					$("ul#contact-list").append(getLoadMoreButton("Load More", page));
+			}
+			
+			if ( $.trim(contacts) == "" ) // No contacts found with the current filter settings
+			{
+				$("ul#contact-list").replaceWith('<span id="no-contacts-found" style="display:block; margin-left:auto; margin-right:auto; text-align: center;">No contacts found with current filter</span>');
 			}
 		}
 	);
