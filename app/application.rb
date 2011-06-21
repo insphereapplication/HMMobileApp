@@ -37,7 +37,7 @@ class AppApplication < Rho::RhoApplication
   
       # To stop local web server when application switched to 
       # background return "stop_local_server"
-      return "stop_local_server" 
+      #return "stop_local_server" 
   end
   
   def on_ui_created
