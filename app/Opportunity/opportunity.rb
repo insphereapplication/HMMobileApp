@@ -128,18 +128,18 @@ class Opportunity
     #Also include opportunities that have no activities and have a status code != "New Opportunity"
     #Sort by the opportunity's last activity date
     
-    statusReasonWhere = ''
+    statusReasonWhereClause = 'and '
     case statusReasonFilter
       when 'NoContactMade'
-        statusReasonWhere = "o.statuscode = 'No Contact Made'"
+        statusReasonWhereClause += "(o.statuscode = 'No Contact Made')"
       when 'ContactMade'
-        statusReasonWhere = "o.statuscode = 'Contact Made'"
+        statusReasonWhereClause += "(o.statuscode = 'Contact Made')"
       when 'AppointmentSet'
-        statusReasonWhere = "o.statuscode = 'Appointment Set'"
+        statusReasonWhereClause += "(o.statuscode = 'Appointment Set')"
       when 'DealInProgress'
-        statusReasonWhere = "o.statuscode = 'Deal in Progress'"
+        statusReasonWhereClause += "(o.statuscode = 'Deal in Progress')"
       else
-        statusReasonWhere = "o.statuscode <> 'New Opportunity'"
+        statusReasonWhereClause = ''
     end
     
     sortByClause= ''
@@ -156,27 +156,30 @@ class Opportunity
         sortByClause = "order by datetime(o.cssi_lastactivitydate) asc"
     end
         
-    createdClause = ''
+    createdClause = 'and '
     case createdFilter # It should be a number unless "All" is selected
       when 'All'
-        createdClause = "date(createdon) <= date('now')"
+        createdClause += "date(o.createdon) <= date('now')"
+      when /^\d+$/ # When it's a number (i.e. string only contains numerical characters)
+        createdClause += "date(o.createdon) = date('now', '-#{createdFilter.to_i} days')"
       else
-        createdClause = "date(createdon) = date('now', '-#{createdFilter.to_i} days')"
+        createdClause = ''
     end
     
     sql = %Q{
       select * from Opportunity o 
         where o.statecode not in ('Won', 'Lost') 
-        and (#{statusReasonWhere})
+        and o.statuscode <> 'New Opportunity'
         and not exists (
           select a2.object from Activity a2 where
           a2.parent_type='Opportunity' and 
           a2.parent_id=o.object and
           (a2.statecode in ('Open', 'Scheduled') and a2.scheduledend is not null and a2.scheduledend <> '')
         )
-      and #{createdClause}
-      #{sortByClause}
-      #{get_pagination_sql(page, page_size)}
+        #{statusReasonWhereClause}
+        #{createdClause}
+        #{sortByClause}
+        #{get_pagination_sql(page, page_size)}
     }
     
     find_by_sql( sql )
