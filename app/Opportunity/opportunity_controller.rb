@@ -419,11 +419,10 @@ class OpportunityController < Rho::RhoController
   def call_opp_number
     puts "calling number: #{@params['phone_number']}"
     telephone = @params['phone_number']
-    telephone.gsub!(/[^0-9]/, "")
     redirect :action => :show, :back => 'callback:',
               :id => @params['id'],
               :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}
-    System.open_url("tel:#{telephone}")
+    System.open_url("tel:#{telephone.gsub(/[^0-9]/, "")}")
   end
 
   def birthpopup

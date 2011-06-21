@@ -23,9 +23,13 @@
 	</div>
 
 	<% if launcher == :phone_dialog%>
-	   <a onclick="hideSpin()" href="<%= url_for :action => launcher, :id=> opportunity.object, :query =>{:opportunity => opportunity.object, :location => location, :origin => origin}%>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
-	           <img class="opp-icon" src="/public/images/phone_black.png">
-	       </a>            
+		<% if reference == "Scheduled" && location %>
+			<a onclick="hideSpin()" href="<%= url_for :action => :call_opp_number, :id=> opportunity.object, :query =>{:opportunity => opportunity.object, :phone_number => location, :origin => origin}%>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
+		<% else %>
+	   		<a onclick="hideSpin()" href="<%= url_for :action => launcher, :id=> opportunity.object, :query =>{:opportunity => opportunity.object, :location => location, :origin => origin}%>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
+	    <% end %>       
+			<img class="opp-icon" src="/public/images/phone_black.png">
+	       	</a>            
 	<% else %>
 	   <% if System::get_property('platform') == 'APPLE'%>
 	       <a onclick="hideSpin()" href=<%="maps:q=#{Rho::RhoSupport.url_encode(location)}"%>
