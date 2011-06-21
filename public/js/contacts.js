@@ -7,6 +7,11 @@ $(document).ready(function() {
 		toggleDiv('filter'); 
 		toggleDiv('plus'); 
 		toggleDiv('minus');
+		select_list_field = document.getElementById('contact_filter');
+		select_list_selected_index = select_list_field.selectedIndex;
+		filter = select_list_field.options[select_list_selected_index].text;
+		input = $('input#search_input').val();
+		showFilterParams(filter, input);
 		loadPage();
 	})
 	
@@ -18,6 +23,7 @@ $(document).ready(function() {
 	{
 		$('#contact_filter').val('all');
 		$('#search_input').val('');
+		$('#filter-params').remove();
 		loadPage();
 		return false;
 	})
@@ -87,4 +93,11 @@ function getLoadMoreButton(text, page){
 		</span>																																																						\
 		<input id="load-more-button" class="standardButton ui-btn-hidden" page="' + page + '" data-theme="b"/>						\
 	</div>'
+}
+
+function showFilterParams(filter, input){
+	filterparams = '<span id="filter-params" style="margin-top:5px;font-size:12px;">Filter: ' + filter + ', "' + input + '"</span>'
+	$('#filter-params').remove();
+	$('#filter-details').append( filterparams );
+
 }
