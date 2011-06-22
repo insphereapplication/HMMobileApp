@@ -3,6 +3,7 @@ require 'rho/rhocontroller'
 require 'rho/rhoerror'
 require 'helpers/browser_helper'
 require 'rho/rhotabbar'
+require 'helpers/crypto'
 
 class SettingsController < Rho::RhoController
   $prompted_for_upgrade = false
@@ -672,13 +673,22 @@ class SettingsController < Rho::RhoController
   end
   
   def resource_center
-    Settings.record_activity
-    resource_url=Rho::RhoConfig.resource_center_url
-    resource_params = "?UserName=#{Settings.login}&pwd=#{Settings.password}"
-    puts "Resource URL parameters are: #{resource_params}"
-    WebView.navigate(WebView.current_location)
-    System.open_url("#{resource_url}#{resource_params}")
-  end
+        Settings.record_activity
+        resource_url=Rho::RhoConfig.resource_center_url
+        ctime = Time.new
+        ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
+        user_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.login}Delimit"))
+        pwd_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.password}Delimit"))
+       
+        resource_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}"
+        
+        puts "Resource URL parameters are: ****#{resource_params_enc}****"
+        rc_url ="#{resource_url}?#{resource_params_enc}"
+       
+        WebView.navigate(WebView.current_location)
+        
+        System.open_url("#{resource_url}?#{resource_params_enc}")
+      end
 
   def check_for_upgrade
     latest_version = AppInfo.instance.latest_version

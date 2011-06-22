@@ -102,16 +102,18 @@ splash_screen='zoom'
 test_user = ""
 test_password = ""
 
+crypt_key = "HFAGIEH777837776KFKHHSJJJFHEUUGF"
+
 # High lead cost indicator threshold -- set the threshold lead cost to display a dollar sign indicating high lead cost
 lead_cost_threshold = 100
 
 Dev
 # quick_quote_url = https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
-# resource_center_url=https://m.dev.insphereis.net/InsiteMobile/rc/ResourceCenterSSO.aspx
+resource_center_url=https://m.dev.insphereis.net/InsiteMobile/rc/ResourceCenterSSO.aspx
 
 Model
 quick_quote_url = https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
-resource_center_url=https://rc.model.insphereis.net
+#resource_center_url=https://rc.model.insphereis.net
 
 Production
 #quick_quote_url = #https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
