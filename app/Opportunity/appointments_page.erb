@@ -11,10 +11,12 @@
 			scheduledtime = appointment.scheduledend
 			icon = "phoneopp"
 			launcher = :phone_dialog
+			location = appointment.phonenumber
 		elsif appointment.type == 'Appointment'
 			scheduledtime = appointment.scheduledstart
 			icon = "mapopp"
 			launcher = :map
+			location = appointment.location
 		end
 		
 		render :partial =>"opportunity", :back => 'callback:', :locals => { 
@@ -25,7 +27,8 @@
               :origin => "appointments",
               :launcher => launcher,
               :icon => icon,
-              :location => appointment.location
+              :location => location,
+			  :reference => "Scheduled"
 		} if appointment.opportunity 
 	 %>
 <% end%>

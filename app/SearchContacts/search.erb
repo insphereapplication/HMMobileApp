@@ -38,6 +38,9 @@
 	<div class="ui-content search-results-list" data-role="none" role="main">
 		<% if @last_search %>
 			<ul id="search-results-list" data-role="listview" data-counttheme="e" class="ui-listview" role="listbox">
+				<% if @last_search.search_results.size == 0%>
+					<li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No Contacts Found </li>
+				<% else %>
 				<% @last_search.search_results.each do |result| %>
 					<li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
 						<div class="ui-btn-inner">
@@ -55,6 +58,7 @@
 										<img class="search-icon" src="/public/images/computer_icon.png">
 							    </li>
 								<%end%>
+				<% end %>
 				<% end %>
 			</ul>
 		<% end %>
