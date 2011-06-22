@@ -32,25 +32,25 @@ class ContactController < Rho::RhoController
   
   def get_contacts_page
     Settings.record_activity
-    
-    @contacts = lambda {
-      case @params['filter']
-      when 'all' 
-        Contact.all_open(@params['page'].to_i, @params['search_terms'])
-      when 'active-policies'
-        Contact.with_policies(@params['page'].to_i, 'Active', @params['search_terms'])
-      when 'pending-policies'
-        Contact.with_policies(@params['page'].to_i, 'Pending', @params['search_terms'])
-      when 'open-opps'
-        Contact.with_open_opps(@params['page'].to_i, @params['search_terms'])
-      when 'won-opps'
-        Contact.with_won_opps(@params['page'].to_i, @params['search_terms'])
-      end
-    }.call
-    
+    @contacts = get_contacts_for_filter(@params['filter'])  
     @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
     
     render :action => :contact_page, :back => 'callback:'
+  end
+  
+  def get_contacts_for_filter(filter)
+    case filter
+    when 'all' 
+      Contact.all_open(@params['page'].to_i, @params['search_terms'])
+    when 'active-policies'
+      Contact.with_policies(@params['page'].to_i, 'Active', @params['search_terms'])
+    when 'pending-policies'
+      Contact.with_policies(@params['page'].to_i, 'Pending', @params['search_terms'])
+    when 'open-opps'
+      Contact.with_open_opps(@params['page'].to_i, @params['search_terms'])
+    when 'won-opps'
+      Contact.with_won_opps(@params['page'].to_i, @params['search_terms'])
+    end
   end
 
   # GET /Contact/{1}
