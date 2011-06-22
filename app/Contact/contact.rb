@@ -94,15 +94,15 @@ class Contact
   def self.get_filtered_contacts(params)
     case params['filter']
     when 'all' 
-      all_open(params['page'].to_i, params['search_terms'])
+      all_open(params['page'], params['search_terms'])
     when 'active-policies'
-      with_policies(params['page'].to_i, 'Active', params['search_terms'])
+      with_policies(params['page'], 'Active', params['search_terms'])
     when 'pending-policies'
-      with_policies(params['page'].to_i, 'Pending', params['search_terms'])
+      with_policies(params['page'], 'Pending', params['search_terms'])
     when 'open-opps'
-      with_open_opps(params['page'].to_i, params['search_terms'])
+      with_open_opps(params['page'], params['search_terms'])
     when 'won-opps'
-      with_won_opps(params['page'].to_i, params['search_terms'])
+      with_won_opps(params['page'], params['search_terms'])
     end
   end
   

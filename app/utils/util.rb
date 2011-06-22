@@ -38,7 +38,7 @@ module SQLHelper
   
   module ClassMethods
     def get_pagination_sql(page, page_size=DEFAULT_PAGE_SIZE) 
-      "limit #{page_size} offset #{page * page_size}" if page
+      "limit #{page_size} offset #{page.to_i * page_size.to_i}" if page
     end
   end
   
