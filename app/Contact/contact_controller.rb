@@ -332,13 +332,19 @@ class ContactController < Rho::RhoController
   
   #creates a contact on the device that already exists in CRM
   def create_AC_contact
-    contact = Contact.create_new(@params['contact'])    
+    @devicecontact = Contact.find_contact(@params['contact']['contactid'])
+    if @devicecontact
+      contact = @devicecontact
+    else
+      contact = Contact.create_new(@params['contact'])
+    end
+    puts "CREATING THE NEW OPPORTUNITY FROM AC SEARCH"  
     opp = Opportunity.create_for_new_contact(@params['opportunity'], contact.object)
     SyncEngine.dosync
     redirect :controller => :Contact,
              :action => :show, 
              :id => contact.object,
-             :query => { :origin => @params['origin'], :back => 'callback:'}
+             :query => { :origin => 'SearchContacts', :back => 'callback:'}
              
   end
   

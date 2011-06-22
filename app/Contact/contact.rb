@@ -84,10 +84,12 @@ class Contact
   #given an array of contact ids, returns the IDs that are currently on the device
   def self.find_contacts_on_device(contact_ids)    
     return [] if contact_ids.empty?
-    
-    Contact.find_by_sql(%Q{
-        select distinct c.contactid from Contact c 
-        where c.contactid in ('#{contact_ids.join("', '")}')
+        Contact.find_by_sql(%Q{
+        select distinct c.contactid as 'contactid' from Contact c, Opportunity o
+        where o.contact_id=c.object and c.contactid in ('#{contact_ids.join("', '")}')
+        union
+        select distinct c.contactid as 'contactid' from Contact c, Policy p
+        where p.contact_id=c.object and c.contactid in ('#{contact_ids.join("', '")}')
       }).map{|contact| contact.contactid } 
   end  
   

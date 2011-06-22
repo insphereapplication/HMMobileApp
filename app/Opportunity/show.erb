@@ -9,7 +9,7 @@ $(document).ready(function(){
 </script>
 <div id="opportunity_show" data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar%>
-	<% if @params['origin'] == "contact" %>
+	<% if @params['origin'] == "contact" || @params['origin'] == "SearchContacts" %>
 	<div data-role="header" data-backbtn="false">
 		<a data-transition="slideback" href="<%= url_for(:controller => :Contact, :action => :show, :id => @opportunity.contact.object, :query =>{:origin => @params['origin']}) %>" data-direction="reverse" data-icon="back">Contact</a>
 		<h3>Opportunity</h3>
