@@ -23,8 +23,8 @@
 	function getSelectedText(span, select){
 		filter = document.getElementById(span+'_'+select+'_filter');
 		selected_index = filter.selectedIndex;
-		filter_status = filter.options[selected_index].text;
-		return filter_status		
+		filter_text = filter.options[selected_index].text;
+		return filter_text		
 	}
 	
 	$(document).ready(function() {
