@@ -280,28 +280,9 @@ class ActivityController < Rho::RhoController
   end
   
   def mark_appointment_complete
-    puts @params.inspect
-    Settings.record_activity
-    opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
-    
-    opp_attrs = {
-      :cssi_statusdetail => '',
-      :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-    }
-
-    db = ::Rho::RHO.get_src_db('Opportunity')
-    db.start_transaction
-    appointment = []
-    appointment.push(@params['appointments'])
-    
-    begin
-      opportunity.update_attributes(opp_attrs)
-      finished_update_status(opportunity, @params['origin'], appointment)
-      db.commit
-    rescue Exception => e
-      puts "Exception in setting appointment as complete: #{e.inspect} -- #{@params.inspect}"
-      db.rollback
-    end
+    complete_appointments([@params['appointments']])
+    SyncUtil.start_sync
+    redirect :controller => :Opportunity, :action => :show, :back => 'callback:', :id => @params['opportunity_id'], :query => {:origin => @params['origin']}
   end
     
   def update_status_call_back_requested
