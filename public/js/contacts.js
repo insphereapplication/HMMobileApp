@@ -21,6 +21,7 @@ $(document).ready(function() {
 	
 	$('#contact_filter_clear').click( function()
 	{
+		$('ul#contact-list').empty();
 		$('#contact_filter').val('all');
 		$('#search_input').val('');
 		$('#filter-params').remove();
@@ -85,10 +86,19 @@ function loadContactsAsync(filterType, page, startPage, searchTerms){
 			
 			if ( $.trim(contacts) == "" ) // No contacts found with the current filter settings
 			{
-				$("ul#contact-list").replaceWith('<span id="no-contacts-found" style="display:block; margin-left:auto; margin-right:auto; text-align: center;">No contacts found with current filter</span>');
+				checkForNoContacts();
 			}
 		}
 	);
+}
+
+function checkForNoContacts()
+{
+	if ( 0 == $("ul#contact-list li").length )
+	{
+		$("ul#contact-list").empty();
+		$("ul#contact-list").append('<span id="no-contacts-found" style="display:block; margin-left:auto; margin-right:auto; text-align: center;">No contacts found with current filter</span>');
+	}
 }
 
 function getLoadMoreButton(text, page){
