@@ -178,7 +178,7 @@ class Activity
     if search_terms.count > 0
       like_clause << ' and ('
       search_terms.each do |search_term|
-        like_clause << %Q{a.subject like '%#{search_term}%' or }
+        like_clause << %Q{c.firstname like '#{search_term}%' or c.lastname like '#{search_term}%' or }
       end
       like_clause.chomp!(" or ")
       like_clause << ')'
@@ -205,6 +205,7 @@ class Activity
     
     sql = %Q{
         #{SELECT_SCHEDULED_NO_WHERE_SQL} #{type_where_clause} and
+        (c.contactid=o.contact_id) and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
         #{SCHEDULED_TIME_SQL} #{time_compare} #{NOW_SQL}and
         #{SCHEDULED_OPEN_SQL}

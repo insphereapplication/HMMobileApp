@@ -80,7 +80,7 @@ module SQLHelper
   
   # SQL building blocks for the Scheduled tab on the Opportunities page
   SELECT_SCHEDULED_SQL = "select ifnull(a.scheduledstart, a.scheduledend) as scheduledtime, a.* from Activity a, Opportunity o where (a.type='Appointment' or a.type='PhoneCall')"
-  SELECT_SCHEDULED_NO_WHERE_SQL = "select ifnull(a.scheduledstart, a.scheduledend) as scheduledtime, a.* from Activity a, Opportunity o"
+  SELECT_SCHEDULED_NO_WHERE_SQL = "select ifnull(a.scheduledstart, a.scheduledend) as scheduledtime, a.*, c.firstname, c.lastname from Activity a, Opportunity o, Contact c"
   SCHEDULED_END_SQL = "date(scheduledend)"
   SCHEDULED_START_SQL = "date(scheduledstart)"
   SCHEDULED_TIME_SQL = "date(scheduledtime)"
