@@ -231,9 +231,10 @@ class ContactController < Rho::RhoController
   # POST /Contact/{1}/update
   def update
     Settings.record_activity
-    puts "CONTACT UPDATE: #{@params.inspect}"
+    puts "CONTACT UPDATE: #{@params.inspect}"   
+    dobdatetime = DateTime.strptime(@params['birthdate'].to_s, DateUtil::BIRTHDATE_PICKER_TIME_FORMAT)
     @contact = Contact.find_contact(@params['id'])
-    @contact.update_attributes(@params['contact']) if @contact
+    @contact.update_attributes(@params['contact'].merge({:birthdate => dobdatetime.strftime(DateUtil::DEFAULT_TIME_FORMAT)})) if @contact
     SyncUtil.start_sync
     redirect :action => :show, :back => 'callback:',
               :id => @contact.object,
