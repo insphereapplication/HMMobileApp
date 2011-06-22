@@ -120,7 +120,7 @@ class ActivityController < Rho::RhoController
           :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
         })
 
-        finished_win_loss_status(opportunity, @params['origin'])
+        finished_win_status(opportunity, @params['origin'])
 
         db.commit
       rescue Exception => e
@@ -172,11 +172,11 @@ class ActivityController < Rho::RhoController
           :competitorid => @params['competitorid'] || "",
           :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
         })
-    
+      
         opportunity.record_phone_call_made_now
         appointmentids = get_appointment_ids(@params['appointments'])
         
-        finished_win_loss_status(opportunity, @params['origin'], appointmentids)
+        finished_loss_status(opportunity, @params['origin'], appointmentids)
         db.commit
       rescue Exception => e
         puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
@@ -393,7 +393,13 @@ class ActivityController < Rho::RhoController
     redirect :controller => :Opportunity, :action => :show, :back => 'callback:', :id => opportunity.object, :query => {:origin => origin}
   end
   
-  def finished_win_loss_status(opportunity, origin, appointmentids=nil)
+  def finished_win_status(opportunity, origin, appointmentids=nil)
+    complete_appointments(appointmentids)
+    SyncUtil.start_sync
+    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :back => 'callback:', :query => {:origin => origin}
+  end
+
+  def finished_loss_status(opportunity, origin, appointmentids=nil)
     complete_appointments(appointmentids)
     SyncUtil.start_sync
     WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :back => 'callback:', :query => {:origin => origin})) 

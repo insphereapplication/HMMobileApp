@@ -34,10 +34,8 @@
 		<fieldset class="ui-grid-a">
 			<div class="ui-block-a"><input type="submit" data-theme="b" class="standardButton" value="Reset"/></div>
 			<% if @params['contact'].blank? %>	
-				<% puts "#"*80 + " Reset PIN if block" %>
 				<div class="ui-block-b"><a type="button" data-theme="c" value="Cancel" href="<%= url_for(:action => :index, :query => {:origin => @params['origin']}) %>">Cancel</a></div>
 			<% else %>
-				<% puts "#"*80 + " params = #{@params.inspect}" %>
 				<div class="ui-block-b"><a type="button" data-theme="c" value="Cancel" href="<%= url_for(:controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>">Cancel</a></div>
 			<% end %>
 	    </fieldset>
