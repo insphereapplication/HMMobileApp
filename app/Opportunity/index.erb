@@ -158,13 +158,13 @@
 					</select>
 					<label for="followup_sort_by_filter" class="fieldLabel ui-input-text">Sort By:</label>
 					<select class="ui-custom-dropdown" name="followup_sort_by_filter" id="followup_sort_by_filter" tabindex="-1" onchange="addtext();">
-						<option class="ui-btn-text" selected="true" value="LastActivityDateAscending">Last Activity Date Ascending</option>
-						<option class="ui-btn-text" value="LastActivityDateDescending">Last Activity Date Descending</option>
-						<option class="ui-btn-text" value="CreateDateAscending">Create Date Ascending</option>
-						<option class="ui-btn-text" value="CreateDateDescending">Create Date Descending</option>
+						<option class="ui-btn-text" selected="true" value="LastActivityDateAscending">Latest Activity Date</option>
+						<option class="ui-btn-text" value="LastActivityDateDescending">Earliest Activity Date</option>
+						<option class="ui-btn-text" value="CreateDateAscending">Created Ascending</option>
+						<option class="ui-btn-text" value="CreateDateDescending">Created Descending</option>
 					</select>
 					<label for="followup_created_filter" class="fieldLabel ui-input-text">Created:</label>
-					<select class="ui-custom-dropdown" name="followup_created_filter" id="followup_created_filter" tabindex="-1" onchange="addtext();">
+					<select class="ui-custom-dropdown" data-native-menu="true" name="followup_created_filter" id="followup_created_filter" tabindex="-1">
 						<option class="ui-btn-text" selected="true" value="All">All</option>
 						<option class="ui-btn-text" value="1">1 Day Ago</option>
 						<option class="ui-btn-text" value="2">2 Days Ago</option>
@@ -240,8 +240,8 @@
 				<div id="appointments_filter" style="display:none;" data-role="none">
 					<select class="ui-custom-dropdown" name="appointments_select_filter" id="appointments_select_filter" tabindex="-1" onchange="addtext();">
 						<option class="ui-btn-text" selected="true" value="All">All</option>
-						<option class="ui-btn-text" value="ScheduledAppointments">Scheduled Appointments</option>
-						<option class="ui-btn-text" value="ScheduledCallbacks">Scheduled Callbacks</option>
+						<option class="ui-btn-text" value="ScheduledAppointments">Appointments</option>
+						<option class="ui-btn-text" value="ScheduledCallbacks">Callbacks</option>
 					</select>
 					<label for="appointments_search_input" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Search: </label>
 					<input type="text" id="appointments_search_input" maxlength="30" class="ui-search-text ui-body-null ui-corner-all"></input>
