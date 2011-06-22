@@ -91,6 +91,21 @@ class Contact
       }).map{|contact| contact.contactid } 
   end  
   
+  def self.get_filtered_contacts(params)
+    case params['filter']
+    when 'all' 
+      all_open(params['page'].to_i, params['search_terms'])
+    when 'active-policies'
+      with_policies(params['page'].to_i, 'Active', params['search_terms'])
+    when 'pending-policies'
+      with_policies(params['page'].to_i, 'Pending', params['search_terms'])
+    when 'open-opps'
+      with_open_opps(params['page'].to_i, params['search_terms'])
+    when 'won-opps'
+      with_won_opps(params['page'].to_i, params['search_terms'])
+    end
+  end
+  
   def self.all_open(page=nil, terms=nil, page_size=DEFAULT_PAGE_SIZE)  
     Contact.find_by_sql(%Q{
       select distinct c.contactid, c.* from Contact c, Opportunity o 
