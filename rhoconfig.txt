@@ -5,7 +5,7 @@ start_path = '/app/Settings/init'
 options_path = '/app/Settings'
 
 #app database version -- changing this value will wipe the entire db for an upgrade
-app_db_version = '2.0'
+app_db_version = '3.0'
 
 # location of bundle url (i.e. from rhohub.com); used by desktop win32 simulator
 rhobundle_zip_url = ''
@@ -17,7 +17,7 @@ rhobundle_zip_pwd = nil
 # log level
 # 0-trace, 1-info(app level), 3-warnings, 4-errors
 # for production set to 3
-MinSeverity  = 3
+MinSeverity  = 1
 
 # enable copy log messages to standard output, useful for debugging
 LogToOutput = 1
@@ -29,7 +29,7 @@ LogCategories = *
 ExcludeLogCategories = 
 
 # max log file size in Bytes, set 0 to unlimited size; when limit is reached, log wraps to beginning of file
-MaxLogFileSize=0
+MaxLogFileSize=500000
 
 # turn on local http server traces, off by default
 #net_trace = 0
@@ -49,7 +49,7 @@ KeepTrackOfLastVisitedPage = 0
 LastVisitedPage = ''
 
 # DEV RHOHUB
-# syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
+#syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
 
 # MODEL ONSITE
 syncserver = 'https://rhosync.model.insphereis.net/application'
@@ -58,7 +58,7 @@ syncserver = 'https://rhosync.model.insphereis.net/application'
 # syncserver = 'https://rhosync.insphereis.net/application'
 
 # LOCAL
-# syncserver = 'http://localhost:9292/application'
+#syncserver = 'http://localhost:9292/application'
 
 
 #sync_poll_interval=300

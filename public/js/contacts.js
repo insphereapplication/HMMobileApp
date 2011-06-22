@@ -4,11 +4,29 @@ $(document).ready(function() {
 	})
 	
 	$('#submit-search-button').click(function(){
+		toggleDiv('filter'); 
+		toggleDiv('plus'); 
+		toggleDiv('minus');
+		select_list_field = document.getElementById('contact_filter');
+		select_list_selected_index = select_list_field.selectedIndex;
+		filter = select_list_field.options[select_list_selected_index].text;
+		input = $('input#search_input').val();
+		showFilterParams(filter, input);
 		loadPage();
 	})
 	
 	$('#submit-ac-search').click(function(){
 		initializeSearchAC();
+	})
+	
+	$('#contact_filter_clear').click( function()
+	{
+		$('ul#contact-list').empty();
+		$('#contact_filter').val('all');
+		$('#search_input').val('');
+		$('#filter-params').remove();
+		loadPage();
+		return false;
 	})
 });
 
@@ -61,11 +79,26 @@ function loadContactsAsync(filterType, page, startPage, searchTerms){
 				});
 				
 				loadContactsAsync(filterType, page + 1, startPage, searchTerms);
-			} else if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
+			} 
+			else if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
 					$("ul#contact-list").append(getLoadMoreButton("Load More", page));
+			}
+			
+			if ( $.trim(contacts) == "" ) // No contacts found with the current filter settings
+			{
+				checkForNoContacts();
 			}
 		}
 	);
+}
+
+function checkForNoContacts()
+{
+	if ( 0 == $("ul#contact-list li").length )
+	{
+		$("ul#contact-list").empty();
+		$("ul#contact-list").append('<span id="no-contacts-found" style="display:block; margin-left:auto; margin-right:auto; text-align: center;">No contacts found with current filter</span>');
+	}
 }
 
 function getLoadMoreButton(text, page){
@@ -76,4 +109,11 @@ function getLoadMoreButton(text, page){
 		</span>																																																						\
 		<input id="load-more-button" class="standardButton ui-btn-hidden" page="' + page + '" data-theme="b"/>						\
 	</div>'
+}
+
+function showFilterParams(filter, input){
+	filterparams = '<span id="filter-params" style="margin-top:5px;font-size:12px;">Filter: ' + filter + ', "' + input + '"</span>'
+	$('#filter-params').remove();
+	$('#filter-details').append( filterparams );
+
 }

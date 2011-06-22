@@ -166,22 +166,29 @@ class OpportunityController < Rho::RhoController
     preferred = contact.preferred_number
     allow_call = 'True'
     company_dnc = 'False'
+    preferred_type = ''
     
     if preferred == contact.telephone2 # Home
       allow_call = contact.cssi_allowcallshomephone
       company_dnc = contact.cssi_companydnchomephone
+      preferred_type = 'Home'
     elsif preferred == contact.mobilephone # Mobile
       allow_call = contact.cssi_allowcallsmobilephone
       company_dnc = contact.cssi_companydncmobilephone
+      preferred_type = 'Mobile'
     elsif preferred == contact.telephone1 # Business
       allow_call = contact.cssi_allowcallsbusinessphone
       company_dnc = contact.cssi_companydncbusinessphone
+      preferred_type = 'Business'
     elsif preferred == contact.telephone3 # Alternate
       allow_call = contact.cssi_allowcallsalternatephone
       company_dnc = contact.cssi_companydncalternatephone
+      preferred_type = 'Alternate'
     end
     
-    is_preferred = phone_type == preferred
+    is_preferred = phone_type == preferred_type
+
+    puts "CHECK PHONE %^%^%^%^%^%^%^%^%^% phone_type: #{phone_type} contact: #{contact} preferred: #{preferred} allow_call: #{allow_call} company_dnc: #{company_dnc} is_preferred: #{is_preferred}"
 
     # Special case where we need 2 icons side by side, and some jQuery/JavaScript tricks are needed
     # We look for the two-icons attribute in the .erb and substitute a formatted HTML string that will show both
@@ -189,7 +196,7 @@ class OpportunityController < Rho::RhoController
       return %Q{ <span two-icons class="ui-icon ui-icon-check ui-icon-shadow"></span> }
     end
     
-    if phone_type == preferred
+    if phone_type == preferred_type
       %Q{ <span class="ui-icon ui-icon-check ui-icon-shadow"></span> }
     elsif (allow_call == 'False' || company_dnc == 'True')
       %Q{ <span class="ui-icon ui-icon-delete ui-icon-shadow"></span> }
@@ -412,11 +419,10 @@ class OpportunityController < Rho::RhoController
   def call_opp_number
     puts "calling number: #{@params['phone_number']}"
     telephone = @params['phone_number']
-    telephone.gsub!(/[^0-9]/, "")
     redirect :action => :show, :back => 'callback:',
               :id => @params['id'],
               :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}
-    System.open_url("tel:#{telephone}")
+    System.open_url("tel:#{telephone.gsub(/[^0-9]/, "")}")
   end
 
   def birthpopup
@@ -479,7 +485,6 @@ class OpportunityController < Rho::RhoController
       WebView.execute_js('setFieldValue("'+datetime_vars[:field_key]+'","'+formatted_result+'");')
       $choosed = {} #Need to clear these out so that the fields don't populate with values previously selected.
       $saved = {}
-      render :back => 'callback:'
     end
   end
   

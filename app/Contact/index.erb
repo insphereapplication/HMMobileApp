@@ -35,7 +35,9 @@
 					</span>
 				</span>
 			</a>
+			<span id="filter-details" style="margin-top:5px;font-size:12px;"></span>
 		</h3>
+
 	</div>
 	
 	<div id="minus" style="display:none;" data-role="collapsible" data-collapsed="true" class="ui-collapsible-contain">
@@ -55,15 +57,15 @@
 				</span>
 			</a>
 		</h3>
-	</div>
-	<form name="contact_filter_form" id="contact_filter_form">	
+	</div>	
 		<div id="filter" style="display:none;" data-role="none">
+			<label for="contact_filter" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;View Contacts With: </label>
 			<select style="-webkit-backface-visibility:visible" class="ui-custom-dropdown" name="contact_filter" id="contact_filter" tabindex="-1">
 				<option class="ui-btn-text" data-placeholder="true" selected="true" value="all">All</option>
-				<option class="ui-btn-text" value="active-policies">Contacts with Active Policies</option>
-				<option class="ui-btn-text" value="pending-policies">Contacts with Pending Policies</option>
-				<option class="ui-btn-text" value="open-opps">Contacts with Open Opportunities</option>
-				<option class="ui-btn-text" value="won-opps">Contacts with Won Opportunities</option>
+				<option class="ui-btn-text" value="active-policies">Active Policies</option>
+				<option class="ui-btn-text" value="pending-policies">Pending Policies</option>
+				<option class="ui-btn-text" value="open-opps">Open Opportunities</option>
+				<option class="ui-btn-text" value="won-opps">Won Opportunities</option>
 			</select>
 			<label for="search_input" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Search: </label>
 			<input type="text" id="search_input" name="search_input" maxlength="30" class="ui-search-text ui-body-null ui-corner-all"></input>
@@ -81,12 +83,11 @@
 						<span class="ui-btn-inner ui-btn-corner-all">
 							<span class="ui-btn-text">Clear</span>
 						</span>
-						<a type="button" data-theme="b" href="" class="ui-btn-hidden ui-link"></a>
+						<span id="contact_filter_clear" name="contact_filter_clear" class="standardButton ui-btn-hidden"></span>
 					</div>
 				</div>
 			</fieldset>
-		</div>
-	</form>	  	
+		</div>	  	
 	<div class="ui-content contacts-list" data-role="none" role="main">
 		<ul id="contact-list" data-role="listview" data-counttheme="e" class="ui-listview" role="listbox">
 		</ul>

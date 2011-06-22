@@ -80,7 +80,7 @@ module SQLHelper
   
   # SQL building blocks for the Scheduled tab on the Opportunities page
   SELECT_SCHEDULED_SQL = "select ifnull(a.scheduledstart, a.scheduledend) as scheduledtime, a.* from Activity a, Opportunity o where (a.type='Appointment' or a.type='PhoneCall')"
-  SELECT_SCHEDULED_NO_WHERE_SQL = "select ifnull(a.scheduledstart, a.scheduledend) as scheduledtime, a.* from Activity a, Opportunity o"
+  SELECT_SCHEDULED_NO_WHERE_SQL = "select ifnull(a.scheduledstart, a.scheduledend) as scheduledtime, a.*, c.firstname, c.lastname from Activity a, Opportunity o, Contact c"
   SCHEDULED_END_SQL = "date(scheduledend)"
   SCHEDULED_START_SQL = "date(scheduledstart)"
   SCHEDULED_TIME_SQL = "date(scheduledtime)"
@@ -90,7 +90,8 @@ module SQLHelper
   CREATED_ON_SQL = "and date(o.createdon)"
   NOW_SQL = "date('now', 'localtime')"
   ORDER_BY_CREATED_ON_DESC_SQL = "order by datetime(o.createdon) desc"
-  NEW_OPPORTUNITY_SQL = "select * from Opportunity o where statuscode='New Opportunity' and"
+
+  NEW_OPPORTUNITY_SQL = "select * from Opportunity o where statuscode='New Opportunity'"
   NEW_OPPORTUNITY_IDS_SQL = %Q{ 
     select o.opportunityid from Opportunity o where statuscode = 'New Opportunity' and
     #{NO_ACTIVITIES_FOR_OPPORTUNITY_SQL}
@@ -98,10 +99,9 @@ module SQLHelper
   
   SELECT_FIRST_PER_OPPORTUNITY_SQL = "group by o.object order by datetime(a.scheduledend)"
   
-  NEW_LEADS_SQL = %Q{
-    #{NEW_OPPORTUNITY_SQL}
-    #{NO_ACTIVITIES_FOR_OPPORTUNITY_SQL}
-  }
+  NEW_LEADS_SQL = "select * from Opportunity o where statuscode='New Opportunity'"
+
+
 end
 
 module DateUtil

@@ -221,6 +221,22 @@ class Contact
     end
   end
   
+  def show_home_address
+    if !address1_line1.blank? || !address1_line2.blank? || !address1_city.blank? || !cssi_state1id.blank? || !address1_postalcode.blank?
+      true
+    else
+      false
+    end
+  end
+
+  def show_business_address
+    if !address2_line1.blank? || !address2_line2.blank? || !address2_city.blank? || !cssi_state2id.blank? || !address2_postalcode.blank?
+      true
+    else
+      false
+    end
+  end
+  
   def age
     begin
       birthday = Date.strptime(birthdate, DateUtil::DEFAULT_TIME_FORMAT)
