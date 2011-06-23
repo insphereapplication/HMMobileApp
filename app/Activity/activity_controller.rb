@@ -422,7 +422,7 @@ class ActivityController < Rho::RhoController
       if method == 'popup'
         WebView.navigate(url_for(:controller => model, :action => :index, :back => 'callback:', :query => {:origin => origin})) 
       else
-        redirect :controller => model, :action => :index, :layout => 'layout_JQM_Lite'
+        redirect :controller => model, :action => :index, :back => 'callback:', :query => {:origin => origin}
       end
     
   end
