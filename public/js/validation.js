@@ -337,7 +337,7 @@ $('#callback_create, #callback_edit').live('pagecreate',function(event){
 	  rules: {
 	    'phone_number' : {
 	      phoneUS: true,
-		  required: true
+		  required: false
 	    }
 	  }
 	});
