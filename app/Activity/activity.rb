@@ -52,8 +52,8 @@ class Activity
   
   def parent
     if self.parent_type && self.parent_id
-      parent = Object.const_get(self.parent_type.capitalize) 
-      parent.find(:first, :conditions => {"#{self.parent_type.downcase}id" => self.parent_id})
+      parent = Object.const_get(self.parent_type.capitalize)
+      parent.send("find_#{self.parent_type.downcase}", self.parent_id)
     end
   end
   
