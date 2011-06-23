@@ -80,6 +80,7 @@ class Opportunity
       end
   end
 
+  # TODO: Dave/Carter, why is find_contact here in Opportunity.rb?
   def self.find_contact(id)
     
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
@@ -167,14 +168,23 @@ class Opportunity
         createdClause = ''
     end
     
+    # This query is complex; be sure you know what you are doing before modifying this
     sql = %Q{
       select * from Opportunity o 
         where o.statecode not in ('Won', 'Lost') 
+        and exists (
+          select a1.object from Activity a1 where 
+          a1.parent_type='Opportunity' and 
+          a1.parent_id=o.object and 
+          a1.type <> 'Email' and
+          (a1.statecode not in ('Open', 'Scheduled') or a1.scheduledend = '' or a1.scheduledend is null)
+        )
         and o.statuscode <> 'New Opportunity'
         and not exists (
           select a2.object from Activity a2 where
           a2.parent_type='Opportunity' and 
           a2.parent_id=o.object and
+          a2.type <> 'Email' and
           (a2.statecode in ('Open', 'Scheduled') and a2.scheduledend is not null and a2.scheduledend <> '')
         )
         #{statusReasonWhereClause}
