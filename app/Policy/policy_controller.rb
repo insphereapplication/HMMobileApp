@@ -12,14 +12,15 @@ class PolicyController < Rho::RhoController
 
   # GET /Policy/{1}
   def show
+    puts Settings.pin_confirmed.to_s
     Settings.record_activity
+    puts Settings.pin_confirmed.to_s
     @policy = Policy.find_policy(@params['id'])
-    if @policy
+    if Settings.pin_confirmed == true && @policy
       @contact = @policy.contact
-      puts "*** @contact = " + @contact.inspect + " ***"
       render :action => :show, :back => 'callback:'
     else
-      redirect :action => :index
+      redirect :controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
     end
   end
 

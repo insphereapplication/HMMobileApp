@@ -162,15 +162,7 @@
 						<% end %>
 					</ul>
 				</div>
-
-
-								<%puts "************************"+ Settings.pin%>
-								<%puts "************************"+ Settings.pin_last_activity_time.to_s%>
-								<%puts "************************"+ Settings.pin_confirmed.to_s%>
-								<%puts "************************"+ pin_is_current?(Settings.pin_last_activity_time).to_s%>
-								
 			
-				
 				<% if @contact.policies.size == 0 %>	
 
 					<ul data-role="listview" data-filter="false" data-inset="true">
@@ -194,7 +186,7 @@
 
 					<% @contact.policies.each do |policy| %>
 					<li>
-						<a href="<%= url_for(:controller => :Policy, :action => :show, :id => policy.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>">
+						<a href="<%= url_for(:controller => :Policy, :action => :show, :id => policy.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity'], :contact => @contact.object}) %>">
 							<p></p><p>Carrier: <%= policy.carrier_name %></p>
 							<p>Application Date: <%= to_date(policy.cssi_applicationdate) %></p>
 							<p>Status: <%= policy.cssi_statusreason %></p>
