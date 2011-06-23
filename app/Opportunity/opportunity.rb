@@ -92,10 +92,6 @@ class Opportunity
       @contact
       end
   end
-
-  def self.new_leads
-    find_by_sql(NEW_LEADS_SQL)
-  end 
   
   def self.latest_integrated_lead
     find_by_sql(LATEST_INTEGRATED_LEAD)
@@ -106,21 +102,25 @@ class Opportunity
   end
   
   def self.todays_new_leads(page=nil, page_size=DEFAULT_PAGE_SIZE)
-    find_by_sql(%Q{
+    sql = %Q{
       #{NEW_LEADS_SQL}
       #{CREATED_ON_SQL} = #{NOW_SQL}
       #{ORDER_BY_CREATED_ON_DESC_SQL}
       #{get_pagination_sql(page, page_size)}
-    })
+    }
+    
+    find_by_sql(sql)
   end
   
   def self.previous_days_leads(page=nil, page_size=DEFAULT_PAGE_SIZE)
-    find_by_sql(%Q{
+    sql = %Q{
       #{NEW_LEADS_SQL}
       #{CREATED_ON_SQL} < #{NOW_SQL}
       #{ORDER_BY_CREATED_ON_DESC_SQL}
       #{get_pagination_sql(page, page_size)}
-    })
+    }
+    
+    find_by_sql(sql)
   end
   
   # TODO: not an optimal query. find a better one.
