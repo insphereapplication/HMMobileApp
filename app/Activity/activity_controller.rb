@@ -170,7 +170,8 @@ class ActivityController < Rho::RhoController
           opportunity.record_phone_call_made_now
           appointmentids = get_appointment_ids(@params['appointments'])
           
-          finished_loss_status(opportunity, @params['origin'], appointmentids)
+          finished_loss_status(opportunity, @params['origin'], appointmentids, 'popup')
+          opportunity.destroy
           db.commit
         rescue Exception => e
           puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
@@ -216,7 +217,8 @@ class ActivityController < Rho::RhoController
       
           opportunity.record_phone_call_made_now
       
-          finished_update_status(opportunity, @params['origin'], @params['appointments'])
+          finished_loss_status(opportunity, @params['origin'], @params['appointments'], 'controller')
+          opportunity.destroy
           db.commit
         rescue Exception => e
           puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
@@ -410,10 +412,19 @@ class ActivityController < Rho::RhoController
     redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :back => 'callback:', :query => {:origin => origin}
   end
 
-  def finished_loss_status(opportunity, origin, appointmentids=nil)
+  def finished_loss_status(opportunity, origin, appointmentids=nil, method)
     complete_appointments(appointmentids)
     SyncUtil.start_sync
-    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :back => 'callback:', :query => {:origin => origin})) 
+    puts @params.inspect
+    model = ['SearchContacts', 'contact'].include?(@params['origin']) ? :Contact : :Opportunity
+    puts "8"*40
+    puts model.inspect
+      if method == 'popup'
+        WebView.navigate(url_for(:controller => model, :action => :index, :back => 'callback:', :query => {:origin => origin})) 
+      else
+        redirect :controller => model, :action => :index, :layout => 'layout_JQM_Lite'
+      end
+    
   end
   
   def complete_appointments(appointmentids)
