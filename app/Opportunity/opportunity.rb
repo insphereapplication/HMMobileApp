@@ -172,14 +172,16 @@ class Opportunity
     sql = %Q{
       select * from Opportunity o 
         where o.statecode not in ('Won', 'Lost') 
-        and exists (
-          select a1.object from Activity a1 where 
-          a1.parent_type='Opportunity' and 
-          a1.parent_id=o.object and 
-          a1.type <> 'Email' and
-          (a1.statecode not in ('Open', 'Scheduled') or a1.scheduledend = '' or a1.scheduledend is null)
+        and (
+          o.statuscode <> 'New Opportunity'
+          or exists (
+            select a1.object from Activity a1 where 
+            a1.parent_type='Opportunity' and 
+            a1.parent_id=o.object and 
+            a1.type <> 'Email' and
+            (a1.statecode not in ('Open', 'Scheduled') or a1.scheduledend = '' or a1.scheduledend is null)
+          )
         )
-        and o.statuscode <> 'New Opportunity'
         and not exists (
           select a2.object from Activity a2 where
           a2.parent_type='Opportunity' and 
