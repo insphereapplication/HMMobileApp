@@ -522,10 +522,10 @@ class OpportunityController < Rho::RhoController
      
      #puts("The query parameters are: #{@quote_param}")    
      quote_url="#{Rho::RhoConfig.quick_quote_url}#{@quote_param}"
-     WebView.navigate(WebView.current_location)
+     WebView.refresh()
      System.open_url("#{quote_url}")
 
-   end
+  end
   
   def map
         # WebView.refresh
