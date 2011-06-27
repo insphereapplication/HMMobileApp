@@ -553,7 +553,10 @@ class OpportunityController < Rho::RhoController
     @opp.update_attributes( :statecode => 'Open')
     @opp.update_attributes( :statuscode => 'New Opportunity')
     @opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))
-
+    @opp.update_attributes( :cssi_statusdetail => 'New')
+    @opp.update_attributes( :opportunityratingcode => 'Warm')
+    @opp.update_attributes( :cssi_inputsource => 'Manual')    
+    
     SyncEngine.dosync
     redirect  :controller => :Contact,
             :action => :show, 
