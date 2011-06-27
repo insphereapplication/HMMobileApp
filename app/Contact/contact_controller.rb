@@ -230,10 +230,22 @@ class ContactController < Rho::RhoController
   # POST /Contact/{1}/update
   def update
     Settings.record_activity
-    puts "CONTACT UPDATE: #{@params.inspect}"   
-    dobdatetime = DateTime.strptime(@params['birthdate'].to_s, DateUtil::BIRTHDATE_PICKER_TIME_FORMAT)
+    
+    dob_formatted = ''
+    
+    unless @params['birthdate'].blank?
+      # convert date picker date format to DB date format
+      dob_picker_time = DateTime.strptime(@params['birthdate'].to_s, DateUtil::BIRTHDATE_PICKER_TIME_FORMAT)
+      dob_formatted = dob_picker_time.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+      puts "Parsed updated birthdate to #{dob_formatted}"
+    end
+    
+    @params['contact'].merge!({'birthdate' => dob_formatted})
+    
+    puts "CONTACT UPDATE: #{@params.inspect}"
+    
     @contact = Contact.find_contact(@params['id'])
-    @contact.update_attributes(@params['contact'].merge({:birthdate => dobdatetime.strftime(DateUtil::DEFAULT_TIME_FORMAT)})) if @contact
+    @contact.update_attributes(@params['contact']) if @contact
     SyncUtil.start_sync
     redirect :action => :show, :back => 'callback:',
               :id => @contact.object,
