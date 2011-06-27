@@ -173,14 +173,16 @@ class ActivityController < Rho::RhoController
           :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
         })
       
-        opportunity.record_phone_call_made_now
-        appointmentids = get_appointment_ids(@params['appointments'])
-        
-        finished_loss_status(opportunity, @params['origin'], appointmentids)
-        db.commit
-      rescue Exception => e
-        puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
-        db.rollback
+          opportunity.record_phone_call_made_now
+          appointmentids = get_appointment_ids(@params['appointments'])
+          
+          finished_loss_status(opportunity, @params['origin'], appointmentids)
+          opportunity.destroy
+          db.commit
+        rescue Exception => e
+          puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
+          db.rollback
+
       end
     else
       WebView.navigate(url_for :controller => :Opportunity, :action => :status_update, :id => @params['opportunity_id'], :query => {:origin => @params['origin']})
@@ -205,7 +207,6 @@ class ActivityController < Rho::RhoController
   
   
   def update_lost_other_status
-    unless @params['status_code'].blank?
         Settings.record_activity
         db = ::Rho::RHO.get_src_db('Opportunity')
         db.start_transaction
@@ -222,16 +223,13 @@ class ActivityController < Rho::RhoController
       
           opportunity.record_phone_call_made_now
       
-          finished_update_status(opportunity, @params['origin'], @params['appointments'])
+          finished_loss_status(opportunity, @params['origin'], @params['appointments'])
+          opportunity.destroy
           db.commit
         rescue Exception => e
           puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
           db.rollback
-      end
-    else
-      Alert.show_popup "Please choose a lost reason."
-      WebView.refresh
-    end
+        end
   end
 
   def confirm_lost_status
@@ -402,7 +400,9 @@ class ActivityController < Rho::RhoController
   def finished_loss_status(opportunity, origin, appointmentids=nil)
     complete_appointments(appointmentids)
     SyncUtil.start_sync
-    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :back => 'callback:', :query => {:origin => origin})) 
+    puts @params.inspect
+    model = ['SearchContacts', 'contact'].include?(@params['origin']) ? :Contact : :Opportunity
+    WebView.navigate(url_for(:controller => model, :action => :index, :back => 'callback:', :query => {:origin => origin})) 
   end
   
   def complete_appointments(appointmentids)
