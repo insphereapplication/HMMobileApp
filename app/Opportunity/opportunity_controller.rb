@@ -502,29 +502,27 @@ class OpportunityController < Rho::RhoController
   end
   
   def quick_quote
-     @opportunity = Opportunity.find(@params['id'])
-     @contact = @opportunity.contact
-    
-     if (@contact.birthdate.nil? || @contact.birthdate? || @contact.birthdate =="")
-       @dob='' 
-     else  
-       date = (Date.strptime(@contact.birthdate, '%Y-%m-%d %H:%M:%S'))
-       @dob = date.strftime('%m/%d/%Y')
-     end     
-     
-     @quote_param = ",dob=#{@dob},gender=#{@contact.gendercode}"
-   
-     if (not (@contact.cssi_state1id.nil? || @contact.cssi_state1id.blank? || @contact.cssi_state1id == ''))   
-       @quote_param="#{@quote_param},statecode=#{@contact.cssi_state1id}"
-     else
-        @quote_param="#{@quote_param},statecode=#{@contact.cssi_state2id}"
-     end  
-     
-     #puts("The query parameters are: #{@quote_param}")    
-     quote_url="#{Rho::RhoConfig.quick_quote_url}#{@quote_param}"
-     WebView.refresh()
-     System.open_url("#{quote_url}")
+    opportunity = Opportunity.find_opportunity(@params['id'])
+    contact = opportunity.contact
 
+    formatted_dob = ''
+         
+    unless contact.birthdate.blank?
+     parsed_dob = (Date.strptime(contact.birthdate, DateUtil::DEFAULT_TIME_FORMAT))
+     formatted_dob = parsed_dob.strftime('%m/%d/%Y')
+    end
+
+    quote_param = ",dob=#{formatted_dob},gender=#{contact.gendercode}"
+
+    unless contact.cssi_state1id.blank?
+      quote_param += ",statecode=#{contact.cssi_state1id}"
+    else
+      quote_param += ",statecode=#{contact.cssi_state2id}"
+    end
+
+    quote_url="#{Rho::RhoConfig.quick_quote_url}#{quote_param}"
+    WebView.refresh()
+    System.open_url("#{quote_url}")
   end
   
   def map
@@ -553,7 +551,10 @@ class OpportunityController < Rho::RhoController
     @opp.update_attributes( :statecode => 'Open')
     @opp.update_attributes( :statuscode => 'New Opportunity')
     @opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))
-
+    @opp.update_attributes( :cssi_statusdetail => 'New')
+    @opp.update_attributes( :opportunityratingcode => 'Warm')
+    @opp.update_attributes( :cssi_inputsource => 'Manual')    
+    
     SyncEngine.dosync
     redirect  :controller => :Contact,
             :action => :show, 
