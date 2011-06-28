@@ -31,7 +31,7 @@ end
 
 module SQLHelper
   # SQL snippets to avoid duplication. Use with caution.
-  DEFAULT_PAGE_SIZE = 5
+  DEFAULT_PAGE_SIZE = 20
   def self.included(model)
     model.extend(ClassMethods)
   end
