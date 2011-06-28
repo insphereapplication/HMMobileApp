@@ -3,28 +3,26 @@ require 'base64'
 
 
 class Crypto
-  @@rijndael = Crypt::Rijndael::new( AppInfo.instance.mobile_crypt_key )
   
-  def self.encrypt(value)
-    encryptedValue = @@rijndael.encrypt_string( value )
-    return encryptedValue
+  def self.get_rijndael
+     Crypt::Rijndael::new( AppInfo.instance.mobile_crypt_key )
+  end 
+
+  
+  def self.encrypt(value)  
+    get_rijndael.encrypt_string( value )
   end # self.encrypt
   
   def self.encryptBase64(value)
-    encryptedValue = Base64.encode64(@@rijndael.encrypt_string( value ))
-    return encryptedValue
+    Base64.encode64(get_rijndael.encrypt_string( value ))
   end # self.encrypt
   
   def self.decrypt( value )
-    decryptedValue = @@rijndael.decrypt_string( value )
-    
-    return decryptedValue
+    get_rijndael.decrypt_string( value )
   end # self.decrypt
   
   def self.decryptBase64(value)
-    decryptedValue = @@rijndael.decrypt_string(Base64.decode64( value ))
-    
-    return decryptedValue
+    get_rijndael.decrypt_string(Base64.decode64( value ))
   end # self.decrypt
   
 end # module Crypto
