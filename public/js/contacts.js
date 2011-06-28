@@ -1,40 +1,59 @@
 $(document).ready(function() {
 	$('input#load-more-button').live('click', function(){
 		loadMore();
-	})
-	
-	$('#submit-search-button').click(function(){
-		toggleDiv('filter'); 
-		toggleDiv('plus'); 
-		toggleDiv('minus');
-		select_list_field = document.getElementById('contact_filter');
-		select_list_selected_index = select_list_field.selectedIndex;
-		filter = select_list_field.options[select_list_selected_index].text;
-		input = $('input#search_input').val();
-		showFilterParams(filter, input);
-		loadPage();
-	})
+	});
 	
 	$('#submit-ac-search').click(function(){
 		initializeSearchAC();
-	})
+	});
+	
+	initializeFilterButtonHandlers();
+	
+});
+
+// this creates two one-time handlers for the 'clear' and 'filter' buttons. They must be removed during a page load, and will be re-added when the load is done.
+function initializeFilterButtonHandlers(){
+	$('#submit-search-button').click(function(){
+		initializeSearch();
+	});
 	
 	$('#contact_filter_clear').click( function()
 	{
-		$('ul#contact-list').empty();
-		$('#contact_filter').val('all');
-		$('#search_input').val('');
-		$('#filter-params').remove();
-		loadPage();
-		return false;
-	})
-});
+  	clearContacts();
+	});
+}
+
+function disableSearchButtons(){
+	$('#submit-search-button').unbind('click');
+	$('#contact_filter_clear').unbind('click');
+}
+
+function initializeSearch(){
+	toggleDiv('filter'); 
+	toggleDiv('plus'); 
+	toggleDiv('minus');
+	select_list_field = document.getElementById('contact_filter');
+	select_list_selected_index = select_list_field.selectedIndex;
+	filter = select_list_field.options[select_list_selected_index].text;
+	input = $('input#search_input').val();
+	showFilterParams(filter, input);
+	loadPage();
+}
+
+function clearContacts(){
+	$('ul#contact-list').empty();
+	$('#contact_filter').val('all');
+	$('#search_input').val('');
+	$('#filter-params').remove();
+	loadPage();
+	return false;
+}
 
 function initializeSearchAC(){
 	firstName = $('input#search_first_name').val();
 	lastName = $('input#search_last_name').val();
 	// The callback function is empty except for error handling -- Rhosync's search method is asynchronous and will trigger a separate redirect 
-	$.post("/app/SearchContacts/search_contacts", {first_name: firstName, last_name: lastName},
+	$.get("/app/SearchContacts/search_contacts", {first_name: firstName, last_name: lastName},
 		function(result) {	
 			if (result.match(/Error/) == "Error"){
 					alert("There was a server error.");
@@ -44,6 +63,7 @@ function initializeSearchAC(){
 }
 
 function loadMore(){
+	disableSearchButtons();
 	filterType = $('#contact_filter').val();
 	searchTerms = $('input#search_input').val();
 	page = parseInt($('input#load-more-button').attr('page'));
@@ -52,6 +72,7 @@ function loadMore(){
 }
 
 function loadPage(){
+	disableSearchButtons();
 	filterType = $('#contact_filter').val();
 	searchTerms = $('input#search_input').val();
 	$("div#load-more-div").remove();
@@ -61,7 +82,7 @@ function loadPage(){
 
 function loadContactsAsync(filterType, page, startPage, searchTerms){
 	var pageLimit = 10;
-	$.post("/app/Contact/get_contacts_page", { filter: filterType, page: page, search_terms: searchTerms },
+	$.get("/app/Contact/get_contacts_page", { filter: filterType, page: page, search_terms: searchTerms },
 		function(contacts) {	
 			if (contacts.match(/Error/) == "Error"){
 					alert("There was a server error.");
@@ -80,8 +101,12 @@ function loadContactsAsync(filterType, page, startPage, searchTerms){
 				
 				loadContactsAsync(filterType, page + 1, startPage, searchTerms);
 			} 
-			else if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
+			else {
+				if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
 					$("ul#contact-list").append(getLoadMoreButton("Load More", page));
+				}
+				// re-initialize one-time filter and clear button handlers -- they were removed during the page load
+				initializeFilterButtonHandlers();
 			}
 			
 			if ( $.trim(contacts) == "" ) // No contacts found with the current filter settings
