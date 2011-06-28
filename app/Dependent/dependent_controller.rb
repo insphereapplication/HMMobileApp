@@ -115,7 +115,6 @@ class DependentController < Rho::RhoController
        month_diff = Date.today.month - birthdate.month - (day_diff < 0 ? 1 : 0)
        (Date.today.year - birthdate.year - (month_diff < 0 ? 1 : 0)).to_s
     rescue
-      puts "Invalid date parameter in age calculation method; no age returned"
     end
   end
 end

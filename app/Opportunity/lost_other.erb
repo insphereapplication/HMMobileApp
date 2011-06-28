@@ -22,7 +22,9 @@ return true;
 				<% @params['appointments'].each do |appt| %>
 					<input type="hidden" name="appointments[]" value="<%= @params['appointments'].join(',') %>" />
 				<% end %>
+
 				<label for="status_codeid" class="fieldLabel">Lost Reason (Required):</label>
+
 					
 				<select name="status_code" id="status_codeid">
 					<option></option>
@@ -31,7 +33,7 @@ return true;
 					<% end %>
 				</select>
 
-				<label for="competitorid" class="fieldLabel">Competitor (Optional):</label>
+				<label for="competitorid" class="fieldLabel">Competitor:</label>
 				<select name="competitorid" id="competitorid">
 					<option></option>
 					<% @competitors.each do |competitor| %>

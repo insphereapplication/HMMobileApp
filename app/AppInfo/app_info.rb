@@ -14,6 +14,8 @@ class AppInfo
   property :apple_soft_upgrade_url, :string
   property :android_soft_upgrade_url, :string
   
+  property :mobile_crypt_key, :string
+  
   def self.instance
     AppInfo.find(:all).first
   end
