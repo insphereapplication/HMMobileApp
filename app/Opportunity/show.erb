@@ -46,7 +46,7 @@ $(document).ready(function(){
 				</li> 
 				<% @opportunity.contact.phone_numbers.each do |type, number| %>
 					<li data-icon="false">
-						<a href="<%= url_for :action => :call_number, :id => @opportunity.object, :query =>{:origin => @params['origin'], :phone_number => number} %>"> <%="#{type}: #{number}"%></a>
+						<a href="<%= url_for :action => :call_number, :id => @opportunity.object, :query =>{:origin => @params['origin'], :phone_number => number} %>" rel="external"> <%="#{type}: #{number}"%></a>
 						<%= check_preferred_and_donotcall(type, @opportunity.contact) %>
 					</li>
 				<% end %>

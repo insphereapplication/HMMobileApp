@@ -1,6 +1,12 @@
+<script>
+function validatelostother(){
 
+	
+return true;
+}
+</script>
 
-<div data-role="page" data-theme="b">
+<div data-role="page" id="lost_other_page" data-theme="b">
 	<%= offline_bar%>
 	<div data-role="header" data-theme="d" data-position="inline">
 		<a href="<%=url_for(:action=>:show, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
@@ -11,14 +17,14 @@
 	</div>
 	<div id="contentDiv" data-role="content">
 		<div class="ui-body ui-body-d">
-			<form name="lost_opportunity_other_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_lost_other_status, :query => {:origin => @params['origin']} %>">
+			<form id='lost_opportunity_other_form' method="POST" action="<%= url_for :controller => :Activity, :action => :update_lost_other_status, :query => {:origin => @params['origin']} %>">
 				<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
 				<% @params['appointments'].each do |appt| %>
 					<input type="hidden" name="appointments[]" value="<%= @params['appointments'].join(',') %>" />
 				<% end %>
-				<label for="status_code" class="fieldLabel">Lost Reason (Required):</label>
+				<label for="status_codeid" class="fieldLabel">Lost Reason (Required):</label>
 					
-				<select name="status_code" id="status_code">
+				<select name="status_code" id="status_codeid">
 					<option></option>
 					<% @lost_reasons.each do |reason| %>
 						<option value="<%=reason%>"><%=reason%></option>
@@ -32,8 +38,7 @@
 						<option value="<%=competitor%>"><%=competitor%></option>
 					<% end %>
 				</select>
-
-				<input type="submit" class="standardButton" value="Update" />
+				<input type="submit" href="#" data-direction="reverse" value="Update"/>
 			</form>
 		</div>
 	</div>
