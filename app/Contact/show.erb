@@ -56,6 +56,8 @@
 					
 					<% if @contact.cssi_heightft && @contact.cssi_heightin %>
 					<li data-icon="false"><a href="#">Height: <%= @contact.cssi_heightft + '\' ' + @contact.cssi_heightin + "\"" %></a></li>
+					<% elsif @contact.cssi_heightft %>
+					<li data-icon="false"><a href="#">Height: <%= @contact.cssi_heightft + '\' ' + "\"" %></a></li>
 					<% else %>
 					<li data-icon="false"><a href="#">Height :</a></li>
 					<% end %>

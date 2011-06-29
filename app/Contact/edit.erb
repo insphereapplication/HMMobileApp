@@ -27,6 +27,18 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
+				        		<label for="contact[firstname]" class="fieldLabel">First Name:</label>
+				        		<input id="contact[firstname]" maxlength="50" type="text" name="contact[firstname]" value="<%= @contact.firstname %>" />
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+				        		<label for="contact[lastname]" class="fieldLabel">Last Name:</label>
+				        		<input id="contact[lastname]" maxlength="50" type="text" name="contact[lastname]" value="<%= @contact.lastname %>"/>
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
 								<label for="contact[emailaddress1]" class="fieldLabel">Email Address:</label> 
 								<input type="email" maxlength="255" class="required_group" name="contact[emailaddress1]" id="contact[emailaddress1]" value="<%= @contact.emailaddress1 %>" <%= placeholder( "Email Address" ) %>>
 							</div>
@@ -182,6 +194,7 @@
 									<tr>
 										<td colspan="2">
 											<label for="select-choice-heightft" class="fieldLabel">Height:</label>
+											<label for="select-choice-heightin" class="fieldLabel" style="display:none;">Height:</label>
 										</td>
 									</tr>
 									<tr>
