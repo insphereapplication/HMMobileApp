@@ -22,24 +22,24 @@ return true;
 				<% @params['appointments'].each do |appt| %>
 					<input type="hidden" name="appointments[]" value="<%= @params['appointments'].join(',') %>" />
 				<% end %>
-
-				<label for="status_codeid" class="fieldLabel">Lost Reason (Required):</label>
-
-					
-				<select name="status_code" id="status_codeid">
-					<option></option>
+				<div data-role="fieldcontain">
+				<label for="status_codeid" class="select">Lost Reason:<font color="red">&nbsp;&nbsp;*<br/></font></label>
+				<select data-role="none" data-native-menu="false" name="status_code" id="status_codeid">
+					<option data-placeholder="true"></option>
 					<% @lost_reasons.each do |reason| %>
 						<option value="<%=reason%>"><%=reason%></option>
 					<% end %>
-				</select>
-
-				<label for="competitorid" class="fieldLabel">Competitor:</label>
-				<select name="competitorid" id="competitorid">
-					<option></option>
+				<br/></select>
+				</div>
+				<div data-role="fieldcontain">
+				<label for="competitorid" class="select">Competitor:<br/></label>
+				<select data-role="none" data-native-menu="false" name="competitorid" id="competitorid">
+					<option data-placeholder="true"></option>
 					<% @competitors.each do |competitor| %>
 						<option value="<%=competitor%>"><%=competitor%></option>
 					<% end %>
 				</select>
+				</div>
 				<input type="submit" href="#" data-direction="reverse" value="Update"/>
 			</form>
 		</div>
