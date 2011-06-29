@@ -514,6 +514,7 @@ class SettingsController < Rho::RhoController
   
   def show_log
     Rho::RhoConfig.show_log
+    WebView.refresh # this line gets rid of the spinner
   end
   
   def toggle_log_level
