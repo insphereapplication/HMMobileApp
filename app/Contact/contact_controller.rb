@@ -166,7 +166,7 @@ class ContactController < Rho::RhoController
     if @params['PIN'] == Settings.pin
       puts @params.inspect
       Settings.pin_last_activity_time = Time.new
-      Settings.pin_confirmed= true
+      Settings.pin_confirmed = true
       render :action => :show, :id => @params['id'], :query => {:origin => @params['origin']}
     else
       Alert.show_popup({

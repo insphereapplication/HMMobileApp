@@ -184,7 +184,7 @@ class SettingsController < Rho::RhoController
   end
   
   def pin
-    render :action => :pin
+    render :action => :pin, :back => 'callback:', :layout => 'layout_jquerymobile'
   end
   
   def validate_pin

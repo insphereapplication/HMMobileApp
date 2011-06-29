@@ -365,6 +365,25 @@ $('#callback_create, #callback_edit').live('pagecreate',function(event){
 	}, "Please specify a valid phone number in format ### ### ####");
 });
 
+
+// pin reset 
+$('#pin_reset_page').live('pagecreate',function(event){
+	$("#reset_pin_form").validate({
+	     rules: {
+	        enter_pin: {
+	          required: true,
+	          number: true
+	        },
+			verify_pin: {
+			      equalTo: "#enter_pin"
+			    }
+	     }
+	    });
+
+});
+
+
+
 // Appointment Add / Edit
 $('#appointment_add_page, #appointment_edit_page').live('pagecreate',function(event){
 	$("#appointment_form").validate();
