@@ -36,6 +36,9 @@ class Activity
   property :email_from, :string
   ################################
   
+  belongs_to :parent_id, 'Opportunity'
+  belongs_to :parent_contact_id, 'Contact'
+  
   index :activity_pk_index, [:activityid]
   unique_index :unique_activity, [:activityid] 
   
