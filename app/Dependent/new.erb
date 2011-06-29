@@ -47,7 +47,7 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="dependent[cssi_dateofbirth]" class="fieldLabel">Date of Birth:</label>
-					<input id="dependent[cssi_dateofbirth]" type="text" name="dependent[cssi_dateofbirth]" readonly value="<%= $choosed['0'] %>" onClick="popupBirthDateAJPicker('1', 'Dependent Birth Date', 'dependent[cssi_dateofbirth]'); document.getElementById('dependent[cssi_gender]').focus();"></input>
+					<input id="dependent[cssi_dateofbirth]" type="text" name="dependent[cssi_dateofbirth]" readonly value="<%= $choosed['0'] %>" onClick="popupBirthDateAJPicker('1', 'Dependent Birth Date', 'dependent[cssi_dateofbirth]'); document.getElementById('submit_button').focus();"></input>
 				</div>
 			</div>
 			<div data-role="fieldcontain">
@@ -75,7 +75,7 @@
 					<input type="text" maxlength="250" name="dependent[cssi_comments]" id="dependent[cssi_comments]" value="" />
 				</div>
 			</div>
-			<input type="submit" data-theme="b" value="Done"/>
+			<input id="submit_button" type="submit" data-theme="b" value="Done"/>
 		</div>
 	</form>
 </div>

@@ -47,7 +47,7 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="contact[cssi_spousebirthdate]" class="fieldLabel">Date of Birth:</label>
-					<input id="contact[cssi_spousebirthdate]" type="text" name="contact[cssi_spousebirthdate]" readonly value="<%= $choosed['0'] %>"  onClick="popupBirthDateAJPicker('1', 'Spouse Birth Date', 'contact[cssi_spousebirthdate]'); document.getElementById('contact[cssi_spousegender]').focus();"></input>
+					<input id="contact[cssi_spousebirthdate]" type="text" name="contact[cssi_spousebirthdate]" readonly value="<%= $choosed['0'] %>"  onClick="popupBirthDateAJPicker('1', 'Spouse Birth Date', 'contact[cssi_spousebirthdate]'); document.getElementById('submit_button').focus();"></input>
 				</div>
 			</div>
 			<div data-role="fieldcontain">
@@ -69,7 +69,7 @@
 					</select>
 				</div>
 			</div>			
-			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+			<input id="submit_button" type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
 		</div>
 	</form>
 </div>
