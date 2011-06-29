@@ -12,7 +12,7 @@ class SettingsController < Rho::RhoController
   def index
     $tab = 2
     @msg = @params['msg']
-    render :controller => :Setting, :back => 'callback:', :action => :index, :layout => 'layout_jquerymobile'
+    render :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
   end
   
   def can_skip_login?

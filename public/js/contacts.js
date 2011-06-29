@@ -77,6 +77,7 @@ function loadPage(){
 	searchTerms = $('input#search_input').val();
 	$("div#load-more-div").remove();
 	$('.contacts-list li').remove();
+	$('#no-contacts-found').remove();
 	loadContactsAsync(filterType, 0, 0, searchTerms);
 }
 
