@@ -1,7 +1,7 @@
 <script>
 function PickDateCallbackChangeFocus() {
 popupAppDateAJPicker('1', 'Application Date', 'cssi_applicationdate');
-document.getElementById('appdetail[cssi_avforapplicationsubmitted]').focus();
+document.getElementById('submit_button').focus();
 }
 </script>
 <div data-role="page" data-theme="b" id="appdetail_add_page">
@@ -64,7 +64,7 @@ document.getElementById('appdetail[cssi_avforapplicationsubmitted]').focus();
 					<input id="cssi_applicationdate" type="text" name="cssi_applicationdate" readonly value="<%= to_date(Time.new.to_s) %>" class="required" onClick="PickDateCallbackChangeFocus();"></input>
 				</div>
 			</div>
-			<input type="submit" id="btnDone" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+			<input id="submit_button" type="submit" id="btnDone" href="#" data-theme="b" data-direction="reverse" value="Done"/>
 		</div>
 	</form>
 </div>
