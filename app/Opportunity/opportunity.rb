@@ -231,9 +231,12 @@ class Opportunity
   end
   
   def phone_calls
-    Activity.find_by_sql(%Q{
+    sql = %Q{
         select * from Activity where type='PhoneCall' and #{is_owned_by_this_opportunity_sql}
-      })
+        order by scheduledend
+      }
+      
+    Activity.find_by_sql(sql)
   end
   
   def app_details

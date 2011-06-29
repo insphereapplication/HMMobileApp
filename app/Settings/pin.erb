@@ -1,31 +1,28 @@
-<div data-role="page"data-theme="b" id="jqm-home">
+<div data-role="page" data-theme="b" id="pin_reset_page">
 	<%= offline_bar %>
     <div data-role="header" data-backbtn="false">
         <h1><img src="/public/images/logo.png" alt="Login" /></h1>
     </div>
 
     <div data-role="content">
-	 <form method="POST" action="<%= url_for :action => :validate_pin, :query => {:origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity']} %>">
+	 <form id="reset_pin_form" method="POST" action="<%= url_for :action => :validate_pin, :query => {:origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity']} %>">
 	   <% if @msg %>
 		 <p style="color: red"><%= @msg %></p>
 	   <% end %>
        <ul data-role="listview" data-inset="true">
 			<li>
 				Login: <%= Settings.login %>
+		   </li>	
            <li>
 				<div data-role="fieldcontain" style="border: none">
 	       			<label for="enter_pin" style="display: inline">Enter PIN <small>(Should consist of 4 numbers)</small></label>
-	       			<input maxlength="4" type="password" pattern="[0-9]*" name="enter_pin" id="enter_pin" />
+	       			<input maxlength="4" type="password"  pattern="[0-9]*" name="enter_pin" id="enter_pin" />
 				</div>
-			</li>
-			<li>
 				<div data-role="fieldcontain" style="border: none">
 					 <label for="verify_pin" style="display: inline">Verify PIN</label>
                      <input maxlength="4" type="password" pattern="[0-9]*" name="verify_pin" id="verify_pin" />
 				</div>
-	     	</li>
-			<li>
-				<div data-role="fieldcontain" style="border: none">
+	     		<div data-role="fieldcontain" style="border: none">
 					<label for="pin_password" style="display: inline">Password</label>
                     <input type="password" name="pin_password" id="pin_password" />
 				</div>
