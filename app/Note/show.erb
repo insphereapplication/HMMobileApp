@@ -1,6 +1,6 @@
 <div data-role="page" data-theme="b" data-cache="never">
 		<div data-role="header" data-backbtn="false">
-			<h3>Note Detail</h3>
+			<h3>Note Detail <%= sync_spinner %></h3>
 			<a href="<%=url_for(:controller => :Opportunity, :action=>:show, :id => @note.parent_opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
 		</div>
 	<div data-role="content">

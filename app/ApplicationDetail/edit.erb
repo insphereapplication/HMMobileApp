@@ -2,7 +2,7 @@
 	<form method="post" id="appdetail" action="<%= url_for(:action => :update, :id => @appdetail.object, :query => {:opportunity => @appdetail.opportunity_id, :origin => @params['origin']})%>" name="appdetail_edit">
 		<div data-role="header" data-backbtn="false" data-theme="b">
 			<a href="<%= url_for(:controller => :Opportunity, :action => :won, :id => @params['opportunity'], :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>			
-			<h1>Application Details</h1>
+			<h1>Application Details <%= sync_spinner %></h1>
 			<span class="ui-btn-right">
 				<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
 			</span>

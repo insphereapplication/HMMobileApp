@@ -1,8 +1,14 @@
+<script>
+function PickDateCallbackChangeFocus() {
+popupAppDateAJPicker('1', 'Application Date', 'cssi_applicationdate');
+document.getElementById('appdetail[cssi_avforapplicationsubmitted]').focus();
+}
+</script>
 <div data-role="page" data-theme="b" id="appdetail_add_page">
 	<form method="post" id="appdetail" action="<%= url_for(:action => :create, :query => {:opportunity => @opportunity.object, :origin => @params['origin']})%>" name="app_details_create">
 		<div data-role="header" data-backbtn="false" data-theme="b">
 			<a href="<%= url_for(:controller => :Opportunity, :action => :won, :id => @opportunity.object, :query =>{:opportunity => @opportunity.object, :origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>			
-			<h1>Add App Details</h1>
+			<h1>Add App Details <%= sync_spinner %></h1>
 			<span class="ui-btn-right">
 				<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
 			</span>
@@ -55,10 +61,10 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="cssi_applicationdate" class="fieldLabel">Application Date:<font color="red">&nbsp;&nbsp;*</font></label>
-					<input id="cssi_applicationdate" type="text" name="cssi_applicationdate" readonly value="<%= $choosed['0'] %>" class="required" onClick="popupAppDateAJPicker('1', 'Application Date', 'cssi_applicationdate');"></input>
+					<input id="cssi_applicationdate" type="text" name="cssi_applicationdate" readonly value="<%= $choosed['0'] %>" class="required" onClick="PickDateCallbackChangeFocus();"></input>
 				</div>
 			</div>
-			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+			<input type="submit" id="btnDone" href="#" data-theme="b" data-direction="reverse" value="Done"/>
 		</div>
 	</form>
 </div>

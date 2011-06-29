@@ -15,7 +15,7 @@ document.getElementById('appointment_duration').focus();
 		<%= offline_bar%>
 		<div data-role="header" data-theme="b" data-position="inline">
 			<a href="<%=url_for(:action=>:show_appt, :id => @appt.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
-			<h1>Edit Appt</h1>
+			<h1>Edit Appt 	<%= sync_spinner %></h1>
 			<span class="ui-btn-right">
 			<input type="submit" data-theme="b" class="standardButton" onclick="getLocationType(); return enableLocation();" value="Done"/>
 			</span>

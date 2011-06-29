@@ -10,7 +10,7 @@
 					<%= offline_bar %>
 					<div data-role="header" data-backbtn="false" data-theme="b">
 						<a href="<%= url_for :action => :show, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" data-transition="slideback" data-icon="back">Cancel</a>
-						<h1>Edit</h1>
+						<h1>Edit <%= sync_spinner %></h1>
 						<!-- <a href="JAVASCRIPT:contact_edit.submit()" data-transition="slideback">Done</a> -->
 						<span class="ui-btn-right">
 							<input type="submit" data-theme="b" data-transition="none" data-icon="false" value="Done"/>

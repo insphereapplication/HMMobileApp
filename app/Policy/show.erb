@@ -2,7 +2,7 @@
 	<%= offline_bar %>
 		<div data-role="header" data-backbtn="false">
 			<a href="<%= url_for(:controller => :Contact, :action => :show, :id => @policy.contact.object, :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}) %>" data-direction="reverse" data-icon="back">Contact</a>
-			<h3>Policy Detail</h3
+			<h3>Policy Detail <%= sync_spinner %></h3>
 		</div>
 	<div data-role="content">
 		<ul data-role="listview" data-theme="d" data-inset="true">
