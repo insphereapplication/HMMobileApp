@@ -359,13 +359,14 @@ class SettingsController < Rho::RhoController
     WebView.execute_js("startSyncSpin();")
     setup_sync_handlers
     
-
     
     sourcename = @params['source_name'] ? @params['source_name'] : ""
   
     status = @params['status'] ? @params['status'] : ""
     
     if status == "complete"
+      Settings.set_last_synced_time
+            
       if sourcename == 'AppInfo'
         check_for_upgrade
       end
