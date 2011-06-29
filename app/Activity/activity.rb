@@ -199,7 +199,7 @@ class Activity
         #{SELECT_SCHEDULED_NO_WHERE_SQL} #{type_where_clause} and
         (c.contactid=o.contact_id) and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-        #{SCHEDULED_TIME_SQL} #{time_compare} #{NOW_SQL}and
+        #{SCHEDULED_TIME_SQL} #{time_compare} #{NOW_SQL} and
         #{SCHEDULED_OPEN_SQL}
         #{like_clause}
         #{SCHEDULED_ORDERBY_SQL}
