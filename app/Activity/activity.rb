@@ -36,6 +36,9 @@ class Activity
   property :email_from, :string
   ################################
   
+  belongs_to :parent_id, 'Opportunity'
+  belongs_to :parent_contact_id, 'Contact'
+  
   index :activity_pk_index, [:activityid]
   unique_index :unique_activity, [:activityid] 
   
@@ -199,7 +202,7 @@ class Activity
         #{SELECT_SCHEDULED_NO_WHERE_SQL} #{type_where_clause} and
         (c.contactid=o.contact_id) and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-        #{SCHEDULED_TIME_SQL} #{time_compare} #{NOW_SQL}and
+        #{SCHEDULED_TIME_SQL} #{time_compare} #{NOW_SQL} and
         #{SCHEDULED_OPEN_SQL}
         #{like_clause}
         #{SCHEDULED_ORDERBY_SQL}

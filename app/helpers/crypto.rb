@@ -5,7 +5,9 @@ require 'base64'
 class Crypto
   
   def self.get_rijndael
-     Crypt::Rijndael::new( AppInfo.instance.mobile_crypt_key )
+     # Will need to use change back to the AppInfo once the property bag is working.
+     #Crypt::Rijndael::new( AppInfo.instance.mobile_crypt_key )
+     Crypt::Rijndael::new( CryptKey.instance.mobile_crypt_key )
   end 
 
   
