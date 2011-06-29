@@ -222,7 +222,6 @@ class ActivityController < Rho::RhoController
           opportunity.record_phone_call_made_now
       
           finished_loss_status(opportunity, @params['origin'], @params['appointments'])
-          opportunity.destroy
           db.commit
         rescue Exception => e
           puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
