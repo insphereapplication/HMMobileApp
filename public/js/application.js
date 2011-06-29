@@ -12,7 +12,6 @@ $(document).ready(function() {
       return false;
     }
   });
-});
 
 // Disables a form if the form was valid (prevent duplicate submits)
  $('form').live('submit', function(event) {
@@ -20,6 +19,9 @@ $(document).ready(function() {
          $('input[type="submit"]').attr('disabled', 'disabled');
 		}
  });
+});
+
+
 
 
 
