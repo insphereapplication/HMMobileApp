@@ -13,6 +13,7 @@ class ContactController < Rho::RhoController
   def index
     $tab = 1
     Settings.record_activity
+    @page_limit = System.get_property('platform') == "ANDROID" ? 3 : 10
     render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
