@@ -3,7 +3,7 @@ $(document).ready(function() {
 		loadMore();
 	});
 	
-	$('#submit-ac-search').click(function(){
+	$('#submit-ac-search').live('click', function(){
 		initializeSearchAC();
 	});
 	

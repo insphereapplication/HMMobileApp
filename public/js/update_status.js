@@ -1,5 +1,5 @@
 $(document).ready(function() {
-   	$('.UpdateStatus').click(function() {
+   	$('.UpdateStatus').live('click', function() {
 
 		var apptids = $('input:checkbox:checked.custom').map(function(){
 			return this.value
@@ -10,7 +10,7 @@ $(document).ready(function() {
 		window.location.href = $(this).attr('href') + appointments + notes;
 		return false;
 	});
-	$('.UpdateStatusWon').click(function() {
+	$('.UpdateStatusWon').live('click', function() {
 
 		// if(confirm('Click OK to Confirm this Opportunity as Won')){			
 			var apptids = $('input:checkbox:checked.custom').map(function(){
@@ -26,7 +26,7 @@ $(document).ready(function() {
 		// 	return false;
 		// }
 	});
-	$('.UpdateStatusLost').click(function() {
+	$('.UpdateStatusLost').live('click', function() {
 
 		// if(confirm('Click OK to Confirm this Opportunity as Lost')){			
 			var apptids = $('input:checkbox:checked.custom').map(function(){

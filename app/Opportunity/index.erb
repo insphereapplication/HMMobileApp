@@ -52,7 +52,7 @@
 		loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val() );
 		loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
 	
-		$('#followup_filter_button').click( function()
+		$('#followup_filter_button').live('click', function()
 		{
 			toggleFilterArea('followup');
 			filter_status=getSelectedText('followup','status_reason');
@@ -64,7 +64,7 @@
 			return false;
 		});
 		
-		$('#followup_clear').click( function()
+		$('#followup_clear').live('click', function()
 		{
 			$('#followup_status_reason_filter').val('All');
 			$('#followup_sort_by_filter').val('LastActivityDateAscending');
@@ -74,7 +74,7 @@
 			return false;
 		});
 
-		$('#appointments_clear').click( function()
+		$('#appointments_clear').live('click', function()
 		{
 			$('#appointments_search_input').val('');
 			$('#appointments_select_filter').val('All');
@@ -83,7 +83,7 @@
 			return false;
 		});
 
-		$('#appointments_filter_button').click( function()
+		$('#appointments_filter_button').live('click', function()
 		{
 			toggleFilterArea('appointments');
 			appointments_filter=getSelectedText('appointments','select')

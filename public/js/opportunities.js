@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	
-   	$('#new-leads-button').click(function() {
+   	$('#new-leads-button').live('click', function() {
 		checkForChanges('new-leads');
 		setNavContext('new-leads');
 		$('.opp-tab').hide();
@@ -9,7 +9,7 @@ $(document).ready(function() {
 		$('#new-leads').show();
 	});
 	
-	$('#follow-ups-button').click(function() {
+	$('#follow-ups-button').live('click', function() {
 		checkForChanges('follow-ups');
 		setNavContext('follow-ups')
 		$('.opp-tab').hide();
@@ -18,7 +18,7 @@ $(document).ready(function() {
 		$('#follow-ups').show();
 	});
 	
-	$('#appointments-button').click(function() {
+	$('#appointments-button').live('click', function() {
 		checkForChanges('appointments');
 		setNavContext('appointments')
 		$('.opp-tab').hide();
