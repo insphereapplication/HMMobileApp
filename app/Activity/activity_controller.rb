@@ -281,7 +281,6 @@ class ActivityController < Rho::RhoController
   end
     
   def update_status_call_back_requested
-    unless @params['callback_datetime'].blank?
       opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
       Settings.record_activity
       opp_attrs = {
@@ -319,10 +318,6 @@ class ActivityController < Rho::RhoController
       puts "Exception in update status call back requested, rolling back: #{e.inspect} -- #{@params.inspect}"
       db.rollback
     end
-    else
-        Alert.show_popup "Please choose a callback date and time."
-        WebView.refresh
-      end
   end
   
   def update_status_appointment_set

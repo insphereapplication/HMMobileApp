@@ -521,7 +521,7 @@ class OpportunityController < Rho::RhoController
     end
 
     quote_url="#{Rho::RhoConfig.quick_quote_url}#{quote_param}"
-    WebView.refresh()
+    redirect :action => :show, :id => @params['id'], :layout => 'layout_jquerymobile', :query=>{:origin => @params['origin']}
     System.open_url("#{quote_url}")
   end
   
