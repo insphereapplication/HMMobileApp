@@ -77,11 +77,11 @@ function loadPage(){
 	searchTerms = $('input#search_input').val();
 	$("div#load-more-div").remove();
 	$('.contacts-list li').remove();
+	$('#no-contacts-found').remove();
 	loadContactsAsync(filterType, 0, 0, searchTerms);
 }
 
-function loadContactsAsync(filterType, page, startPage, searchTerms){
-	var pageLimit = 10;
+function loadContactsAsync(filterType, page, startPage, searchTerms){	
 	$.get("/app/Contact/get_contacts_page", { filter: filterType, page: page, search_terms: searchTerms },
 		function(contacts) {	
 			if (contacts.match(/Error/) == "Error"){
@@ -140,5 +140,4 @@ function showFilterParams(filter, input){
 	filterparams = '<span id="filter-params" style="margin-top:5px;font-size:12px;">Filter: ' + filter + ', "' + input + '"</span>'
 	$('#filter-params').remove();
 	$('#filter-details').append( filterparams );
-
 }

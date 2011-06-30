@@ -283,3 +283,14 @@ label.error {
 	font-size: 80%;
 }
 
+div.ACSpinner{
+	position:absolute;
+	left:145px;
+	top:150px;
+}
+
+img.dncIcon{
+	height:12px;
+	width:12px;
+}
+

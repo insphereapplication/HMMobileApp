@@ -343,7 +343,7 @@ $('#lost_other_page').live('pagecreate',function(event){
 	
 	jQuery.validator.addMethod('notBlank', function(val, el) {
 	        return (val != '');
-	    }, 'Please select an option.');	
+	    }, '<br/>Please select an option.');	
 });
 
 // Callback Add / Edit

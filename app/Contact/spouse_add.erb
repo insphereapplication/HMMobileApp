@@ -2,7 +2,7 @@
 	<form method="post" id="spouse_form" action="<%= url_for(:controller => :Contact, :action => :spouse_update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" name="spouse_add">
 		<div data-role="header" data-backbtn="false" data-theme="b">
 			<a href="<%=url_for(:controller=>:Contact, :action=>:show, :id => @contact.object, :query=>{:origin => @params['origin'], :opportunity => @params['opportunity'] })%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
-			<h1>Add Spouse</h1>
+			<h1>Add Spouse <%= sync_spinner %></h1>
 			<span class="ui-btn-right">
 				<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
 			</span>
@@ -47,7 +47,7 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="contact[cssi_spousebirthdate]" class="fieldLabel">Date of Birth:</label>
-					<input id="contact[cssi_spousebirthdate]" type="text" name="contact[cssi_spousebirthdate]" readonly value="<%= $choosed['0'] %>"  onClick="popupBirthDateAJPicker('1', 'Spouse Birth Date', 'contact[cssi_spousebirthdate]'); document.getElementById('contact[cssi_spousegender]').focus();"></input>
+					<input id="contact[cssi_spousebirthdate]" type="text" name="contact[cssi_spousebirthdate]" readonly value="<%= $choosed['0'] %>"  onClick="popupBirthDateAJPicker('1', 'Spouse Birth Date', 'contact[cssi_spousebirthdate]'); document.getElementById('submit_button').focus();"></input>
 				</div>
 			</div>
 			<div data-role="fieldcontain">
@@ -69,7 +69,7 @@
 					</select>
 				</div>
 			</div>			
-			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
+			<input id="submit_button" type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
 		</div>
 	</form>
 </div>

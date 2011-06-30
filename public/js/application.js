@@ -12,7 +12,6 @@ $(document).ready(function() {
       return false;
     }
   });
-});
 
 // Disables a form if the form was valid (prevent duplicate submits)
  $('form').live('submit', function(event) {
@@ -20,6 +19,9 @@ $(document).ready(function() {
          $('input[type="submit"]').attr('disabled', 'disabled');
 		}
  });
+});
+
+
 
 
 
@@ -258,6 +260,16 @@ function toggle(showHideDiv) {
 	else {
 		ele.style.display = "block";
 	}
+}
+
+function showACSpin(){
+	spinner = document.getElementById('syncSpinner');
+	spinner.style.display = 'block'
+}
+
+function hideACSpin(){
+	spinner = document.getElementById('syncSpinner');
+	spinner.style.display = 'none'
 } 
 
 //dynamically populate phone numbers from dropdowns
@@ -494,6 +506,16 @@ function updateConnectionStatusIndicator()
 			}
 		);
 	}
+}
+
+function stopSyncSpin(){
+	spinner = document.getElementById('syncSpinner');
+	spinner.style.visibility = 'hidden'
+}
+
+function startSyncSpin(){
+	spinner = document.getElementById('syncSpinner');
+	spinner.style.visibility = 'visible'
 }
 
 function pollConnectionStatus(interval_ms)

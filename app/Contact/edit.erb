@@ -10,7 +10,7 @@
 					<%= offline_bar %>
 					<div data-role="header" data-backbtn="false" data-theme="b">
 						<a href="<%= url_for :action => :show, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" data-transition="slideback" data-icon="back">Cancel</a>
-						<h1>Edit</h1>
+						<h1>Edit <%= sync_spinner %></h1>
 						<!-- <a href="JAVASCRIPT:contact_edit.submit()" data-transition="slideback">Done</a> -->
 						<span class="ui-btn-right">
 							<input type="submit" data-theme="b" data-transition="none" data-icon="false" value="Done"/>
@@ -24,6 +24,18 @@
 						<div align="center">
 							<label class="fieldLabel"><b>Edit <%= @contact.full_name %></b></label><br>
 							<br>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+				        		<label for="contact[firstname]" class="fieldLabel">First Name:</label>
+				        		<input id="contact[firstname]" maxlength="50" type="text" name="contact[firstname]" value="<%= @contact.firstname %>" />
+							</div>
+						</div>
+						<div data-role="fieldcontain">
+							<div class="ui-body ui-body-d">
+				        		<label for="contact[lastname]" class="fieldLabel">Last Name:</label>
+				        		<input id="contact[lastname]" maxlength="50" type="text" name="contact[lastname]" value="<%= @contact.lastname %>"/>
+							</div>
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
@@ -182,6 +194,7 @@
 									<tr>
 										<td colspan="2">
 											<label for="select-choice-heightft" class="fieldLabel">Height:</label>
+											<label for="select-choice-heightin" class="fieldLabel" style="display:none;">Height:</label>
 										</td>
 									</tr>
 									<tr>

@@ -40,6 +40,12 @@ module BrowserHelper
     }
   end
   
+  def sync_spinner
+      %Q{
+        	<img style="visibility:hidden;" id="syncSpinner" src="/public/images/syncSpinner.gif" height="12" width="12" />
+      }
+  end
+  
   def udpate_status_lost_link(opportunity, text, status_code)
     #launch dialog to confirm lost
     %Q{

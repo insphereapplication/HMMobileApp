@@ -290,7 +290,7 @@ class OpportunityController < Rho::RhoController
       else
         redirect :action => :index, :back => 'callback:'
       end
-    end
+  end
     
   def app_detail_show
       # @appdetail = Opportunity.find(@params['id'])

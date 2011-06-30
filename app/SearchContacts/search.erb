@@ -4,7 +4,7 @@
 				<a href="<%=url_for( :controller => :Contact, :action=>:index)%>" data-direction="reverse" rel="external" data-theme="b" data-icon="back" class="ui-btn-left ui-btn ui-btn-icon-left ui-btn-corner-all ui-shadow ui-btn-up-b">
 			<span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Back</span><span class="ui-icon ui-icon-back ui-icon-shadow"></span></span>
 		</a>
-		<h1 class="ui-title" tabindex="0" role="heading" aria-level="1">Activity Center</h1>
+		<h1 class="ui-title" tabindex="0" role="heading" aria-level="1">Activity Center </h1>
 	</div>
 
 	<form name="contact_filter_form" id="contact_filter_form">	
@@ -33,36 +33,45 @@
 					</div>
 				</div>
 			</fieldset>
+			<% if @params['msg'] %>
+				 <div style="color:red;"><%= @params['msg'] %> </div>
+			<% end %>
 		</div>
-	</form>	  	
+	</form>	  
+			<!-- <a href="#" onclick="showACSpin();"> HIDE SPIN </a>	 -->
 	<div class="ui-content search-results-list" data-role="none" role="main">
 		<% if @last_search %>
 			<ul id="search-results-list" data-role="listview" data-counttheme="e" class="ui-listview" role="listbox">
 				<% if @last_search.search_results.size == 0%>
 					<li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No Contacts Found </li>
 				<% else %>
-				<% @last_search.search_results.each do |result| %>
-					<li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
-						<div class="ui-btn-inner">
-							<div class="ui-btn-text">
-								<% if @contacts_already_on_device.include?(result[0]) %>
-								   <h3 class="ui-li-heading"><a href="<%=url_for(:action => :show, :controller => :Contact, :id => result[0], :query => {:origin =>'SearchContacts'})%>" class="ui-link-inherit"> <%= result[1]['lastname'] %>, <%= result[1]['firstname'] %></a></h3>
+					<% @last_search.search_results.each do |result| %>
+						<li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
+							<div class="ui-btn-inner">
+								<div class="ui-btn-text">
+									<% if @contacts_already_on_device.include?(result[0]) %>
+									   <h3 class="ui-li-heading"><a href="<%=url_for(:action => :show, :controller => :Contact, :id => result[0], :query => {:origin =>'SearchContacts'})%>" class="ui-link-inherit"> <%= result[1]['lastname'] %>, <%= result[1]['firstname'] %></a></h3>
+												</div>
 											</div>
-										</div>
-										<img class="search-icon" src="/public/images/mobile_phone.png">
-							    </li>
-								<% else %>
-								   <h3 class="ui-li-heading"><a href="<%=url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })%>" class="ui-link-inherit"> <%= result[1]['lastname'] %>, <%= result[1]['firstname'] %></a></h3>
+											<img class="search-icon" src="/public/images/mobile_phone.png">
+								    </li>
+									<% else %>
+									   <h3 class="ui-li-heading"><a href="<%=url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })%>" class="ui-link-inherit"> <%= result[1]['lastname'] %>, <%= result[1]['firstname'] %></a></h3>
+												</div>
 											</div>
-										</div>
-										<img class="search-icon" src="/public/images/computer_icon.png">
-							    </li>
-								<%end%>
-				<% end %>
+											<img class="search-icon" src="/public/images/computer_icon.png">
+								    </li>
+									<%end%>
+					<% end %>
+					<% if @last_search.search_results.size == 50 %>
+					<li style="display:block; margin-left:auto; margin-right:auto; text-align: center;"> More than 50 results were found.  Please specify additional search parameters to narrow the results. </li>
+					<% end %>
 				<% end %>
 			</ul>
 		<% end %>
 		
-
+		<div class="ACSpinner">
+			<img id="syncSpinner" style="display: none; height:20px; width:20px;" src="/public/images/spinner.gif" />
+		</div>
 	</div>
 </div>

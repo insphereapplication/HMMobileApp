@@ -1,7 +1,7 @@
 <div data-role="page" data-theme="b" data-cache="never">
 		<div data-role="header" data-backbtn="false">
 			<a href="<%=url_for(:controller => :Opportunity, :action=>:show, :id => @callback.opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>			
-			<h3>Callback</h3>
+			<h3>Callback <%= sync_spinner %></h3>
 			<a data-icon="edit" href="<%=url_for(:action=>:edit_callback, :id => @callback.object, :query => {:origin => @params['origin']})%>" data-direction="forward"> Edit </a>
 		</div>
 	<div data-role="content">

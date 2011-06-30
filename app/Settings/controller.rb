@@ -12,7 +12,7 @@ class SettingsController < Rho::RhoController
   def index
     $tab = 2
     @msg = @params['msg']
-    render :controller => :Setting, :back => 'callback:', :action => :index, :layout => 'layout_jquerymobile'
+    render :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
   end
   
   def can_skip_login?
@@ -354,16 +354,19 @@ class SettingsController < Rho::RhoController
     #     ERR_CANCELBYUSER = 10
     #     ERR_SYNCVERSION = 11
     #     ERR_GEOLOCATION = 12
-
+    
+    #Show spinner on page to indicate sync is occurring
+    WebView.execute_js("startSyncSpin();")
     setup_sync_handlers
     
-
     
     sourcename = @params['source_name'] ? @params['source_name'] : ""
   
     status = @params['status'] ? @params['status'] : ""
     
     if status == "complete"
+      Settings.set_last_synced_time
+            
       if sourcename == 'AppInfo'
         check_for_upgrade
       end
@@ -378,7 +381,8 @@ class SettingsController < Rho::RhoController
       end
       
       @on_sync_complete.call
-      
+          #Sync complete--stop sync spinners
+          WebView.execute_js("stopSyncSpin();")
       #if latest integrated lead createdon is greater than before sync, display popup alert
       handle_new_integrated_leads
     elsif status == "ok"
@@ -510,6 +514,7 @@ class SettingsController < Rho::RhoController
   
   def show_log
     Rho::RhoConfig.show_log
+    WebView.refresh # this line gets rid of the spinner
   end
   
   def toggle_log_level
@@ -688,7 +693,7 @@ class SettingsController < Rho::RhoController
         WebView.navigate(WebView.current_location)
         
         System.open_url("#{resource_url}?#{resource_params_enc}")
-      end
+  end
 
   def check_for_upgrade
     latest_version = AppInfo.instance.latest_version

@@ -6,6 +6,14 @@ class Settings
 
   class << self
     
+    def set_last_synced_time
+      instance.last_synced = Time.now.to_s
+    end
+
+    def get_last_synced_time
+      instance.last_synced.nil? ? '' : instance.last_synced
+    end
+    
     def credentials
       [login,password,pin]
     end

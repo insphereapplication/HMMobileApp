@@ -10,18 +10,23 @@ class SearchContactsController < Rho::RhoController
     #TODO: remove last search activity
     SearchContacts.clear_all_search_results
     
+    unless System.has_network
+      WebView.navigate(url_for(:action => :search, :controller => :SearchContacts, :query => {:show_results => 'true', :msg => 'No internet connection. Please check your connection and try again.'}))
+    else
     
-    # perform new search    
-    @last_search_terms = { 
-      :first_name => @params['first_name'],
-      :last_name => @params['last_name']
-    }
-    SearchContacts.search({
-      :from => 'search',
-      :search_params => @last_search_terms,
-      :callback => url_for(:action => :search_callback),
-      :callback_param => ""
-    })
+      WebView.execute_js('showACSpin();')
+      # perform new search    
+      @last_search_terms = { 
+        :first_name => @params['first_name'],
+        :last_name => @params['last_name']
+      }
+      SearchContacts.search({
+        :from => 'search',
+        :search_params => @last_search_terms,
+        :callback => url_for(:action => :search_callback),
+        :callback_param => ""
+      })
+    end
   end
   
   def search_callback
