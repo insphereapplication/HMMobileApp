@@ -44,7 +44,9 @@ class SettingsController < Rho::RhoController
   end
   
   def get_connection_status
-    @connection_status = DeviceCapabilities.connection_status
+    connection_status = DeviceCapabilities.connection_status
+    sync_status = DeviceCapabilities.sync_status
+    @result = "#{connection_status},#{sync_status}"
     render :action => :get_connection_status, :back => 'callback:', :layout => false
   end
   
@@ -355,8 +357,6 @@ class SettingsController < Rho::RhoController
     #     ERR_SYNCVERSION = 11
     #     ERR_GEOLOCATION = 12
     
-    #Show spinner on page to indicate sync is occurring
-    WebView.execute_js("startSyncSpin();")
     setup_sync_handlers
     
     
@@ -381,8 +381,7 @@ class SettingsController < Rho::RhoController
       end
       
       @on_sync_complete.call
-          #Sync complete--stop sync spinners
-          WebView.execute_js("stopSyncSpin();")
+
       #if latest integrated lead createdon is greater than before sync, display popup alert
       handle_new_integrated_leads
     elsif status == "ok"

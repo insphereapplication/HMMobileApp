@@ -491,10 +491,14 @@ if (!Array.prototype.reduce)
 function updateConnectionStatusIndicator()
 {
 	offline_bar_selector = '.ui-offline-bar'
+	sync_spinner_selector = '#syncSpinner'
 	if( $(offline_bar_selector).length>0 )
 	{
 		$.post('/app/Settings/get_connection_status', 
-			function(connection_status) {				
+			function(ajax_result) {
+				result = ajax_result.split(",")
+				connection_status = result[0]
+				sync_status = result[1]		
 				if(connection_status == "Offline")
 				{
 					$(offline_bar_selector).show();
@@ -503,6 +507,17 @@ function updateConnectionStatusIndicator()
 				{
 					$(offline_bar_selector).hide();
 				}
+				
+				if(sync_status == "Syncing")
+				{
+					$(sync_spinner_selector).show();
+				}
+				else
+				{
+					$(sync_spinner_selector).hide();
+				}
+				
+				
 			}
 		);
 	}

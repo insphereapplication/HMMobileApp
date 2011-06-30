@@ -42,7 +42,7 @@ module BrowserHelper
   
   def sync_spinner
       %Q{
-        	<img style="visibility:hidden;" id="syncSpinner" src="/public/images/syncSpinner.gif" height="12" width="12" />
+        	<img class="#{ DeviceCapabilities.is_syncing? ? 'ui-hidden' : '' }" id="syncSpinner" src="/public/images/syncSpinner.gif" height="12" width="12" />
       }
   end
   

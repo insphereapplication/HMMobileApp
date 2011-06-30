@@ -49,10 +49,10 @@ KeepTrackOfLastVisitedPage = 0
 LastVisitedPage = ''
 
 # DEV RHOHUB
-syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
+#syncserver = 'https://rhohub-insphere-a06075d6.heroku.com/application'
 
 # MODEL ONSITE
-#syncserver = 'https://rhosync.model.insphereis.net/application'
+syncserver = 'https://rhosync.model.insphereis.net/application'
 
 # PRODUCTION ONSITE
 # syncserver = 'https://rhosync.insphereis.net/application'
@@ -77,7 +77,7 @@ full_screen = 0
 # Port of the local (embedded) HTTP server. This parameter is mainly for debug purposes.
 # If not specified, application will use dynamically selected one.
 # WARNING!!! Remove this parameter before put application to production.
-local_server_port = 8080
+#local_server_port = 8080
 
 # show status bar on windows mobile. default 1
 #wm_show_statusbar = 1
@@ -108,11 +108,11 @@ lead_cost_threshold = 100
 
 Dev
 # quick_quote_url = https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
-resource_center_url=https://mobile-rc.dev.insphereis.net/_layouts/InsphereLogin.aspx
+#resource_center_url=https://mobile-rc.dev.insphereis.net/_layouts/InsphereLogin.aspx
 
 Model
 quick_quote_url = https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
-#resource_center_url=https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx
+resource_center_url=https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx
 
 Production
 #quick_quote_url = #https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
