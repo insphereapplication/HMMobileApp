@@ -763,4 +763,8 @@ class SettingsController < Rho::RhoController
     System.exit
   end
 
+  def launch_upgrade_site 
+    System.open_url(@params['upgrade_url'])
+    render :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+  end
 end
