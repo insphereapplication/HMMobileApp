@@ -415,7 +415,7 @@ class SettingsController < Rho::RhoController
           SyncEngine.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :retry)
         else
           #notify the user here?
-          #we need to roll back the change that was made here, but the Rhodes API doesn't provide a mechanism to do this
+          SyncEngine.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :rollback, @params['server_errors']['update-rollback'])
         end
       end
 
