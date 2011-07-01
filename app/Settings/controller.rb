@@ -186,6 +186,7 @@ class SettingsController < Rho::RhoController
   end
   
   def pin
+    @msg = @params['msg']
     render :action => :pin, :back => 'callback:', :layout => 'layout_jquerymobile'
   end
   
@@ -193,15 +194,7 @@ class SettingsController < Rho::RhoController
     enter_pin = @params['enter_pin']
     verify_pin = @params['verify_pin']
     password = @params['pin_password']
-    
-    if enter_pin.length < 4
-      redirect :action => :pin, :query => {:origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity']}
-      Alert.show_popup(
-        {
-          :message => "PIN must be 4 numbers.",
-          :buttons => ["OK"]
-        })
-    else  
+     
       if enter_pin and verify_pin and password
         if ( enter_pin == verify_pin )
           if ( password == Settings.password )
@@ -212,15 +205,11 @@ class SettingsController < Rho::RhoController
             
             if (@params['origin'].nil? || @params['origin'].blank?)
               redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
+              return
             else
               redirect :controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
+              return
             end
-            # Alert.show_popup(
-            #           {
-            #             :message => "Your PIN has been reset.",
-            #             :buttons => ["OK"],
-            #             :callback => url_for( :action => :validate_pin_callback )
-            #           })
           else
             @msg = 'The password you entered is not valid.'
           end
@@ -228,9 +217,7 @@ class SettingsController < Rho::RhoController
           @msg = 'Please enter matching PINs'
         end
       end
-    end
-    
-    render :action => :pin if @msg and @msg.length > 0
+    WebView.navigate(url_for :action => :pin, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:msg => @msg, :origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity']} )  if @msg and @msg.length > 0
   end # validate_pin
   
   def validate_pin_callback
