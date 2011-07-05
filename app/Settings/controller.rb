@@ -383,10 +383,14 @@ class SettingsController < Rho::RhoController
       @on_sync_complete.call
 
       #if latest integrated lead createdon is greater than before sync, display popup alert
-      handle_new_integrated_leads
+      # handle_new_integrated_leads
     elsif status == "ok"
       if sourcename == 'AppInfo'
         check_for_upgrade
+      end
+      
+      if sourcename == 'Opportunity'
+        handle_new_integrated_leads
       end
       
       if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
