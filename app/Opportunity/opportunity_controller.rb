@@ -163,32 +163,25 @@ class OpportunityController < Rho::RhoController
   
   
   def check_preferred_and_donotcall(phone_type, contact)
-    preferred = contact.preferred_number
-    allow_call = 'True'
-    company_dnc = 'False'
-    preferred_type = ''
+    preferred = contact.cssi_preferredphone
     
-    if preferred == contact.telephone2 # Home
-      allow_call = contact.cssi_allowcallshomephone
-      company_dnc = contact.cssi_companydnchomephone
-      preferred_type = 'Home'
-    elsif preferred == contact.mobilephone # Mobile
-      allow_call = contact.cssi_allowcallsmobilephone
-      company_dnc = contact.cssi_companydncmobilephone
-      preferred_type = 'Mobile'
-    elsif preferred == contact.telephone1 # Business
-      allow_call = contact.cssi_allowcallsbusinessphone
-      company_dnc = contact.cssi_companydncbusinessphone
-      preferred_type = 'Business'
-    elsif preferred == contact.telephone3 # Alternate
-      allow_call = contact.cssi_allowcallsalternatephone
-      company_dnc = contact.cssi_companydncalternatephone
-      preferred_type = 'Alternate'
+    case phone_type
+      when 'Home'
+        allow_call = contact.cssi_allowcallshomephone
+        company_dnc = contact.cssi_companydnchomephone
+      when 'Mobile'
+        allow_call = contact.cssi_allowcallsmobilephone
+        company_dnc = contact.cssi_companydncmobilephone
+      when 'Business'
+        allow_call = contact.cssi_allowcallsbusinessphone
+        company_dnc = contact.cssi_companydncbusinessphone
+      when 'Alternate'
+        allow_call = contact.cssi_allowcallsalternatephone
+        company_dnc = contact.cssi_companydncalternatephone
     end
     
-    is_preferred = phone_type == preferred_type
-
-    puts "CHECK PHONE %^%^%^%^%^%^%^%^%^% phone_type: #{phone_type} contact: #{contact} preferred: #{preferred} allow_call: #{allow_call} company_dnc: #{company_dnc} is_preferred: #{is_preferred}"
+    Settings.record_activity
+    is_preferred = phone_type == preferred
 
     # Special case where we need 2 icons side by side, and some jQuery/JavaScript tricks are needed
     # We look for the two-icons attribute in the .erb and substitute a formatted HTML string that will show both
@@ -196,7 +189,7 @@ class OpportunityController < Rho::RhoController
       return %Q{ <span two-icons class="ui-icon ui-icon-check ui-icon-shadow"></span> }
     end
     
-    if phone_type == preferred_type
+    if phone_type == preferred
       %Q{ <span class="ui-icon ui-icon-check ui-icon-shadow"></span> }
     elsif (allow_call == 'False' || company_dnc == 'True')
       %Q{ <span class="ui-icon ui-icon-delete ui-icon-shadow"></span> }
