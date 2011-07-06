@@ -306,6 +306,10 @@ class SettingsController < Rho::RhoController
     end
   end
   
+  def update_last_synced_time
+    Settings.last_synced = Time.now.to_s
+  end
+  
   def handle_new_integrated_leads
     former_last_lead = Settings.last_integrated_lead
     set_last_integrated_lead
@@ -352,7 +356,7 @@ class SettingsController < Rho::RhoController
     status = @params['status'] ? @params['status'] : ""
     
     if status == "complete"
-      Settings.set_last_synced_time
+      update_last_synced_time
             
       if sourcename == 'AppInfo'
         check_for_upgrade

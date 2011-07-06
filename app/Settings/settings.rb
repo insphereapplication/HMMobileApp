@@ -5,15 +5,6 @@ class Settings
   set :schema_version, '1.0'
 
   class << self
-    
-    def set_last_synced_time
-      instance.last_synced = Time.now.to_s
-    end
-
-    def get_last_synced_time
-      instance.last_synced.nil? ? '' : instance.last_synced
-    end
-    
     def credentials
       [login,password,pin]
     end
@@ -89,6 +80,10 @@ class Settings
       instance.sync_type || 'background'
     end
     
+    def last_synced
+      instance.last_synced || ''
+    end
+    
     def new_opportunity_sync_pending
       result = instance.new_opportunity_sync_pending || false
       
@@ -140,6 +135,11 @@ class Settings
     
     def sync_type=(value)
       instance.sync_type=value
+      instance.save
+    end
+    
+    def last_synced=(value)
+      instance.last_synced=value
       instance.save
     end
     
