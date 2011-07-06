@@ -21,7 +21,7 @@ module BrowserHelper
   def udpate_status_won_link(opportunity)
     #launch dialog to confirm won
     %Q{
-      <a class="UpdateStatusWon" href="#{ url_for(:controller => :Activity, :action => :confirm_win_status, 
+      <a class="UpdateStatus" href="#{ url_for(:controller => :Activity, :action => :confirm_win_status, 
   				:query => {
   				  :opportunity_id => opportunity.object,
   				  :origin => @params['origin']
@@ -49,7 +49,7 @@ module BrowserHelper
   def udpate_status_lost_link(opportunity, text, status_code)
     #launch dialog to confirm lost
     %Q{
-      <a class="UpdateStatusLost" href="#{ url_for(:controller => :Activity, :action => :confirm_lost_status, 
+      <a class="UpdateStatus" href="#{ url_for(:controller => :Activity, :action => :confirm_lost_status, 
   				:query => {
   				  :opportunity_id => opportunity.object,
   			    :status_code => status_code,
