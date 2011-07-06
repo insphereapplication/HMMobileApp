@@ -518,6 +518,11 @@ class SettingsController < Rho::RhoController
     WebView.refresh # this line gets rid of the spinner
   end
   
+  def clear_log
+    Rho::RhoConfig.clean_log
+    WebView.refresh # this line gets rid of the spinner
+  end
+  
   def toggle_log_level
     new_log_level = detailed_logging_enabled? ? '3' : '1'
     RhoConf.set_property_by_name('MinSeverity', new_log_level)
