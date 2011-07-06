@@ -507,6 +507,13 @@ class SettingsController < Rho::RhoController
     WebView.refresh # this line gets rid of the spinner
   end
   
+  def send_log
+    Rho::RhoConfig.send_log
+    show_popup( "Log File Sent", "Time: #{Time.now.to_s}\nClient id #{Rhom::Rhom::client_id}" )
+    
+    WebView.refresh # this line gets rid of the spinner
+  end
+  
   def toggle_log_level
     new_log_level = detailed_logging_enabled? ? '3' : '1'
     RhoConf.set_property_by_name('MinSeverity', new_log_level)
