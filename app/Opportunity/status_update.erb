@@ -30,7 +30,7 @@
 		<ul data-role="listview" data-inset="true"> 
 			<li data-role="list-divider">Follow-Up</li> 
 			<% ['Left Message','No Answer'].each do |status_detail| %>
-				<li>
+				<li class="NoContact">
 					<%= udpate_status_no_contact_link(@opportunity, status_detail) %>
 				</li> 
 			<% end %>
