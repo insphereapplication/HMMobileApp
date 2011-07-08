@@ -215,24 +215,26 @@ module Constants
   BACKGROUND_POLL_INTERVAL = 600
   
   OTHER_LOST_REASONS = [
-    "Covered By Competitor",
-    "Wrong Number",
-    "No Answer",
-    "Disconnected Phone",
-    "Deceased",
-    "Cost",
-    "Insufficient Coverage",
-    "Other",
-    "Insurance Not Desired",
-    "Uninsurable",
-    "Group Insurance",
-    "Under Age",
-    "Over Age",
-    "Medicaid",
-    "Never Inquired",
-    "Does Not Speak English",
-    "Working With Agent",
-    "Covered By Spouse"
+    ["Not Interested","Insurance Not Desired"],
+    ["Wrong Number/Disconnected",'Wrong Number'],
+    ["Covered By Competitor","Covered By Competitor"],
+    ["Wrong Number","Wrong Number"],
+    ["No Answer","No Answer"],
+    ["Disconnected Phone","Disconnected Phone"],
+    ["Deceased","Deceased"],
+    ["Cost","Cost"],
+    ["Insufficient Coverage","Insufficient Coverage"],
+    ["Other","Other"],
+    ["Insurance Not Desired","Insurance Not Desired"],
+    ["Uninsurable","Uninsurable"],
+    ["Group Insurance","Group Insurance"],
+    ["Under Age","Under Age"],
+    ["Over Age","Over Age"],
+    ["Medicaid","Medicaid"],
+    ["Never Inquired","Never Inquired"],
+    ["Does Not Speak English","Does Not Speak English"],
+    ["Working With Agent","Working With Agent"],
+    ["Covered By Spouse","Covered By Spouse"]
   ]
   
   COMPETITORS = [

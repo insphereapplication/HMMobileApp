@@ -27,7 +27,8 @@ return true;
 				<select data-role="none" data-native-menu="false" name="status_code" id="status_codeid">
 					<option data-placeholder="true"></option>
 					<% @lost_reasons.each do |reason| %>
-						<option value="<%=reason%>"><%=reason%></option>
+					    <% selected =  ( @params['selected_option'] != 'Other' && @params['selected_option'] == reason[0] ) ? '"selected="selected"' : "" %>
+						<option value="<%=reason[1]%>" <%= selected %>><%=reason[0]%></option>
 					<% end %>
 				<br/></select>
 				</div>
