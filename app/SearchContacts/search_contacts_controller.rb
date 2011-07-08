@@ -14,7 +14,6 @@ class SearchContactsController < Rho::RhoController
       WebView.navigate(url_for(:action => :search, :controller => :SearchContacts, :query => {:show_results => 'true', :msg => 'No internet connection. Please check your connection and try again.'}))
     else
     
-      WebView.execute_js('showACSpin();')
       # perform new search    
       @last_search_terms = { 
         :first_name => @params['first_name'],
@@ -26,6 +25,7 @@ class SearchContactsController < Rho::RhoController
         :callback => url_for(:action => :search_callback),
         :callback_param => ""
       })
+            
     end
   end
   
