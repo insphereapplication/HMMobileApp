@@ -552,7 +552,7 @@ $('#contact_show, #ACcontact_show').live('pagecreate',function(event){
   	var replace = $('li[two-icons] div span');
 	if ( replace.length = 1 ) // We can only have 1 preferred number, so only one of these will have the attribute
 	{
-		replace.replaceWith('<span class="ui-icon ui-icon-delete"></span><span class="ui-icon ui-icon-check" style="float:right; right:33px;"></span>');
+		replace.replaceWith('<span class="ui-icon ui-icon-donotcall"></span><span class="ui-icon ui-icon-check" style="float:right; right:33px;"></span>');
 	}
 });
 
@@ -560,6 +560,6 @@ $('#opportunity_show').live('pagecreate',function(event){
   	var replace = $('span[two-icons]');
 	if ( replace.length = 1 ) // We can only have 1 preferred number, so only one of these will have the attribute
 	{
-		replace.replaceWith('<span class="ui-icon ui-icon-delete"></span><span class="ui-icon ui-icon-check" style="float:right; right:33px;"></span>');
+		replace.replaceWith('<span class="ui-icon ui-icon-donotcall"></span><span class="ui-icon ui-icon-check" style="float:right; right:33px;"></span>');
 	}
 });

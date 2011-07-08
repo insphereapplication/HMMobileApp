@@ -192,7 +192,7 @@ class OpportunityController < Rho::RhoController
     if phone_type == preferred
       %Q{ <span class="ui-icon ui-icon-check ui-icon-shadow"></span> }
     elsif (allow_call == 'False' || company_dnc == 'True')
-      %Q{ <span class="ui-icon ui-icon-delete ui-icon-shadow"></span> }
+      %Q{ <span class="ui-icon ui-icon-donotcall ui-icon-shadow"></span> }
     else
       ""
     end    

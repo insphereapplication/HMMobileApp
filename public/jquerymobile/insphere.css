@@ -169,8 +169,8 @@ ul li a { display: block; padding: 1px 5px; text-decoration: none;}
 }
 
 .ui-icon-donotcall {
-	background-image: url(/public/images/glyphish-icons/21-skull.png);
-	background-size: 16px 16px;
+	background-image: url(/public/images/dncIcon.png);
+	background-size: 18px 18px;
 }
 
 .ui-icon-edit {
