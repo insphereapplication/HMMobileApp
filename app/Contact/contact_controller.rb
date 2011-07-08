@@ -86,64 +86,8 @@ class ContactController < Rho::RhoController
     end
   end
   
-  def do_not_call_button(allow_call,company_dnc,phone_type,phone_number,contact)
-    if allow_call == 'True' && company_dnc == 'False' && !phone_number.blank?
-      %Q{
-          <a href="#{url_for(:controller => :Contact, :action => :do_not_call_press, :id => @contact.object, :query => {:origin => @params['origin'], :phone_type => phone_type, :phone_number => phone_number, :contact => contact})}" id="#{phone_type}_button" data-role="button" data-theme="b">DNC</a>
-        }
-    end 
-  end
-  
-  def do_not_call_button_spacing(allow_call,company_dnc,phone_type,phone_number,contact)
-    if allow_call == 'True' && company_dnc == 'False' && !phone_number.blank?
-      %Q{
-          <td width="20"></td>
-        }
-    end 
-  end
-  
-  def do_not_call_press
-    Settings.record_activity
-    phone_type = @params['phone_type']
-    phone_number = @params['phone_number']
-    id = @params['id']
-    
-    message = "This will mark #{phone_number} as do not call."
-    Alert.show_popup(
-                {
-                  :title => "Mark as Do Not Call?",
-                  :message => message,
-                  :buttons => ["Confirm","Cancel"],
-                  :callback => url_for( :action => :do_not_call_press_callback, :query => {:phone_type => phone_type, :id => id, :origin => @params['origin']} )
-                })
-  end
-  
-  def do_not_call_press_callback
-    Settings.record_activity
-    button_id   = @params['button_id']
-    id          = @params['id']
-    phone_type  = @params['phone_type']
-    
-    contact = Contact.find_contact(id)
-    
-    if button_id == 'Confirm' and contact
-      case phone_type
-        when "Mobile"
-          contact.update_attributes( { :cssi_allowcallsmobilephone => 'False', :cssi_companydncmobilephone => 'True' } )
-        when "Home"
-          contact.update_attributes( { :cssi_allowcallshomephone => 'False', :cssi_companydnchomephone => 'True' } )
-        when "Business"
-          contact.update_attributes( { :cssi_allowcallsbusinessphone => 'False', :cssi_companydncbusinessphone => 'True' } )
-        when "Alternative"
-          contact.update_attributes( { :cssi_allowcallsalternatephone => 'False', :cssi_companydncalternatephone => 'True' } )
-      end  
-      SyncEngine.dosync     
-      WebView.execute_js("$('##{phone_type}_icon').css('visibility','visible');$('##{phone_type}_button').hide();hideSpin();")
-    end
-    
-    # If the user selected 'Cancel'
-    WebView.execute_js("hideSpin();")
-    
+  def show_do_not_call_slider(allow_call,company_dnc,phone_number)
+    return allow_call == 'True' && company_dnc == 'False' && !phone_number.blank?
   end
   
   def select_preferred(phone_type, preferred)
@@ -239,6 +183,19 @@ class ContactController < Rho::RhoController
       dob_picker_time = DateTime.strptime(@params['birthdate'].to_s, DateUtil::BIRTHDATE_PICKER_TIME_FORMAT)
       dob_formatted = dob_picker_time.strftime(DateUtil::DEFAULT_TIME_FORMAT)
       puts "Parsed updated birthdate to #{dob_formatted}"
+    end
+    
+    ['alternate','home','business','mobile'].each do |dnctype|
+      dncfield = "allowcalls#{dnctype}phone"
+      companydncfield = "cssi_companydnc#{dnctype}phone"
+      
+      unless @params[dncfield].blank?
+        puts "$"*80 + " dncfield = #{@params[dncfield]}"
+        if @params[dncfield] == 'False'
+          puts "$"*80 + " Changing DNC values for #{dnctype}"
+          @params['contact'].merge!({"cssi_#{dncfield}" => 'False', "#{companydncfield}" => 'True'}) if @params['contact']
+        end
+      end
     end
     
     @params['contact'].merge!({'birthdate' => dob_formatted})
