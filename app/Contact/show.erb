@@ -20,13 +20,13 @@
 							<p>DOB: <%= to_date(@contact.birthdate) %></p>		
 					</li> 
 					
-					<% if @contact.mobilephone %>
+					<% if @contact.mobilephone && !@contact.mobilephone.blank? %>
 						<li <%= check_preferred_and_donotcall("Mobile", @contact.cssi_preferredphone, @contact.cssi_allowcallsmobilephone, @contact.cssi_companydncmobilephone) %> ><a href="tel: <%= @contact.mobilephone.to_s %>"> Mobile: <%= @contact.mobilephone %></a></li>
 					<% else %>
 						<li data-icon="false"><a href="#">Mobile:</a></li>
 					<% end %>
 					
-					<% if @contact.telephone1 %>
+					<% if @contact.telephone1 && !@contact.telephone1.blank? %>
 						<li <%= check_preferred_and_donotcall("Business", @contact.cssi_preferredphone, @contact.cssi_allowcallsbusinessphone, @contact.cssi_companydncbusinessphone) %> ><a href="tel: <%= @contact.telephone1.to_s %>">Bus: <%= @contact.telephone1 %></a>
 							<% if (@contact.cssi_businessphoneext != nil || @contact.cssi_businessphoneext == "")%> 
 								<!-- <div align="center"><p> -->x<%= @contact.cssi_businessphoneext %><!-- </p></div> -->
@@ -36,13 +36,13 @@
 						<li data-icon="false"><a href="#">Bus:</a></li>
 					<% end %>
 					
-					<% if @contact.telephone2 %>
+					<% if @contact.telephone2 && !@contact.telephone2.blank? %>
 						<li <%= check_preferred_and_donotcall("Home", @contact.cssi_preferredphone, @contact.cssi_allowcallshomephone, @contact.cssi_companydnchomephone) %> ><a href="tel: <%= @contact.telephone2.to_s %>">Home: <%= @contact.telephone2 %></a></li>
 					<% else %>
 						<li data-icon="false"><a href="#">Home:</a></li>
 					<% end %>
 					
-					<% if @contact.telephone3 %>
+					<% if @contact.telephone3 && !@contact.telephone3.blank? %>
 						<li <%= check_preferred_and_donotcall("Alternate", @contact.cssi_preferredphone, @contact.cssi_allowcallsalternatephone, @contact.cssi_companydncalternatephone) %> ><a href="tel: <%= @contact.telephone3.to_s %>">Alternate: <%= @contact.telephone3 %></a></li>
 					<% else %>
 						<li data-icon="false"><a href="#">Alternate:</a></li>
