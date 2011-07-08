@@ -263,14 +263,14 @@ function toggle(showHideDiv) {
 }
 
 function showACSpin(){
-	spinner = document.getElementById('syncSpinner');
+	spinner = document.getElementById('acSyncSpinner');
 	spinner.style.display = 'block'
 }
 
 function hideACSpin(){
-	spinner = document.getElementById('syncSpinner');
+	spinner = document.getElementById('acSyncSpinner');
 	spinner.style.display = 'none'
-} 
+}
 
 //dynamically populate phone numbers from dropdowns
 function populatePhone(dropdown)

@@ -3,7 +3,7 @@ $(document).ready(function() {
 		loadMore();
 	});
 	
-	$('#submit-ac-search').live('click', function(){
+	$('#submit-ac-search').click(function(){
 		initializeSearchAC();
 	});
 	
@@ -28,6 +28,10 @@ function disableSearchButtons(){
 	$('#contact_filter_clear').unbind('click');
 }
 
+function disableACSearchButtons(){
+	$('#submit-ac-search').unbind('click');
+}
+
 function initializeSearch(){
 	toggleDiv('filter'); 
 	toggleDiv('plus'); 
@@ -37,7 +41,7 @@ function initializeSearch(){
 	filter = select_list_field.options[select_list_selected_index].text;
 	input = $('input#search_input').val();
 	showFilterParams(filter, input);
-	loadPage();
+	loadPage();	
 }
 
 function clearContacts(){
@@ -52,6 +56,9 @@ function clearContacts(){
 function initializeSearchAC(){
 	firstName = $('input#search_first_name').val();
 	lastName = $('input#search_last_name').val();
+
+	disableACSearchButtons();
+	showACSpin();
 	// The callback function is empty except for error handling -- Rhosync's search method is asynchronous and will trigger a separate redirect 
 	$.get("/app/SearchContacts/search_contacts", {first_name: firstName, last_name: lastName},
 		function(result) {	
