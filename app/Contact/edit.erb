@@ -45,50 +45,52 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
+								<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,"Mobile") %> 
+								<% if System::get_property('platform') == 'APPLE' %>
+								<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" class="required_group" id="contact[mobilephone]" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>> 
+								<% else %>
+								<input type="tel" class="required_group" id="contact[mobilephone]" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>>
+								<% end %>
+								<% if show_do_not_call_slider(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,@contact.mobilephone) %>
 								<table width="100%">
 									<tr>
-										<td colspan="2">
-											<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,"Mobile") %> 
+										<td width="40%">
+											<label for="mobileDncSlider" class="fieldLabel">Allow Calls:</label>
 										</td>
-									</tr>
-									<tr>
 										<td>
-											<% if System::get_property('platform') == 'APPLE' %>
-											<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" class="required_group" id="contact[mobilephone]" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>> 
-											<% else %>
-											<input type="tel" class="required_group" id="contact[mobilephone]" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>>
-											<% end %>
-										</td>
-										<%= do_not_call_button_spacing(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,"Mobile",@contact.mobilephone,@contact.object) %>	
-										<td>
-											<%= do_not_call_button(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,"Mobile",@contact.mobilephone,@contact.object) %>
+											<select name="allowcallsmobilephone" id="mobileDncSlider" data-role="slider">
+												<option value="False" <% if @contact.cssi_allowcallsmobilephone == "False" || @contact.cssi_companydncmobilephone == 'True' %> selected="selected" <% end %> >No</option>
+												<option value="True" <% if @contact.cssi_allowcallsmobilephone == "True" || @contact.cssi_companydncmobilephone == 'False' %> selected="selected" <% end %>>Yes</option>
+											</select>
 										</td>
 									</tr>
 								</table>
+								<% end %>
 							</div>
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
+								<label for="contact[telephone1]" class="fieldLabel">Business Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,"Business") %>
+								<% if System::get_property('platform') == 'APPLE' %>
+								<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" class="required_group" id="contact[telephone1]" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
+								<% else %>
+								<input type="tel" id="contact[telephone1]" class="required_group" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
+								<% end %>
+								<% if show_do_not_call_slider(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,@contact.telephone1) %>
 								<table width="100%">
 									<tr>
-										<td colspan="2">
-											<label for="contact[telephone1]" class="fieldLabel">Business Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,"Business") %>
+										<td width="40%">
+											<label for="businessDncSlider" class="fieldLabel">Allow Calls?</label>
 										</td>
-									</tr>
-									<tr>
 										<td>
-											<% if System::get_property('platform') == 'APPLE' %>
-											<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" class="required_group" id="contact[telephone1]" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
-											<% else %>
-											<input type="tel" id="contact[telephone1]" class="required_group" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
-											<% end %>
-										</td>
-										<%= do_not_call_button_spacing(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,"Business",@contact.telephone1,@contact.object) %><%#  %>
-										<td>
-											<%= do_not_call_button(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,"Business",@contact.telephone1,@contact.object) %><%#  %>
+											<select name="allowcallsbusinessphone" id="businessDncSlider" data-role="slider">
+												<option value="False" <% if @contact.cssi_allowcallsbusinessphone == "False" || @contact.cssi_companydncbusinessphone == 'True' %> selected="selected" <% end %> >No</option>
+												<option value="True" <% if @contact.cssi_allowcallsbusinessphone == "True" || @contact.cssi_companydncbusinessphone == 'False' %> selected="selected" <% end %>>Yes</option>
+											</select>
 										</td>
 									</tr>
 								</table>
+								<% end %>
 							</div>
 						</div>
 						<div data-role="fieldcontain">
@@ -99,52 +101,52 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
+								<label for="contact[telephone2]" class="fieldLabel">Home Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,"Home") %>
+								<% if System::get_property('platform') == 'APPLE' %>
+								<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" class="required_group" id="contact[telephone2]" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
+								<% else %>
+								<input type="tel" class="required_group" id="contact[telephone2]" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
+								<% end %>
+								<% if show_do_not_call_slider(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,@contact.telephone2) %>
 								<table width="100%">
 									<tr>
-										<td colspan="2">
-											<label for="contact[telephone2]" class="fieldLabel">Home Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,"Home") %>
+										<td width="40%">
+											<label for="homeDncSlider" class="fieldLabel">Allow Calls?</label>
 										</td>
-									</tr>
-									<tr>
 										<td>
-											<% if System::get_property('platform') == 'APPLE' %>
-											<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" class="required_group" id="contact[telephone2]" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
-											<% else %>
-											<input type="tel" class="required_group" id="contact[telephone2]" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
-											<% end %>
-										</td>
-										<%= do_not_call_button_spacing(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,"Home",@contact.telephone2,@contact.object) %><%#  %>
-										<td>
-											<%= do_not_call_button(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,"Home",@contact.telephone2,@contact.object) %><%#  %>
+											<select name="allowcallshomephone" id="homeDncSlider" data-role="slider">
+												<option value="False" <% if @contact.cssi_allowcallshomephone == "False" || @contact.cssi_companydnchomephone == 'True' %> selected="selected" <% end %> >No</option>
+												<option value="True" <% if @contact.cssi_allowcallshomephone == "True" || @contact.cssi_companydnchomephone == 'False' %> selected="selected" <% end %>>Yes</option>
+											</select>
 										</td>
 									</tr>
 								</table>
+								<% end %>
 							</div>
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
+								<label for="contact[telephone3]" class="fieldLabel">Alternate Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone, "Alternative") %> 
+								<% if System::get_property('platform') == 'APPLE' %>
+								<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" class="required_group" name="contact[telephone3]" id="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>>
+								<% else %>
+								<input type="tel" class="required_group" id="contact[telephone3]" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>>
+								<% end %>
+								<% if show_do_not_call_slider(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone,@contact.telephone3) %>
 								<table width="100%">
 									<tr>
-										<td colspan="2">
-											<label for="contact[telephone3]" class="fieldLabel">Alternate Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone, "Alternative") %> 
+										<td width="40%">
+											<label for="alternateDncSlider" class="fieldLabel">Allow Calls?</label>
 										</td>
-									</tr>
-									<tr>
 										<td>
-											<% if System::get_property('platform') == 'APPLE' %>
-											<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" class="required_group" name="contact[telephone3]" id="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>>
-											<% else %>
-											<input type="tel" class="required_group" id="contact[telephone3]" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>>
-											<% end %>
-										</td>
-										<%= do_not_call_button_spacing(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone,"Alternative",@contact.telephone3,@contact.object) %><%#  %>
-										<td>
-											<%= do_not_call_button(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone,"Alternative",@contact.telephone3,@contact.object) %><%#  %>
+											<select name="allowcallsalternatephone" id="alternateDncSlider" data-role="slider">
+												<option value="False" <% if @contact.cssi_allowcallsalternatephone == "False" || @contact.cssi_companydncalternatephone == 'True' %> selected="selected" <% end %> >No</option>
+												<option value="True" <% if @contact.cssi_allowcallsalternatephone == "True" || @contact.cssi_companydncalternatephone == 'False' %> selected="selected" <% end %>>Yes</option>
+											</select>
 										</td>
 									</tr>
 								</table>
-								
-								
+								<% end %>
 							</div>
 						</div>
 						<div data-role="fieldcontain">
