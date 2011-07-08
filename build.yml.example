@@ -1,7 +1,7 @@
 sdk: "/Library/ParivedaInsite/rhodes"
 sdkversion: 2.3.0
-name: InSite Mobile
-version: 1.2.2
+name: InSite 
+version: 2.0.6
 vendor: Insphere
 build: debug
 bbver: 4.6
@@ -27,16 +27,16 @@ wmsdk: "Windows Mobile 6 Professional SDK (ARMV4I)"
 applog: rholog.txt
 encrypt_database: '1'
 iphone:
-  # configuration: Debug
-  # sdk: 4.2
   configuration: release
   sdk: iphoneos4.3
+  # ------------------ INSPHERE ENTERPRISE ACCOUNT -----------------------
   BundleIdentifier: com.insphere.insite
-  codesignidentity: GET YOURS FROM THE INSPHERE ENTERPRISE APPLE DEV ACCOUNT
-  provisionprofile: GET LATEST FROM INSPHERE ENTERPRISE APPLE DEV ACCOUNT
+  codesignidentity: "iPhone Developer: Kyle Norton (XX9U4R9CB6)"
+  provisionprofile: 57605487-01A2-48E5-93CE-A160E7631951
+  # ----------------------------------------------------------------------
   entitlements:
   BundleURLScheme: insite
   capabilities:
   - push
   
-extensions: ["json", "another-extension", "fileutils", "mspec"]
+extensions: ["json", "another-extension", "fileutils", "mspec", "crypt"]
