@@ -1,5 +1,5 @@
 module ExceptionUtil
-  def self.log_exception_to_server(exception)
+  def self.log_exception_to_server(exception, type=nil)
     unless exception.kind_of?(Exception)
       exception = new Exception(exception)
     end
@@ -7,7 +7,8 @@ module ExceptionUtil
     exception_data = {
       :message => exception.message,
       :backtrace => exception.backtrace,
-      :exception_id => Time.now.to_f.to_s.gsub(/\./,'')
+      :exception_id => Time.now.to_f.to_s.gsub(/\./,''),
+      :exception_type => type
     }
     
     begin

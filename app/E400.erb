@@ -2,7 +2,7 @@
 <% puts "E400 ERROR PAGE ERROR: #{Rho::RHO.current_exception.message().to_s}" %>
 <% puts "E400 ERROR PAGE STACKTRACE: #{Rho::RHO.current_exception.backtrace().to_s}" %>
 <%
-      ExceptionUtil.log_exception_to_server(Rho::RHO.current_exception)
+      ExceptionUtil.log_exception_to_server(Rho::RHO.current_exception, "E400")
 %>
 <% puts "********** END E400 ERROR PAGE **********" %>
 

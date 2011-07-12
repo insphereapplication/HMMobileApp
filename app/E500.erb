@@ -2,7 +2,7 @@
 <% puts "E500 ERROR PAGE ERROR: #{Rho::RHO.current_exception.message().to_s}" %>
 <% puts "E500 ERROR PAGE STACKTRACE: #{Rho::RHO.current_exception.backtrace().to_s}" %>
 <%
-      ExceptionUtil.log_exception_to_server(Rho::RHO.current_exception)
+      ExceptionUtil.log_exception_to_server(Rho::RHO.current_exception, "E500")
 %>
 <% puts "********** END E500 ERROR PAGE **********" %>
 
