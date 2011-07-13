@@ -11,7 +11,7 @@ class SearchContactsController < Rho::RhoController
     SearchContacts.clear_all_search_results
     
     unless System.has_network
-      WebView.navigate(url_for(:action => :search, :controller => :SearchContacts, :query => {:show_results => 'true', :msg => 'No internet connection. Please check your connection and try again.'}))
+      WebView.navigate(url_for(:action => :search, :controller => :SearchContacts, :query => {:show_results => 'true', :msg => 'No internet connection. Please check your connection and try again.'}), Constants::TAB_INDEX['Contacts'])
     else
     
       # perform new search    
@@ -32,7 +32,7 @@ class SearchContactsController < Rho::RhoController
   def search_callback
     status = @params["status"] 
     if (status and status == "complete")
-      WebView.navigate(url_for(:action => :search, :controller => :SearchContacts, :query => {:show_results => 'true'}))
+      WebView.navigate(url_for(:action => :search, :controller => :SearchContacts, :query => {:show_results => 'true'}), Constants::TAB_INDEX['Contacts'])
     end
   end   
     
@@ -47,8 +47,7 @@ class SearchContactsController < Rho::RhoController
   
   # this method is called when control returns to this page from the show_AC.erb page
   def show_search_index    
-    WebView.navigate(url_for(:action => :search, :controller => :SearchContacts, :query => {:show_results => 'true'}))
+    WebView.navigate(url_for(:action => :search, :controller => :SearchContacts, :query => {:show_results => 'true'}), Constants::TAB_INDEX['Contacts'])
   end
-    
   
 end

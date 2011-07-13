@@ -215,6 +215,12 @@ module Constants
   DEFAULT_POLL_INTERVAL = 60
   BACKGROUND_POLL_INTERVAL = 600
   
+  TAB_INDEX = {
+    "Opportunities" => 0,
+    "Contacts" => 1,
+    "Tools" => 2,        
+  }
+  
   OTHER_LOST_REASONS = [
     ["Not Interested","Insurance Not Desired"],
     ["Wrong Number/Disconnected",'Wrong Number'],
