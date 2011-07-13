@@ -30,7 +30,7 @@
 					<div>
 						<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]">
 							<option data-placeholder="true" value="<%= @appdetail.cssi_lineofbusinessid %>" selected="true"><%= @appdetail.cssi_lineofbusinessid %></option>
-								<% StaticEntity.get_rawlead_lob_names.each do |lob_name| %>
+								<% StaticEntity.get_lob_names.each do |lob_name| %>
 									<option value="<%=lob_name%>">
 										<%=lob_name%>
 									</option>
