@@ -678,7 +678,7 @@ class SettingsController < Rho::RhoController
 
   def quick_quote
     Settings.record_activity
-    WebView.refresh
+    redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
     quote_url=Rho::RhoConfig.quick_quote_url
     System.open_url("#{quote_url}")
   end
@@ -699,7 +699,7 @@ class SettingsController < Rho::RhoController
 
         rc_url ="#{resource_url}?#{resource_params_enc}"
        
-        WebView.refresh
+        redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
         
         System.open_url("#{resource_url}?#{resource_params_enc}")
   end
