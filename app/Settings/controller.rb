@@ -650,22 +650,26 @@ class SettingsController < Rho::RhoController
     end
   end
   
+  def parse_version_number(version)
+    version.split(".").map{ |x| x.to_i }
+  end
+  
   def needs_upgrade?(min_version, current_version) # returns true if current_version is less than min_version
     # comparison is lexicographical, as in it reads from left to right and only proceeds to the 
     # next sub-version if a given sub-version in min_version and current_version is equal
     unless min_version.nil?
-      min_version_split = min_version.split(".")
-      current_version_split = current_version.split(".")
+      min_version_split = parse_version_number(min_version)
+      current_version_split = parse_version_number(current_version)
     
       puts "****Version check: min version = #{min_version_split}, current version = #{current_version_split}****"
     
       # compare sub-versions from left to right
       # if current_version has fewer version numbers than min_version, assume '0' for missing version numbers to the right 
       (0...min_version_split.count).each do |i|
-        if min_version_split[i] > (current_version_split[i] || '0')
+        if min_version_split[i] > (current_version_split[i] || 0)
           # current_version must be older, no need to continue checking
           return true
-        elsif min_version_split[i] < (current_version_split[i] || '0')
+        elsif min_version_split[i] < (current_version_split[i] || 0)
           # current_version must be newer, no need to continue checking
           return false
         end
