@@ -19,7 +19,7 @@ class ContactController < Rho::RhoController
   
   def show_all_contacts
     if Contact.local_changed? || $first_render
-      WebView.navigate(url_for :controller => :Contact, :action => :index)
+      WebView.navigate(url_for(:controller => :Contact, :action => :index), Constants::TAB_INDEX['Contacts'])
       Contact.local_changed = false
       $first_render = false
     end
@@ -56,7 +56,7 @@ class ContactController < Rho::RhoController
       Settings.record_activity
       $search_input1, $search_input2 = @params['search_input'].split(' ', 2)
       $filter = @params['contact_filter']
-      WebView.navigate(url_for :controller => :Contact, :action => :index_filter, :query => {:search_input1 => search_in})
+      WebView.navigate(url_for(:controller => :Contact, :action => :index_filter, :query => {:search_input1 => search_in}), Constants::TAB_INDEX['Contacts'])
   end
   
   def check_preferred_and_donotcall(phone_type, preferred, allow_call, company_dnc)
