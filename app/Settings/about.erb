@@ -41,13 +41,13 @@
 					<li><a href="<%= url_for :action => :do_reset %>"><h1>Reset Database</h1></a></li>
 			    	<li><a href="<%= url_for :action => :do_sync %>"><h1>Perform Sync</h1></a></li>
 		        	<li><a href="<%= url_for :action => :show_log %>"><h1>Show Log</h1></a></li>
-					<li><a href="<%= url_for :action => :send_log %>"><h1>Send Log</h1></a></li>
 					<li><a href="<%= url_for :action => :clear_log %>"><h1>Clear Log</h1></a></li>
 					<li><a href="<%= url_for :action => :configure_log %>"><h1>Configure Log</h1></a></li>
 				</div>
 			</ul>
 			<ul data-role="listview" data-inset="true">
 				<li><h3><a href="<%= url_for :action => :show_log %>">Show Log</a></h3></li>
+				<li><a href="<%= url_for :action => :send_log %>"><h1>Send Log</h1></a></li>
 				<li><h3><a href="<%= url_for :action => :toggle_log_level %>"><%= detailed_logging_enabled? ? 'Disable' : 'Enable' %> Detailed Logging</a></h3></li>
 			</ul>
 			<div>

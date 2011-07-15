@@ -8,6 +8,7 @@ module ExceptionUtil
       :message => exception.message,
       :backtrace => exception.backtrace,
       :exception_id => Time.now.to_f.to_s.gsub(/\./,''),
+      :client_created_on => Time.now.utc.to_s,
       :exception_type => type
     }
     
