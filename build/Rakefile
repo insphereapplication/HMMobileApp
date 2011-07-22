@@ -8,6 +8,7 @@ def process_erb(erb_file, output_file, local_binding)
   File.open(output_file, 'w') {|f| f.write(template.result(local_binding)) }
 end
 
+# build tasks
 namespace :build do
   task :gen_rhoconfig do 
     app_db_version = '3.0'
