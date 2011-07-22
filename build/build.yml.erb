@@ -1,0 +1,40 @@
+sdk: <%= sdk_path %>
+sdkversion: <%= sdk_version %>
+name: <%= name %> 
+version: <%= version %>
+vendor: Insphere
+build: <%= build_type %>
+capabilities:
+    - push
+android: 
+  package_name: <%= package_name %>
+  production:
+    certificate: <%= android_cert_path %>
+    password: <%= android_password %>
+    alias: <%= name %>
+  emulator: rhoandroid
+  android_title: 1
+  push:
+    sender: <%= android_push_sender %>
+    notifications: always
+  capabilities: 
+  - network_state
+  - push
+  - vibrate
+  version: <%= android_sdk_version %>
+applog: rholog.txt
+encrypt_database: <%= encrypt_database %>
+iphone:
+  configuration: <%= iphone_config %>
+  sdk: <%= iphone_sdk %>
+  # ------------------ INSPHERE ENTERPRISE ACCOUNT -----------------------
+  BundleIdentifier: <%= bundle_identifier %>
+  codesignidentity: <%= codesignidentity %>
+  provisionprofile: <%= provisionprofile %>
+  # ----------------------------------------------------------------------
+  entitlements:
+  BundleURLScheme: <%= bundle_url_scheme %>
+  capabilities:
+  - push
+  
+extensions: <%= extensions %>

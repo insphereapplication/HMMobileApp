@@ -1,5 +1,6 @@
 require 'yaml'
 
+
 unless File.exists? "build.yml"
   puts "Cannot find build.yml"
   exit 1
@@ -13,6 +14,8 @@ if ENV["RHO_HOME"].nil?
 else
   rakefilepath = "#{ENV["RHO_HOME"]}/Rakefile"
 end
+
+require "#{$app_path}/build/build.rb"
 
 unless File.exists? rakefilepath
   puts "\nCannot find your Rhodes gem or source path: #{rakefilepath}"
