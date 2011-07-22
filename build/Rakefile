@@ -43,7 +43,7 @@ namespace :build do
   end
   
   task :prod => [:gen_rhoconfig, :gen_build_yml] do
-    load "../Rakefile"     
+    load "#{app_path}/Rakefile"     
     Rake::Task['device:android:production'].invoke
   end 
   
