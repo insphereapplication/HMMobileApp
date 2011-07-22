@@ -25,7 +25,7 @@ namespace :build do
     version = '2.1.0'
     iphone_config = 'release'
     iphone_sdk = 'iphoneos4.3'
-    codesignidentity = '"iPhone Developer: Kyle Norton (XX9U4R9CB6)"'
+    codesignidentity = '"iPhone Developer: Dave Sims (8A2526Z579)"'
     provisionprofile = '57605487-01A2-48E5-93CE-A160E7631951'
     package_name = 'com.insphere.insite' 
     sdk_path = "/Library/ParivedaInsite/rhodes"
@@ -46,6 +46,7 @@ namespace :build do
   task :prod => [:gen_rhoconfig, :gen_build_yml] do
     load "#{app_path}/Rakefile"     
     Rake::Task['device:android:production'].invoke
+    Rake::Task['device:iphone:production'].invoke
   end 
   
 end
