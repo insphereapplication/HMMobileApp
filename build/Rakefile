@@ -1,6 +1,8 @@
 require 'erb'
 require 'ap'
 
+app_path = File.expand_path(File.dirname(__FILE__) + "/..")
+
 def process_erb(erb_file, output_file, local_binding)
   template = ERB.new(File.read(erb_file))
   File.open(output_file, 'w') {|f| f.write(template.result(local_binding)) }
@@ -14,7 +16,7 @@ namespace :build do
     sync_server = 'rhosync.insphereis.net/application'
     quick_quote_url = 'quick/quote'
     resource_center_url = 'resource/center'
-    process_erb("#{$app_path}/build/rhoconfig.txt.erb", "#{$app_path}/rhoconfig.txt.tmp", binding)
+    process_erb("#{app_path}/build/rhoconfig.txt.erb", "#{app_path}/rhoconfig.txt", binding)
   end
   
   task :gen_build_yml do 
@@ -22,7 +24,7 @@ namespace :build do
     version = '2.1.0'
     iphone_config = 'release'
     iphone_sdk = 'iphoneos4.3'
-    codesignidentity = "iPhone Developer: Kyle Norton (XX9U4R9CB6)"
+    codesignidentity = '"iPhone Developer: Kyle Norton (XX9U4R9CB6)"'
     provisionprofile = '57605487-01A2-48E5-93CE-A160E7631951'
     package_name = 'com.insphere.insite' 
     sdk_path = "/Library/ParivedaInsite/rhodes"
@@ -37,10 +39,12 @@ namespace :build do
     bundle_identifier = "com.insphere.insite"
     bundle_url_scheme = 'insite'
     extensions = '["json", "another-extension", "fileutils", "mspec", "crypt"]'
-    process_erb("#{$app_path}/build/build.yml.erb", "#{$app_path}/build.yml.tmp", binding)
+    process_erb("#{app_path}/build/build.yml.erb", "#{app_path}/build.yml", binding)
   end
   
-  task :prod => [:gen_rhoconfig, :gen_build_yml, 'device:android:production'] do     
+  task :prod => [:gen_rhoconfig, :gen_build_yml] do
+    load "../Rakefile"     
+    Rake::Task['device:android:production'].invoke
   end 
   
 end
