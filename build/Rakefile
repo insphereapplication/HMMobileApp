@@ -2,20 +2,37 @@ require 'erb'
 require 'ap'
 require 'yaml'
 
-@app_path = File.expand_path(File.dirname(__FILE__) + "/..")
+APP_PATH = File.expand_path(File.dirname(__FILE__) + "/..")
 RHODES_BRANCH = "2-4-stable"
 
-def process_erb(erb_file, output_file)
+# icon folder names
+PROD_ICON_FOLDER = "Production"
+MODEL_UAT_ICON_FOLDER = "UAT-Model"
+PROD_UAT_ICON_FOLDER = "UAT-Prod"
+INTEG_DEV_ICON_FOLDER = "UAT-IntegDev"
+
+# rhoconfig and build.yml paths
+RHO_CONFIG_TEMPLATE_PATH = "#{APP_PATH}/build/rhoconfig.txt.erb"
+RHO_CONFIG_PATH = "#{APP_PATH}/rhoconfig.txt"
+BUILD_YML_TEMPLATE_PATH = "#{APP_PATH}/build/build.yml.erb"
+BUILD_YML_PATH = "#{APP_PATH}/build.yml"
+
+def process_erb(erb_file, output_file, local_binding=binding)
   template = ERB.new(File.read(erb_file))
-  File.open(output_file, 'w') {|f| f.write(template.result(binding)) }
+  File.open(output_file, 'w') {|f| f.write(template.result(local_binding)) }
 end
 
 def build_config
-  @build_config ||= YAML::load_file("#{@app_path}/build.yml")
+  @build_config ||= YAML::load_file("#{APP_PATH}/build.yml")
 end
 
 def update_rhodes
   system "cd #{build_config['sdk']} && git checkout #{RHODES_BRANCH} && git pull origin #{RHODES_BRANCH}"
+end
+
+def update_icons(icon_folder)
+  puts "Updating icons from #{icon_folder}..."
+  raise "Unable to update icons in #{APP_PATH}/icon/#{icon_folder}" unless system "cp #{APP_PATH}/icon/#{icon_folder}/* #{APP_PATH}/icon"
 end
 
 def build_yml
@@ -53,30 +70,74 @@ def rhoconfig
   }
 end
 
+def model_rhoconfig
+  rhoconfig.merge({
+    :sync_server => 'rhosync.model.insphereis.net/application', 
+    :quick_quote_url => " https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
+    :resource_center_url => "https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx"
+  })
+end
+
 # build tasks
 namespace :build do
+  namespace :update_icons do
+    task :prod do 
+      update_icons(PROD_ICON_FOLDER)
+    end
+    
+    task :model_uat do
+      update_icons(MODEL_UAT_ICON_FOLDER) 
+    end
+    
+    task :prod_uat do 
+      update_icons(PROD_UAT_ICON_FOLDER)
+    end
+    
+    task :integ_dev do 
+      update_icons(INTEG_DEV_ICON_FOLDER)
+    end
+  end
+  
   task :update_rhodes do 
     puts "Updating #{build_config['sdk']}..."
     raise "Build failed: Could not update Rhodes" unless update_rhodes
     puts "Successfully updated Rhodes..."
   end
   
-  task :gen_rhoconfig do 
-    puts "Generating rhoconfig.txt..."
-    process_erb("#{@app_path}/build/rhoconfig.txt.erb", "#{@app_path}/rhoconfig.txt")
+  task :gen_rhoconfig_prod do 
+    puts "Generating rhoconfig.txt for production..."
+    @rhoconfig = rhoconfig
+    process_erb(RHO_CONFIG_TEMPLATE_PATH, RHO_CONFIG_PATH, binding)
+    puts "Successfully generated rhoconfig.txt..."
+  end
+  
+  task :gen_rhoconfig_model do 
+    @rhoconfig = model_rhoconfig
+    puts "Generating rhoconfig.txt for production..."
+    process_erb(RHO_CONFIG_TEMPLATE_PATH, RHO_CONFIG_PATH, binding)
     puts "Successfully generated rhoconfig.txt..."
   end
   
   task :gen_build_yml do 
     puts "Generating build.yml..."
-    process_erb("#{@app_path}/build/build.yml.erb", "#{@app_path}/build.yml")
+    @build_yml = build_yml
+    process_erb(BUILD_YML_TEMPLATE_PATH, BUILD_YML_PATH, binding)
     puts "Successfully generated build.yml..."
   end
   
-  task :prod => [:gen_rhoconfig, :gen_build_yml, :update_rhodes] do
-    load "#{@app_path}/Rakefile"     
+  task :build_clients do
+    load "#{APP_PATH}/Rakefile"     
     Rake::Task['device:android:production'].invoke
     Rake::Task['device:iphone:production'].invoke
+  end
+  
+  task :prod => [:gen_rhoconfig_prod, :gen_build_yml, :update_rhodes, 'update_icons:prod', :build_clients] do
+  end
+  
+  task :prod_uat => [:gen_rhoconfig_prod, :gen_build_yml, :update_rhodes, 'update_icons:prod_uat', :build_clients] do
   end 
+  
+  task :model_uat => [:gen_rhoconfig_model, :gen_build_yml, :update_rhodes, 'update_icons:model_uat', :build_clients] do 
+  end
 end
 

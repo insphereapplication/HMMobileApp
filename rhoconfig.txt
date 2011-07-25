@@ -13,7 +13,7 @@ logname='InsiteMobile-rhodes'
 
 KeepTrackOfLastVisitedPage = 0 
 LastVisitedPage = ''
-syncserver = rhosync.insphereis.net/application
+syncserver = rhosync.model.insphereis.net/application
 
 full_screen = 0
 jqtouch_mode=1
@@ -21,8 +21,8 @@ jqtouch_mode=1
 splash_screen='zoom'
 lead_cost_threshold = 100
 
-quick_quote_url = quick/quote
-resource_center_url=https: resource/center
+quick_quote_url =  https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
+resource_center_url=https: https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx
 
 
 
