@@ -1,61 +1,82 @@
 require 'erb'
 require 'ap'
+require 'yaml'
 
-app_path = File.expand_path(File.dirname(__FILE__) + "/..")
-branch = "master"
-rhodes_dir = "/Library/ParivedaInsite"
+@app_path = File.expand_path(File.dirname(__FILE__) + "/..")
+RHODES_BRANCH = "2-4-stable"
 
-def process_erb(erb_file, output_file, local_binding)
+def process_erb(erb_file, output_file)
   template = ERB.new(File.read(erb_file))
-  File.open(output_file, 'w') {|f| f.write(template.result(local_binding)) }
+  File.open(output_file, 'w') {|f| f.write(template.result(binding)) }
+end
+
+def build_config
+  @build_config ||= YAML::load_file("#{@app_path}/build.yml")
+end
+
+def update_rhodes
+  system "cd #{build_config['sdk']} && git checkout #{RHODES_BRANCH} && git pull origin #{RHODES_BRANCH}"
+end
+
+def build_yml
+  {
+    :name => 'Insite',
+    :version => '2.1.0',
+    :iphone_config => 'release',
+    :iphone_sdk => 'iphoneos4.3',
+    :codesignidentity => '"iPhone Developer: Dave Sims (8A2526Z579)"',
+    :provisionprofile => '57605487-01A2-48E5-93CE-A160E7631951',
+    :package_name => 'com.insphere.insite',
+    :sdk_path => "/Library/ParivedaInsite/rhodes",
+    :sdk_version => "2.3.0",
+    :build_type => "release",
+    :android_password => "5zW8e3ZuS7DWY0TsnCTyyWnpGSDUqUgj",
+    :android_push_send => "insphereapplication@insphereis.com",
+    :android_sdk_version => "2.2",
+    :android_cert_path => "cert/path",
+    :android_push_sender => "push_sender",
+    :encrypt_database => '1',
+    :bundle_identifier => "com.insphere.insite",
+    :bundle_url_scheme => 'insite',
+    :extensions => '["json", "another-extension", "fileutils", "mspec", "crypt"]'
+  }
+end
+
+def rhoconfig
+  {
+    :app_db_version => '3.0',
+    :min_severity => '5',
+    :max_log_file_size => '1000000',
+    :sync_server => 'rhosync.insphereis.net/application',    
+    :quick_quote_url => "https://mobile.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
+    :resource_center_url => "https://mobile-rc.insphereis.net/_layouts/InsphereLogin.aspx"
+  }
 end
 
 # build tasks
 namespace :build do
   task :update_rhodes do 
-    puts "Updating #{rhodes_dir}..."
-    `cd #{rhodes_dir}`
-    puts `git pull origin #{branch}`
+    puts "Updating #{build_config['sdk']}..."
+    raise "Build failed: Could not update Rhodes" unless update_rhodes
+    puts "Successfully updated Rhodes..."
   end
   
   task :gen_rhoconfig do 
-    app_db_version = '3.0'
-    min_severity = '5'
-    max_log_file_size = '1000000'
-    sync_server = 'rhosync.insphereis.net/application'
-    quick_quote_url = 'quick/quote'
-    resource_center_url = 'resource/center'
-    process_erb("#{app_path}/build/rhoconfig.txt.erb", "#{app_path}/rhoconfig.txt", binding)
+    puts "Generating rhoconfig.txt..."
+    process_erb("#{@app_path}/build/rhoconfig.txt.erb", "#{@app_path}/rhoconfig.txt")
+    puts "Successfully generated rhoconfig.txt..."
   end
   
   task :gen_build_yml do 
-    name = 'Insite'
-    version = '2.1.0'
-    iphone_config = 'release'
-    iphone_sdk = 'iphoneos4.3'
-    codesignidentity = '"iPhone Developer: Dave Sims (8A2526Z579)"'
-    provisionprofile = '57605487-01A2-48E5-93CE-A160E7631951'
-    package_name = 'com.insphere.insite' 
-    sdk_path = "/Library/ParivedaInsite/rhodes"
-    sdk_version = "2.3.0"
-    build_type = "release"
-    android_password = "5zW8e3ZuS7DWY0TsnCTyyWnpGSDUqUgj"
-    android_push_send = "insphereapplication@insphereis.com"
-    android_sdk_version = "2.2"
-    android_cert_path = "cert/path"
-    android_push_sender = "push_sender"
-    encrypt_database = '1'
-    bundle_identifier = "com.insphere.insite"
-    bundle_url_scheme = 'insite'
-    extensions = '["json", "another-extension", "fileutils", "mspec", "crypt"]'
-    process_erb("#{app_path}/build/build.yml.erb", "#{app_path}/build.yml", binding)
+    puts "Generating build.yml..."
+    process_erb("#{@app_path}/build/build.yml.erb", "#{@app_path}/build.yml")
+    puts "Successfully generated build.yml..."
   end
   
-  task :prod => [:update_rhodes, :gen_rhoconfig, :gen_build_yml] do
-    load "#{app_path}/Rakefile"     
+  task :prod => [:gen_rhoconfig, :gen_build_yml, :update_rhodes] do
+    load "#{@app_path}/Rakefile"     
     Rake::Task['device:android:production'].invoke
     Rake::Task['device:iphone:production'].invoke
   end 
-  
 end
 
