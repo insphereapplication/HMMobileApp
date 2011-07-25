@@ -2,6 +2,8 @@ require 'erb'
 require 'ap'
 
 app_path = File.expand_path(File.dirname(__FILE__) + "/..")
+branch = "master"
+rhodes_dir = "/Library/ParivedaInsite"
 
 def process_erb(erb_file, output_file, local_binding)
   template = ERB.new(File.read(erb_file))
@@ -10,6 +12,12 @@ end
 
 # build tasks
 namespace :build do
+  task :update_rhodes do 
+    puts "Updating #{rhodes_dir}..."
+    `cd #{rhodes_dir}`
+    puts `git pull origin #{branch}`
+  end
+  
   task :gen_rhoconfig do 
     app_db_version = '3.0'
     min_severity = '5'
@@ -43,7 +51,7 @@ namespace :build do
     process_erb("#{app_path}/build/build.yml.erb", "#{app_path}/build.yml", binding)
   end
   
-  task :prod => [:gen_rhoconfig, :gen_build_yml] do
+  task :prod => [:update_rhodes, :gen_rhoconfig, :gen_build_yml] do
     load "#{app_path}/Rakefile"     
     Rake::Task['device:android:production'].invoke
     Rake::Task['device:iphone:production'].invoke
