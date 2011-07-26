@@ -17,6 +17,8 @@ RHO_CONFIG_PATH = "#{APP_PATH}/rhoconfig.txt"
 BUILD_YML_TEMPLATE_PATH = "#{APP_PATH}/build/build.yml.erb"
 BUILD_YML_PATH = "#{APP_PATH}/build.yml"
 
+IOS_BUILD_DIR = "#{APP_PATH}/bin/target/iOS"
+
 def process_erb(erb_file, output_file, local_binding=binding)
   template = ERB.new(File.read(erb_file))
   File.open(output_file, 'w') {|f| f.write(template.result(local_binding)) }
@@ -119,7 +121,7 @@ namespace :build do
   end
   
   task :gen_rhoconfig_prod do 
-    log "Generating rhoconfig.txt for production..."
+    log "Generating rhoconfig.txt for Production..."
     @rhoconfig = rhoconfig
     process_erb(RHO_CONFIG_TEMPLATE_PATH, RHO_CONFIG_PATH, binding)
     log "Successfully generated rhoconfig.txt..."
@@ -127,7 +129,7 @@ namespace :build do
   
   task :gen_rhoconfig_model do 
     @rhoconfig = model_rhoconfig
-    log "Generating rhoconfig.txt for production..."
+    log "Generating rhoconfig.txt for Model..."
     process_erb(RHO_CONFIG_TEMPLATE_PATH, RHO_CONFIG_PATH, binding)
     log "Successfully generated rhoconfig.txt..."
   end
@@ -147,24 +149,44 @@ namespace :build do
   end
   
   task :build_clients do
+    log "Building clients for version: #{build_config['version']}"
     load "#{APP_PATH}/Rakefile"    
     log "Building Android..." 
-    Rake::Task['device:android:production'].invoke
+    puts `cd #{APP_PATH} && rake device:android:production`
+    # Rake::Task['device:android:production'].reenable
+    # Rake::Task['device:android:production'].invoke
     log "Building iPhone..."
-    Rake::Task['device:iphone:production'].invoke
+    puts `cd #{APP_PATH} && rake device:iphone:production`
+    # Rake::Task['device:iphone:production'].reenable
+    # Rake::Task['device:iphone:production'].invoke
     log "Done building clients"
   end
   
-  task :prod => [:gen_rhoconfig_prod, :gen_build_yml, :update_rhodes, 'update_icons:prod', :build_clients] do
+  task :copy_model_builds => [:copy_model_iphone_build] do 
   end
   
-  task :prod_uat => [:gen_rhoconfig_prod, :gen_build_yml, :update_rhodes, 'update_icons:prod_uat', :build_clients] do
+  task :copy_model_iphone_build do
+    ios_target_dir = "#{IOS_BUILD_DIR}/#{build_config['iphone']['sdk']}"
+    log "Copying iphone model build to model dir: #{ios_target_dir}/model"  
+    Dir.mkdir "#{ios_target_dir}/model" unless File.exists?("#{ios_target_dir}/model")
+    raise "Unable to copy model iphone build" unless system "cp -r #{ios_target_dir}/release/* #{ios_target_dir}/model"
+    log "iphone model build copied to model dir"
+  end
+  
+  task :prod => [:gen_rhoconfig_prod, :gen_build_yml, :update_rhodes, 'update_icons:prod'] do
+    Rake::Task["build:build_clients"].execute
+  end
+  
+  task :prod_uat => [:gen_rhoconfig_prod, :gen_build_yml, :update_rhodes, 'update_icons:prod_uat'] do
+    Rake::Task["build:build_clients"].execute
   end 
   
-  task :model_uat => [:gen_rhoconfig_model, :gen_build_yml_model, :update_rhodes, 'update_icons:model_uat', :build_clients] do 
+  task :model_uat => [:gen_rhoconfig_model, :gen_build_yml_model, :update_rhodes, 'update_icons:model_uat'] do
+    Rake::Task["build:build_clients"].execute 
+    Rake::Task["build:copy_model_builds"].invoke
   end
   
-  task :all => [:prod, :model_uat] do 
+  task :all =>  [:model_uat, :prod] do 
   end
 end
 
