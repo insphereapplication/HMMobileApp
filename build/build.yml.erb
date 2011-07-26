@@ -1,0 +1,40 @@
+sdk: <%= @build_yml[:sdk_path] %>
+sdkversion: <%= @build_yml[:sdk_version] %>
+name: <%= @build_yml[:name] %> 
+version: <%= @build_yml[:version] %>
+vendor: Insphere
+build: <%= @build_yml[:build_type] %>
+capabilities:
+    - push
+android: 
+  package_name: <%= @build_yml[:package_name] %>
+  production:
+    certificate: <%= @build_yml[:android_cert_path] %>
+    password: <%= @build_yml[:android_password] %>
+    alias: <%= @build_yml[:name] %>
+  emulator: rhoandroid
+  android_title: 1
+  push:
+    sender: <%= @build_yml[:android_push_sender] %>
+    notifications: always
+  capabilities: 
+  - network_state
+  - push
+  - vibrate
+  version: <%= @build_yml[:android_sdk_version] %>
+applog: rholog.txt
+encrypt_database: <%= @build_yml[:encrypt_database] %>
+iphone:
+  configuration: <%= @build_yml[:iphone_config] %>
+  sdk: <%= @build_yml[:iphone_sdk] %>
+  # ------------------ INSPHERE ENTERPRISE ACCOUNT -----------------------
+  BundleIdentifier: <%= @build_yml[:bundle_identifier] %>
+  codesignidentity: <%= @build_yml[:codesignidentity] %>
+  provisionprofile: <%= @build_yml[:provisionprofile] %>
+  # ----------------------------------------------------------------------
+  entitlements:
+  BundleURLScheme: <%= @build_yml[:bundle_url_scheme] %>
+  capabilities:
+  - push
+  
+extensions: <%= @build_yml[:extensions] %>

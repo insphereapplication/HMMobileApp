@@ -1,12 +1,12 @@
 require 'yaml'
+$app_path = File.expand_path(File.dirname(__FILE__))
 
-unless File.exists? "build.yml"
+unless File.exists? "#{$app_path}/build.yml"
   puts "Cannot find build.yml"
   exit 1
 end
 
-$app_path = File.expand_path(File.dirname(__FILE__))
-$app_config = YAML::load_file("#{$app_path}/build.yml")
+$app_config = YAML::load_file("#{$app_path}/build.yml") 
 
 if ENV["RHO_HOME"].nil?
   rakefilepath = "#{$app_config["sdk"]}/Rakefile"
@@ -24,8 +24,6 @@ unless File.exists? rakefilepath
 end
 
 load rakefilepath
-
-# Dir[File.join(File.dirname(__FILE__),'tasks','**','*.rb')].each { |file| load file }
 
 ios_version = "4.3"
 

@@ -1,0 +1,28 @@
+start_path = '/app/Settings/init'
+options_path = '/app/Settings'
+app_db_version = <%= @rhoconfig[:app_db_version] %>
+
+MinSeverity  = <%= @rhoconfig[:min_severity] %>
+LogToOutput = 1
+LogCategories = *
+
+MaxLogFileSize=<%= @rhoconfig[:max_log_file_size] %>
+
+logserver = 'https://mobileproxy.model.insphereis.net/clientlog' 
+logname='InsiteMobile-rhodes'
+
+KeepTrackOfLastVisitedPage = 0 
+LastVisitedPage = ''
+syncserver = <%= @rhoconfig[:sync_server] %>
+
+full_screen = 0
+jqtouch_mode=1
+
+splash_screen='zoom'
+lead_cost_threshold = 100
+
+quick_quote_url = <%= @rhoconfig[:quick_quote_url] %>
+resource_center_url=https: <%= @rhoconfig[:resource_center_url] %>
+
+
+
