@@ -27,7 +27,7 @@ def build_config
 end
 
 def update_rhodes
-  system "cd #{build_config['sdk']} && git checkout #{RHODES_BRANCH} && git pull origin #{RHODES_BRANCH}"
+  system "cd #{build_config['sdk']} && git reset --hard && git checkout #{RHODES_BRANCH} && git pull origin #{RHODES_BRANCH}"
 end
 
 def update_icons(icon_folder)
