@@ -25,6 +25,7 @@ class Policy
   property :cssi_paymentmode, :string #
   property :cssi_annualpremium, :string #
   property :cssi_insuredtype, :string #
+  property :cssi_decisionclassification, :string
   
   property :modifiedon, :string
   property :temp_id, :string
