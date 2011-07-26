@@ -31,8 +31,14 @@ def update_rhodes
 end
 
 def update_icons(icon_folder)
-  puts "Updating icons from #{icon_folder}..."
+  log "Updating icons from #{icon_folder}..."
   raise "Unable to update icons in #{APP_PATH}/icon/#{icon_folder}" unless system "cp #{APP_PATH}/icon/#{icon_folder}/* #{APP_PATH}/icon"
+end
+
+def log(message)
+  puts "*"*80
+  puts message
+  puts "%"*80
 end
 
 def build_yml
@@ -50,7 +56,7 @@ def build_yml
     :android_password => "5zW8e3ZuS7DWY0TsnCTyyWnpGSDUqUgj",
     :android_push_send => "insphereapplication@insphereis.com",
     :android_sdk_version => "2.2",
-    :android_cert_path => "cert/path",
+    :android_cert_path => "#{APP_PATH}/insphere_insite.keystore",
     :android_push_sender => "push_sender",
     :encrypt_database => '1',
     :bundle_identifier => "com.insphere.insite",
@@ -61,7 +67,9 @@ end
 
 def model_build_yml
   build_yml.merge({
-    :name => "Insite Model"
+    :name => "Insite Model", 
+    :android_cert_path => "#{APP_PATH}/insphere_insite_model.keystore", 
+    :android_password => "insphere1"
   })
 end
 
@@ -70,7 +78,7 @@ def rhoconfig
     :app_db_version => '3.0',
     :min_severity => '5',
     :max_log_file_size => '1000000',
-    :sync_server => 'rhosync.insphereis.net/application',    
+    :sync_server => 'https://rhosync.insphereis.net/application',    
     :quick_quote_url => "https://mobile.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
     :resource_center_url => "https://mobile-rc.insphereis.net/_layouts/InsphereLogin.aspx"
   }
@@ -78,7 +86,7 @@ end
 
 def model_rhoconfig
   rhoconfig.merge({
-    :sync_server => 'rhosync.model.insphereis.net/application', 
+    :sync_server => 'https://rhosync.model.insphereis.net/application', 
     :quick_quote_url => " https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
     :resource_center_url => "https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx"
   })
@@ -105,43 +113,46 @@ namespace :build do
   end
   
   task :update_rhodes do 
-    puts "Updating #{build_config['sdk']}..."
+    log "Updating #{build_config['sdk']}..."
     raise "Build failed: Could not update Rhodes" unless update_rhodes
-    puts "Successfully updated Rhodes..."
+    log "Successfully updated Rhodes..."
   end
   
   task :gen_rhoconfig_prod do 
-    puts "Generating rhoconfig.txt for production..."
+    log "Generating rhoconfig.txt for production..."
     @rhoconfig = rhoconfig
     process_erb(RHO_CONFIG_TEMPLATE_PATH, RHO_CONFIG_PATH, binding)
-    puts "Successfully generated rhoconfig.txt..."
+    log "Successfully generated rhoconfig.txt..."
   end
   
   task :gen_rhoconfig_model do 
     @rhoconfig = model_rhoconfig
-    puts "Generating rhoconfig.txt for production..."
+    log "Generating rhoconfig.txt for production..."
     process_erb(RHO_CONFIG_TEMPLATE_PATH, RHO_CONFIG_PATH, binding)
-    puts "Successfully generated rhoconfig.txt..."
+    log "Successfully generated rhoconfig.txt..."
   end
   
   task :gen_build_yml do 
-    puts "Generating build.yml..."
+    log "Generating build.yml..."
     @build_yml = build_yml
     process_erb(BUILD_YML_TEMPLATE_PATH, BUILD_YML_PATH, binding)
-    puts "Successfully generated build.yml..."
+    log "Successfully generated build.yml..."
   end
   
   task :gen_build_yml_model do 
-    puts "Generating build.yml for Model..."
+    log "Generating build.yml for Model..."
     @build_yml = model_build_yml
     process_erb(BUILD_YML_TEMPLATE_PATH, BUILD_YML_PATH, binding)
-    puts "Successfully generated build.yml..."
+    log "Successfully generated build.yml..."
   end
   
   task :build_clients do
-    load "#{APP_PATH}/Rakefile"     
+    load "#{APP_PATH}/Rakefile"    
+    log "Building Android..." 
     Rake::Task['device:android:production'].invoke
+    log "Building iPhone..."
     Rake::Task['device:iphone:production'].invoke
+    log "Done building clients"
   end
   
   task :prod => [:gen_rhoconfig_prod, :gen_build_yml, :update_rhodes, 'update_icons:prod', :build_clients] do
