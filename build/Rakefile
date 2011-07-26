@@ -17,6 +17,8 @@ RHO_CONFIG_PATH = "#{APP_PATH}/rhoconfig.txt"
 BUILD_YML_TEMPLATE_PATH = "#{APP_PATH}/build/build.yml.erb"
 BUILD_YML_PATH = "#{APP_PATH}/build.yml"
 
+IOS_BUILD_DIR = "#{APP_PATH}/bin/target/iOS"
+
 def process_erb(erb_file, output_file, local_binding=binding)
   template = ERB.new(File.read(erb_file))
   File.open(output_file, 'w') {|f| f.write(template.result(local_binding)) }
@@ -27,18 +29,24 @@ def build_config
 end
 
 def update_rhodes
-  system "cd #{build_config['sdk']} && git checkout #{RHODES_BRANCH} && git pull origin #{RHODES_BRANCH}"
+  system "cd #{build_config['sdk']} && git reset --hard && git checkout #{RHODES_BRANCH} && git pull origin #{RHODES_BRANCH}"
 end
 
 def update_icons(icon_folder)
-  puts "Updating icons from #{icon_folder}..."
+  log "Updating icons from #{icon_folder}..."
   raise "Unable to update icons in #{APP_PATH}/icon/#{icon_folder}" unless system "cp #{APP_PATH}/icon/#{icon_folder}/* #{APP_PATH}/icon"
+end
+
+def log(message)
+  puts "*"*80
+  puts message
+  puts "%"*80
 end
 
 def build_yml
   {
     :name => 'Insite',
-    :version => '2.1.0',
+    :version => ENV['BUILD_NUMBER'] || '2.1.0',
     :iphone_config => 'release',
     :iphone_sdk => 'iphoneos4.3',
     :codesignidentity => '"iPhone Developer: Dave Sims (8A2526Z579)"',
@@ -50,7 +58,7 @@ def build_yml
     :android_password => "5zW8e3ZuS7DWY0TsnCTyyWnpGSDUqUgj",
     :android_push_send => "insphereapplication@insphereis.com",
     :android_sdk_version => "2.2",
-    :android_cert_path => "cert/path",
+    :android_cert_path => "#{APP_PATH}/insphere_insite.keystore",
     :android_push_sender => "push_sender",
     :encrypt_database => '1',
     :bundle_identifier => "com.insphere.insite",
@@ -59,12 +67,20 @@ def build_yml
   }
 end
 
+def model_build_yml
+  build_yml.merge({
+    :name => "Insite Model", 
+    :android_cert_path => "#{APP_PATH}/insphere_insite_model.keystore", 
+    :android_password => "insphere1"
+  })
+end
+
 def rhoconfig
   {
     :app_db_version => '3.0',
     :min_severity => '5',
     :max_log_file_size => '1000000',
-    :sync_server => 'rhosync.insphereis.net/application',    
+    :sync_server => 'https://rhosync.insphereis.net/application',    
     :quick_quote_url => "https://mobile.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
     :resource_center_url => "https://mobile-rc.insphereis.net/_layouts/InsphereLogin.aspx"
   }
@@ -72,7 +88,7 @@ end
 
 def model_rhoconfig
   rhoconfig.merge({
-    :sync_server => 'rhosync.model.insphereis.net/application', 
+    :sync_server => 'https://rhosync.model.insphereis.net/application', 
     :quick_quote_url => " https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
     :resource_center_url => "https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx"
   })
@@ -99,45 +115,74 @@ namespace :build do
   end
   
   task :update_rhodes do 
-    puts "Updating #{build_config['sdk']}..."
+    log "Updating #{build_config['sdk']}..."
     raise "Build failed: Could not update Rhodes" unless update_rhodes
-    puts "Successfully updated Rhodes..."
+    log "Successfully updated Rhodes..."
   end
   
   task :gen_rhoconfig_prod do 
-    puts "Generating rhoconfig.txt for production..."
+    log "Generating rhoconfig.txt for Production..."
     @rhoconfig = rhoconfig
     process_erb(RHO_CONFIG_TEMPLATE_PATH, RHO_CONFIG_PATH, binding)
-    puts "Successfully generated rhoconfig.txt..."
+    log "Successfully generated rhoconfig.txt..."
   end
   
   task :gen_rhoconfig_model do 
     @rhoconfig = model_rhoconfig
-    puts "Generating rhoconfig.txt for production..."
+    log "Generating rhoconfig.txt for Model..."
     process_erb(RHO_CONFIG_TEMPLATE_PATH, RHO_CONFIG_PATH, binding)
-    puts "Successfully generated rhoconfig.txt..."
+    log "Successfully generated rhoconfig.txt..."
   end
   
   task :gen_build_yml do 
-    puts "Generating build.yml..."
+    log "Generating build.yml..."
     @build_yml = build_yml
     process_erb(BUILD_YML_TEMPLATE_PATH, BUILD_YML_PATH, binding)
-    puts "Successfully generated build.yml..."
+    log "Successfully generated build.yml..."
+  end
+  
+  task :gen_build_yml_model do 
+    log "Generating build.yml for Model..."
+    @build_yml = model_build_yml
+    process_erb(BUILD_YML_TEMPLATE_PATH, BUILD_YML_PATH, binding)
+    log "Successfully generated build.yml..."
   end
   
   task :build_clients do
-    load "#{APP_PATH}/Rakefile"     
-    Rake::Task['device:android:production'].invoke
-    Rake::Task['device:iphone:production'].invoke
+    log "Building clients for version: #{build_config['version']}"  
+    log "Building Android..." 
+    # invoking rake tasks from console because the builds need to run in separate processes...
+    puts `cd #{APP_PATH} && rake device:android:production`
+    log "Building iPhone..."
+    puts `cd #{APP_PATH} && rake device:iphone:production`
+    log "Done building clients"
   end
   
-  task :prod => [:gen_rhoconfig_prod, :gen_build_yml, :update_rhodes, 'update_icons:prod', :build_clients] do
+  task :copy_model_builds => [:copy_model_iphone_build] do 
   end
   
-  task :prod_uat => [:gen_rhoconfig_prod, :gen_build_yml, :update_rhodes, 'update_icons:prod_uat', :build_clients] do
+  task :copy_model_iphone_build do
+    ios_target_dir = "#{IOS_BUILD_DIR}/#{build_config['iphone']['sdk']}"
+    log "Copying iphone model build to model dir: #{ios_target_dir}/model"  
+    Dir.mkdir "#{ios_target_dir}/model" unless File.exists?("#{ios_target_dir}/model")
+    raise "Unable to copy model iphone build" unless system "cp -r #{ios_target_dir}/release/* #{ios_target_dir}/model"
+    log "iphone model build copied to model dir"
+  end
+  
+  task :prod => [:gen_rhoconfig_prod, :gen_build_yml, :update_rhodes, 'update_icons:prod'] do
+    Rake::Task["build:build_clients"].execute
+  end
+  
+  task :prod_uat => [:gen_rhoconfig_prod, :gen_build_yml, :update_rhodes, 'update_icons:prod_uat'] do
+    Rake::Task["build:build_clients"].execute
   end 
   
-  task :model_uat => [:gen_rhoconfig_model, :gen_build_yml, :update_rhodes, 'update_icons:model_uat', :build_clients] do 
+  task :model_uat => [:gen_rhoconfig_model, :gen_build_yml_model, :update_rhodes, 'update_icons:model_uat'] do
+    Rake::Task["build:build_clients"].execute 
+    Rake::Task["build:copy_model_builds"].invoke
+  end
+  
+  task :all =>  [:model_uat, :prod] do 
   end
 end
 
