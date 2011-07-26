@@ -8,12 +8,19 @@ LogCategories = *
 
 MaxLogFileSize=1000000
 
+#turn on to exclude logging all post parameters
+log_skip_post = 0
+
+#Exclude the following parameters from logging
+
+log_exclude_filter = 'login, password, pin'
+
 logserver = 'https://mobileproxy.model.insphereis.net/clientlog' 
 logname='InsiteMobile-rhodes'
 
 KeepTrackOfLastVisitedPage = 0 
 LastVisitedPage = ''
-syncserver = rhosync.model.insphereis.net/application
+syncserver = https://rhosync.model.insphereis.net/application
 
 full_screen = 0
 jqtouch_mode=1
