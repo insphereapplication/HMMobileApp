@@ -59,6 +59,12 @@ def build_yml
   }
 end
 
+def model_build_yml
+  build_yml.merge({
+    :name => "Insite Model"
+  })
+end
+
 def rhoconfig
   {
     :app_db_version => '3.0',
@@ -125,6 +131,13 @@ namespace :build do
     puts "Successfully generated build.yml..."
   end
   
+  task :gen_build_yml_model do 
+    puts "Generating build.yml for Model..."
+    @build_yml = model_build_yml
+    process_erb(BUILD_YML_TEMPLATE_PATH, BUILD_YML_PATH, binding)
+    puts "Successfully generated build.yml..."
+  end
+  
   task :build_clients do
     load "#{APP_PATH}/Rakefile"     
     Rake::Task['device:android:production'].invoke
@@ -137,7 +150,10 @@ namespace :build do
   task :prod_uat => [:gen_rhoconfig_prod, :gen_build_yml, :update_rhodes, 'update_icons:prod_uat', :build_clients] do
   end 
   
-  task :model_uat => [:gen_rhoconfig_model, :gen_build_yml, :update_rhodes, 'update_icons:model_uat', :build_clients] do 
+  task :model_uat => [:gen_rhoconfig_model, :gen_build_yml_model, :update_rhodes, 'update_icons:model_uat', :build_clients] do 
+  end
+  
+  task :all => [:prod, :model_uat] do 
   end
 end
 
