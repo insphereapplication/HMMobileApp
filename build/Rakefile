@@ -149,16 +149,12 @@ namespace :build do
   end
   
   task :build_clients do
-    log "Building clients for version: #{build_config['version']}"
-    load "#{APP_PATH}/Rakefile"    
+    log "Building clients for version: #{build_config['version']}"  
     log "Building Android..." 
+    # invoking rake tasks from console because the builds need to run in separate processes...
     puts `cd #{APP_PATH} && rake device:android:production`
-    # Rake::Task['device:android:production'].reenable
-    # Rake::Task['device:android:production'].invoke
     log "Building iPhone..."
     puts `cd #{APP_PATH} && rake device:iphone:production`
-    # Rake::Task['device:iphone:production'].reenable
-    # Rake::Task['device:iphone:production'].invoke
     log "Done building clients"
   end
   
