@@ -70,7 +70,7 @@ $(document).ready(function(){
 				<li><p><strong> Status Detail:	</strong> <%= @opportunity.cssi_statusdetail %> </p></li> 
 				<li><p><strong> Source: 		</strong> <%= @opportunity.cssi_leadsourceid %> </li> 
 				<li><p><strong> LOB: 			</strong> <%= @opportunity.cssi_lineofbusiness %></li>
-				<li><p><strong> Lead Cost: 		</strong> <%= format_currency(@opportunity.cssi_leadcost.to_f, {}) %></li>  
+				<li><p><strong> Lead Cost: 		</strong> <%= format_currency(@opportunity.cssi_leadcost) %></li>  
 				<li><p><strong> Created:		</strong> <%= to_datetime(@opportunity.createdon) %> </li> 
 				<li><p><strong> Last Activity:	</strong> <%= to_datetime(@opportunity.cssi_lastactivitydate) %> </li> 
 				<li><p><strong> Call Count: 	</strong> <%= @opportunity.phone_calls.size %> </li> 

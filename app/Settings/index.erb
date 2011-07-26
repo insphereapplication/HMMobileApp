@@ -4,15 +4,43 @@
 		<h1>Tools <%= sync_spinner %></h1>
 	</div>
 	<div id="contentDiv" data-role="content">
+				
+			<% if Settings.pin == "" %>
+				<ul data-role="none" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-filter="false" data-inset="true">
+					<li class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">Quick Links</li>
+					<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom">
+								<a type="button" data-theme="b" value="Submit" href="<%= url_for(:controller => :Settings, :action => :pin, :query => {:origin => @params['origin']}) %>">Create PIN to view Links</a>
+					</li>						
+				</ul>
+			<% elsif Settings.pin_confirmed == true && Settings.pin_is_current? %>	
+						<ul data-role="listview" data-inset="true">
+							<li data-role="list-divider">Quick Links</li>
+							<li>
+								<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
+								<h3><a href="<%= url_for :action => :resource_center %>">Resource Center</a></h3>
+							</li>
+					 	</ul>				
+			<% else %>
+					<form name="pin_form" method="POST" action="<%= url_for(:action => :verify_pin, :query => {:origin => @params['origin']}) %>">
+						<ul data-role="none" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-filter="false" data-inset="true">
+							<li class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">Quick Links</li>
+							<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom">
+								<label class="fieldLabel ui-input-text" for="PIN" class="fieldLabel">Please Enter PIN:</label>
+								<input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-b" maxlength="4" type="password" id="PIN" name="PIN" value=""/>
+								<fieldset class="ui-grid-a">
+									<div class="ui-block-a"><input type="submit" class="standardButton" data-theme="b" value="Submit"/></div>	
+									<div class="ui-block-b"><a type="button"  data-theme="b" value="Reset PIN" href="<%= url_for(:controller => :Settings, :action => :pin, :query => {:origin => @params['origin']}) %>">Reset PIN</a></div>
+							    </fieldset>
+							</li>						
+						</ul>				
+					</form>
+			<% end %>
+		
  		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider">Tools</li>
 			<li>
 				<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
 				<h3><a href="<%= url_for :action => :quick_quote %>">Term Life Quick Quote</a></h3>
-			</li>
-			<li>
-				<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
-				<h3><a href="<%= url_for :action => :resource_center %>">Resource Center</a></h3>
 			</li>
 			<li>
 				<img src="/public/images/phone_small.png" class="ui-li-icon" style="margin-top:8px">

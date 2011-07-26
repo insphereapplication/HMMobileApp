@@ -124,13 +124,6 @@ class ContactController < Rho::RhoController
     end    
   end
   
-  def pin_is_current?(last_activity)
-    if Time.new - last_activity < 900
-      return true
-    else
-      return false
-    end
-  end
 
   # GET /Contact/new
   def new
