@@ -29,6 +29,7 @@ def build_config
 end
 
 def update_rhodes
+  log "Updating #{build_config['sdk']}..."
   system "cd #{build_config['sdk']} && git reset --hard && git checkout #{RHODES_BRANCH} && git pull origin #{RHODES_BRANCH}"
 end
 
@@ -115,7 +116,6 @@ namespace :build do
   end
   
   task :update_rhodes do 
-    log "Updating #{build_config['sdk']}..."
     raise "Build failed: Could not update Rhodes" unless update_rhodes
     log "Successfully updated Rhodes..."
   end
@@ -152,9 +152,9 @@ namespace :build do
     log "Building clients for version: #{build_config['version']}"  
     log "Building Android..." 
     # invoking rake tasks from console because the builds need to run in separate processes...
-    puts `cd #{APP_PATH} && rake device:android:production`
+    raise "Could not build android" unless system "cd #{APP_PATH} && rake device:android:production"
     log "Building iPhone..."
-    puts `cd #{APP_PATH} && rake device:iphone:production`
+    raise "Could not build iphone" unless system "cd #{APP_PATH} && rake device:iphone:production"
     log "Done building clients"
   end
   
