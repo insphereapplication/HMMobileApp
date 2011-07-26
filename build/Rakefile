@@ -46,7 +46,7 @@ end
 def build_yml
   {
     :name => 'Insite',
-    :version => '2.1.0',
+    :version => ENV['BUILD_NUMBER'] || '2.1.0',
     :iphone_config => 'release',
     :iphone_sdk => 'iphoneos4.3',
     :codesignidentity => '"iPhone Developer: Dave Sims (8A2526Z579)"',
