@@ -181,7 +181,7 @@
 						</li>						
 					</ul>
 								
-				<% elsif Settings.pin_confirmed == true && pin_is_current?(Settings.pin_last_activity_time) %>
+				<% elsif Settings.pin_confirmed == true && Settings.pin_is_current? %>
 				
 				<ul data-role="listview" data-filter="false" data-inset="true">
 					<li data-role="list-divider">Policies - <%= @contact.policies.size %></li>

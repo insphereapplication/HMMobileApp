@@ -58,9 +58,11 @@ class Settings
       instance.pin_last_activity_time || ''
     end
     
+    
     def pin_confirmed
       instance.pin_confirmed|| ''
     end
+    
     
     def credentials_verified
       # use string comparison below because settings DB always stores & returns strings
@@ -152,7 +154,16 @@ class Settings
       @instance = Settings.find(:first) || Settings.create({})
     end
     
+    def pin_is_current?
+       if Time.new - instance.pin_last_activity_time < Constants::PIN_EXPIRE_SECONDS
+         return true
+       else
+         return false
+       end
+     end
+    
     def record_activity
+     
       if Settings.pin_last_activity_time.class==String
         Settings.pin_last_activity_time = Time.parse(Settings.pin_last_activity_time)
       end
@@ -161,7 +172,7 @@ class Settings
       if Settings.pin_last_activity_time.nil? || Settings.pin_last_activity_time==""
         Settings.pin_last_activity_time=Time.new
         Settings.pin_confirmed=false
-      elsif Time.new - Settings.pin_last_activity_time < 900
+      elsif Time.new - Settings.pin_last_activity_time < Constants::PIN_EXPIRE_SECONDS
           Settings.pin_last_activity_time=Time.new
       else
           Settings.pin_confirmed=false

@@ -224,6 +224,31 @@ class SettingsController < Rho::RhoController
     redirect :action => :index
   end
   
+  def verify_pin
+    if @params['PIN'] == Settings.pin
+      puts @params.inspect
+      Settings.pin_last_activity_time = Time.new
+      Settings.pin_confirmed = true
+      render :action => :index, :query => {:origin => @params['origin']}
+    else
+      Alert.show_popup({
+        :message => "Invalid PIN Entered", 
+        :title => 'Invalid PIN', 
+        :buttons => ["OK"]
+      })
+      @pinverified="false"
+      render :action => :index, :query => {:origin => @params['origin']}
+    end    
+  end
+  
+  def pin_is_current?(last_activity)
+    if Time.new - last_activity < 120
+      return true
+    else
+      return false
+    end
+  end
+  
   def reset
     render :action => :reset, :back => 'callback:'
   end
@@ -689,23 +714,28 @@ class SettingsController < Rho::RhoController
   
   def resource_center
         Settings.record_activity
-        resource_url=Rho::RhoConfig.resource_center_url
-        ctime = Time.new.utc
-        ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
-        user_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.login}Delimit"))
-        pwd_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.password}Delimit"))
+        if Settings.pin_confirmed == true
+          resource_url=Rho::RhoConfig.resource_center_url
+          ctime = Time.new.utc
+          ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
+          user_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.login}Delimit"))
+          pwd_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.password}Delimit"))
+            
+          resource_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}"
         
-        
-        resource_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}"
-        
-        puts "Resource URL parameters are: ****#{resource_params_enc}****"
-        puts "Current UTC is:  #{ctime}"
+          puts "Resource URL parameters are: ****#{resource_params_enc}****"
+          puts "Current UTC is:  #{ctime}"
 
-        rc_url ="#{resource_url}?#{resource_params_enc}"
+          rc_url ="#{resource_url}?#{resource_params_enc}"
        
-        redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+          redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
         
-        System.open_url("#{resource_url}?#{resource_params_enc}")
+          System.open_url("#{resource_url}?#{resource_params_enc}")
+          
+      else
+          redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+      end
+      
   end
 
   def check_for_upgrade
