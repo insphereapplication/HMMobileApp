@@ -172,10 +172,19 @@ namespace :build do
   end
   
   task :build_clients do
-    log "Building clients for version: #{build_config['version']}"  
-    build_android
-    build_iphone
-    log "Done building clients"
+    log "Building clients for version: #{build_config['version']}"
+    android_build = Thread.new do
+      build_android
+    end
+    
+    iphone_build = Thread.new do 
+      build_iphone
+    end
+
+    iphone_build.join
+    log "Done building iPhone..."
+    android_build.join
+    log "Done building Android..."
   end
   
   task :copy_model_builds => [:copy_model_iphone_build] do 
