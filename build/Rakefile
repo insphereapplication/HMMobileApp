@@ -1,6 +1,7 @@
 require 'erb'
 require 'ap'
 require 'yaml'
+require 'open4'
 
 APP_PATH = File.expand_path(File.dirname(__FILE__) + "/..")
 RHODES_BRANCH = "2-4-stable"
@@ -47,12 +48,23 @@ end
 # using system commands for client builds instead of rake tasks because for multiple builds, they must run in separate processes (and not share constants, etc.)
 def build_android
   log "Building Android..." 
-  raise "Could not build android" unless system "cd #{APP_PATH} && rake device:android:production"
+  system_io "cd #{APP_PATH} && rake device:android:production"
 end
 
 def build_iphone
-  log "Building iPhone..."
-  puts `cd #{APP_PATH} && rake device:iphone:production`
+  # log "Building iPhone..."
+  system_io "cd #{APP_PATH} && rake device:iphone:production"
+end
+
+def system_io(call)
+  $err = ""
+  exit_status = Open4::popen4(call) do |pid, stdin, stdout, stderr|
+    until stdout.eof? 
+      puts stdout.gets
+    end
+    $err = stderr.read
+  end
+  raise "ERROR: #{$err}" unless exit_status == 0
 end
 
 
