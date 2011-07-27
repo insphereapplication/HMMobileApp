@@ -35,7 +35,7 @@ document.getElementById('appointment_duration').focus();
 						</div>
 						<div data-role="fieldcontain">
 							<label for="appointment_duration" class="fieldLabel">Duration:</label>
-							<select name="appointment_duration" id="appointment_duration">
+							<select name="appointment_duration" id="appointment_duration" data-role="none" class="ins-drop-down">
 								<option value="90.0">1.5 Hours</option>
 								<option value="30.0">30 Minutes</option>
 								<option value="60.0">1 Hour</option>
@@ -46,7 +46,7 @@ document.getElementById('appointment_duration').focus();
 						</div>
 						<div data-role="fieldcontain">
 							<label for="select_location" class="fieldLabel">Location:</label>
-				            <select name="select_location" id="select_location" onchange='updateAddress();'>
+				            <select name="select_location" id="select_location" onchange='updateAddress();' data-role="none" class="ins-drop-down">
 								<% @opportunity.contact.addresses.each do |type, address| %>
 									<option value="<%= address %>"><%= type %></option>
 								<% end %>
