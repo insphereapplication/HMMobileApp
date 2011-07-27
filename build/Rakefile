@@ -52,21 +52,20 @@ def build_android
 end
 
 def build_iphone
-  # log "Building iPhone..."
+  log "Building iPhone..."
   system_io "cd #{APP_PATH} && rake device:iphone:production"
 end
 
 def system_io(call)
-  $err = ""
+  err_text = ""
   exit_status = Open4::popen4(call) do |pid, stdin, stdout, stderr|
     until stdout.eof? 
       puts stdout.gets
     end
-    $err = stderr.read
+    err_text = stderr.read
   end
-  raise "ERROR: #{$err}" unless exit_status == 0
+  raise "ERROR: #{err_text}" unless exit_status == 0
 end
-
 
 def build_yml
   {
