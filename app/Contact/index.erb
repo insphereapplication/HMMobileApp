@@ -6,6 +6,7 @@
 		
 		pageLimit = <%= @page_limit %>
 		loadPage();
+		refreshFilterSummary();
 	});
 </script>
 
@@ -65,14 +66,10 @@
 		<div id="filter" style="display:none;" data-role="none">
 			<label for="contact_filter" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;View Contacts With: </label>
 			<select style="-webkit-backface-visibility:visible" class="ui-custom-dropdown" name="contact_filter" id="contact_filter" tabindex="-1">
-				<option class="ui-btn-text" data-placeholder="true" selected="true" value="all">All</option>
-				<option class="ui-btn-text" value="active-policies">Active Policies</option>
-				<option class="ui-btn-text" value="pending-policies">Pending Policies</option>
-				<option class="ui-btn-text" value="open-opps">Open Opportunities</option>
-				<option class="ui-btn-text" value="won-opps">Won Opportunities</option>
+				<%= contact_filter_options %>
 			</select>
 			<label for="search_input" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Search: </label>
-			<input type="text" id="search_input" name="search_input" maxlength="30" class="ui-search-text ui-body-null ui-corner-all"></input>
+			<input type="text" id="search_input" name="search_input" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%= @persisted_search_terms %>"></input>
 			<fieldset class="ui-grid-custom ui-grid-a">
 				<div class="ui-block-a">
 					<div data-theme="b" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">

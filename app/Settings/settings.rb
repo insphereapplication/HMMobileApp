@@ -1,3 +1,4 @@
+require 'json'
 
 class Settings
   include Rhom::PropertyBag
@@ -31,6 +32,10 @@ class Settings
     
     def is_new_opportunity_sync?
       sync_type == 'new_opportunity'
+    end
+    
+    def filter_values
+      @filter_values ||= Rho::JSON.parse(instance.filter_values || '{}')
     end
     
     def clear_credentials
@@ -143,6 +148,29 @@ class Settings
     def last_synced=(value)
       instance.last_synced=value
       instance.save
+    end
+    
+    def set_filter_values(value)
+      @filter_values = value
+      instance.filter_values = ::JSON.generate(value)
+      instance.save
+    end
+
+    def update_persisted_filter_values(prefix, filter_names, params)
+      persisted_filter_update = filter_names.inject({}){|sum,filter_name| 
+        sum["#{prefix}#{filter_name}"] = params[filter_name] unless params[filter_name].nil?
+        sum
+      }
+
+      set_filter_values((filter_values || {}).merge(persisted_filter_update)) unless persisted_filter_update.count == 0
+    end
+    
+    def get_persisted_filter_values(prefix, filters)
+      filters.inject({}){|sum,filter|
+        persisted_filter_value = Settings.filter_values["#{prefix}#{filter[:name]}"]
+        sum[filter[:name]] = persisted_filter_value.blank? ? filter[:default_value] : persisted_filter_value
+        sum
+      }
     end
     
     def instance #pulls settings from DB, caches them in @instance

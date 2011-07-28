@@ -92,6 +92,87 @@ module BrowserHelper
     end
   end
   
+  def gen_options(options, selected_value)
+    options.map{|option|
+      selected_text = (option[:value] == selected_value) ? 'selected="true"' : ''
+      "<option class=\"ui-btn-text\" #{selected_text} value=\"#{option[:value]}\">#{option[:label]}</option>"
+    }.join("\n")
+  end
+  
+  def scheduled_filter_options
+    options = [
+      {:value => 'All', :label => 'All'},
+      {:value => 'ScheduledAppointments', :label => 'Appointments'},
+      {:value => 'ScheduledCallbacks', :label => 'Callbacks'}
+    ]
+    
+    persisted_selection = Settings.filter_values['scheduled_filter']
+    persisted_selection = 'All' if persisted_selection.blank?
+    
+    gen_options(options, persisted_selection)
+  end
+  
+  def followup_status_reason_filter_options  	
+  	options = [
+      {:value => 'All', :label => 'All'},
+      {:value => 'NoContactMade', :label => 'No Contact Made'},
+      {:value => 'ContactMade', :label => 'Contact Made'},
+      {:value => 'AppointmentSet', :label => 'Appointment Set'},
+      {:value => 'DealInProgress', :label => 'Deal in Progress'}
+    ]
+    
+    persisted_selection = Settings.filter_values["#{Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX}statusReason"]
+    persisted_selection = 'All' if persisted_selection.blank?
+    
+    gen_options(options, persisted_selection)
+  end
+  
+  def followup_sort_by_filter_options
+		options = [
+      {:value => 'LastActivityDateAscending', :label => 'Latest Activity Date'},
+      {:value => 'LastActivityDateDescending', :label => 'Earliest Activity Date'},
+      {:value => 'CreateDateAscending', :label => 'Created Ascending'},
+      {:value => 'CreateDateDescending', :label => 'Created Descending'}
+    ]
+    
+    persisted_selection = Settings.filter_values["#{Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX}sortBy"]
+    persisted_selection = 'LastActivityDateAscending' if persisted_selection.blank?
+    
+    gen_options(options, persisted_selection)
+  end
+  
+  def followup_created_filter_options
+    options = [
+      {:value => 'All', :label => 'All'},
+      {:value => '1', :label => '1 Day Ago'},
+      {:value => '2', :label => '2 Days Ago'},
+      {:value => '3', :label => '3 Days Ago'},
+      {:value => '4', :label => '4 Days Ago'},
+      {:value => '5', :label => '5 Days Ago'}
+    ]
+    
+    persisted_selection = Settings.filter_values["#{Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX}created"]
+    persisted_selection = 'All' if persisted_selection.blank?
+    
+    gen_options(options, persisted_selection)
+  end
+  
+  def contact_filter_options
+    options = [
+      {:value => 'all', :label => 'All'},
+      {:value => 'active-policies', :label => 'Active Policies'},
+      {:value => 'pending-policies', :label => 'Pending Policies'},
+      {:value => 'open-opps', :label => 'Open Opportunities'},
+      {:value => 'won-opps', :label => 'Won Opportunities'}
+    ]
+    
+    persisted_selection = Settings.filter_values["#{Constants::PERSISTED_CONTACT_FILTER_PREFIX}filter"]
+    persisted_selection = 'all' if persisted_selection.blank?
+    
+    gen_options(options, persisted_selection)
+  end
+
+  
   def opp_detail_backbutton(origin)
       case origin
         when "new-leads"

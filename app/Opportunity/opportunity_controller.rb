@@ -70,6 +70,7 @@ class OpportunityController < Rho::RhoController
       intialize_nav_contexts
       Opportunity.local_changed = false
       @params['selected_tab'] ||= 'new-leads'
+      @persisted_scheduled_search = Settings.get_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS)['search']
       set_opportunities_nav_context(@params['selected_tab']);    
       render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
     else
@@ -122,45 +123,41 @@ class OpportunityController < Rho::RhoController
   end
 
   def by_last_activities
-    statusReason = !@params['statusReason'].nil? ? @params['statusReason'] : 'All';
-    sortBy       = !@params['sortBy'].nil? ? @params['sortBy'] : 'LastActivityDateAscending';
-    created      = !@params['created'].nil? ? @params['created'] : 'All';
+    Settings.update_persisted_filter_values(Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX, Constants::FOLLOWUP_FILTERS.map{|filter| filter[:name]}, @params)
+    persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX, Constants::FOLLOWUP_FILTERS)
     
-    opportunities = Opportunity.by_last_activities(@params['page'].to_i, statusReason, sortBy, created)
+    opportunities = Opportunity.by_last_activities(@params['page'].to_i, persisted_filter_values['statusReason'], persisted_filter_values['sortBy'], persisted_filter_values['created'])
     
-    get_activities(opportunities)
+    $follow_ups_nav_context += opportunities.map{|opp| opp.opportunityid }
+    @page = opportunities
+    render :action => :last_activities_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
-  def get_appointments(color, text, appointments)
+  def get_filtered_appointments(color, label, bucket)
+    Settings.update_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS.map{|filter| filter[:name]}, @params)
+    persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS)
+    
+    appointments = Activity.appointment_list(@params['page'].to_i, persisted_filter_values['filter'], persisted_filter_values['search'], bucket)
+    
     $appointments_nav_context += appointments.map{|appointment| appointment.opportunity.opportunityid }
     @color = color
-    @label = text
+    @label = label
     @page = appointments
     
     render :action => :appointments_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
   def future_scheduled
-    filter = !@params['filter'].nil? ? @params['filter'] : "All"
-    search = !@params['search'].nil? ? @params['search'] : ""
-    
-    get_appointments('green', 'Future', Activity.appointment_list(@params['page'].to_i, filter, search, 'future'))
+    get_filtered_appointments('green', 'Future', 'future')
   end
 
   def todays_scheduled
-    filter = !@params['filter'].nil? ? @params['filter'] : "All"
-    search = !@params['search'].nil? ? @params['search'] : ""
-        
-    get_appointments('orange', 'Today', Activity.appointment_list(@params['page'].to_i, filter, search, 'today'))
+    get_filtered_appointments('orange', 'Today', 'today')
   end
 
-  def past_due_scheduled
-    filter = !@params['filter'].nil? ? @params['filter'] : "All"
-    search = !@params['search'].nil? ? @params['search'] : ""
-    
-    get_appointments('red', 'Past Due', Activity.appointment_list(@params['page'].to_i, filter, search, 'past_due'))
+  def past_due_scheduled    
+    get_filtered_appointments('red', 'Past Due', 'past_due')
   end
-  
   
   def check_preferred_and_donotcall(phone_type, contact)
     preferred = contact.cssi_preferredphone
