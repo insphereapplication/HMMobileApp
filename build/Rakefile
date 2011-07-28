@@ -52,7 +52,7 @@ def build_android
 end
 
 def build_iphone
-  # log "Building iPhone..."
+  log "Building iPhone..."
   system_io "cd #{APP_PATH} && rake device:iphone:production"
 end
 
@@ -88,7 +88,7 @@ def build_yml
     :encrypt_database => '1',
     :bundle_identifier => "com.insphere.insite",
     :bundle_url_scheme => 'insite',
-    :extensions => '["json", "another-extension", "fileutils", "mspec", "crypt"]'
+    :extensions => '["json", "fileutils", "mspec", "crypt"]'
   }
 end
 

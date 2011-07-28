@@ -10,11 +10,12 @@ $(document).ready(function() {
 	});
 	
 	// make all submits fast buttons
-	$(':submit').each(function() {
+	$('input:submit').each(function() {
 	  var element = $(this).get(0);
 	  var button = $(this);
 	  new FastButton(element, function(){
-			button.click();
+		  alert('hey');
+			// button.click();
 		});
 	});
 	
