@@ -1,7 +1,8 @@
 $(document).ready(function() {
 	
   $('a.fast-button').each(function() {
-	  var element, href = $(this).get(0), $(this).attr('href');
+	  var element = $(this).get(0);
+	  var href = $(this).attr('href');
 	  new FastButton(element, function(){
 		  window.location.href = href;
 		});
