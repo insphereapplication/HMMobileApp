@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	
+	
   $('a.fast-button').each(function() {
 	  var element = $(this).get(0);
 	  var href = $(this).attr('href');
@@ -8,7 +9,8 @@ $(document).ready(function() {
 		});
 	});
 	
-	$(':submit.fast-button').each(function() {
+	// make all submits fast buttons
+	$(':submit').each(function() {
 	  var element = $(this).get(0);
 	  var button = $(this);
 	  new FastButton(element, function(){
