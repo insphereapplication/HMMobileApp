@@ -29,7 +29,7 @@
 					</div>
 					<div data-role="fieldcontain">
 					    <label for="phonelist">Phone Type:</label>            
-						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();">
+						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();" data-role="none" class="ins-drop-down">
 							<% if @callback.phonenumber == @callback.opportunity.contact.telephone2 %>
 			            		<option data-placeholder="true">Home</option>
 							<% elsif @callback.phonenumber == @callback.opportunity.contact.mobilephone  %>

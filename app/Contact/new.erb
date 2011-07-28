@@ -85,7 +85,7 @@
 				<div class="ui-body ui-body-d">
 	            	<label for="contact_preferredphone" class="select">Preferred Phone:</label>
 					<div>
-						<select id="contact_preferredphone" name="contact[cssi_preferredphone]">
+						<select id="contact_preferredphone" name="contact[cssi_preferredphone]" data-role="none" class="ins-drop-down">
 							<option value="" selected="true"></option>
 							<option value="Business">Business</option>
 							<option value="Mobile">Mobile</option>
@@ -100,7 +100,7 @@
 				<div class="ui-body ui-body-d">
 	            	<label for="contact_gendercode" class="select">Gender:</label>
 					<div>
-						<select id="contact_gendercode" name="contact[gendercode]">
+						<select id="contact_gendercode" name="contact[gendercode]" data-role="none" class="ins-drop-down">
 							<option value="" selected="true"></option>
 							<option value="Male">Male</option>
 							<option value="Female">Female</option>
@@ -112,7 +112,7 @@
 			<div data-role="fieldcontain">
 					<div class="ui-body ui-body-d">
 		            	<label for="contact[birthdate]" class="fieldLabel">Date of Birth:</label>
-						<input id="contact[birthdate]" type="text" name="contact[birthdate]" readonly value="<%= $choosed['0'] %>"  onClick="popupBirthDateAJPicker('1', 'Contact Birth Date', 'contact[birthdate]'); document.getElementById('opportunity_lineofbusiness').focus();"></input>
+						<input id="contact[birthdate]" type="text" name="contact[birthdate]" readonly value="<%= $choosed['0'] %>"  onClick="popupBirthDateAJPicker('1', 'Contact Birth Date', 'contact[birthdate]'); document.getElementById('opportunity_lineofbusiness').focus();">
 			    	</div>
 			</div>				
 		</div>
@@ -125,30 +125,32 @@
 				<div class="ui-body ui-body-d">
 	        		<label for="opportunity_lineofbusiness" class="select">LOB:</label>
 					<div>
-						<select id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]">
+					
+						<select id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]"  data-role="none" class="ins-drop-down" >
 							<option value="" selected="true"></option>
 								<% StaticEntity.get_rawlead_lob_names.each do |lob_name| %>
 									<option value="<%=lob_name%>">
 										<%=lob_name%>
 									</option>
-								<% end %>
+								<% end %> 
 						</select>
-					</div>
+						
+				   </div>	
 				</div>
 			</div>		
 
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 	        		<label for="opportunity_inputsource" class="select">Source:</label>
-					<div>
-						<select id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]">
+					  <div>
+						<select id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]" data-role="none" class="ins-drop-down" >
 							<option value="" selected="true"></option>
 								<% StaticEntity.get_lead_source_names.each do |lead_source_name| %>
 									<option value="<%=lead_source_name%>">
 										<%=lead_source_name%>
 									</option>
 								<% end %>					
-						</select>
+				  		</select>
 					</div>
 				</div>
 			</div>
@@ -182,7 +184,7 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="contact[cssi_state1id]" class="select">State:</label>
-					<select name="contact[cssi_state1id]" data-role="none" id="contact[cssi_state1id]">
+					<select name="contact[cssi_state1id]" data-role="none" class="ins-drop-down"id="contact[cssi_state1id]">
 						<option data-placeholder="true">
 							<%= @contact.cssi_state1id %>
 						</option>
@@ -232,7 +234,7 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="contact[cssi_state2id]" class="select">State:</label>
-					<select name="contact[cssi_state2id]" data-role="none" id="contact[cssi_state2id]">
+					<select name="contact[cssi_state2id]" data-role="none" class="ins-drop-down" id="contact[cssi_state2id]">
 						<option data-placeholder="true">
 							<%= @contact.cssi_state2id %>
 						</option>

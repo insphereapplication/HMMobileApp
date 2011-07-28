@@ -32,7 +32,7 @@ document.getElementById('phoneList').focus();
 					</div>
 					<div data-role="fieldcontain">
 					    <label for="phonelist">Phone Type:</label>            
-						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();">
+						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();" data-role="none" class="ins-drop-down">
 							<% @opportunity.contact.phone_numbers.each do |type, number| %>
 								<% if @opportunity.contact.cssi_preferredphone == type %>
 									<option selected value="<%= number %>"><%= type %></option>

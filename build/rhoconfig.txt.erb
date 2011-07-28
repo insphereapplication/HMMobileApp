@@ -5,6 +5,8 @@ app_db_version = <%= @rhoconfig[:app_db_version] %>
 MinSeverity  = <%= @rhoconfig[:min_severity] %>
 LogToOutput = 1
 LogCategories = *
+log_skip_post = 0
+log_exclude_filter = 'login, password, pin'
 
 MaxLogFileSize=<%= @rhoconfig[:max_log_file_size] %>
 

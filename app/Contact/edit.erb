@@ -152,7 +152,7 @@
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
 								<label for="contact_preferredphone" class="select">Preferred Phone:</label> 
-								<select name="contact[cssi_preferredphone]" id="contact_preferredphone">
+								<select name="contact[cssi_preferredphone]" id="contact_preferredphone" data-role="none" class="ins-drop-down">
 									<option data-placeholder="true">
 										<%= @contact.cssi_preferredphone %>
 									</option>
@@ -175,7 +175,7 @@
 							<div class="ui-body ui-body-d">
 				            	<label for="contact_gendercode" class="select">Gender:</label>
 								<div>
-									<select id="contact_gendercode" name="contact[gendercode]">
+									<select id="contact_gendercode" name="contact[gendercode]" data-role="none" class="ins-drop-down">
 										<option data-placeholder="true" value="<%= @contact.gendercode %>"><%= @contact.gendercode %></option>
 										<option value="Male">Male</option>
 										<option value="Female">Female</option>
@@ -192,34 +192,21 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
-								<table width="100%">
-									<tr>
-										<td colspan="2">
 											<label for="select-choice-heightft" class="fieldLabel">Height:</label>
-											<label for="select-choice-heightin" class="fieldLabel" style="display:none;">Height:</label>
-										</td>
-									</tr>
-									<tr>
-										<td width="50%">
-											<select name="contact[cssi_heightft]" id="select-choice-heightft" width="50%">
+											<select name="contact[cssi_heightft]" id="select-choice-heightft"  data-role="none" >
 												<option data-placeholder="true"><%= @contact.cssi_heightft %></option>
 												<% Constants::HEIGHT_FEET.each do |height_feet| %>
 												<option value="<%=height_feet%>"><%=height_feet%></option>
 												<% end %>
-											</select>
-										</td>
-										<td width="50%">
-											<select name="contact[cssi_heightin]" id="select-choice-heightin">
+											</select>'&nbsp;
+											<select name="contact[cssi_heightin]" id="select-choice-heightin" data-role="none" >
 												<option data-placeholder="true"><%= @contact.cssi_heightin %></option>
 												<% Constants::HEIGHT_INCHES.each do |height_inches| %>
 												<option value="<%=height_inches%>"><%=height_inches%></option>
 												<% end %>
-											</select>
-										</td>
-									</tr>
-								</table>
+											</select>"			
 							</div>
-						</div>
+						</div>	
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
 								<label for="contact[cssi_weight]" class="fieldLabel">Weight:</label> 
@@ -238,7 +225,7 @@
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
 								<label for="select-choice-familystatuscode" class="fieldLabel">Marital Status:</label> 
-								<select name="contact[familystatuscode]" id="select-choice-familystatuscode">
+								<select name="contact[familystatuscode]" id="select-choice-familystatuscode" data-role="none" class="ins-drop-down">
 									<option data-placeholder="true"><%= @contact.familystatuscode %></option>
 									<option value="Single">Single</option>
 									<option value="Married">Married</option>
@@ -266,7 +253,7 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
-								<label for="contact[cssi_state1id]" class="fieldLabel">State:</label> <select name="contact[cssi_state1id]" id="contact[cssi_state1id]" data-role="none" id="select-choice-2">
+								<label for="contact[cssi_state1id]" class="fieldLabel">State:</label> <select name="contact[cssi_state1id]" id="contact[cssi_state1id]" data-role="none" class="ins-drop-down" id="select-choice-2">
 									<option value="">--</option>
 									<% Constants::STATE_CODES.each do |state_code| %>
 										<option value="<%=state_code[0]%>" <% if @contact.cssi_state1id == state_code[0] %> selected="selected" <% end %>>
@@ -299,7 +286,7 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
-								<label for="contact[cssi_state2id]" class="fieldLabel">State:</label> <select id="contact[cssi_state2id]" name="contact[cssi_state2id]" data-role="none" id="select-choice-3">
+								<label for="contact[cssi_state2id]" class="fieldLabel">State:</label> <select id="contact[cssi_state2id]" name="contact[cssi_state2id]" data-role="none" class="ins-drop-down" id="select-choice-3">
 									<option value="">--</option>
 									<% Constants::STATE_CODES.each do |state_code| %>
 										<option value="<%=state_code[0]%>" <% if @contact.cssi_state2id == state_code[0] %> selected="selected" <% end %>>

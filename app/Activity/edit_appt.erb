@@ -37,7 +37,7 @@ document.getElementById('appointment_duration').focus();
 						</div>
 						<div data-role="fieldcontain">
 							<label for="appointment_duration" class="fieldLabel">Duration:</label>
-							<select name="appointment_duration" id="appointment_duration">
+							<select name="appointment_duration" id="appointment_duration" data-role="none" class="ins-drop-down">
 									<% if get_duration(@appt.scheduledstart, @appt.scheduledend) == 30.0 %>
 					        			<option data-placeholder="true" value="<%=get_duration(@appt.scheduledstart, @appt.scheduledend)%>"> 30 Minutes</option>
 									<% elsif get_duration(@appt.scheduledstart, @appt.scheduledend) == 60.0 %>
@@ -61,7 +61,7 @@ document.getElementById('appointment_duration').focus();
 						</div>
 						<div data-role="fieldcontain">
 							<label for="select_location" class="fieldLabel">Location:</label>
-				            <select name="select_location" id="select_location" onchange='updateAddress();'>
+				            <select name="select_location" id="select_location" onchange='updateAddress();' data-role="none" class="ins-drop-down">
 									<option data-placeholder="true" value = "<%= @appt.cssi_location%>"><%= @appt.cssi_location %> </option>
 								<% @appt.opportunity.contact.addresses.each do |type, address| %>
 									<option value="<%= address %>"><%= type %></option>
