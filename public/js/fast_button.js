@@ -1,3 +1,22 @@
+$(document).ready(function() {
+	
+  $('a.fast-button').each(function() {
+	  var element, href = $(this).get(0), $(this).attr('href');
+	  new FastButton(element, function(){
+		  window.location.href = href;
+		});
+	});
+	
+	$(':submit.fast-button').each(function() {
+	  var element = $(this).get(0);
+	  var button = $(this);
+	  new FastButton(element, function(){
+			button.click();
+		});
+	});
+	
+});
+
 function FastButton(element, handler) {
    this.element = element;
    this.handler = handler;
