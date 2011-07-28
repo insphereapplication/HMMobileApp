@@ -19,6 +19,7 @@ BUILD_YML_TEMPLATE_PATH = "#{APP_PATH}/build/build.yml.erb"
 BUILD_YML_PATH = "#{APP_PATH}/build.yml"
 
 IOS_BUILD_DIR = "#{APP_PATH}/bin/target/iOS"
+SUCCESS = 0
 
 def process_erb(erb_file, output_file, local_binding=binding)
   template = ERB.new(File.read(erb_file))
@@ -64,7 +65,7 @@ def system_io(call)
     end
     err_text = stderr.read
   end
-  raise "ERROR: #{err_text}" unless exit_status == 0
+  raise "ERROR: #{err_text}" unless exit_status == SUCCESS
 end
 
 def build_yml
