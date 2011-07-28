@@ -1,17 +1,7 @@
 $(document).ready(function() {
-
-    //   $('a.fast-button').each(function() {
-    //   var element = $(this).get(0);
-    //   var href = $(this).attr('href');
-    //   var button = $(this)
-    //   new FastButton(element, function(){
-    // 	  alert("fast anchor");
-    // 	  // window.location.href = href;
-    // 	  button.click();
-    // 	});
-    // });
-    // make all submits fast buttons
-
+	  // this makes ALL anchors and submit buttons FastButtons
+	  // Note that it will use an anchor's href attribute if it exists, and will defeat 
+	  // any other handlers attached to that anchor -- jQuery, etc. 
     $('input:submit, a').each(function() {
         var element = $(this).get(0);
         var button = $(this);
@@ -26,7 +16,6 @@ $(document).ready(function() {
             }
         });
     });
-
 });
 
 function FastButton(element, handler) {
