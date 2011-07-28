@@ -1,22 +1,22 @@
-$(document).ready(function() {
-	  // this makes ALL anchors and submit buttons FastButtons
-	  // Note that it will use an anchor's href attribute if it exists, and will defeat 
-	  // any other handlers attached to that anchor -- jQuery, etc. 
-    $('input:submit, a').each(function() {
-        var element = $(this).get(0);
-        var button = $(this);
-        var href = $(this).attr('href');
-        new FastButton(element,
-        function() {
-            if (href && href != '') {
-                window.location.href = href;
-            }
-            else {
-                button.click();
-            }
-        });
-    });
-});
+// $(document).ready(function() {
+// 	  // this makes ALL anchors and submit buttons FastButtons
+// 	  // Note that it will use an anchor's href attribute if it exists, and will defeat 
+// 	  // any other handlers attached to that anchor -- jQuery, etc. 
+//     $('input:submit, a').each(function() {
+//         var element = $(this).get(0);
+//         var button = $(this);
+//         var href = $(this).attr('href');
+//         new FastButton(element,
+//         function() {
+//             if (href && href != '') {
+//                 window.location.href = href;
+//             }
+//             else {
+//                 button.click();
+//             }
+//         });
+//     });
+// });
 
 function FastButton(element, handler) {
     this.element = element;
