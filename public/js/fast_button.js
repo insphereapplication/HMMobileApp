@@ -7,8 +7,8 @@ $(document).ready(function() {
         var button = $(this);
         var href = $(this).attr('href');
         new FastButton(element,
-        function() {
-            if (href && href != '') {
+          function() {
+            if (href && href != '' && href != "#") {
                 window.location.href = href;
             }
             else {

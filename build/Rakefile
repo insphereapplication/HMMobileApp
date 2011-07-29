@@ -227,6 +227,7 @@ namespace :build do
     build_device "Android"
   end
   
+  # always build model first, so you don't overwrite the prod build for iphone
   task :all =>  [:model_uat, :prod] do 
   end
 end
