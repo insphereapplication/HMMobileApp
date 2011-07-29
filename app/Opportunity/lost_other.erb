@@ -24,7 +24,7 @@ return true;
 				<% end %>
 				<div data-role="fieldcontain">
 				<label for="status_codeid" class="select">Lost Reason:<font color="red">&nbsp;&nbsp;*<br/></font></label>
-				<select data-role="none" data-native-menu="false" name="status_code" id="status_codeid">
+				<select data-role="none" class="ins-drop-down" name="status_code" id="status_codeid">
 					<option data-placeholder="true"></option>
 					<% @lost_reasons.each do |reason| %>
 					    <% selected =  ( @params['selected_option'] != 'Other' && @params['selected_option'] == reason[0] ) ? '"selected="selected"' : "" %>
@@ -34,7 +34,7 @@ return true;
 				</div>
 				<div data-role="fieldcontain">
 				<label for="competitorid" class="select">Competitor:<br/></label>
-				<select data-role="none" data-native-menu="false" name="competitorid" id="competitorid">
+				<select data-role="none" class="ins-drop-down" name="competitorid" id="competitorid">
 					<option data-placeholder="true"></option>
 					<% @competitors.each do |competitor| %>
 						<option value="<%=competitor%>"><%=competitor%></option>

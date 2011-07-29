@@ -25,14 +25,14 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="dependent[cssi_heightft]" class="fieldLabel">Height:</label>
-					<select name="dependent[cssi_heightft]" data-role="none" id="dependent[cssi_heightft]">
+					<select name="dependent[cssi_heightft]" data-role="none" class="ins-narrow-drop-down" id="dependent[cssi_heightft]">
 						<option data-placeholder="true"> <%= @dependent.cssi_heightft %> </option>
 						<option value=""></option>
 						<% (0..10).each do |i| %>
 							<option value="<%= i %>"><%= i %></option>
 						<% end %>				
 					</select>'&nbsp;
-					<select name="dependent[cssi_heightin]" data-role="none" id="dependent[cssi_heightin]">
+					<select name="dependent[cssi_heightin]" data-role="none" class="ins-narrow-drop-down" id="dependent[cssi_heightin]">
 						<option data-placeholder="true"> <%= @dependent.cssi_heightin %> </option>
 						<option value=""></option>
 						<% (0..12).each do |i| %>
@@ -56,7 +56,7 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="dependent[cssi_gender]" class="fieldLabel">Gender:</label>
-					<select name="dependent[cssi_gender]" data-role="none" id="dependent[cssi_gender]">
+					<select name="dependent[cssi_gender]" data-role="none" class="ins-drop-down" id="dependent[cssi_gender]">
 						<option value=""></option>
 						<option value="Male" <% if @dependent.cssi_gender == "Male" %> selected="selected" <% end %>>Male</option>
 						<option value="Female" <% if @dependent.cssi_gender == "Female" %> selected="selected" <% end %>>Female</option>
