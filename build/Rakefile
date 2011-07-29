@@ -47,14 +47,9 @@ def log(message)
 end
 
 # using system commands for client builds instead of rake tasks because for multiple builds, they must run in separate processes (and not share constants, etc.)
-def build_android
-  log "Building Android..." 
-  system_io "cd #{APP_PATH} && rake device:android:production"
-end
-
-def build_iphone
-  log "Building iPhone..."
-  system_io "cd #{APP_PATH} && rake device:iphone:production"
+def build_device(device)
+  log "Building #{device}..." 
+  system_io "cd #{APP_PATH} && rake device:#{device.downcase}:production"
 end
 
 def system_io(call)
@@ -174,16 +169,18 @@ namespace :build do
   
   task :build_clients do
     log "Building clients for version: #{build_config['version']}"
+    
     android_build = Thread.new do
-      build_android
+      build_device "Android"
     end
     
     iphone_build = Thread.new do 
-      build_iphone
+      build_device "iPhone"
     end
 
     iphone_build.join
     log "Done building iPhone..."
+    
     android_build.join
     log "Done building Android..."
   end
@@ -215,19 +212,19 @@ namespace :build do
   end
   
   task :iphone_model => [:prep_for_model] do
-    build_iphone
+    build_device "iPhone"
   end
   
   task :android_model => [:prep_for_model] do
-    build_android
+    build_device "Android"
   end
   
   task :iphone => [:prep_for_prod] do 
-    build_iphone
+    build_device "iPhone"
   end
   
   task :android => [:prep_for_prod] do
-    build_android
+    build_device "Android"
   end
   
   task :all =>  [:model_uat, :prod] do 
