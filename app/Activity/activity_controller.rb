@@ -117,7 +117,8 @@ class ActivityController < Rho::RhoController
           :statuscode => 'Sale',
           :cssi_statusdetail => "",
           :actual_end => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
-          :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+          :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
+          :status_update_timestamp => Time.now.utc.to_s
         })
 
         finished_win_status(opportunity, @params['origin'])
@@ -170,7 +171,8 @@ class ActivityController < Rho::RhoController
           :statuscode => @params['status_code'],
           :cssi_statusdetail => "",
           :competitorid => @params['competitorid'] || "",
-          :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+          :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
+          :status_update_timestamp => Time.now.utc.to_s
         })
       
         opportunity.record_phone_call_made_now
@@ -216,7 +218,8 @@ class ActivityController < Rho::RhoController
             :statuscode => @params['status_code'],
             :cssi_statusdetail => "",
             :competitorid => @params['competitorid'] || "",
-            :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+            :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
+            :status_update_timestamp => Time.now.utc.to_s
           })
       
           opportunity.record_phone_call_made_now
@@ -253,7 +256,8 @@ class ActivityController < Rho::RhoController
     
     opp_attrs = {
       :cssi_statusdetail => @params['status_detail'],
-      :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+      :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
+      :status_update_timestamp => Time.now.utc.to_s
     }
     
     if opportunity.statuscode == 'New Opportunity'
@@ -286,7 +290,8 @@ class ActivityController < Rho::RhoController
       opp_attrs = {
         :cssi_statusdetail => 'Call Back Requested',
         :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
-        :statuscode => 'Contact Made'
+        :statuscode => 'Contact Made',
+        :status_update_timestamp => Time.now.utc.to_s
       }
     
       db = ::Rho::RHO.get_src_db('Opportunity')
@@ -328,7 +333,8 @@ class ActivityController < Rho::RhoController
     
       opp_attrs = {
         :cssi_statusdetail => 'Appointment Set',
-        :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+        :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
+        :status_update_timestamp => Time.now.utc.to_s
       }
     
       if ['New Opportunity', 'No Contact Made', 'Contact Made'].include?(opportunity.statuscode)

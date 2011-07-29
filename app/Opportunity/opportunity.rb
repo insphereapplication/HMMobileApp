@@ -33,6 +33,7 @@ class Opportunity
   property :temp_id, :string
   property :actualclosedate, :string
   property :opportunityratingcode, :string
+  property :status_update_timestamp, :string
   
   index :opportunity_pk_index, [:opportunityid]
   unique_index :unique_opp, [:opportunityid] 
