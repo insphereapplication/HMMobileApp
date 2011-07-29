@@ -10,7 +10,7 @@ log_exclude_filter = 'login, password, pin'
 
 MaxLogFileSize=<%= @rhoconfig[:max_log_file_size] %>
 
-logserver = 'https://mobileproxy.model.insphereis.net/clientlog' 
+logserver = '<%= @rhoconfig[:log_server] %>' 
 logname='InsiteMobile-rhodes'
 
 KeepTrackOfLastVisitedPage = 0 
@@ -23,8 +23,8 @@ jqtouch_mode=1
 splash_screen='zoom'
 lead_cost_threshold = 100
 
-quick_quote_url = <%= @rhoconfig[:quick_quote_url] %>
-resource_center_url=https: <%= @rhoconfig[:resource_center_url] %>
+quick_quote_url='<%= @rhoconfig[:quick_quote_url] %>'
+resource_center_url='<%= @rhoconfig[:resource_center_url] %>'
 
 
 
