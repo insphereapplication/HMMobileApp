@@ -361,4 +361,23 @@ module Constants
     "11",
     "12"
   ]
+  
+  PERSISTED_CONTACT_FILTER_PREFIX = 'contact_'
+  CONTACT_FILTERS = [
+    {:name => 'filter', :default_value => 'All'},
+    {:name => 'search_terms', :default_value => ''}
+  ]
+  
+  PERSISTED_FOLLOWUP_FILTER_PREFIX = 'followup_'
+  FOLLOWUP_FILTERS = [
+    {:name => 'statusReason', :default_value => 'All'},
+    {:name => 'sortBy', :default_value => 'LastActivityDateAscending'},
+    {:name => 'created', :default_value => 'All'}
+  ]
+  
+  PERSISTED_SCHEDULED_FILTER_PREFIX = 'scheduled_'
+  SCHEDULED_FILTERS = [
+    {:name => 'filter', :default_value => 'All'},
+    {:name => 'search', :default_value => ''}
+  ]
 end

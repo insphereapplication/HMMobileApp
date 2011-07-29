@@ -8,7 +8,6 @@ $(document).ready(function() {
 	});
 	
 	initializeFilterButtonHandlers();
-	
 });
 
 // this creates two one-time handlers for the 'clear' and 'filter' buttons. They must be removed during a page load, and will be re-added when the load is done.
@@ -36,11 +35,7 @@ function initializeSearch(){
 	toggleDiv('filter'); 
 	toggleDiv('plus'); 
 	toggleDiv('minus');
-	select_list_field = document.getElementById('contact_filter');
-	select_list_selected_index = select_list_field.selectedIndex;
-	filter = select_list_field.options[select_list_selected_index].text;
-	input = $('input#search_input').val();
-	showFilterParams(filter, input);
+	refreshFilterSummary();
 	loadPage();	
 }
 
@@ -48,7 +43,7 @@ function clearContacts(){
 	$('ul#contact-list').empty();
 	$('#contact_filter').val('all');
 	$('#search_input').val('');
-	$('#filter-params').remove();
+	refreshFilterSummary();
 	loadPage();
 	return false;
 }
@@ -141,6 +136,14 @@ function getLoadMoreButton(text, page){
 		</span>																																																						\
 		<input id="load-more-button" class="standardButton ui-btn-hidden" page="' + page + '" data-theme="b"/>						\
 	</div>'
+}
+
+function refreshFilterSummary(){
+	select_list_field = document.getElementById('contact_filter');
+	select_list_selected_index = select_list_field.selectedIndex;
+	filter = select_list_field.options[select_list_selected_index].text;
+	input = $('input#search_input').val();
+	showFilterParams(filter, input);
 }
 
 function showFilterParams(filter, input){

@@ -17,7 +17,6 @@
 		filterparams = '<span id="'+span+ '-filter-params" style="margin-top:5px;font-size:12px;">Filter: ' + filter +'</span>'
 		$('#'+span+'-filter-params').remove();
 		$('#'+span+'-filter-details').append( filterparams );
-
 	}
 	
 	function getSelectedText(span, select){
@@ -44,6 +43,23 @@
 		setTimeout("pollDateRefreshStatus("+ interval_ms +")",interval_ms);
 	}
 	
+	function refreshFollowupFilterSummary()
+	{
+		filter_status=getSelectedText('followup','status_reason');
+		sort_by_status=getSelectedText('followup','sort_by');
+		created_status=getSelectedText('followup','created');
+		filter=filter_status+', '+sort_by_status+', '+created_status
+		showFilterParams(filter, 'followup');
+	}
+	
+	function refreshAppointmentFilterSummary()
+	{
+		appointments_filter=getSelectedText('appointments','select')
+		input = $('#appointments_search_input').val();
+		filter=appointments_filter+', "'+input+'"'
+		showFilterParams(filter, 'scheduled');
+	}
+	
 	$(document).ready(function() {
 		// add the selected style to the selected tab button
 		$('a#<%= @params['selected_tab'] %>-button').addClass('ui-btn-active');
@@ -55,11 +71,7 @@
 		$('#followup_filter_button').live('click', function()
 		{
 			toggleFilterArea('followup');
-			filter_status=getSelectedText('followup','status_reason');
-			sort_by_status=getSelectedText('followup','sort_by');
-			created_status=getSelectedText('followup','created');
-			filter=filter_status+', '+sort_by_status+', '+created_status
-			showFilterParams(filter, 'followup');
+			refreshFollowupFilterSummary();
 			loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val() );
 			return false;
 		});
@@ -69,7 +81,7 @@
 			$('#followup_status_reason_filter').val('All');
 			$('#followup_sort_by_filter').val('LastActivityDateAscending');
 			$('#followup_created_filter').val('All');
-			$('#followup-filter-params').remove();
+			refreshFollowupFilterSummary();
 			loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val() );
 			return false;
 		});
@@ -78,7 +90,7 @@
 		{
 			$('#appointments_search_input').val('');
 			$('#appointments_select_filter').val('All');
-			$('#scheduled-filter-params').remove();
+			refreshAppointmentFilterSummary();
 			loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
 			return false;
 		});
@@ -86,13 +98,13 @@
 		$('#appointments_filter_button').live('click', function()
 		{
 			toggleFilterArea('appointments');
-			appointments_filter=getSelectedText('appointments','select')
-			input = $('#appointments_search_input').val();
-			filter=appointments_filter+', "'+input+'"'
-			showFilterParams(filter, 'scheduled');
+			refreshAppointmentFilterSummary();
 			loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
 			return false;
 		});
+		
+		refreshFollowupFilterSummary();
+		refreshAppointmentFilterSummary();
 	});
 
 	var tempDate = new Date();
@@ -186,27 +198,15 @@
 				<div id="followup_filter" style="display:none;" data-role="none">
 					<label for="followup_status_reason_filter" class="fieldLabel ui-input-text">&nbsp;&nbsp;&nbsp;&nbsp;Status Reason:</label>
 					<select class="ui-custom-dropdown" name="followup_status_reason_filter" id="followup_status_reason_filter" tabindex="-1" onchange="addtext();">
-						<option class="ui-btn-text" selected="true" value="All">All</option>
-						<option class="ui-btn-text" value="NoContactMade">No Contact Made</option>
-						<option class="ui-btn-text" value="ContactMade">Contact Made</option>
-						<option class="ui-btn-text" value="AppointmentSet">Appointment Set</option>
-						<option class="ui-btn-text" value="DealInProgress">Deal in Progress</option>
+						<%= followup_status_reason_filter_options %>
 					</select>
 					<label for="followup_sort_by_filter" class="fieldLabel ui-input-text">&nbsp;&nbsp;&nbsp;&nbsp;Sort By:</label>
 					<select class="ui-custom-dropdown" name="followup_sort_by_filter" id="followup_sort_by_filter" tabindex="-1" onchange="addtext();">
-						<option class="ui-btn-text" selected="true" value="LastActivityDateAscending">Latest Activity Date</option>
-						<option class="ui-btn-text" value="LastActivityDateDescending">Earliest Activity Date</option>
-						<option class="ui-btn-text" value="CreateDateAscending">Created Ascending</option>
-						<option class="ui-btn-text" value="CreateDateDescending">Created Descending</option>
+						<%= followup_sort_by_filter_options %>
 					</select>
 					<label for="followup_created_filter" class="fieldLabel ui-input-text">&nbsp;&nbsp;&nbsp;&nbsp;Created:</label>
 					<select class="ui-custom-dropdown" data-native-menu="true" name="followup_created_filter" id="followup_created_filter" tabindex="-1">
-						<option class="ui-btn-text" selected="true" value="All">All</option>
-						<option class="ui-btn-text" value="1">1 Day Ago</option>
-						<option class="ui-btn-text" value="2">2 Days Ago</option>
-						<option class="ui-btn-text" value="3">3 Days Ago</option>
-						<option class="ui-btn-text" value="4">4 Days Ago</option>
-						<option class="ui-btn-text" value="5">5 Days Ago</option>
+						<%= followup_created_filter_options %>
 					</select>
 					<fieldset class="ui-grid-custom ui-grid-a">
 						<div class="ui-block-a">
@@ -276,12 +276,10 @@
 				</div>
 				<div id="appointments_filter" style="display:none;" data-role="none">
 					<select class="ui-custom-dropdown" name="appointments_select_filter" id="appointments_select_filter" tabindex="-1" onchange="addtext();">
-						<option class="ui-btn-text" selected="true" value="All">All</option>
-						<option class="ui-btn-text" value="ScheduledAppointments">Appointments</option>
-						<option class="ui-btn-text" value="ScheduledCallbacks">Callbacks</option>
+						<%= scheduled_filter_options %>
 					</select>
 					<label for="appointments_search_input" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Search: </label>
-					<input type="text" id="appointments_search_input" maxlength="30" class="ui-search-text ui-body-null ui-corner-all"></input>
+					<input type="text" id="appointments_search_input" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%=  @persisted_scheduled_search %>"/>
 					<fieldset class="ui-grid-custom ui-grid-a">
 						<div class="ui-block-a">
 							<div data-theme="b" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">
