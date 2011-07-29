@@ -18,6 +18,7 @@ RHO_CONFIG_PATH = "#{APP_PATH}/rhoconfig.txt"
 BUILD_YML_TEMPLATE_PATH = "#{APP_PATH}/build/build.yml.erb"
 BUILD_YML_PATH = "#{APP_PATH}/build.yml"
 
+ANDROID_BUILD_DIR = "#{APP_PATH}/bin/target"
 IOS_BUILD_DIR = "#{APP_PATH}/bin/target/iOS"
 SUCCESS = 0
 
@@ -88,11 +89,7 @@ def build_yml
 end
 
 def model_build_yml
-  build_yml.merge({
-    :name => "Insite Model", 
-    :android_cert_path => "#{APP_PATH}/insphere_insite_model.keystore", 
-    :android_password => "insphere1"
-  })
+  build_yml
 end
 
 def rhoconfig
@@ -185,7 +182,7 @@ namespace :build do
     log "Done building Android..."
   end
   
-  task :copy_model_builds => [:copy_model_iphone_build] do 
+  task :copy_model_builds => [:copy_model_iphone_build, :copy_model_android_build] do 
   end
   
   task :prep_for_model => [:gen_rhoconfig_model, :gen_build_yml_model, :update_rhodes, 'update_icons:model_uat'] do 
@@ -200,6 +197,14 @@ namespace :build do
     Dir.mkdir "#{ios_target_dir}/model" unless File.exists?("#{ios_target_dir}/model")
     raise "Unable to copy model iphone build" unless system "cp -r #{ios_target_dir}/release/* #{ios_target_dir}/model"
     log "iphone model build copied to model dir"
+  end
+  
+  task :copy_model_android_build do
+    android_target_dir = "#{ANDROID_BUILD_DIR}"
+    log "Copying android model build to model dir: #{android_target_dir}/model"  
+    Dir.mkdir "#{android_target_dir}/model" unless File.exists?("#{android_target_dir}/model")
+    raise "Unable to copy model android build" unless system "cp #{android_target_dir}/*.apk #{android_target_dir}/model"
+    log "android model build copied to model dir"
   end
   
   task :prod => [:prep_for_prod] do
