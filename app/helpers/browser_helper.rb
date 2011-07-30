@@ -208,7 +208,7 @@ module BrowserHelper
   	# :currency_before => false puts the currency symbol after the number
   	# default format: $12,345,678.90
   	
-  	number ||= 0 # default to 0 if given number is nil
+  	number = number.blank? ? 0 : number # default to 0 if given number is blank
   	
   	options = {:currency_symbol => "$", :delimiter => ",", :decimal_symbol => ".", :currency_before => true, :no_decimal => false}.merge(options)
     
