@@ -169,19 +169,11 @@ namespace :build do
   
   task :build_clients do
     log "Building clients for version: #{build_config['version']}"
-    
-    android_build = Thread.new do
-      build_device "Android"
-    end
-    
-    iphone_build = Thread.new do 
-      build_device "iPhone"
-    end
 
-    iphone_build.join
+    build_device "iPhone"
     log "Done building iPhone..."
     
-    android_build.join
+    build_device "Android"
     log "Done building Android..."
   end
   
