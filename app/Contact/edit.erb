@@ -187,7 +187,7 @@
 						<div data-role="fieldcontain">
 								<div class="ui-body ui-body-d">
 					            	<label for="birthdate" class="fieldLabel">Date of Birth:</label>
-									<input id="birthdate" type="text" name="birthdate" readonly value="<%= to_date(@contact.birthdate) %>"  onClick="popupAppDateAJPicker('1', 'Contact Birth Date', 'birthdate', '<%= @contact.birthdate %>'); document.getElementById('select-choice-heightft').focus();"></input>
+									<input id="birthdate" type="text" name="birthdate" readonly value="<%= to_date(@contact.birthdate) %>"  onClick="popupAppDateAJPicker('1', 'Contact Birth Date', 'birthdate', '<%= @contact.birthdate %>'); document.getElementById('birthdate').focus();"></input>
 						    	</div>
 						</div>
 						<div data-role="fieldcontain">
