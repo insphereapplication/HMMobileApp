@@ -107,6 +107,7 @@ end
 def model_rhoconfig
   rhoconfig.merge({
     :min_severity => '1',
+    :max_log_file_size => '2000000',
     :sync_server => 'https://rhosync.model.insphereis.net/application', 
     :quick_quote_url => "https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
     :resource_center_url => "https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx",
@@ -169,19 +170,11 @@ namespace :build do
   
   task :build_clients do
     log "Building clients for version: #{build_config['version']}"
-    
-    android_build = Thread.new do
-      build_device "Android"
-    end
-    
-    iphone_build = Thread.new do 
-      build_device "iPhone"
-    end
 
-    iphone_build.join
+    build_device "iPhone"
     log "Done building iPhone..."
     
-    android_build.join
+    build_device "Android"
     log "Done building Android..."
   end
   
