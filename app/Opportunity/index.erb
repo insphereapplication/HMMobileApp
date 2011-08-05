@@ -68,38 +68,54 @@
 		loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val() );
 		loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
 	
-		$('#followup_filter_button').live('click', function()
+		$('#followup_filter_button').click( function()
 		{
-			toggleFilterArea('followup');
-			refreshFollowupFilterSummary();
-			loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val() );
+			if(filteringEnabled('follow-ups'))
+			{
+				disableFilters('follow-ups');
+				toggleFilterArea('followup');
+				refreshFollowupFilterSummary();
+				loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val() );
+			}
 			return false;
 		});
 		
 		$('#followup_clear').live('click', function()
 		{
-			$('#followup_status_reason_filter').val('All');
-			$('#followup_sort_by_filter').val('LastActivityDateAscending');
-			$('#followup_created_filter').val('All');
-			refreshFollowupFilterSummary();
-			loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val() );
+			if(filteringEnabled('follow-ups'))
+			{
+				disableFilters('follow-ups');
+				$('#followup_status_reason_filter').val('All');
+				$('#followup_sort_by_filter').val('LastActivityDateAscending');
+				$('#followup_created_filter').val('All');
+				refreshFollowupFilterSummary();
+				loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val() );
+			}
 			return false;
 		});
 
 		$('#appointments_clear').live('click', function()
 		{
-			$('#appointments_search_input').val('');
-			$('#appointments_select_filter').val('All');
-			refreshAppointmentFilterSummary();
-			loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
+			if(filteringEnabled('scheduled'))
+			{
+				disableFilters('scheduled');
+				$('#appointments_search_input').val('');
+				$('#appointments_select_filter').val('All');
+				refreshAppointmentFilterSummary();
+				loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
+			}
 			return false;
 		});
 
 		$('#appointments_filter_button').live('click', function()
 		{
-			toggleFilterArea('appointments');
-			refreshAppointmentFilterSummary();
-			loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
+			if(filteringEnabled('scheduled'))
+			{
+				disableFilters('scheduled');
+				toggleFilterArea('appointments');
+				refreshAppointmentFilterSummary();
+				loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
+			}
 			return false;
 		});
 		
@@ -214,7 +230,7 @@
 								<span class="ui-btn-inner ui-btn-corner-all">
 									<span class="ui-btn-text">Filter</span>
 								</span>
-								<input type="submit" class="standardButton ui-btn-hidden" data-theme="b" id="followup_filter_button" name="followup_filter_button"/>
+								<span class="standardButton ui-btn-hidden" data-theme="b" id="followup_filter_button" name="followup_filter_button"/>
 							</div>
 						</div>
 						<div class="ui-block-b">
@@ -286,7 +302,7 @@
 								<span class="ui-btn-inner ui-btn-corner-all">
 									<span class="ui-btn-text">Filter</span>
 								</span>
-								<input type="submit" class="standardButton ui-btn-hidden" data-theme="b" id="appointments_filter_button" name="appointments_filter_button"/>
+								<span class="standardButton ui-btn-hidden" data-theme="b" id="appointments_filter_button" name="appointments_filter_button"/>
 							</div>
 						</div>
 						<div class="ui-block-b">

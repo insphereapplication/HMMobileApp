@@ -1,3 +1,8 @@
+tabLoading = new Array();
+tabLoading['new-leads'] = false;
+tabLoading['follow-ups'] = false;
+tabLoading['scheduled'] = false;
+
 $(document).ready(function() {
 	
    	$('#new-leads-button').live('click', function() {
@@ -33,6 +38,18 @@ $(document).ready(function() {
 	
  });
 
+function disableFilters(tab){
+	tabLoading[tab] = true;
+}
+
+function enableFilters(tab){
+	tabLoading[tab] = false;
+}
+
+function filteringEnabled(tab){
+	return (tabLoading[tab] == false);
+}
+
 function checkForChanges(tab){
 	$.post('/app/Opportunity/refresh_if_changed', { tab: tab });
 }
@@ -47,7 +64,7 @@ function loadNewLeads(){
 		{ opportunity_method: 'previous_days_new_leads', list_selector: 'span#previous-days-leads-list',  next: null}
 	]);
 								
-	loadOpportunities(newLeadBuckets, 0);
+	loadOpportunities('new-leads', newLeadBuckets, 0);
 }
 
 function loadFollowUps( statusReasonFilter, sortByFilter, createdFilter )
@@ -62,7 +79,7 @@ function loadFollowUps( statusReasonFilter, sortByFilter, createdFilter )
 					   sortBy: sortByFilter,
 					   created: createdFilter };
 	
-	loadOpportunities( followUpBucket, 0, jsonParams );
+	loadOpportunities('follow-ups', followUpBucket, 0, jsonParams );
 }
 
 function loadScheduled( scheduledSelectFilter, scheduledSearchInput )
@@ -80,10 +97,10 @@ function loadScheduled( scheduledSelectFilter, scheduledSearchInput )
 	var jsonParams = { filter: scheduledSelectFilter,
 					   search: scheduledSearchInput };	
 											
-	loadOpportunities(appointmentBucket, 0, jsonParams);
+	loadOpportunities('scheduled', appointmentBucket, 0, jsonParams);
 }
 
-function loadOpportunities(opportunityBucket, opportunity_page, jsonParams)
+function loadOpportunities(tab, opportunityBucket, opportunity_page, jsonParams)
 {
 	if ( jsonParams == undefined )
 	{
@@ -108,16 +125,17 @@ function loadOpportunities(opportunityBucket, opportunity_page, jsonParams)
 			if (opportunities && $.trim(opportunities) != "")
 			{
 				$(opportunityBucket.list_selector).append(opportunities);
-				loadOpportunities(opportunityBucket, opportunity_page + 1, jsonParams);
+				loadOpportunities(tab, opportunityBucket, opportunity_page + 1, jsonParams);
 			}
 			else if (opportunityBucket.next != null)
 			{
 				checkForNoOpportunities( opportunityBucket.opportunity_method );
-				loadOpportunities(opportunityBucket.next, 0, jsonParams);
+				loadOpportunities(tab, opportunityBucket.next, 0, jsonParams);
 			}
 			else
 			{
 				checkForNoOpportunities( opportunityBucket.opportunity_method );
+				enableFilters(tab);
 			}
 		}
 	);
