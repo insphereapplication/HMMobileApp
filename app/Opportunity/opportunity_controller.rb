@@ -92,7 +92,7 @@ class OpportunityController < Rho::RhoController
   end
   
   def get_new_leads(color, text, opportunities, page_number)
-    $new_leads_nav_context += opportunities.map{|opp| opp.opportunityid }
+    $new_leads_nav_context += opportunities.map{|opp| opp.object }
     @color = color
     @label = text
     @page = opportunities
@@ -128,7 +128,7 @@ class OpportunityController < Rho::RhoController
     
     opportunities = Opportunity.by_last_activities(@params['page'].to_i, persisted_filter_values['statusReason'], persisted_filter_values['sortBy'], persisted_filter_values['created'])
     
-    $follow_ups_nav_context += opportunities.map{|opp| opp.opportunityid }
+    $follow_ups_nav_context += opportunities.map{|opp| opp.object }
     @page = opportunities
     render :action => :last_activities_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
@@ -139,7 +139,7 @@ class OpportunityController < Rho::RhoController
     
     appointments = Activity.appointment_list(@params['page'].to_i, persisted_filter_values['filter'], persisted_filter_values['search'], bucket)
     
-    $appointments_nav_context += appointments.map{|appointment| appointment.opportunity.opportunityid }
+    $appointments_nav_context += appointments.map{|appointment| appointment.opportunity.object }
     @color = color
     @label = label
     @page = appointments
