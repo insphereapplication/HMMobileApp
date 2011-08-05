@@ -62,7 +62,7 @@ function loadFollowUps( statusReasonFilter, sortByFilter, createdFilter )
 					   sortBy: sortByFilter,
 					   created: createdFilter };
 	
-	loadOpportunities( followUpBucket, 0, jsonParams );
+	loadOpportunities( followUpBucket, 0, jsonParams, true);
 }
 
 function loadScheduled( scheduledSelectFilter, scheduledSearchInput )
@@ -80,10 +80,10 @@ function loadScheduled( scheduledSelectFilter, scheduledSearchInput )
 	var jsonParams = { filter: scheduledSelectFilter,
 					   search: scheduledSearchInput };	
 											
-	loadOpportunities(appointmentBucket, 0, jsonParams);
+	loadOpportunities(appointmentBucket, 0, jsonParams, true);
 }
 
-function loadOpportunities(opportunityBucket, opportunity_page, jsonParams)
+function loadOpportunities(opportunityBucket, opportunity_page, jsonParams, initTabLoad)
 {
 	if ( jsonParams == undefined )
 	{
@@ -92,6 +92,15 @@ function loadOpportunities(opportunityBucket, opportunity_page, jsonParams)
 	else
 	{
 		jsonParams.page = opportunity_page;
+	}
+	
+	if (initTabLoad == undefined)
+	{
+		jsonParams.init_tab_load = false;
+	}
+	else
+	{
+		jsonParams.init_tab_load = initTabLoad;
 	}
 	
 	var jsonString = "{";

@@ -90,8 +90,23 @@ class OpportunityController < Rho::RhoController
       when 'appointments' then $appointments_nav_context
     end
   end
+
+  def check_for_context_reset(tab)
+    init_tab_load = @params['init_tab_load']
+    if init_tab_load == 'true'      
+      case tab
+      when 'appointments'
+        $appointments_nav_context = []
+      when 'follow-ups'
+        $follow_ups_nav_context = []
+      when 'new-leads'
+        $new_leads_nav_context = []
+      end
+    end
+  end
   
   def get_new_leads(color, text, opportunities, page_number)
+    check_for_context_reset('new-leads')
     $new_leads_nav_context += opportunities.map{|opp| opp.object }
     @color = color
     @label = text
@@ -106,21 +121,6 @@ class OpportunityController < Rho::RhoController
   def previous_days_new_leads
     get_new_leads('orange', 'Previous Days', Opportunity.previous_days_leads(@params['page'].to_i), @params['page'])
   end
-  
-  def get_follow_ups(color, text, date_proc, phone_calls)
-    $follow_ups_nav_context += phone_calls.map{|phone_call| phone_call.opportunity.opportunityid }
-    @color = color
-    @label = text
-    @date_proc = date_proc
-    @page = phone_calls
-    render :action => :follow_ups_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
-  end
-  
-  def get_activities(opportunities)
-    $follow_ups_nav_context += opportunities.map{|opp| opp.opportunityid }
-    @page = opportunities
-    render :action => :last_activities_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
-  end
 
   def by_last_activities
     Settings.update_persisted_filter_values(Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX, Constants::FOLLOWUP_FILTERS.map{|filter| filter[:name]}, @params)
@@ -128,7 +128,9 @@ class OpportunityController < Rho::RhoController
     
     opportunities = Opportunity.by_last_activities(@params['page'].to_i, persisted_filter_values['statusReason'], persisted_filter_values['sortBy'], persisted_filter_values['created'])
     
+    check_for_context_reset('follow-ups')
     $follow_ups_nav_context += opportunities.map{|opp| opp.object }
+    
     @page = opportunities
     render :action => :last_activities_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
@@ -139,7 +141,9 @@ class OpportunityController < Rho::RhoController
     
     appointments = Activity.appointment_list(@params['page'].to_i, persisted_filter_values['filter'], persisted_filter_values['search'], bucket)
     
+    check_for_context_reset('appointments')
     $appointments_nav_context += appointments.map{|appointment| appointment.opportunity.object }
+    
     @color = color
     @label = label
     @page = appointments
