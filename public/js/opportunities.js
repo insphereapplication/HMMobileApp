@@ -78,8 +78,8 @@ function loadFollowUps( statusReasonFilter, sortByFilter, createdFilter )
 	var jsonParams = { statusReason: statusReasonFilter,
 					   sortBy: sortByFilter,
 					   created: createdFilter };
-	
-	loadOpportunities('follow-ups', followUpBucket, 0, jsonParams );
+					
+	loadOpportunities('follow-ups', followUpBucket, 0, jsonParams, true );
 }
 
 function loadScheduled( scheduledSelectFilter, scheduledSearchInput )
@@ -97,10 +97,11 @@ function loadScheduled( scheduledSelectFilter, scheduledSearchInput )
 	var jsonParams = { filter: scheduledSelectFilter,
 					   search: scheduledSearchInput };	
 											
-	loadOpportunities('scheduled', appointmentBucket, 0, jsonParams);
+
+	loadOpportunities('scheduled', appointmentBucket, 0, jsonParams, true);
 }
 
-function loadOpportunities(tab, opportunityBucket, opportunity_page, jsonParams)
+function loadOpportunities(tab, opportunityBucket, opportunity_page, jsonParams, initTabLoad)
 {
 	if ( jsonParams == undefined )
 	{
@@ -109,6 +110,15 @@ function loadOpportunities(tab, opportunityBucket, opportunity_page, jsonParams)
 	else
 	{
 		jsonParams.page = opportunity_page;
+	}
+	
+	if (initTabLoad == undefined)
+	{
+		jsonParams.init_tab_load = false;
+	}
+	else
+	{
+		jsonParams.init_tab_load = initTabLoad;
 	}
 	
 	var jsonString = "{";
