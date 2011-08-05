@@ -14,9 +14,8 @@
 					<label for="cssi_carrierid" class="fieldLabel">Carrier:<font color="red">&nbsp;&nbsp;*</font></label>
 					<div>
 						<select id="cssi_carrierid" name="appdetail[cssi_carrierid]" data-role="none" class="ins-drop-down">
-							<option data-placeholder="true" value="<%= @appdetail.cssi_carrierid %>" selected="true"><%= @appdetail.cssi_carrierid %></option>
 								<% StaticEntity.get_carrier_names.each do |carrier_name| %>
-									<option value="<%=carrier_name%>">
+									<option <% if @appdetail.cssi_carrierid == carrier_name %> selected="true" <% end %> value="<%=carrier_name%>">
 										<%=carrier_name%>
 									</option>
 								<% end %>
@@ -29,9 +28,8 @@
 	        		<label for="cssi_lineofbusinessid" class="fieldLabel">LOB:<font color="red">&nbsp;&nbsp;*</font></label>
 					<div>
 						<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]" data-role="none" class="ins-drop-down">
-							<option data-placeholder="true" value="<%= @appdetail.cssi_lineofbusinessid %>" selected="true"><%= @appdetail.cssi_lineofbusinessid %></option>
 								<% StaticEntity.get_lob_names.each do |lob_name| %>
-									<option value="<%=lob_name%>">
+									<option <% if @appdetail.cssi_lineofbusinessid == lob_name %> selected="True" <% end %>value="<%=lob_name%>">
 										<%=lob_name%>
 									</option>
 								<% end %>

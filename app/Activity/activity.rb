@@ -142,6 +142,24 @@ class Activity
       })
   end
   
+  def phone_type
+    if self.phonenumber == ""
+      return "Ad-Hoc"
+    end
+    
+    if self.phonenumber == self.opportunity.contact.telephone2
+      "Home"
+    elsif self.phonenumber == self.opportunity.contact.telephone1
+      "Business"
+    elsif self.phonenumber == self.opportunity.contact.mobilephone
+      "Mobile"
+    elsif self.phonenumber == self.opportunity.contact.telephone3
+      "Alternate"
+    else
+      "Ad-Hoc"
+    end
+  end
+  
   def create_note(note_text)
     unless note_text.blank?
       Note.create({

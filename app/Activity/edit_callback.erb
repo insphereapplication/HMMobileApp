@@ -21,7 +21,6 @@
 	</div>
 	<div id="contentDiv" data-role="content">
 		<div class="ui-body ui-body-d">
-
 				<div data-role="fieldcontain">
 					<div data-role="fieldcontain">
 		            	<label for="callback_datetime">Call Back Date and Time:</label>
@@ -29,20 +28,11 @@
 					</div>
 					<div data-role="fieldcontain">
 					    <label for="phonelist">Phone Type:</label>            
-						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();" data-role="none" class="ins-drop-down">
-							<% if @callback.phonenumber == @callback.opportunity.contact.telephone2 %>
-			            		<option data-placeholder="true">Home</option>
-							<% elsif @callback.phonenumber == @callback.opportunity.contact.mobilephone  %>
-								<option data-placeholder="true">Mobile</option>
-							<% elsif @callback.phonenumber == @callback.opportunity.contact.telephone1  %>
-								<option data-placeholder="true">Business</option>
-							<% else %>
-								<option data-placeholder="true">Ad Hoc</option>
-							<% end %>							
+						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();" data-role="none" class="ins-drop-down">							
 							<% @callback.opportunity.contact.phone_numbers.each do |type, number| %>
-									<option value="<%= number %>"><%= type %></option>
+									<option <% if @callback.phone_type == type %> selected="True" <% end %> value="<%= number %>"><%= type %></option>
 							<% end %>
-								<option value='ad-hoc'>Ad-Hoc</option>
+								<option <% if @callback.phone_type == "Ad-Hoc" %> selected="True" <% end %> value='ad-hoc'>Ad-Hoc</option>
 						</select>
 					</div>
 					<div data-role="fieldcontain">

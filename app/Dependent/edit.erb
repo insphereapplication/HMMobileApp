@@ -26,18 +26,16 @@
 				<div class="ui-body ui-body-d">
 					<label for="dependent[cssi_heightft]" class="fieldLabel">Height:</label>
 					<select name="dependent[cssi_heightft]" data-role="none" class="ins-narrow-drop-down" id="dependent[cssi_heightft]">
-						<option data-placeholder="true"> <%= @dependent.cssi_heightft %> </option>
 						<option value=""></option>
-						<% (0..10).each do |i| %>
-							<option value="<%= i %>"><%= i %></option>
+						<% Constants::HEIGHT_FEET.each do |height_feet| %>
+							<option <% if @dependent.cssi_heightft == height_feet %> selected = "true" <% end %> value="<%=height_feet%>"><%=height_feet%></option>
 						<% end %>				
 					</select>'&nbsp;
 					<select name="dependent[cssi_heightin]" data-role="none" class="ins-narrow-drop-down" id="dependent[cssi_heightin]">
-						<option data-placeholder="true"> <%= @dependent.cssi_heightin %> </option>
 						<option value=""></option>
-						<% (0..12).each do |i| %>
-							<option value="<%= i %>"><%= i %></option>
-						<% end %>
+						<% Constants::HEIGHT_INCHES.each do |height_inches| %>
+							<option <% if @dependent.cssi_heightin == height_inches %> selected = "true" <% end %>value="<%=height_inches%>"><%=height_inches%></option>
+								<% end %>
 					</select>"
 				</div>
 			</div>

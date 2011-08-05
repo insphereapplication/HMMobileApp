@@ -25,17 +25,15 @@
 				<div class="ui-body ui-body-d">
 					<label for="contact[cssi_spouseheightft]" class="fieldLabel">Height:</label>
 					<select name="contact[cssi_spouseheightft]" data-role="none" class="ins-narrow-drop-down" id="contact[cssi_spouseheightft]">
-						<option data-placeholder="true"> <%= @contact.cssi_spouseheightft %> </option>
 						<option value=""></option>
-						<% (0..10).each do |i| %>
-							<option value="<%= i %>"><%= i %></option>
+						<% Constants::HEIGHT_FEET.each do |height_feet| %>
+							<option <% if @contact.cssi_spouseheightft == height_feet %> selected = "true" <% end %> value="<%=height_feet%>"><%= height_feet %></option>
 						<% end %>				
 					</select>'&nbsp;
 					<select name="contact[cssi_spouseheightin]" data-role="none" class="ins-narrow-drop-down" id="contact[cssi_spouseheightin]">
-						<option data-placeholder="true"> <%= @contact.cssi_spouseheightin %> </option>
 						<option value=""></option>
-						<% (0..12).each do |i| %>
-							<option value="<%= i %>"><%= i %></option>
+						<% Constants::HEIGHT_INCHES.each do |height_inches| %>
+							<option <% if @contact.cssi_spouseheightin == height_inches %> selected = "true" <% end %>value="<%=height_inches%>"><%=height_inches%></option>
 						<% end %>
 					</select>"
 				</div>
