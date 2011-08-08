@@ -33,7 +33,7 @@ document.getElementById('appointment_duration').focus();
 					<div data-role="fieldcontain">
 						<div data-role="fieldcontain">
 							<label for="appointment_datetime" class="fieldLabel">Appointment Start:</label>
-							<input id="appointment_datetime" type="text" class="required" name="appointment_datetime" readonly value="<%= to_datetime(@appt.scheduledstart) %>"  onClick="editpopupDateTimeAJPicker('0', 'Appointment Time', 'appointment_datetime', '<%= @appt.scheduledstart %>'); document.getElementById('appointment_duration').focus();"></input>
+							<input id="appointment_datetime" type="text" class="required" name="appointment_datetime" readonly value="<%= to_datetime(@appt.scheduledstart) %>"  onClick="editpopupDateTimeAJPicker('0', 'Appointment Time', 'appointment_datetime', '<%= @appt.scheduledstart %>'); document.getElementById('appointment_datetime').focus();"></input>
 						</div>
 						<div data-role="fieldcontain">
 							<label for="appointment_duration" class="fieldLabel">Duration:</label>

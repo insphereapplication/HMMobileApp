@@ -24,7 +24,7 @@
 				<div data-role="fieldcontain">
 					<div data-role="fieldcontain">
 		            	<label for="callback_datetime">Call Back Date and Time:</label>
-						<input id="callback_datetime" type="text" class="required" name="callback_datetime" readonly value="<%= to_datetime(@callback.scheduledend) %>"  onClick="editpopupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime', '<%= @callback.scheduledend %>'); document.getElementById('phoneList').focus();"></input>
+						<input id="callback_datetime" type="text" class="required" name="callback_datetime" readonly value="<%= to_datetime(@callback.scheduledend) %>"  onClick="editpopupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime', '<%= @callback.scheduledend %>'); document.getElementById('callback_datetime').focus();"></input>
 					</div>
 					<div data-role="fieldcontain">
 					    <label for="phonelist">Phone Type:</label>            
