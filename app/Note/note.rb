@@ -20,7 +20,7 @@ class Note
     if self.parent_type && self.parent_id
       rhodes_parent_type = ['phonecall', 'appointment'].include?(self.parent_type.downcase) ? "Activity" : self.parent_type.capitalize
       parent = Object.const_get(rhodes_parent_type) 
-      parent.send("find_#{self.parent_type.downcase}", self.parent_id)
+      parent.send("find_#{rhodes_parent_type.downcase}", self.parent_id)
     end
   end
   
