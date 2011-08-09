@@ -50,9 +50,13 @@ end
 # using system commands for client builds instead of rake tasks because for multiple builds, they must run in separate processes (and not share constants, etc.)
 def build_device(device)
   log "Building #{device}..." 
-  # puts `cd #{APP_PATH} && rake device:#{device.downcase}:production`
-  # raise "Error occurred during build for #{device}, stopping." unless $?.success?
-  system_io "cd #{APP_PATH} && rake device:#{device.downcase}:production"
+  child_pid = fork
+  if child_pid.nil?
+    exec("cd #{APP_PATH} && rake device:#{device.downcase}:production") 
+  else
+    Process.wait(child_pid)
+    raise "Error occurred during build for #{device}, stopping." unless $?.success?
+  end
 end
 
 def system_io(call)
