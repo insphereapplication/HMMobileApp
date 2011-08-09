@@ -68,10 +68,10 @@ def build_yml
   {
     :name => 'Insite',
     :version => ENV['BUILD_NUMBER'] || '2.1.10',
-    :iphone_config => 'release',
+    :iphone_config => 'Distribution',
     :iphone_sdk => 'iphoneos4.3',
-    :codesignidentity => '"iPhone Developer: Dave Sims (8A2526Z579)"',
-    :provisionprofile => '57605487-01A2-48E5-93CE-A160E7631951',
+    :codesignidentity => '"iPhone Distribution: Insphere Insurance Solutions, Inc"',
+    :provisionprofile => 'DBC56EAB-6D57-4161-958E-55533E7642A0',
     :package_name => 'com.insphere.insite',
     :sdk_path => "/Library/ParivedaInsite/rhodes",
     :sdk_version => "2.3.0",
@@ -89,7 +89,11 @@ def build_yml
 end
 
 def model_build_yml
-  build_yml
+  build_yml.merge({
+    :codesignidentity => '"iPhone Developer: Dave Sims (8A2526Z579)"',
+    :iphone_config => 'release',
+    :provisionprofile => '57605487-01A2-48E5-93CE-A160E7631951'
+  })
 end
 
 def rhoconfig
