@@ -92,7 +92,7 @@ end
 def model_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Dave Sims (8A2526Z579)"',
-    :iphone_config => 'release',
+    :iphone_config => 'Release',
     :provisionprofile => '57605487-01A2-48E5-93CE-A160E7631951'
   })
 end
