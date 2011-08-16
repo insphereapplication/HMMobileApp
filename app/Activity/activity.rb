@@ -36,6 +36,10 @@ class Activity
   property :email_from, :string
   ################################
   
+  #####Task properties ##########
+  property :prioritycode, :string
+  ###############################
+  
   belongs_to :parent_id, 'Opportunity'
   belongs_to :parent_contact_id, 'Contact'
   
