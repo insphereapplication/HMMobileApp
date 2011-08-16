@@ -213,7 +213,7 @@ module BrowserHelper
   	options = {:currency_symbol => "$", :delimiter => ",", :decimal_symbol => ".", :currency_before => true, :no_decimal => false}.merge(options)
     
   	# split integer and fractional parts 
-  	int, frac = ("%.2f" % number).split('.')
+  	int, frac = ("%.2f" % number.to_f).split('.')
   	# insert the delimiters
   	int.gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1#{options[:delimiter]}")
 
