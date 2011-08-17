@@ -10,8 +10,8 @@ android:
   package_name: <%= @build_yml[:package_name] %>
   production:
     certificate: <%= @build_yml[:android_cert_path] %>
-    password: <%= @build_yml[:android_password] %>
-    alias: <%= @build_yml[:name] %>
+    password: "<%= @build_yml[:android_cert_password] %>"
+    alias: "<%= @build_yml[:android_cert_alias] %>"
   emulator: rhoandroid
   android_title: 1
   push:
@@ -23,7 +23,7 @@ android:
   - vibrate
   version: <%= @build_yml[:android_sdk_version] %>
 applog: rholog.txt
-encrypt_database: <%= @build_yml[:encrypt_database] %>
+encrypt_database: '<%= @build_yml[:encrypt_database] %>'
 iphone:
   configuration: <%= @build_yml[:iphone_config] %>
   sdk: <%= @build_yml[:iphone_sdk] %>
