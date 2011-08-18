@@ -4,7 +4,31 @@ require 'date'
 
 class ActivityController < Rho::RhoController
   include BrowserHelper
+
+  def index
+    render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
+  end
+
+  def get_new_activities(color, activities)
+    @color = color
+    @page = activities
+    render :action => :activity_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
+  end
   
+  def past_due_activities
+    data = []
+    data = ["a", "b", "c"] if (@params['page'] == '0')
+    data = ["d", "e"] if (@params['page'] == '1')
+    get_new_activities('red', data)
+  end
+  
+  def completed_activities
+    data = []
+    data = ["a", "b", "c"] if (@params['page'] == '0')
+    data = ["d", "e"] if (@params['page'] == '1')
+    get_new_activities('grey', data)
+  end
+
   # GET /Appt/{1}
   def show_appt
     @appt = Activity.find_activity(@params['id'])
