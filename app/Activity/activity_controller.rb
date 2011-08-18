@@ -5,6 +5,19 @@ require 'date'
 class ActivityController < Rho::RhoController
   include BrowserHelper
   
+  # GET /Contact/activity_summary
+   def activity_summary
+      Settings.record_activity
+      @contact = Contact.find_contact(@params['id'])      
+      if @contact
+        @activity_list = @contact.activity_list
+        render :action => :activity_summary, :id => @contact.object, :back => 'callback:',
+                :layout => 'layout_jquerymobile',
+                :origin => @params['origin']
+      end
+    end
+  
+  
   # GET /Appt/{1}
   def show_appt
     @appt = Activity.find_activity(@params['id'])
@@ -403,6 +416,7 @@ class ActivityController < Rho::RhoController
     WebView.navigate(url_for(:controller => model, :action => :index, :back => 'callback:', :query => {:origin => origin})) 
   end
   
+  
   def complete_appointments(appointmentids)
     Settings.record_activity
     if appointmentids
@@ -412,5 +426,9 @@ class ActivityController < Rho::RhoController
       end
     end
   end
+  
+ 
+  
+ 
 
 end

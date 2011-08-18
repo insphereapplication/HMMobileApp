@@ -323,4 +323,13 @@ class Contact
         puts "Could not generate home_map map string; Value is #{}"
     end
   end
+  
+  
+  def activity_list
+    Activity.find_by_sql(%Q{
+       select * from Activity where (parent_type = 'Contact' and parent_id = '#{self.object}' ) or 
+       (parent_type = 'Opportunity' and parent_id in (select object from Opportunity where contact_id = '#{self.object}')) or
+       (parent_type = 'Cssi_policy' and parent_id in (select object from Policy where contact_id = '#{self.object}'))
+      })
+  end
 end

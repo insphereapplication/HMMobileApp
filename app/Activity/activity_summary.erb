@@ -1,0 +1,26 @@
+<div data-role="page" data-theme="b">
+	<div data-role="header" data-theme="d" data-position="inline">
+		<a href="<%=url_for(:controller => :Contact, :action=>:show, :id => @contact.object, :query=>{:origin=>@params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
+		<h1>Activity Summary <%= sync_spinner %></h1>
+		<div style="text-align:center" class="ui-bar ui-bar-c"> 
+			<%= "#{@contact.full_name}" %>
+		</div>
+	</div>
+	<div id="contentDiv" data-role="content">
+		<ul data-role="listview">
+			<!-- NOTE: May have to make this markup conditional to show appointment status(statuscode) correctly -->
+			<% @activity_list.each do |activity|%>
+				<li>
+					<h3><strong><%= activity.activity_type %></strong></h3>
+					   <p><%= activity.subject %></p>
+						<div class="ui-li-aside">
+							<p><strong>Created <%= "#{to_date(activity.createdon)}"%></strong></p>
+							<% if activity.statecode %>
+							  <p><%= activity.statecode%></p>
+							<% end %>
+						</div> 
+				</li>		
+			<% end %>
+		</ul>
+	</div>
+</div>
