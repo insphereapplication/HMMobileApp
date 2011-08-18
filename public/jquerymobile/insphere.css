@@ -17,7 +17,7 @@
 }
 /* Color-coded sidebars */
 .ui-li-sidebar-red { position: absolute; width: 10px; height: 100%; border-width: 0; border-right-width: 1px; top: 0; left: 0; margin: 0; padding: 0; background:#222E2F;}
-.ui-li-sidebar-grey { position: absolute; width: 10px; height: 100%; border-width: 0; border-right-width: 1px; top: 0; left: 0; margin: 0; padding: 0; background:#4D4D37;}
+.ui-li-sidebar-grey { position: absolute; width: 10px; height: 100%; border-width: 0; border-right-width: 1px; top: 0; left: 0; margin: 0; padding: 0; background: #4D4B52; }
 .ui-li-sidebar-yellow { position: absolute; width: 10px; height: 100%; border-width: 0; border-right-width: 1px; top: 0; left: 0; margin: 0; padding: 0; background:#E1E190;}
 .ui-li-sidebar-green { position: absolute; width: 10px; height: 100%; border-width: 0; border-right-width: 1px; top: 0; left: 0; margin: 0; padding: 0; background:#462237;}
 .ui-li-sidebar-orange { position: absolute; width: 10px; height: 100%; border-width: 0; border-right-width: 1px; top: 0; left: 0; margin: 0; padding: 0; background:#4D4D37;}
@@ -54,20 +54,16 @@ ul li a { display: block; padding: 1px 5px; text-decoration: none;}
 			color-stop(1, 		#4D4D37));
 		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#81a8ce', EndColorStr='#5e87b0')";
 	}
-	
-	.ui-bar-grey {
-			background: 			#A65100;
-			color: 					#fff;
-			font-weight: bold;
-			text-shadow: 0 -1px 1px #254f7a;
-			background-image: -moz-linear-gradient(top, 
-									#FF7C00, 
-									#A65100);
-			background-image: -webkit-gradient(linear,left top,left bottom,
-				color-stop(0, 		#FF7C00),
-				color-stop(1, 		#A65100));
-			-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#81a8ce', EndColorStr='#5e87b0')";
-		}
+
+.ui-bar-grey {
+    background: #4D4B52;
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 0 -1px 1px #4D4B52;
+    background-image: -moz-linear-gradient(top, #A19FA8, #4D4B52);
+    background-image: -webkit-gradient(linear,left top,left bottom, color-stop(0, 		#A19FA8), color-stop(1, #4D4B52));
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#81a8ce', EndColorStr='#4D4B52')";
+}
 		
 	.ui-bar-yellow {
 			background: 			#E1E190;
