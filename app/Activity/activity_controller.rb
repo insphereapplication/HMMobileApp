@@ -4,20 +4,46 @@ require 'date'
 
 class ActivityController < Rho::RhoController
   include BrowserHelper
+
+  def index
+    render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
+  end
+
+  def get_new_activities(color, activities)
+    @color = color
+    @page = activities
+    render :action => :activity_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
+  end
   
+
   # GET /Contact/activity_summary
-   def activity_summary
-      Settings.record_activity
-      @contact = Contact.find_contact(@params['id'])      
-      if @contact
-        @activity_list = @contact.activity_list
-        render :action => :activity_summary, :id => @contact.object, :back => 'callback:',
-                :layout => 'layout_jquerymobile',
-                :origin => @params['origin']
-      end
+  def activity_summary
+    Settings.record_activity
+    @contact = Contact.find_contact(@params['id'])      
+    if @contact
+      @activity_list = @contact.activity_list
+      render :action => :activity_summary, :id => @contact.object, :back => 'callback:',
+              :layout => 'layout_jquerymobile',
+              :origin => @params['origin']
     end
+  end
+
+
+  def past_due_activities
+    data = []
+    data = ["a", "b", "c"] if (@params['page'] == '0')
+    data = ["d", "e"] if (@params['page'] == '1')
+    get_new_activities('red', data)
+  end
   
-  
+  def completed_activities
+    data = []
+    data = ["a", "b", "c"] if (@params['page'] == '0')
+    data = ["d", "e"] if (@params['page'] == '1')
+    get_new_activities('grey', data)
+  end
+
+
   # GET /Appt/{1}
   def show_appt
     @appt = Activity.find_activity(@params['id'])
@@ -427,8 +453,4 @@ class ActivityController < Rho::RhoController
     end
   end
   
- 
-  
- 
-
 end
