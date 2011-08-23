@@ -6,6 +6,13 @@ return true;
 }
 </script>
 
+<script type="text/javascript">
+function PickDueDateChangeFocus() {
+popupDateTimeAJPicker('0', 'Due Time', 'task_due_datetime');
+document.getElementById('task_due_datetime').focus();
+}
+</script>
+
 <div data-role="page" id="lost_other_page" data-theme="b">
 	<%= offline_bar%>
 	<div data-role="header" data-theme="d" data-position="inline">
@@ -41,6 +48,7 @@ return true;
 					<% end %>
 				</select>
 				</div>
+				<%= quick_task_add_panel %>
 				<input type="submit" href="#" data-direction="reverse" value="Update"/>
 			</form>
 		</div>

@@ -98,7 +98,6 @@ class ActivityController < Rho::RhoController
   #CR: use inline 'if's carefully. Here there should be an if clause and an 'else' to handle negative paths. What happens if we don't have an appointment?
   #CR: Wrap all database operations in transactions -- Note here that if the first update fails, the second update is now inaccurate.
   def update_appt
-    puts "APPOINTMENT UPDATE: #{@params.inspect}"
     Settings.record_activity
     @appointment = Activity.find_activity(@params['id'])
     @appointment.update_attributes({
@@ -121,7 +120,7 @@ class ActivityController < Rho::RhoController
   
   #CR: careful with the inline 'if's; remove crufty old output; needs a transaction
   def update_callback
-    puts "CALLBACK UPDATE: #{@params.inspect}"
+
     @callback = Activity.find_activity(@params['id'])
     Settings.record_activity
     if @callback
@@ -160,15 +159,45 @@ class ActivityController < Rho::RhoController
           :status_update_timestamp => Time.now.utc.to_s
         })
 
+        
         finished_win_status(opportunity, @params['origin'])
 
         db.commit
+        
       rescue Exception => e
         puts "Exception in update won status, rolling back: #{e.inspect} -- #{@params.inspect}"
         db.rollback
       end
+      
+      unless @params['task']['subject'].blank?
+        task = create_new_task(@params['task'],opportunity)
+      end
+      
   end
   
+  def create_new_task(task_params, opportunity)
+     
+      db = ::Rho::RHO.get_src_db('Activity')
+      db.start_transaction
+      begin
+        task = Activity.create_new({
+          :scheduledend => DateUtil.date_build(task_params['due_datetime']), 
+          :subject => "Task - #{task_params['subject']}",
+          :parent_type => 'Contact', 
+          :parent_id => opportunity.contact_id,
+          :parent_contact_id => opportunity.contact_id,
+          :statecode => 'Open',
+          :type => 'Task',
+          :prioritycode => task_params['high_priority_checkbox'] ? 'High' : 'Normal',
+          :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+        })
+        db.commit
+     rescue Exception => e
+        puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
+        db.rollback
+     end
+  end
+
   def confirm_win_status
     Alert.show_popup ({
         :message => "Click OK to Confirm this Opportunity as Won", 
@@ -223,6 +252,9 @@ class ActivityController < Rho::RhoController
         puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
         db.rollback
       end
+      unless @params['task_subject'].blank?
+        task = create_new_task(@params['task_subject'],@params['task_due_datetime'],@params['task_priority_checkbox'],opportunity)
+      end  
     else
       WebView.navigate(url_for :controller => :Opportunity, :action => :status_update, :id => @params['opportunity_id'], :query => {:origin => @params['origin']})
     end
@@ -230,7 +262,7 @@ class ActivityController < Rho::RhoController
   
   def confirm_lost_other_status
     unless @params['status_code'].blank?
-      puts "STATUS CODE IS #{@params['status_code']}"
+
       WebView.navigate(url_for :action => :update_lost_other_status, 
               :query => {:opportunity_id => @params['opportunity_id'], 
                           :status_code => @params['status_code'],
@@ -269,6 +301,9 @@ class ActivityController < Rho::RhoController
           puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
           db.rollback
         end
+        unless @params['task_subject'].blank?
+          task = create_new_task(@params['task_subject'],@params['task_due_datetime'],@params['task_priority_checkbox'],opportunity)
+        end
   end
 
   def confirm_lost_status
@@ -288,7 +323,7 @@ class ActivityController < Rho::RhoController
   end  
   
   def update_status_no_contact
-    puts @params.inspect
+
     Settings.record_activity
     opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
     opportunity.create_note(@params['notes'])
@@ -349,7 +384,8 @@ class ActivityController < Rho::RhoController
         :parent_contact_id => opportunity.contact_id,
         :statuscode => 'Open',
         :statecode => 'Open',
-        :type => 'PhoneCall'
+        :type => 'PhoneCall',
+        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
       })
       
       if @params['phoneList'] == 'ad-hoc'
@@ -399,7 +435,8 @@ class ActivityController < Rho::RhoController
             :description => @params['description'],
             :type => 'Appointment',
             :cssi_location => @params['cssi_location'],
-            :parent_contact_id => opportunity.contact_id
+            :parent_contact_id => opportunity.contact_id,
+            :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
           }
         )
   
@@ -437,7 +474,6 @@ class ActivityController < Rho::RhoController
   def finished_loss_status(opportunity, origin, appointmentids=nil)
     complete_appointments(appointmentids)
     SyncUtil.start_sync
-    puts @params.inspect
     model = ['SearchContacts', 'contact'].include?(@params['origin']) ? :Contact : :Opportunity
     WebView.navigate(url_for(:controller => model, :action => :index, :back => 'callback:', :query => {:origin => origin})) 
   end

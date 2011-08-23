@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $('form').not('#dependent_form, #contact_new, #appdetail, #call_back_form, #appointment_form, #lost_opportunity_other_form, #reset_pin_form').submit(function() {
+  $('form').not('#dependent_form, #contact_new, #appdetail, #call_back_form, #appointment_form, #lost_opportunity_other_form, #reset_pin_form, #won_form').submit(function() {
     if(typeof jQuery.data(this, "disabledOnSubmit") == 'undefined') {
       jQuery.data(this, "disabledOnSubmit", { submited: true });
       $('input[type=submit], input[type=button]', this).each(function() {
