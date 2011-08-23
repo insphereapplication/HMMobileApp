@@ -302,7 +302,8 @@ class Opportunity
       :subject => "Phone Call - #{self.contact.full_name}",
       :cssi_disposition => disposition,
       :statecode => 'Completed',
-      :statuscode => 'Made'
+      :statuscode => 'Made',
+      :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }
     
     if phone_call = most_recent_open_phone_call   
