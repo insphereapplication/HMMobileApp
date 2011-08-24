@@ -452,6 +452,23 @@ class ActivityController < Rho::RhoController
       end
   end
   
+  def verify_pin
+     if @params['PIN'] == Settings.pin
+       puts @params.inspect
+       Settings.pin_last_activity_time = Time.new
+       Settings.pin_confirmed = true
+       render :action => :activity_detail, :query => {:origin => @params['origin']}
+     else
+       Alert.show_popup({
+         :message => "Invalid PIN Entered", 
+         :title => 'Invalid PIN', 
+         :buttons => ["OK"]
+       })
+       @pinverified="false"
+       render :action => :activity_detail, :query => {:origin => @params['origin']}
+     end    
+   end
+  
   private
   
   def get_appointment_ids(appointment_params)
@@ -488,5 +505,6 @@ class ActivityController < Rho::RhoController
       end
     end
   end
+  
   
 end

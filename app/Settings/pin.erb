@@ -5,7 +5,7 @@
     </div>
 
     <div data-role="content">
-	 <form id="reset_pin_form" method="POST" action="<%= url_for :action => :validate_pin, :query => {:origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity']} %>">
+	 <form id="reset_pin_form" method="POST" action="<%= url_for :action => :validate_pin, :query => {:origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity'], :activity => @params['activity'] } %>">
 	   <% if @msg %>
 		 <p style="color: red"><%= @msg %></p>
 	   <% end %>
@@ -30,10 +30,13 @@
 	   </ul>
 		<fieldset class="ui-grid-a">
 			<div class="ui-block-a"><input type="submit" data-theme="b" class="standardButton" value="Reset"/></div>
-			<% if @params['contact'].blank? %>	
-				<div class="ui-block-b"><a type="button" data-theme="c" value="Cancel" href="<%= url_for(:action => :index, :query => {:origin => @params['origin']}) %>">Cancel</a></div>
+			<% if !(@params['contact'].blank?) %>	
+			    <div class="ui-block-b"><a type="button" data-theme="c" value="Cancel" href="<%= url_for(:controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>">Cancel</a></div>
+				
+			<% elsif !(@params['activity'].blank?) %>	
+				<div class="ui-block-b"><a type="button" data-theme="c" value="Cancel" href="<%= url_for(:controller => :Activity, :action => :activity_detail, :id => @params['contact'], :query => {:origin => @params['origin'], :activity => @params['activity']}) %>">Cancel</a></div>
 			<% else %>
-				<div class="ui-block-b"><a type="button" data-theme="c" value="Cancel" href="<%= url_for(:controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>">Cancel</a></div>
+				<div class="ui-block-b"><a type="button" data-theme="c" value="Cancel" href="<%= url_for(:action => :index, :query => {:origin => @params['origin']}) %>">Cancel</a></div>
 			<% end %>
 	    </fieldset>
 	 </form>
