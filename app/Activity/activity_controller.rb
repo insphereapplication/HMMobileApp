@@ -75,7 +75,7 @@ class ActivityController < Rho::RhoController
     if (parent_contact)
       left_text = parent_contact.full_name.blank? ? "&nbsp;" : parent_contact.full_name
     else
-      parent_policy = activity.parent_policy
+      parent_policy = activity.policy
       left_text = parent_policy.nil? || parent_policy.cssi_primaryinsured.blank? ? "&nbsp;" : parent_policy.cssi_primaryinsured
     end
     scheduled_time = activity.scheduled_time

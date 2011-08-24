@@ -65,11 +65,15 @@ class Activity
   end
   
   def opportunity
-    parent if parent && parent_type.downcase == "opportunity"
+    parent if parent_type.downcase == "opportunity"
   end
   
   def contact
-    parent if parent && parent_type.downcase == "contact"
+    parent if parent_type.downcase == "contact"
+  end
+  
+  def policy
+    parent if parent_type.downcase == "policy"
   end
   
   def open?
@@ -345,10 +349,6 @@ class Activity
       this_parent = parent
       this_parent && (parent_type == 'Opportunity' || parent_type == 'Policy') ? this_parent.contact : nil
     end
-  end
-
-  def parent_policy
-    parent if parent_type == 'Policy'
   end
 
   def scheduled_time
