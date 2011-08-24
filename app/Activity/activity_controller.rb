@@ -6,15 +6,31 @@ class ActivityController < Rho::RhoController
   include BrowserHelper
 
   def index
+    Activity.complete_activities(@params['selected-activity']) if @params['selected-activity']
+    Settings.update_persisted_filter_values('activity_', ['type', 'status', 'priority'], @params) if @params['status']
+    selected = Settings.filter_values["activity_type"]
+    selected = 'All' if selected.blank?
+    @type_filter = gen_options([
+        {:value => 'All', :label => 'All'},
+        {:value => 'Task', :label => 'Task'},
+        {:value => 'Appointment', :label => 'Appointment'},
+        {:value => 'PhoneCall', :label => 'Phone Call'}
+    ], selected)
+    selected = Settings.filter_values["activity_status"]
+    selected = 'Open' if selected.blank?
+    @status_filter = gen_options([
+        {:value => 'Open', :label => 'Open'},
+        {:value => 'Completed', :label => 'Completed'}
+    ], selected)
+    selected = Settings.filter_values["activity_priority"]
+    selected = 'All' if selected.blank?
+    @priority_filter = gen_options([
+        {:value => 'All', :label => 'All'},
+        {:value => 'Normal', :label => 'Normal'},
+        {:value => 'High', :label => 'High'}
+    ], selected)
     render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
-
-  def get_new_activities(color, activities)
-    @color = color
-    @page = activities
-    render :action => :activity_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
-  end
-  
 
   # GET /Contact/activity_summary
   def activity_summary
@@ -28,19 +44,63 @@ class ActivityController < Rho::RhoController
     end
   end
 
+  def get_new_activities(color, activities)
+    @color = color
+    @page = activities
+    render :action => :activity_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
+  end
 
   def past_due_activities
-    data = []
-    data = ["a", "b", "c"] if (@params['page'] == '0')
-    data = ["d", "e"] if (@params['page'] == '1')
-    get_new_activities('red', data)
+    get_new_activities('red', Activity.past_due_activities(@params['page'].to_i, @params['type'], @params['priority']))
+  end
+
+  def no_date_activities
+    get_new_activities('green', Activity.no_date_activities(@params['page'].to_i, @params['type'], @params['priority']))
+  end
+
+  def today_activities
+    get_new_activities('orange', Activity.today_activities(@params['page'].to_i, @params['type'], @params['priority']))
+  end
+
+  def future_activities
+    get_new_activities('yellow', Activity.future_activities(@params['page'].to_i, @params['type'], @params['priority']))
   end
   
   def completed_activities
-    data = []
-    data = ["a", "b", "c"] if (@params['page'] == '0')
-    data = ["d", "e"] if (@params['page'] == '1')
-    get_new_activities('grey', data)
+    get_new_activities('grey', Activity.completed_activities(@params['page'].to_i, @params['type'], @params['priority']))
+  end
+
+  def activity_row_parameters(activity)
+    parent_contact = activity.parent_contact
+    if (parent_contact)
+      left_text = parent_contact.full_name.blank? ? "&nbsp;" : parent_contact.full_name
+    else
+      parent_policy = activity.parent_policy
+      left_text = parent_policy.nil? || parent_policy.cssi_primaryinsured.blank? ? "&nbsp;" : parent_policy.cssi_primaryinsured
+    end
+    scheduled_time = activity.scheduled_time
+    right_text = scheduled_time.blank? ? "&nbsp;" : to_datetime_noyear(scheduled_time)
+    is_priority = !activity.priority.blank? && activity.priority == 'High'
+    href = nil
+    is_phone = activity.type == 'PhoneCall'
+    if (is_phone)
+      href = activity.phonenumber.blank? ? "#" : "tel:#{activity.phonenumber}"
+    elsif (activity.type == 'Appointment')
+      href = activity.location.blank? ? "#" :
+               System::get_property('platform') == 'APPLE' ? "maps:q=#{Rho::RhoSupport.url_encode(activity.location)}" :
+                 "http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(activity.location)}"
+    end
+    {
+      :id => activity.object,
+      :show_detail_url => url_for(:action => :show, :id => activity.object),
+      :completed => activity.statecode == 'Completed',
+      :show_icon => is_priority,
+      :top_text => activity.subject,
+      :bottom_left_text => left_text,
+      :bottom_right_text => right_text,
+      :href_text => href,
+      :show_phone => is_phone
+    }
   end
 
 

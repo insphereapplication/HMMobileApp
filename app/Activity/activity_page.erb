@@ -1,5 +1,3 @@
 <% @page.each do |activity| %>
-	<%= render :partial =>"activity", :back => 'callback:', :locals => {
-    :color => @color
-	}%>
-<% end%>
+  <%= render :partial =>"activity", :back => 'callback:', :locals => { :color => @color }.merge(activity_row_parameters(activity))%>
+<% end %>
