@@ -126,6 +126,6 @@ function completeSelectedActivities() {
     if (ids.length > 0) {
         location.href = location.href.replace(/\?.*$/, '') + '?' + $.param({ 'selected-activity': ids });
     } else {
-        alert("Please select activities to complete.");
+        $.post('/app/Activity/complete_activities_alert');
     }
 }

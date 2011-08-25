@@ -32,18 +32,6 @@ class ActivityController < Rho::RhoController
     render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
 
-  # GET /Contact/activity_summary
-  def activity_summary
-    Settings.record_activity
-    @contact = Contact.find_contact(@params['id'])      
-    if @contact
-      @activity_list = @contact.activity_list
-      render :action => :activity_summary, :id => @contact.object, :back => 'callback:',
-              :layout => 'layout_jquerymobile',
-              :origin => @params['origin']
-    end
-  end
-
   def get_new_activities(color, activities)
     @color = color
     @page = activities
@@ -68,6 +56,10 @@ class ActivityController < Rho::RhoController
   
   def completed_activities
     get_new_activities('grey', Activity.completed_activities(@params['page'].to_i, @params['type'], @params['priority']))
+  end
+
+  def complete_activities_alert
+    Alert.show_popup "Please choose activities to complete."
   end
 
   def activity_row_parameters(activity)
@@ -103,6 +95,17 @@ class ActivityController < Rho::RhoController
     }
   end
 
+  # GET /Contact/activity_summary
+  def activity_summary
+    Settings.record_activity
+    @contact = Contact.find_contact(@params['id'])      
+    if @contact
+      @activity_list = @contact.activity_list
+      render :action => :activity_summary, :id => @contact.object, :back => 'callback:',
+             :layout => 'layout_jquerymobile',
+             :origin => @params['origin']
+    end
+  end
 
   # GET /Appt/{1}
   def show_appt
@@ -336,7 +339,6 @@ class ActivityController < Rho::RhoController
     end
   end
   
-  
   def update_lost_other_status
         Settings.record_activity
         db = ::Rho::RHO.get_src_db('Opportunity')
@@ -383,7 +385,6 @@ class ActivityController < Rho::RhoController
   end  
   
   def update_status_no_contact
-
     Settings.record_activity
     opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
     opportunity.create_note(@params['notes'])
@@ -555,7 +556,6 @@ class ActivityController < Rho::RhoController
     WebView.navigate(url_for(:controller => model, :action => :index, :back => 'callback:', :query => {:origin => origin})) 
   end
   
-  
   def complete_appointments(appointmentids)
     Settings.record_activity
     if appointmentids
@@ -565,6 +565,4 @@ class ActivityController < Rho::RhoController
       end
     end
   end
-  
-  
 end
