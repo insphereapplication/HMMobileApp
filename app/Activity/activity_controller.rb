@@ -73,10 +73,15 @@ class ActivityController < Rho::RhoController
     scheduled_time = activity.scheduled_time
     right_text = scheduled_time.blank? ? "&nbsp;" : to_datetime_noyear(scheduled_time)
     is_priority = !activity.priority.blank? && activity.priority == 'High'
+    details = url_for(:action => :show, :id => activity.object)
     href = nil
     is_phone = activity.type == 'PhoneCall'
     if (is_phone)
       href = activity.phonenumber.blank? ? "#" : "tel:#{activity.phonenumber}"
+      if (activity.open?)
+        opp = activity.opportunity
+        details = url_for(:action => :opportunity_details, :id => opp.object) if opp && !opp.closed?
+      end
     elsif (activity.type == 'Appointment')
       href = activity.location.blank? ? "#" :
                System::get_property('platform') == 'APPLE' ? "maps:q=#{Rho::RhoSupport.url_encode(activity.location)}" :
@@ -84,7 +89,7 @@ class ActivityController < Rho::RhoController
     end
     {
       :id => activity.object,
-      :show_detail_url => url_for(:action => :show, :id => activity.object),
+      :show_detail_url => details,
       :completed => activity.statecode == 'Completed',
       :show_icon => is_priority,
       :top_text => activity.subject,
@@ -93,6 +98,12 @@ class ActivityController < Rho::RhoController
       :href_text => href,
       :show_phone => is_phone
     }
+  end
+
+  def opportunity_details
+    Rho::NativeTabbar.switch_tab(0)
+    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :id => @params['id']), 0)
+    redirect :action => :index
   end
 
   # GET /Contact/activity_summary
