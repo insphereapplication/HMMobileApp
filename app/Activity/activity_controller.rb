@@ -31,6 +31,14 @@ class ActivityController < Rho::RhoController
     ], selected)
     render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
+  
+  def show
+    @activity = Activity.find_activity(@params['id'])
+    @parent_contact = @activity.parent_contact
+    @opportunity = @activity.opportunity
+    @policy = @activity.policy
+    render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
+  end
 
   def get_new_activities(color, activities)
     @color = color
@@ -327,10 +335,11 @@ class ActivityController < Rho::RhoController
       })
       db.commit
       finished_create_activity
-   rescue Exception => e
+    rescue Exception => e
       puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
       db.rollback
-   end
+    end
+  end
 
   def update_task
     Settings.record_activity

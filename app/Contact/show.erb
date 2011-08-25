@@ -12,237 +12,222 @@
 				<h1>Contact  <%= sync_spinner %></h1>
 				<a href="<%=url_for(:action=>:edit, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-direction="forward" data-icon="edit"> Edit </a>
 	</div>
-			<div data-role="content">
-				<ul data-role="listview" data-theme="d" data-inset="true" > 
-					<li>
-							<h3><%= @contact.full_name %></h3>
-							<p><%= @contact.gendercode %>, Age <%= (@contact.age).to_s %> </p>
-							<p>DOB: <%= to_date(@contact.birthdate) %></p>		
-					</li> 
-					
-					<% if @contact.mobilephone && !@contact.mobilephone.blank? %>
-						<li <%= check_preferred_and_donotcall("Mobile", @contact.cssi_preferredphone, @contact.cssi_allowcallsmobilephone, @contact.cssi_companydncmobilephone) %> ><a href="tel: <%= @contact.mobilephone.to_s %>"> Mobile: <%= @contact.mobilephone %></a></li>
-					<% else %>
-						<li data-icon="false"><a href="#">Mobile:</a></li>
-					<% end %>
-					
-					<% if @contact.telephone1 && !@contact.telephone1.blank? %>
-						<li <%= check_preferred_and_donotcall("Business", @contact.cssi_preferredphone, @contact.cssi_allowcallsbusinessphone, @contact.cssi_companydncbusinessphone) %> ><a href="tel: <%= @contact.telephone1.to_s %>">Bus: <%= @contact.telephone1 %></a>
-							<% if (@contact.cssi_businessphoneext != nil || @contact.cssi_businessphoneext == "")%> 
-								<!-- <div align="center"><p> -->x<%= @contact.cssi_businessphoneext %><!-- </p></div> -->
-							<% end %>
-						</li>
-					<% else %>
-						<li data-icon="false"><a href="#">Bus:</a></li>
-					<% end %>
-					
-					<% if @contact.telephone2 && !@contact.telephone2.blank? %>
-						<li <%= check_preferred_and_donotcall("Home", @contact.cssi_preferredphone, @contact.cssi_allowcallshomephone, @contact.cssi_companydnchomephone) %> ><a href="tel: <%= @contact.telephone2.to_s %>">Home: <%= @contact.telephone2 %></a></li>
-					<% else %>
-						<li data-icon="false"><a href="#">Home:</a></li>
-					<% end %>
-					
-					<% if @contact.telephone3 && !@contact.telephone3.blank? %>
-						<li <%= check_preferred_and_donotcall("Alternate", @contact.cssi_preferredphone, @contact.cssi_allowcallsalternatephone, @contact.cssi_companydncalternatephone) %> ><a href="tel: <%= @contact.telephone3.to_s %>">Alternate: <%= @contact.telephone3 %></a></li>
-					<% else %>
-						<li data-icon="false"><a href="#">Alternate:</a></li>
-					<% end %>
-					
-					<% if @contact.emailaddress1 %>
-					<li data-icon="false"><a href="mailto:<%= @contact.emailaddress1.to_s %>"><%= "Email: #{@contact.emailaddress1.to_s}" %></a></li>
-					<% else %>
-					<li data-icon="false"><a href="#">Email:</a></li>
-					<% end %>
-					
-					<% if @contact.cssi_heightft && @contact.cssi_heightin %>
-					<li data-icon="false"><a href="#">Height: <%= @contact.cssi_heightft + '\' ' + @contact.cssi_heightin + "\"" %></a></li>
-					<% elsif @contact.cssi_heightft %>
-					<li data-icon="false"><a href="#">Height: <%= @contact.cssi_heightft + '\' ' + "\"" %></a></li>
-					<% else %>
-					<li data-icon="false"><a href="#">Height :</a></li>
-					<% end %>
-					
-					<% if @contact.cssi_weight %>
-					<li data-icon="false"><a href="#">Weight: <%= @contact.cssi_weight %>&nbsp;lbs</a></li>
-					<% else %>
-					<li data-icon="false"><a href="#">Weight :</a></li>
-					<% end %>
-										
-					<% if @contact.cssi_usetobacco %>
-					<li data-icon="false"><a href="#">Tobacco: <%= use_tobacco_string(@contact.cssi_usetobacco) %></a></li>
-					<% else %>
-					<li data-icon="false"><a href="#">Tobacco :</a></li>
-					<% end %>
-					
-					<% if @contact.familystatuscode %>
-					<li data-icon="false"><a href="#">Marital Status: <%= @contact.familystatuscode %></a></li>
-					<% else %>
-					<li data-icon="false"><a href="#">Marital Status :</a></li>
-					<% end %>
-					
-					<li data-role="list-divider">Home Address</li>
-					<li data-icon="false">
-						<% if @contact.show_home_address %>
-							<% if System::get_property('platform') == 'APPLE'%>
-								<a onclick="hideSpin()" href=<%="maps:q=#{@contact.home_map}"%>>
-										<%= @contact.address1_line1 %>
-										<%= @contact.address1_line2 %><br/>
-										<%= @contact.home_city %><br/>
-								</a>
-							<% else %>
-								<a rel="external" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{@contact.home_map}"%>>
-										<%= @contact.address1_line1 %>
-										<%= @contact.address1_line2 %><br/>
-										<%= @contact.home_city %><br/>
-								</a>
-							<% end %>
-						<% else %>
-							<a href="#"> (None) </a>
-						<% end %>
-					</li>
-					<li data-role="list-divider">Business Address</li>
-					<li data-icon="false">
-						<% if @contact.show_business_address %>
-							<% if System::get_property('platform') == 'APPLE'%>
-								<a onclick="hideSpin()" href=<%="maps:q=#{@contact.business_map}"%>>
-									<%= @contact.address2_line1 %>
-									<%= @contact.address2_line2 %><br/>
-									<%= @contact.business_city %><br/>
-								</a>
-							<% else %>
-								<a onclick="hideSpin()" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{@contact.business_map}"%>>
-									<%= @contact.address2_line1 %>
-									<%= @contact.address2_line2 %><br/>
-									<%= @contact.business_city %><br/>
-								</a>
-							<% end %>
-						<% else %>
-							<a href="#"> (None) </a>
-						<% end %>
-					</li>
-				</ul>
-				<div data-role="collapsible" data-collapsed="true">
-					<% if @contact.has_spouse_info? %>
-						<h3>Spouse - <%= @contact.cssi_spousename %>&nbsp;<%= @contact.cssi_spouselastname %></h3>
-					<% else %>
-						<h3>Spouse</h3>
-					<% end %>
-					<ul data-role="listview" data-filter="false" data-inset="true">
-						<li data-role="list-divider">Spouse</li>
-						<% if @contact.has_spouse_info? %>
-							<li>
-								<a href="<%= url_for(:controller => :Contact, :action => :spouse_show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>"></a>
-								<p></p><p><b><%= @contact.cssi_spousename %>&nbsp;<%= @contact.cssi_spouselastname%></b></p>
-								<p><%= @contact.cssi_spousegender %>, <%= @contact.spouse_age %></p>
-								<p>DOB: <%= to_date(@contact.cssi_spousebirthdate) %></p>
-							</li>
-						<% else %>
-							<li data-icon="add">
-								<a href="<%= url_for(:controller => :Contact, :action => :spouse_add, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>">Add Spouse</a>
-							</li>
-						<% end %>
-					</ul>
-				</div>
-				<div data-role="collapsible" data-collapsed="true">
-					<% if @contact.dependents.size == 0 %>
-						<h3>Dependents</h3>
-					<% else %>	
-						<h3>Dependents - <%= @contact.dependents.size %></h3>
-					<% end %>
-					<ul data-role="listview" data-filter="false" data-inset="true">
-						<li data-role="list-divider">Dependents</li>
-						<li data-icon="add">
-							<a href="<%= url_for(:controller => :Dependent, :action => :new, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>">Add Dependent</a>
-						</li>
-						<% @contact.dependents.each do |dependent| %>
-						<li>
-							<a href="<%= url_for(:controller => :Dependent, :action => :show, :id => dependent.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>"></a>
-							<p></p><p><b><%= dependent.cssi_name %>&nbsp;<%= dependent.cssi_lastname %></b></p>
-							<p><%= dependent.cssi_gender %>, Age <%= dependent.cssi_age %></p>
-							<p>DOB: <%= to_date(dependent.cssi_dateofbirth) %></p>
-						</li>
-						<% end %>
-					</ul>
-				</div>
+	<div data-role="content">
+		<ul data-role="listview" data-theme="d" data-inset="true" > 
+			<li>
+					<h3><%= @contact.full_name %></h3>
+					<p><%= @contact.gendercode %>, Age <%= (@contact.age).to_s %> </p>
+					<p>DOB: <%= to_date(@contact.birthdate) %></p>		
+			</li>
 			
-				<% if @contact.policies.size == 0 %>	
-
-					<ul data-role="listview" data-filter="false" data-inset="true">
-						<li data-role="list-divider">Policies - 0</li>
-						<li><div style="text-align:center"><i> (No Policies) </i></div></li>
-					</ul>			
-				
-				<% elsif Settings.pin == "" %>
-				
-					<ul data-role="none" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-filter="false" data-inset="true">
-						<li class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">Policies - <%= @contact.policies.size %></li>
-						<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom">
-								<a type="button" data-theme="b" value="Submit" href="<%= url_for(:controller => :Settings, :action => :pin, :query => {:origin => @params['origin'], :contact => @contact.object, :opportunity => @params['opportunity']}) %>">Create PIN to view Policies</a>
-						</li>						
-					</ul>
-								
-				<% elsif Settings.pin_confirmed == true && Settings.pin_is_current? %>
-				
-				<ul data-role="listview" data-filter="false" data-inset="true">
-					<li data-role="list-divider">Policies - <%= @contact.policies.size %></li>
-
-					<% @contact.policies.each do |policy| %>
-					<li>
-						<a href="<%= url_for(:controller => :Policy, :action => :show, :id => policy.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity'], :contact => @contact.object}) %>">
-							<p></p><p>Carrier: <%= policy.carrier_name %></p>
-							<p>Application Date: <%= to_date(policy.cssi_applicationdate) %></p>
-							<p>Status: <%= policy.cssi_statusreason %></p>
-						</a>
+			<%=
+			@contact.map_phone_numbers{ |type,number,do_not_call,preferred|
+				link = %Q{<a href="tel: #{number}">#{type}: #{number}</a>}
+				icons = generate_phone_number_icons(preferred,do_not_call)
+				%Q{
+					<li data-icon="false">
+						#{link}
+						#{icons}
 					</li>
+				}
+			}.join("\n")
+			%>
+		
+			<% if @contact.emailaddress1 %>
+			<li data-icon="false"><a href="mailto:<%= @contact.emailaddress1.to_s %>"><%= "Email: #{@contact.emailaddress1.to_s}" %></a></li>
+			<% else %>
+			<li data-icon="false"><a href="#">Email:</a></li>
+			<% end %>
+		
+			<% if @contact.cssi_heightft && @contact.cssi_heightin %>
+			<li data-icon="false"><a href="#">Height: <%= @contact.cssi_heightft + '\' ' + @contact.cssi_heightin + "\"" %></a></li>
+			<% elsif @contact.cssi_heightft %>
+			<li data-icon="false"><a href="#">Height: <%= @contact.cssi_heightft + '\' ' + "\"" %></a></li>
+			<% else %>
+			<li data-icon="false"><a href="#">Height :</a></li>
+			<% end %>
+		
+			<% if @contact.cssi_weight %>
+			<li data-icon="false"><a href="#">Weight: <%= @contact.cssi_weight %>&nbsp;lbs</a></li>
+			<% else %>
+			<li data-icon="false"><a href="#">Weight :</a></li>
+			<% end %>
+							
+			<% if @contact.cssi_usetobacco %>
+			<li data-icon="false"><a href="#">Tobacco: <%= use_tobacco_string(@contact.cssi_usetobacco) %></a></li>
+			<% else %>
+			<li data-icon="false"><a href="#">Tobacco :</a></li>
+			<% end %>
+		
+			<% if @contact.familystatuscode %>
+			<li data-icon="false"><a href="#">Marital Status: <%= @contact.familystatuscode %></a></li>
+			<% else %>
+			<li data-icon="false"><a href="#">Marital Status :</a></li>
+			<% end %>
+		
+			<li data-role="list-divider">Home Address</li>
+			<li data-icon="false">
+				<% if @contact.show_home_address %>
+					<% if System::get_property('platform') == 'APPLE'%>
+						<a onclick="hideSpin()" href=<%="maps:q=#{@contact.home_map}"%>>
+								<%= @contact.address1_line1 %>
+								<%= @contact.address1_line2 %><br/>
+								<%= @contact.home_city %><br/>
+						</a>
+					<% else %>
+						<a rel="external" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{@contact.home_map}"%>>
+								<%= @contact.address1_line1 %>
+								<%= @contact.address1_line2 %><br/>
+								<%= @contact.home_city %><br/>
+						</a>
 					<% end %>
-				</ul>
-				
 				<% else %>
-				
-				<form name="pin_form" method="POST" action="<%= url_for :action => :verify_pin, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']} %>">
-					<ul data-role="none" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-filter="false" data-inset="true">
-						<li class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">Policies - <%= @contact.policies.size %></li>
-						<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom">
-							<label class="fieldLabel ui-input-text" for="PIN" class="fieldLabel">Please Enter PIN:</label>
-							<input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-b" maxlength="4" type="password" id="PIN" name="PIN" value=""/>
-							<fieldset class="ui-grid-a">
-								<div class="ui-block-a"><input type="submit" class="standardButton" data-theme="b" value="Submit"/></div>	
-								<div class="ui-block-b"><a type="button"  data-theme="b" value="Reset PIN" href="<%= url_for(:controller => :Settings, :action => :pin, :query => {:origin => @params['origin'], :contact => @contact.object, :opportunity => @params['opportunity']}) %>">Reset PIN</a></div>
-						    </fieldset>
-						</li>						
-					</ul>				
-				</form>
-
-
-				<% end %>	
-				
-				<% if @params['origin'] == "contact" || @params['origin'] == "SearchContacts" %>
-				 <ul data-role="listview" data-filter="false" data-inset="true">
-					<li data-role="list-divider">Opportunities</li>
-					<li data-icon="add">
-						<a href="<%= url_for(:controller => :Opportunity, :action => :new, :id => @contact.object, :query => {:origin => @params['origin']}) %>">Add Opportunity</a>
-					</li>
-					<% if @contact.opportunities.size == 0 %>
-						<li><div style="text-align:center"><i> (No Opportunities) </i></div></li>
-					<% end %>
-					<% @contact.opportunities.each do |opportunity| %>
-					<li>
-						<a href="<%= url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => @params['origin']}) %>"> 
-							<br/><strong><%= to_date(opportunity.createdon) %></strong> <TEST> <%= opportunity.rollup_status %>
-						</a>
-					</li>
-					<% end %>
-				 </ul>
+					<a href="#"> (None) </a>
 				<% end %>
-				<fieldset class="ui-grid-custom ui-grid-a">
-					<div class="ui-block-a">
-						<a href="<%= url_for(:controller => :Activity, :action => :new, :id => @contact.object, :query => {:origin => @params['origin']}) %>" data-icon="add" data-role="button" style="white-space:normal" >Add <br />
-					  Activity</a> 
-					</div>
-					<div class="ui-block-b">
-							<a href="<%= url_for(:controller => :Activity, :action => :contact_activity_summary, :id => @contact.object, :query => {:origin => @params['origin']}) %>" data-icon="arrow-r" data-role="button" >View <br />
-						 Activities</a> 
-					</div>
-				</fieldset>
-			</div>		
+			</li>
+			<li data-role="list-divider">Business Address</li>
+			<li data-icon="false">
+				<% if @contact.show_business_address %>
+					<% if System::get_property('platform') == 'APPLE'%>
+						<a onclick="hideSpin()" href=<%="maps:q=#{@contact.business_map}"%>>
+							<%= @contact.address2_line1 %>
+							<%= @contact.address2_line2 %><br/>
+							<%= @contact.business_city %><br/>
+						</a>
+					<% else %>
+						<a onclick="hideSpin()" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{@contact.business_map}"%>>
+							<%= @contact.address2_line1 %>
+							<%= @contact.address2_line2 %><br/>
+							<%= @contact.business_city %><br/>
+						</a>
+					<% end %>
+				<% else %>
+					<a href="#"> (None) </a>
+				<% end %>
+			</li>
+		</ul>
+		<div data-role="collapsible" data-collapsed="true">
+			<% if @contact.has_spouse_info? %>
+				<h3>Spouse - <%= @contact.cssi_spousename %>&nbsp;<%= @contact.cssi_spouselastname %></h3>
+			<% else %>
+				<h3>Spouse</h3>
+			<% end %>
+			<ul data-role="listview" data-filter="false" data-inset="true">
+				<li data-role="list-divider">Spouse</li>
+				<% if @contact.has_spouse_info? %>
+					<li>
+						<a href="<%= url_for(:controller => :Contact, :action => :spouse_show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>"></a>
+						<p></p><p><b><%= @contact.cssi_spousename %>&nbsp;<%= @contact.cssi_spouselastname%></b></p>
+						<p><%= @contact.cssi_spousegender %>, <%= @contact.spouse_age %></p>
+						<p>DOB: <%= to_date(@contact.cssi_spousebirthdate) %></p>
+					</li>
+				<% else %>
+					<li data-icon="add">
+						<a href="<%= url_for(:controller => :Contact, :action => :spouse_add, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>">Add Spouse</a>
+					</li>
+				<% end %>
+			</ul>
+		</div>
+		<div data-role="collapsible" data-collapsed="true">
+			<% if @contact.dependents.size == 0 %>
+				<h3>Dependents</h3>
+			<% else %>	
+				<h3>Dependents - <%= @contact.dependents.size %></h3>
+			<% end %>
+			<ul data-role="listview" data-filter="false" data-inset="true">
+				<li data-role="list-divider">Dependents</li>
+				<li data-icon="add">
+					<a href="<%= url_for(:controller => :Dependent, :action => :new, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>">Add Dependent</a>
+				</li>
+				<% @contact.dependents.each do |dependent| %>
+				<li>
+					<a href="<%= url_for(:controller => :Dependent, :action => :show, :id => dependent.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>"></a>
+					<p></p><p><b><%= dependent.cssi_name %>&nbsp;<%= dependent.cssi_lastname %></b></p>
+					<p><%= dependent.cssi_gender %>, Age <%= dependent.cssi_age %></p>
+					<p>DOB: <%= to_date(dependent.cssi_dateofbirth) %></p>
+				</li>
+				<% end %>
+			</ul>
+		</div>
+
+		<% if @contact.policies.size == 0 %>	
+
+			<ul data-role="listview" data-filter="false" data-inset="true">
+				<li data-role="list-divider">Policies - 0</li>
+				<li><div style="text-align:center"><i> (No Policies) </i></div></li>
+			</ul>			
+	
+		<% elsif Settings.pin == "" %>
+	
+			<ul data-role="none" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-filter="false" data-inset="true">
+				<li class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">Policies - <%= @contact.policies.size %></li>
+				<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom">
+						<a type="button" data-theme="b" value="Submit" href="<%= url_for(:controller => :Settings, :action => :pin, :query => {:origin => @params['origin'], :contact => @contact.object, :opportunity => @params['opportunity']}) %>">Create PIN to view Policies</a>
+				</li>						
+			</ul>
+					
+		<% elsif Settings.pin_confirmed == true && Settings.pin_is_current? %>
+	
+		<ul data-role="listview" data-filter="false" data-inset="true">
+			<li data-role="list-divider">Policies - <%= @contact.policies.size %></li>
+
+			<% @contact.policies.each do |policy| %>
+			<li>
+				<a href="<%= url_for(:controller => :Policy, :action => :show, :id => policy.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity'], :contact => @contact.object}) %>">
+					<p></p><p>Carrier: <%= policy.carrier_name %></p>
+					<p>Application Date: <%= to_date(policy.cssi_applicationdate) %></p>
+					<p>Status: <%= policy.cssi_statusreason %></p>
+				</a>
+			</li>
+			<% end %>
+		</ul>
+	
+		<% else %>
+	
+		<form name="pin_form" method="POST" action="<%= url_for :action => :verify_pin, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']} %>">
+			<ul data-role="none" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-filter="false" data-inset="true">
+				<li class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">Policies - <%= @contact.policies.size %></li>
+				<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom">
+					<label class="fieldLabel ui-input-text" for="PIN" class="fieldLabel">Please Enter PIN:</label>
+					<input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-b" maxlength="4" type="password" id="PIN" name="PIN" value=""/>
+					<fieldset class="ui-grid-a">
+						<div class="ui-block-a"><input type="submit" class="standardButton" data-theme="b" value="Submit"/></div>	
+						<div class="ui-block-b"><a type="button"  data-theme="b" value="Reset PIN" href="<%= url_for(:controller => :Settings, :action => :pin, :query => {:origin => @params['origin'], :contact => @contact.object, :opportunity => @params['opportunity']}) %>">Reset PIN</a></div>
+				    </fieldset>
+				</li>						
+			</ul>				
+		</form>
+
+
+		<% end %>	
+	
+		<% if @params['origin'] == "contact" || @params['origin'] == "SearchContacts" %>
+		 <ul data-role="listview" data-filter="false" data-inset="true">
+			<li data-role="list-divider">Opportunities</li>
+			<li data-icon="add">
+				<a href="<%= url_for(:controller => :Opportunity, :action => :new, :id => @contact.object, :query => {:origin => @params['origin']}) %>">Add Opportunity</a>
+			</li>
+			<% if @contact.opportunities.size == 0 %>
+				<li><div style="text-align:center"><i> (No Opportunities) </i></div></li>
+			<% end %>
+			<% @contact.opportunities.each do |opportunity| %>
+			<li>
+				<a href="<%= url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => @params['origin']}) %>"> 
+					<br/><strong><%= to_date(opportunity.createdon) %></strong> <TEST> <%= opportunity.rollup_status %>
+				</a>
+			</li>
+			<% end %>
+		 </ul>
+		<% end %>
+		<fieldset class="ui-grid-custom ui-grid-a">
+			<div class="ui-block-a">
+				<a href="<%= url_for(:controller => :Activity, :action => :new, :id => @contact.object, :query => {:origin => @params['origin']}) %>" data-icon="add" data-role="button" style="white-space:normal" >Add <br />
+			  Activity</a> 
+			</div>
+			<div class="ui-block-b">
+					<a href="<%= url_for(:controller => :Activity, :action => :contact_activity_summary, :id => @contact.object, :query => {:origin => @params['origin']}) %>" data-icon="arrow-r" data-role="button" >View <br />
+				 Activities</a> 
+			</div>
+		</fieldset>
+	</div>
 </div>

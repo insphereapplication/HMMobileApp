@@ -346,5 +346,31 @@ module BrowserHelper
       'No'
     end
   end
-
+  
+  def generate_listview_item(item)
+    "<li data-icon=\"false\"><p><strong>#{item[:label]}:</strong>&nbsp;#{item[:value]}</p></li>"
+  end
+  
+  def generate_listview_items(items)
+    items.map{|item| generate_listview_item(item) }.join("\n")
+  end
+  
+  def generate_phone_number_icons(preferred, do_not_call)
+    if preferred && do_not_call
+      # side-by-side icons
+      %Q{ <span class="ui-icon ui-icon-donotcall"></span><span class="ui-icon ui-icon-check" style="float:right; right:33px;"></span> }
+    else
+      if do_not_call
+        %Q{ <span class="ui-icon ui-icon-donotcall ui-icon-shadow"></span> }
+      elsif preferred  
+        %Q{ <span class="ui-icon ui-icon-check ui-icon-shadow"></span> }
+      else
+        ""
+      end
+    end
+  end
+  
+  def space_if_blank(object)
+    object.blank? ? '&nbsp;' : object
+  end
 end

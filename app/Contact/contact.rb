@@ -56,7 +56,9 @@ class Contact
   property :temp_id, :string
   
   index :contact_pk_index, [:contactid]
-  unique_index :unique_contact, [:contactid] 
+  unique_index :unique_contact, [:contactid]
+  
+  PHONE_TYPES = ["home", "mobile", "business", "alternate"]
   
   # If a contact has a spouse first or spouse last name we consider that the contact has a spouse.
   def has_spouse_info?
@@ -257,23 +259,41 @@ class Contact
         (Date.today.year - birthday.year - (month_diff < 0 ? 1 : 0)).to_s
     rescue
     end
+  end  
+  
+  def business_phone
+    phone_number = telephone1
+    phone_number += " x#{cssi_businessphoneext}" unless cssi_businessphoneext.blank?
+    phone_number
   end
   
   def phone_numbers
-    {'Home' => telephone2, 'Mobile' => mobilephone, 'Business' => telephone1, 'Alternate' => telephone3 }.reject{|type, number| number.blank? }
+    {'Home' => telephone2, 'Mobile' => mobilephone, 'Business' => business_phone, 'Alternate' => telephone3 }.reject{|type, number| number.blank? }
+  end
+  
+  def preferred_phone_type?(phone_type)
+    if cssi_preferredphone && phone_type && cssi_preferredphone.downcase == phone_type.downcase
+      true
+    else
+      false
+    end
+  end
+  
+  def do_not_call?(phone_type)
+    raise "Invalid phone type #{phone_type}" unless PHONE_TYPES.include?(phone_type.downcase)
+    allow_calls = self.send("cssi_allowcalls#{phone_type.downcase}phone".to_sym)
+    company_dnc = self.send("cssi_companydnc#{phone_type.downcase}phone".to_sym)
+    puts "*"*80
+    puts "Type: #{phone_type}, Allow calls: #{allow_calls}, company DNC: #{company_dnc}"
+    allow_calls == "False" || company_dnc == "True"
   end
   
   def preferred_number
       phone_numbers.each do |type, number|
-          if type == cssi_preferredphone
+          if preferred_phone_type?(type)
             return number
           end
       end
-  end
-
-  
-  def phone_numbers_full
-    {"Home: #{telephone2}" => telephone2, "Mobile: #{mobilephone}" => mobilephone, "Business: #{telephone1} #{cssi_businessphoneext}" => telephone1, "Alternate: #{telephone3}" => telephone3 }.reject{|type, number| number.blank? }
   end
   
   def addresses
@@ -322,6 +342,14 @@ class Contact
     rescue
         puts "Could not generate home_map map string; Value is #{}"
     end
+  end
+  
+  def map_phone_numbers
+    phone_numbers.map{ |type, number|
+      do_not_call = do_not_call?(type)
+      preferred = preferred_phone_type?(type)
+      yield(type,number,do_not_call,preferred)
+	  }
   end
   
   

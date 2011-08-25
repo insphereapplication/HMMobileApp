@@ -1,12 +1,3 @@
-<script type="text/javascript" >
-$(document).ready(function(){
-  	var replace = $('li[two-icons] div span');
-	if ( replace.length = 1 ) // We can only have 1 preferred number, so only one of these will have the attribute
-	{
-		replace.replaceWith('<span class="ui-icon ui-icon-donotcall"></span><span class="ui-icon ui-icon-check" style="float:right; right:33px;"></span>');
-	}
-});
-</script>
 <div id="opportunity_show" data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar%>
 	<% if @params['origin'] == "contact" || @params['origin'] == "SearchContacts" %>
@@ -50,16 +41,21 @@ $(document).ready(function(){
 					<p><%= @contact.age_sex %></p> 
 					<p><%= @contact.city_summary %></p> 
 				</li> 
-				<% @opportunity.contact.phone_numbers.each do |type, number| %>
-					<li data-icon="false">
-						<% if ((@opportunity.statecode == "Won") || (@opportunity.statecode == "Lost"))%>
-							<a href="<%= url_for :action => :call_won_number, :id => @opportunity.object, :query =>{:origin => @params['origin'], :phone_number => number} %>" rel="external"> <%="#{type}: #{number}"%></a>
-						<% else %>
-							<a href="<%= url_for :action => :call_number, :id => @opportunity.object, :query =>{:origin => @params['origin'], :phone_number => number} %>" rel="external"> <%="#{type}: #{number}"%></a>
-						<% end %>
-						<%= check_preferred_and_donotcall(type, @opportunity.contact) %>
-					</li>
-				<% end %>
+				
+				<%=
+			    	@opportunity.contact.map_phone_numbers{ |type,number,do_not_call,preferred|
+						href = do_not_call ? '#' : "#{url_for({:action => :call_number, :id => @opportunity.object, :query =>{:origin => @params['origin'], :phone_number => number}})}"
+						link = %Q{<a href="#{href}" rel="external">#{type}: #{number}</a>}
+						icons = generate_phone_number_icons(preferred, do_not_call)
+						%Q{
+							<li data-icon="false">
+								#{link}
+								#{icons}
+							</li>
+						}
+						}.join("\n")
+				
+				%>
 				
 				<% if @opportunity.contact.emailaddress1 %>
 				<li data-icon="false"><a href="mailto:<%= @contact.emailaddress1.to_s %>"><%= "Email: #{@contact.emailaddress1.to_s}" %></a></li>

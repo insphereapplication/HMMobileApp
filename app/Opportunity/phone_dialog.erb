@@ -1,17 +1,3 @@
-<script type="text/javascript" >
-$(document).ready(function(){
-  	var replace = $('span[two-icons]');
-	if ( replace.length = 1 ) // We can only have 1 preferred number, so only one of these will have the attribute
-	{
-		replace.replaceWith('<span class="ui-icon ui-icon-donotcall ui-icon-shadow"></span><span class="ui-icon ui-icon-check ui-icon-shadow" style="float:right; right:33px;"></span>');
-	}
-	else
-	{
-		alert( "replace.length = " + replace.length )
-	}
-});
-</script>
-
 <div id="phone_dialog" data-role="none" class="ui-dialog ui-page ui-body-a ui-page-active">
 	
 		<div data-role="header" data-theme="d" data-position="inline" class="ui-corner-top ui-overlay-shadow ui-bar-d ui-header" role="banner">
@@ -26,20 +12,27 @@ $(document).ready(function(){
 
 		<div data-role="content" data-theme="c" class="ui-content ui-body-c ui-corner-bottom ui-overlay-shadow" role="main">
 			<p>Choose a number to dial:</p>
-			<% @opportunity.contact.phone_numbers_full.each do |type, number| %>
-				<a href="<%= url_for(:action => :call_opp_number, :id=>@opportunity.object, :query => {:phone_number => number, :opportunity => @opportunity.object, :origin => @params['origin']}) %>" data-role="button"  data-rel="back" data-theme="c" style="white-space:normal" class="ui-btn ui-btn-icon-right ui-btn-corner-all ui-shadow ui-btn-up-c">
-					<span class="ui-btn-inner ui-btn-corner-all" style="white-space:normal">
-						<span class="ui-btn-text" style="white-space:normal"><Cancel><%= type %></span>
-						<%= check_preferred_and_donotcall(number, @opportunity.contact) %>
-					</span></a> 
-			<% end %>  
+			<%=
+			@opportunity.contact.map_phone_numbers{ |type,number,do_not_call,preferred|
+				link_href = url_for(:action => :call_number, :id=>@opportunity.object, :query => {:phone_number => number, :opportunity => @opportunity.object, :origin => @params['origin'], :redirect_action => :show})
+				icons = generate_phone_number_icons(preferred, do_not_call)
+				%Q{
+					<a href="#{link_href}" data-role="button" data-rel="back" data-theme="c" style="white-space:normal" class="ui-btn ui-btn-icon-right ui-btn-corner-all ui-shadow ui-btn-up-c">
+						<span class="ui-btn-inner ui-btn-corner-all" style="white-space:normal">
+							<span class="ui-btn-text" style="white-space:normal"><Cancel>#{type}: #{number}</span>
+							#{icons}
+						</span>
+					</a>
+				}
+			}.join("\n")
+			%>
 			<% adhoc_nums=[] %>
 			<% @opportunity.activities.each do |activity| %>
 		     <% if activity.phonenumber %>
 				<% if (activity.phonenumber.gsub(/ /,'').length > 2) && !(adhoc_nums.include?(activity.phonenumber)) %>
 					<% if (activity.phonenumber != @opportunity.contact.telephone1) && (activity.phonenumber != @opportunity.contact.telephone2) && (activity.phonenumber != @opportunity.contact.telephone3) && (activity.phonenumber != @opportunity.contact.mobilephone) %>
 						<% adhoc_nums << activity.phonenumber %>
-						<a href="<%= url_for(:action => :call_opp_number, :id=>@opportunity.object, :query => {:phone_number => activity.phonenumber, :opportunity => @opportunity.object, :origin => @params['origin']}) %>" data-role="button"  data-rel="back" data-theme="c" style="white-space:normal" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-c">
+						<a href="<%= url_for(:action => :call_number, :id=>@opportunity.object, :query => {:phone_number => activity.phonenumber, :opportunity => @opportunity.object, :origin => @params['origin']}, :redirect_action => :show) %>" data-role="button"  data-rel="back" data-theme="c" style="white-space:normal" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-c">
 						<span class="ui-btn-inner ui-btn-corner-all" style="white-space:normal">
 						<span class="ui-btn-text" style="white-space:normal"><Cancel>Ad-Hoc: <%= activity.phonenumber %></span>
 						</span></a>

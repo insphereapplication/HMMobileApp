@@ -168,42 +168,6 @@ class OpportunityController < Rho::RhoController
     get_filtered_appointments('red', 'Past Due', 'past_due')
   end
   
-  def check_preferred_and_donotcall(phone_type, contact)
-    preferred = contact.cssi_preferredphone
-    
-    case phone_type
-      when 'Home'
-        allow_call = contact.cssi_allowcallshomephone
-        company_dnc = contact.cssi_companydnchomephone
-      when 'Mobile'
-        allow_call = contact.cssi_allowcallsmobilephone
-        company_dnc = contact.cssi_companydncmobilephone
-      when 'Business'
-        allow_call = contact.cssi_allowcallsbusinessphone
-        company_dnc = contact.cssi_companydncbusinessphone
-      when 'Alternate'
-        allow_call = contact.cssi_allowcallsalternatephone
-        company_dnc = contact.cssi_companydncalternatephone
-    end
-    
-    Settings.record_activity
-    is_preferred = phone_type == preferred
-
-    # Special case where we need 2 icons side by side, and some jQuery/JavaScript tricks are needed
-    # We look for the two-icons attribute in the .erb and substitute a formatted HTML string that will show both
-    if is_preferred && (allow_call == 'False' || company_dnc == 'True')
-      return %Q{ <span two-icons class="ui-icon ui-icon-check ui-icon-shadow"></span> }
-    end
-    
-    if phone_type == preferred
-      %Q{ <span class="ui-icon ui-icon-check ui-icon-shadow"></span> }
-    elsif (allow_call == 'False' || company_dnc == 'True')
-      %Q{ <span class="ui-icon ui-icon-donotcall ui-icon-shadow"></span> }
-    else
-      ""
-    end    
-  end
-  
   # GET /Opportunity/{1}
   def show
     Settings.record_activity
@@ -391,10 +355,11 @@ class OpportunityController < Rho::RhoController
         phone_number = number
       end
       
-      redirect :action => :call_opp_number,
+      redirect :action => :call_number,
               :id => @opportunity.object,
               :query =>{:origin => @params['origin'],
-                        :phone_number => phone_number} 
+                        :phone_number => phone_number,
+                        :redirect_action => :show} 
     else
       render :action => :phone_dialog, :back => 'callback:', :layout => 'layout_JQM_Lite'
     end
@@ -409,29 +374,22 @@ class OpportunityController < Rho::RhoController
     puts "calling number: #{@params['phone_number']}"
     telephone = @params['phone_number']
     telephone.gsub!(/[^0-9]/, "")
-    redirect :action => :status_update, :back => 'callback:',
+    
+    action = @params['redirect_action']
+    
+    if action.blank?
+      #if redirect_action wasn't given, default based on the opportunity's state
+      opportunity = Opportunity.find_opportunity(@params['id'])
+      action = opportunity.closed? ? :show : :status_update
+    else
+      #otherwise convert the given action to a symbol so it will be compatible with redirect
+      action = action.to_sym
+    end
+        
+    redirect :action => action, :back => 'callback:',
               :id => @params['id'],
               :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}
     System.open_url("tel:#{telephone}")
-  end
-  
-  def call_won_number
-    puts "calling number: #{@params['phone_number']}"
-    telephone = @params['phone_number']
-    telephone.gsub!(/[^0-9]/, "")
-    redirect :action => :show, :back => 'callback:',
-              :id => @params['id'],
-              :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}
-    System.open_url("tel:#{telephone}")
-  end
-  
-  def call_opp_number
-    puts "calling number: #{@params['phone_number']}"
-    telephone = @params['phone_number']
-    redirect :action => :show, :back => 'callback:',
-              :id => @params['id'],
-              :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}
-    System.open_url("tel:#{telephone.gsub(/[^0-9]/, "")}")
   end
 
   def birthpopup

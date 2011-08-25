@@ -1,0 +1,86 @@
+<div id="activity_show" data-role="page" data-theme="b" data-cache="never">
+	<%= offline_bar %>
+	<div data-role="header" data-backbtn="false">
+				<a href="<%=url_for(:action => :index)%>" data-direction="reverse" rel="external" data-icon="back">Activities</a>
+				<h1><%=@activity.activity_type%>&nbsp;<%= sync_spinner %></h1>
+				<a href="<%=url_for(:action=>:edit, :id => @activity.object)%>" data-direction="forward" data-icon="edit"> Edit </a>
+	</div>
+	<div data-role="content">
+		<ul data-role="listview" data-filter="false" data-inset="true">
+			<% 
+			case @activity.type
+			when "PhoneCall"
+			%>
+			<li data-role="list-divider">Phone Call Info</li>
+			<%= generate_listview_items([
+				{:label => "Subject", :value => @activity.subject},
+				{:label => "Scheduled Time", :value => to_datetime(@activity.scheduledend)},
+				{:label => "Phone Type", :value => @activity.cssi_phonetype},
+				{:label => "Phone Number", :value => @activity.phonenumber}
+			]) %>
+			<% when "Appointment" %>
+			<li data-role="list-divider">Appointment Info</li>
+			<%= generate_listview_items([
+				{:label => "Subject", :value => @activity.subject},
+				{:label => "Description", :value => @activity.description},
+				{:label => "Start Time", :value => to_datetime(@activity.scheduledstart)},
+				{:label => "End Time", :value => to_datetime(@activity.scheduledend)},
+				{:label => "Location", :value => @activity.cssi_location},
+				{:label => "Address", :value => @activity.location}
+			]) %>
+			<% when "Task" %>
+			<li data-role="list-divider">Task Info</li>
+			<%= generate_listview_items([
+				{:label => "Subject", :value => @activity.subject},
+				{:label => "Priority", :value => @activity.prioritycode},
+				{:label => "Description", :value => @activity.description},
+				{:label => "Due Date", :value => to_datetime(@activity.scheduledend)},
+				{:label => "Created On", :value => @activity.createdon}
+			]) %>
+			<% else %>
+			<li data-role="list-divider">Unknown activity detail</li>
+			<% end %>
+		</ul>
+		<a href="<%= url_for :action => :complete_activity, :id =>@activity.object %>" rel="external" data-transition="none" data-role="button" >Mark as Complete</a>
+		<% if @parent_contact %>
+		<ul data-role="listview" data-filter="false" data-inset="true">
+			<li data-role="list-divider">Contact Info</li>
+			<li>
+					<h3><%= @parent_contact.full_name %></h3>
+					<p><%= "#{@parent_contact.gendercode} #{@parent_contact.age} - #{@parent_contact.address1_city}, #{@parent_contact.address1_state}" %></p>		
+			</li>
+			<%=
+			@parent_contact.map_phone_numbers{ |type,number,do_not_call,preferred|
+				link = %Q{<a href="tel: #{number}">#{type}: #{number}</a>}
+				icons = generate_phone_number_icons(preferred,do_not_call)
+				%Q{
+					<li data-icon="false">
+						#{link}
+						#{icons}
+					</li>
+				}
+			}.join("\n")
+			%>
+			<%=
+			href = @parent_contact.emailaddress1.blank? ? '#' : "mailto:@contact.emailaddress1"
+			%Q{<li data-icon="false"><a href="#{href}">Email: #{@parent_contact.emailaddress1}</a></li>}
+			%>
+		</ul>
+		<% end %>
+		<% if @opportunity %>
+		<ul data-role="listview" data-filter="false" data-inset="true">
+			<li data-role="list-divider">Opportunity Info</li>
+			<li>
+					<h3><%= @opportunity.createdon %></h3>
+					<p><%= space_if_blank(@opportunity.cssi_lineofbusiness) %></p>		
+					<p><%= space_if_blank(@opportunity.statecode) %></p>
+			</li>
+		</ul>
+		<% end %>
+		<% if @policy %>
+		<ul data-role="listview" data-filter="false" data-inset="true">
+			<li data-role="list-divider">Policy Info</li>
+		</ul>
+		<% end %>
+	</div>
+</div>
