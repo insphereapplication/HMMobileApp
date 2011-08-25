@@ -43,6 +43,17 @@ class ActivityController < Rho::RhoController
     get_new_activities('grey', data)
   end
 
+  def new_phonecall
+    render :action => :new_phonecall, :layout => 'layout_jquerymobile'
+  end
+  
+  def new_task
+    render :action => :new_task, :layout => 'layout_jquerymobile'
+  end
+  
+  def new_appointment
+    render :action => :new_appointment, :layout => 'layout_jquerymobile'
+  end
 
   # GET /Appt/{1}
   def show_appt
@@ -196,6 +207,48 @@ class ActivityController < Rho::RhoController
         puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
         db.rollback
      end
+  end
+  
+  def create_new_full_task
+    db = ::Rho::RHO.get_src_db('Activity')
+    db.start_transaction
+    begin
+      task = Activity.create_new({
+        :scheduledend => DateUtil.date_build(@params['task_datetime']), 
+        :subject => "Task - #{@params['task_subject']}",
+        :description => @params['task_description'],
+        :statecode => 'Open',
+        :type => 'Task',
+        :prioritycode => @params['task_priority_checkbox'] ? 'High' : 'Normal',
+        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+      })
+      db.commit
+      finished_create_activity
+   rescue Exception => e
+      puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
+      db.rollback
+   end
+  end
+  
+  def create_new_phonecall
+    db = ::Rho::RHO.get_src_db('Activity')
+    db.start_transaction
+    begin
+      task = Activity.create_new({
+        :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
+        :subject => "Task - #{@params['phonecall_subject']}",
+        :phonenumber => @params['phonecall_number'],
+        :statuscode => 'Open',
+        :statecode => 'Open',
+        :type => 'PhoneCall',
+        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+      })
+      db.commit
+      finished_create_activity
+   rescue Exception => e
+      puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
+      db.rollback
+   end
   end
 
   def confirm_win_status
@@ -463,6 +516,11 @@ class ActivityController < Rho::RhoController
     complete_appointments(appointmentids)
     SyncUtil.start_sync
     redirect :controller => :Opportunity, :action => :show, :back => 'callback:', :id => opportunity.object, :query => {:origin => origin}
+  end
+  
+  def finished_create_activity
+    SyncUtil.start_sync
+    WebView.navigate(url_for( :action => :index, :back => 'callback:', :layout => 'layout_JQM_lite'))
   end
   
   def finished_win_status(opportunity, origin, appointmentids=nil)
