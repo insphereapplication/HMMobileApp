@@ -107,7 +107,7 @@ class ActivityController < Rho::RhoController
   end
 
   # GET /Contact/activity_summary
-  def activity_summary
+  def contact_activity_summary
     Settings.record_activity
     @contact = Contact.find_contact(@params['id'])      
     if @contact
@@ -128,41 +128,31 @@ class ActivityController < Rho::RhoController
       redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
     end
   end
-  
-  # EDIT /Appt/{1}
-  def edit_appt
-    @appt = Activity.find_activity(@params['id'])
-    if @appt
-      Settings.record_activity
-      render :action => :edit_appt, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
-    else
-      redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
-    end
-  end
-  
-  # GET /callback/{1}
-  def show_callback
-    @callback = Activity.find_activity(@params['id'])
 
-    if @callback
-      @notes = @callback.notes
-      Settings.record_activity
-      render :action => :show_callback, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
-    else
-      redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
-    end
-  end
   
-  # EDIT /callback/{1}
-  def edit_callback
-    @callback = Activity.find_activity(@params['id'])
-    if @callback
-      Settings.record_activity
-      render :action => :edit_callback, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
-    else
-      redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
-    end
-  end
+  def edit
+    @activity = Activity.find_activity(@params['id'])
+    edit_action = "edit_#{@activity.type}".downcase.to_sym
+    Settings.record_activity
+    render :action => edit_action, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+  end  
+  
+  
+
+  # GET /callback/{1}
+
+  def show_callback
+     @callback = Activity.find_activity(@params['id'])
+  
+     if @callback
+       @notes = @callback.notes
+       Settings.record_activity
+       render :action => :show_callback, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+     else
+       redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
+     end
+   end
+   
   
   def get_duration(time1, time2)
     duration = (Time.parse(time2) - Time.parse(time1))/60
@@ -186,7 +176,7 @@ class ActivityController < Rho::RhoController
       :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }) if @appointment
     
-    SyncEngine.dosync
+    SyncUtil.start_sync
     redirect :action => :show_appt, :back => 'callback:',
               :id => @appointment.object,
               :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
@@ -210,7 +200,7 @@ class ActivityController < Rho::RhoController
         @callback.update_attributes({:cssi_phonetype => "Ad Hoc"})
       end      
     end
-    SyncEngine.dosync
+    SyncUtil.start_sync
     redirect :action => :show_callback, :back => 'callback:',
               :id => @callback.object,
               :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
@@ -270,6 +260,23 @@ class ActivityController < Rho::RhoController
         puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
         db.rollback
      end
+  end
+  
+  def update_task
+    Settings.record_activity
+    @task = Activity.find_activity(@params['id'])
+    if @task
+      @task.update_attributes({ 
+        :subject => @params['task']['subject'],
+        :description => @params['task']['description'],
+        :prioritycode => @params['task']['high_priority_checkbox'] ? 'High' : 'Normal',
+        :scheduledend => DateUtil.date_build(@params['task']['due_datetime']),
+      })
+    end  
+    SyncUtil.start_sync
+    redirect :action => :activity_detail, :back => 'callback:',
+              :id => @task.object,
+              :query =>{:origin => @params['origin'], :activity => @task.object}
   end
 
   def confirm_win_status

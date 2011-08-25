@@ -240,7 +240,7 @@
 					  Activity</a> 
 					</div>
 					<div class="ui-block-b">
-							<a href="<%= url_for(:controller => :Activity, :action => :activity_summary, :id => @contact.object, :query => {:origin => @params['origin']}) %>" data-icon="arrow-r" data-role="button" >View <br />
+							<a href="<%= url_for(:controller => :Activity, :action => :contact_activity_summary, :id => @contact.object, :query => {:origin => @params['origin']}) %>" data-icon="arrow-r" data-role="button" >View <br />
 						 Activities</a> 
 					</div>
 				</fieldset>
