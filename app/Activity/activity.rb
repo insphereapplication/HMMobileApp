@@ -65,11 +65,15 @@ class Activity
   end
   
   def opportunity
-    parent if parent && parent_type.downcase == "opportunity"
+    parent if parent_type.downcase == "opportunity"
   end
   
   def contact
-    parent if parent && parent_type.downcase == "contact"
+    parent if parent_type.downcase == "contact"
+  end
+  
+  def policy
+    parent if parent_type.downcase == "policy"
   end
   
   def open?
@@ -246,5 +250,115 @@ class Activity
     find_by_sql(%Q{
         #{SELECT_EMAILS_SQL} 
       })
+  end
+
+  def self.activities_status_where_clause(status)
+    case status
+      when 'Open'
+        "a.statecode in ('Open', 'Scheduled')"
+      else
+        "a.statecode = 'Completed'"
+    end
+  end
+
+  def self.activities_type_where_clause(type)
+    case type
+      when 'Task'
+        "and a.type = 'Task'"
+      when 'Appointment'
+        "and a.type = 'Appointment'"
+      when 'PhoneCall'
+        "and a.type = 'PhoneCall'"
+      else
+        "and a.type in ('Task', 'Appointment', 'PhoneCall')"
+    end
+  end
+
+  def self.activities_priority_where_clause(priority)
+    case priority
+      when 'Normal'
+        "and (a.prioritycode is null or a.prioritycode = 'Normal')"
+      when 'High'
+        "and a.prioritycode = 'High'"
+      else
+        ""
+    end
+  end
+
+  def self.activities_date_where_clause(operator)
+    case operator
+      when ''
+        ""
+      when 'null'
+        "and date(scheduledtime) is null"
+      else
+        "and date(scheduledtime) #{operator} date('now', 'localtime')"
+    end
+  end
+
+  def self.activities_case_field_clause(include_clause)
+    if (include_clause)
+      "case
+           when a.scheduledstart is null then a.scheduledend
+           when a.scheduledstart = '' then a.scheduledend
+           else a.scheduledstart
+       end as scheduledtime,"
+    else
+      ""
+    end
+  end
+
+  def self.activities_sql(status, type, priority, operator, include_clause, page, page_size)
+    %Q{
+        select
+            #{activities_case_field_clause(include_clause)}
+            a.*
+        from Activity a
+        where #{activities_status_where_clause(status)}
+            #{activities_date_where_clause(operator)}
+            #{activities_type_where_clause(type)}
+            #{activities_priority_where_clause(priority)}
+        #{get_pagination_sql(page, page_size)}
+    }
+  end
+
+  def self.past_due_activities(page=nil, page_size=DEFAULT_PAGE_SIZE, type, priority)
+    find_by_sql(activities_sql('Open', type, priority, '<', true, page, page_size))
+  end
+
+  def self.no_date_activities(page=nil, page_size=DEFAULT_PAGE_SIZE, type, priority)
+    find_by_sql(activities_sql('Open', type, priority, 'null', true, page, page_size))
+  end
+
+  def self.today_activities(page=nil, page_size=DEFAULT_PAGE_SIZE, type, priority)
+    find_by_sql(activities_sql('Open', type, priority, '=', true, page, page_size))
+  end
+
+  def self.future_activities(page=nil, page_size=DEFAULT_PAGE_SIZE, type, priority)
+    find_by_sql(activities_sql('Open', type, priority, '>', true, page, page_size))
+  end
+
+  def self.completed_activities(page=nil, page_size=DEFAULT_PAGE_SIZE, type, priority)
+    find_by_sql(activities_sql('Completed', type, priority, '', false, page, page_size))
+  end
+
+  def parent_contact
+    if (parent_type == 'Contact')
+      parent
+    else
+      this_parent = parent
+      this_parent && (parent_type == 'Opportunity' || parent_type == 'Policy') ? this_parent.contact : nil
+    end
+  end
+
+  def scheduled_time
+    scheduledstart.blank? ? scheduledend : scheduledstart
+  end
+
+  def self.complete_activities(activity_ids)
+    activity_ids.each do |activity_id|
+      activity = self.find_activity(activity_id)
+      activity.complete if activity
+    end
   end
 end

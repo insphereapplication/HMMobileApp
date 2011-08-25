@@ -6,6 +6,29 @@ class ActivityController < Rho::RhoController
   include BrowserHelper
 
   def index
+    Activity.complete_activities(@params['selected-activity']) if @params['selected-activity']
+    Settings.update_persisted_filter_values('activity_', ['type', 'status', 'priority'], @params) if @params['status']
+    selected = Settings.filter_values["activity_type"]
+    selected = 'All' if selected.blank?
+    @type_filter = gen_options([
+        {:value => 'All', :label => 'All'},
+        {:value => 'Task', :label => 'Task'},
+        {:value => 'Appointment', :label => 'Appointment'},
+        {:value => 'PhoneCall', :label => 'Phone Call'}
+    ], selected)
+    selected = Settings.filter_values["activity_status"]
+    selected = 'Open' if selected.blank?
+    @status_filter = gen_options([
+        {:value => 'Open', :label => 'Open'},
+        {:value => 'Completed', :label => 'Completed'}
+    ], selected)
+    selected = Settings.filter_values["activity_priority"]
+    selected = 'All' if selected.blank?
+    @priority_filter = gen_options([
+        {:value => 'All', :label => 'All'},
+        {:value => 'Normal', :label => 'Normal'},
+        {:value => 'High', :label => 'High'}
+    ], selected)
     render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
 
@@ -14,19 +37,87 @@ class ActivityController < Rho::RhoController
     @page = activities
     render :action => :activity_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
+
+  def past_due_activities
+    get_new_activities('red', Activity.past_due_activities(@params['page'].to_i, @params['type'], @params['priority']))
+  end
+
+  def no_date_activities
+    get_new_activities('green', Activity.no_date_activities(@params['page'].to_i, @params['type'], @params['priority']))
+  end
+
+  def today_activities
+    get_new_activities('orange', Activity.today_activities(@params['page'].to_i, @params['type'], @params['priority']))
+  end
+
+  def future_activities
+    get_new_activities('yellow', Activity.future_activities(@params['page'].to_i, @params['type'], @params['priority']))
+  end
   
+  def completed_activities
+    get_new_activities('grey', Activity.completed_activities(@params['page'].to_i, @params['type'], @params['priority']))
+  end
+
+  def complete_activities_alert
+    Alert.show_popup "Please choose activities to complete."
+  end
+
+  def activity_row_parameters(activity)
+    parent_contact = activity.parent_contact
+    if (parent_contact)
+      left_text = parent_contact.full_name.blank? ? "&nbsp;" : parent_contact.full_name
+    else
+      parent_policy = activity.policy
+      left_text = parent_policy.nil? || parent_policy.cssi_primaryinsured.blank? ? "&nbsp;" : parent_policy.cssi_primaryinsured
+    end
+    scheduled_time = activity.scheduled_time
+    right_text = scheduled_time.blank? ? "&nbsp;" : to_datetime_noyear(scheduled_time)
+    is_priority = !activity.priority.blank? && activity.priority == 'High'
+    details = url_for(:action => :show, :id => activity.object)
+    href = nil
+    is_phone = activity.type == 'PhoneCall'
+    if (is_phone)
+      href = activity.phonenumber.blank? ? "#" : "tel:#{activity.phonenumber}"
+      if (activity.open?)
+        opp = activity.opportunity
+        details = url_for(:action => :opportunity_details, :id => opp.object) if opp && !opp.closed?
+      end
+    elsif (activity.type == 'Appointment')
+      href = activity.location.blank? ? "#" :
+               System::get_property('platform') == 'APPLE' ? "maps:q=#{Rho::RhoSupport.url_encode(activity.location)}" :
+                 "http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(activity.location)}"
+    end
+    {
+      :id => activity.object,
+      :show_detail_url => details,
+      :completed => activity.statecode == 'Completed',
+      :show_icon => is_priority,
+      :top_text => activity.subject,
+      :bottom_left_text => left_text,
+      :bottom_right_text => right_text,
+      :href_text => href,
+      :show_phone => is_phone
+    }
+  end
+
+  def opportunity_details
+    Rho::NativeTabbar.switch_tab(0)
+    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :id => @params['id']), 0)
+    redirect :action => :index
+  end
 
   # GET /Contact/activity_summary
-  def activity_summary
+  def contact_activity_summary
     Settings.record_activity
     @contact = Contact.find_contact(@params['id'])      
     if @contact
       @activity_list = @contact.activity_list
       render :action => :activity_summary, :id => @contact.object, :back => 'callback:',
-              :layout => 'layout_jquerymobile',
-              :origin => @params['origin']
+             :layout => 'layout_jquerymobile',
+             :origin => @params['origin']
     end
   end
+
 
 
   def past_due_activities
@@ -55,6 +146,7 @@ class ActivityController < Rho::RhoController
     render :action => :new_appointment, :layout => 'layout_jquerymobile'
   end
 
+
   # GET /Appt/{1}
   def show_appt
     @appt = Activity.find_activity(@params['id'])
@@ -65,41 +157,31 @@ class ActivityController < Rho::RhoController
       redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
     end
   end
-  
-  # EDIT /Appt/{1}
-  def edit_appt
-    @appt = Activity.find_activity(@params['id'])
-    if @appt
-      Settings.record_activity
-      render :action => :edit_appt, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
-    else
-      redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
-    end
-  end
-  
-  # GET /callback/{1}
-  def show_callback
-    @callback = Activity.find_activity(@params['id'])
 
-    if @callback
-      @notes = @callback.notes
-      Settings.record_activity
-      render :action => :show_callback, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
-    else
-      redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
-    end
-  end
   
-  # EDIT /callback/{1}
-  def edit_callback
-    @callback = Activity.find_activity(@params['id'])
-    if @callback
-      Settings.record_activity
-      render :action => :edit_callback, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
-    else
-      redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
-    end
-  end
+  def edit
+    @activity = Activity.find_activity(@params['id'])
+    edit_action = "edit_#{@activity.type}".downcase.to_sym
+    Settings.record_activity
+    render :action => edit_action, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+  end  
+  
+  
+
+  # GET /callback/{1}
+
+  def show_callback
+     @callback = Activity.find_activity(@params['id'])
+  
+     if @callback
+       @notes = @callback.notes
+       Settings.record_activity
+       render :action => :show_callback, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+     else
+       redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
+     end
+   end
+   
   
   def get_duration(time1, time2)
     duration = (Time.parse(time2) - Time.parse(time1))/60
@@ -123,7 +205,7 @@ class ActivityController < Rho::RhoController
       :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }) if @appointment
     
-    SyncEngine.dosync
+    SyncUtil.start_sync
     redirect :action => :show_appt, :back => 'callback:',
               :id => @appointment.object,
               :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
@@ -147,7 +229,7 @@ class ActivityController < Rho::RhoController
         @callback.update_attributes({:cssi_phonetype => "Ad Hoc"})
       end      
     end
-    SyncEngine.dosync
+    SyncUtil.start_sync
     redirect :action => :show_callback, :back => 'callback:',
               :id => @callback.object,
               :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
@@ -249,6 +331,23 @@ class ActivityController < Rho::RhoController
       puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
       db.rollback
    end
+
+  def update_task
+    Settings.record_activity
+    @task = Activity.find_activity(@params['id'])
+    if @task
+      @task.update_attributes({ 
+        :subject => @params['task']['subject'],
+        :description => @params['task']['description'],
+        :prioritycode => @params['task']['high_priority_checkbox'] ? 'High' : 'Normal',
+        :scheduledend => DateUtil.date_build(@params['task']['due_datetime']),
+      })
+    end  
+    SyncUtil.start_sync
+    redirect :action => :activity_detail, :back => 'callback:',
+              :id => @task.object,
+              :query =>{:origin => @params['origin'], :activity => @task.object}
+
   end
 
   def confirm_win_status
@@ -329,7 +428,6 @@ class ActivityController < Rho::RhoController
     end
   end
   
-  
   def update_lost_other_status
         Settings.record_activity
         db = ::Rho::RHO.get_src_db('Opportunity')
@@ -376,7 +474,6 @@ class ActivityController < Rho::RhoController
   end  
   
   def update_status_no_contact
-
     Settings.record_activity
     opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
     opportunity.create_note(@params['notes'])
@@ -505,6 +602,23 @@ class ActivityController < Rho::RhoController
       end
   end
   
+  def verify_pin
+     if @params['PIN'] == Settings.pin
+       puts @params.inspect
+       Settings.pin_last_activity_time = Time.new
+       Settings.pin_confirmed = true
+       render :action => :activity_detail, :query => {:origin => @params['origin']}
+     else
+       Alert.show_popup({
+         :message => "Invalid PIN Entered", 
+         :title => 'Invalid PIN', 
+         :buttons => ["OK"]
+       })
+       @pinverified="false"
+       render :action => :activity_detail, :query => {:origin => @params['origin']}
+     end    
+   end
+  
   private
   
   def get_appointment_ids(appointment_params)
@@ -536,7 +650,6 @@ class ActivityController < Rho::RhoController
     WebView.navigate(url_for(:controller => model, :action => :index, :back => 'callback:', :query => {:origin => origin})) 
   end
   
-  
   def complete_appointments(appointmentids)
     Settings.record_activity
     if appointmentids
@@ -546,5 +659,4 @@ class ActivityController < Rho::RhoController
       end
     end
   end
-  
 end

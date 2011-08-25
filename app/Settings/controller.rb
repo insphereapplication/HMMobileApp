@@ -203,11 +203,14 @@ class SettingsController < Rho::RhoController
             Settings.pin_confirmed = false
             @msg =  "Your PIN has been reset."
             
-            if (@params['origin'].nil? || @params['origin'].blank?)
-              redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
-              return
-            else
+            if !(@params['contact'].blank?)
               redirect :controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
+              return
+            elsif !(@params['activity'].blank?)
+              redirect :controller => :Activity, :action => :activity_detail, :id => @params['activity'], :query => {:origin => @params['origin'], :activity => @params['activity']}
+              return  
+            else
+              redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}
               return
             end
           else
@@ -217,7 +220,7 @@ class SettingsController < Rho::RhoController
           @msg = 'Please enter matching PINs'
         end
       end
-    WebView.navigate(url_for :action => :pin, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:msg => @msg, :origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity']} )  if @msg and @msg.length > 0
+    WebView.navigate(url_for :action => :pin, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:msg => @msg, :origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity'], :activity => @params['activity']} )  if @msg and @msg.length > 0
   end # validate_pin
   
   def validate_pin_callback
