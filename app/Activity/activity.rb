@@ -151,7 +151,7 @@ class Activity
   end
   
   def phone_type
-    if self.phonenumber == ""
+    if self.phonenumber == "" || self.opportunity.nil?
       return "Ad-Hoc"
     end
     

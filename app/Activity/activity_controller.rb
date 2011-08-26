@@ -153,6 +153,10 @@ class ActivityController < Rho::RhoController
   
   def edit
     @activity = Activity.find_activity(@params['id'])
+    @activity_contact = @activity.parent_contact
+    @opportunity = @activity.opportunity
+    @activity_title = @activity_contact.full_name if @activity_contact
+    @activity_title += " - #{to_date(@opportunity.createdon)}" if @activity_contact && @opportunity
     edit_action = "edit_#{@activity.type}".downcase.to_sym
     Settings.record_activity
     render :action => edit_action, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
