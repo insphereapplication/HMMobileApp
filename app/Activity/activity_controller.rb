@@ -126,22 +126,6 @@ class ActivityController < Rho::RhoController
     end
   end
 
-
-
-  def past_due_activities
-    data = []
-    data = ["a", "b", "c"] if (@params['page'] == '0')
-    data = ["d", "e"] if (@params['page'] == '1')
-    get_new_activities('red', data)
-  end
-  
-  def completed_activities
-    data = []
-    data = ["a", "b", "c"] if (@params['page'] == '0')
-    data = ["d", "e"] if (@params['page'] == '1')
-    get_new_activities('grey', data)
-  end
-
   def new_phonecall
     render :action => :new_phonecall, :layout => 'layout_jquerymobile'
   end
