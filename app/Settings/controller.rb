@@ -644,7 +644,10 @@ class SettingsController < Rho::RhoController
   end
   
   def init_on_sync_in_progress(*args)
-    percent = (@params["cumulative_count"].to_f/@params["total_count"].to_f * 100).to_i
+    percent = 0
+    if @params["total_count]"].to_f > 0.0
+      percent = (@params["cumulative_count"].to_f/@params["total_count"].to_f * 100).to_i
+    end
     update_login_sync_progress(@params['source_name'], percent)
   end
   
