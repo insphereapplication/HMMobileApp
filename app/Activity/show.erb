@@ -41,7 +41,7 @@
 			<li data-role="list-divider">Unknown activity detail</li>
 			<% end %>
 		</ul>
-		<a href="<%= url_for :action => :complete_activity, :id =>@activity.object %>" rel="external" data-transition="none" data-role="button" >Mark as Complete</a>
+		<a href="<%= url_for :action => :mark_as_complete, :id =>@activity.object %>" rel="external" data-transition="none" data-role="button" >Mark as Complete</a>
 		<% if @parent_contact %>
 		<ul data-role="listview" data-filter="false" data-inset="true">
 			<li data-role="list-divider">Contact Info</li>

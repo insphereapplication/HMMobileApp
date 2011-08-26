@@ -611,6 +611,12 @@ class ActivityController < Rho::RhoController
        render :action => :activity_detail, :query => {:origin => @params['origin']}
      end    
    end
+   
+  def mark_as_complete
+   activity = Activity.find_activity(@params['id'])
+   activity.complete if activity
+   redirect :action => :index, :back => 'callback:'
+  end
   
   private
   
