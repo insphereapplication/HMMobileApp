@@ -224,7 +224,7 @@ class Opportunity
         AND type = 'Appointment' AND scheduledstart IS NOT NULL
         UNION
         select type, scheduledend as "displaytime", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
-        AND type = 'PhoneCall' AND scheduledend IS NOT NULL
+        AND type in ('PhoneCall', 'Task') AND scheduledend IS NOT NULL
         UNION
         select type, createdon as "displaytime", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
         AND scheduledstart IS NULL AND scheduledend IS NULL order by "displaytime" desc
