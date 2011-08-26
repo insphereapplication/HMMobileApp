@@ -207,7 +207,7 @@ class SettingsController < Rho::RhoController
               redirect :controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
               return
             elsif !(@params['activity'].blank?)
-              redirect :controller => :Activity, :action => :activity_detail, :id => @params['activity'], :query => {:origin => @params['origin'], :activity => @params['activity']}
+              redirect :controller => :Activity, :action => :show, :id => @params['activity'], :query => {:origin => @params['origin'], :activity => @params['activity']}
               return  
             else
               redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}

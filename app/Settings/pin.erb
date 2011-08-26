@@ -34,7 +34,7 @@
 			    <div class="ui-block-b"><a type="button" data-theme="c" value="Cancel" href="<%= url_for(:controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>">Cancel</a></div>
 				
 			<% elsif !(@params['activity'].blank?) %>	
-				<div class="ui-block-b"><a type="button" data-theme="c" value="Cancel" href="<%= url_for(:controller => :Activity, :action => :activity_detail, :id => @params['contact'], :query => {:origin => @params['origin'], :activity => @params['activity']}) %>">Cancel</a></div>
+				<div class="ui-block-b"><a type="button" data-theme="c" value="Cancel" href="<%= url_for(:controller => :Activity, :action => :show, :id => @params['activity'], :query => {:origin => @params['origin'], :activity => @params['activity']}) %>">Cancel</a></div>
 			<% else %>
 				<div class="ui-block-b"><a type="button" data-theme="c" value="Cancel" href="<%= url_for(:action => :index, :query => {:origin => @params['origin']}) %>">Cancel</a></div>
 			<% end %>

@@ -337,7 +337,7 @@ class ActivityController < Rho::RhoController
       })
     end  
     SyncUtil.start_sync
-    redirect :action => :activity_detail, :back => 'callback:',
+    redirect :action => :show, :back => 'callback:',
               :id => @task.object,
               :query =>{:origin => @params['origin'], :activity => @task.object}
 
@@ -597,10 +597,9 @@ class ActivityController < Rho::RhoController
   
   def verify_pin
      if @params['PIN'] == Settings.pin
-       puts @params.inspect
        Settings.pin_last_activity_time = Time.new
        Settings.pin_confirmed = true
-       render :action => :activity_detail, :query => {:origin => @params['origin']}
+       redirect :action => :show, :id => @params['id'], :query => {:origin => @params['origin']}
      else
        Alert.show_popup({
          :message => "Invalid PIN Entered", 
@@ -608,7 +607,7 @@ class ActivityController < Rho::RhoController
          :buttons => ["OK"]
        })
        @pinverified="false"
-       render :action => :activity_detail, :query => {:origin => @params['origin']}
+       redirect :action => :show, :id => @params['id'], :query => {:origin => @params['origin']}
      end    
    end
   
