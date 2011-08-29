@@ -1,0 +1,58 @@
+<div data-role="page" data-theme="b" id="new_phonecall">
+	<script type='text/javascript'>	
+		function PickCallChangeFocus() {
+			popupDateTimeAJPicker('0', 'Start Time:', 'callback_datetime');
+			document.getElementById('callback_datetime').focus();
+		}
+	</script>
+	
+        <div data-role="header" data-theme="d" data-position="inline">
+            <a href="<%= url_for(:action => :index)%>" rel="external" data-role="button" data-icon="back"><font color="black">Cancel</font></a>
+            <h1>
+                Create Activity</h1>
+            <a href="#" data-role="button" data-icon="gear"><font color="black">CODE ME</font></a>
+        </div>
+        <div id="contentDiv" data-role="content">
+			<div class="ui-body ui-body-d">
+				<form name="new_phonecall_form" id="new_phonecall_form" method="POST" action="<%= url_for :action => :create_new_phonecall %>">
+            		<div data-role="navbar">
+		                <ul>
+		                    <li><a href="<%= url_for(:action => :new_task)%>"  data-theme="d">Task</a></li>
+		                    <li><a href="<%= url_for(:action => :new_phonecall)%>" class="ui-btn-active" data-theme="d">Phone Call</a></li>
+		                    <li><a href="<%= url_for(:action => :new_appointment)%>" data-theme="d">Appointment</a></li>
+
+		                </ul>
+		            </div>
+		            <!-- /navbar -->
+		            <div data-role="fieldcontain">
+		                <div data-role="fieldcontain">
+		                    <label for="phonecall_subject">
+		                        Subject:<font color="red"> *</font></label>
+
+		                    <input id="phonecall_subject" type="text" name="phonecall_subject"></input>
+		                </div>
+		                <div data-role="fieldcontain">
+		                    <label for="callback_datetime">
+		                        Callback Date and Time: <font color="red"> *</font>
+		                    </label>
+		                    <input id="callback_datetime" type="text" name="callback_datetime" readonly value="<%= $choosed['0'] %>"  onClick="PickCallChangeFocus();"></input>
+		                </div>
+		                <div data-role="fieldcontain">
+							<label for="phonecall_number">
+								Phone Number: <font color="red"> *</font>
+							</label>
+							<% if System::get_property('platform') == 'APPLE' %>
+								<input id="phonecall_number" value="" name="phonecall_number" onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" />
+							<% else %>
+								<input id="phonecall_number" value="" name="phonecall_number" type="tel" />
+							<% end %>
+						</div>
+	                    <div data-role="fieldcontain">
+	                        <input type="submit" class="standardButton" value="Create Callback" />
+	                    </div>
+					</div>
+				</form>
+			</div>
+		</div>
+</div>
+

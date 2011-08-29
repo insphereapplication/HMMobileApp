@@ -310,7 +310,8 @@ class ActivityController < Rho::RhoController
     begin
       task = Activity.create_new({
         :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
-        :subject => "Task - #{@params['phonecall_subject']}",
+        :subject => "Phone Call - #{@params['phonecall_subject']}",
+        :cssi_phonetype => "Ad Hoc",
         :phonenumber => @params['phonecall_number'],
         :statuscode => 'Open',
         :statecode => 'Open',
@@ -321,6 +322,30 @@ class ActivityController < Rho::RhoController
       finished_create_activity
     rescue Exception => e
       puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
+      db.rollback
+    end
+  end
+  
+  def create_new_appointment
+    db = ::Rho::RHO.get_src_db('Activity')
+    db.start_transaction
+    begin
+      task = Activity.create_new({
+        :scheduledstart => DateUtil.date_build(@params['appointment_datetime']), 
+        :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
+        :subject => "Appointment - #{@params['appointment_subject']}",
+        :cssi_location => "Ad Hoc",
+        :location => @params['appointment_location'],
+        :description => @params['appointment_description'],
+        :statuscode => "Busy",
+        :statecode => "Scheduled",
+        :type => 'Appointment',
+        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+      })
+      db.commit
+      finished_create_activity
+    rescue Exception => ecreate
+      puts "Exception in create new appointment, rolling back: #{e.inspect} -- #{@params.inspect}"
       db.rollback
     end
   end
