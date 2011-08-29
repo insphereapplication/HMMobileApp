@@ -14,19 +14,21 @@ document.getElementById('appointment_duration').focus();
 		<form name="appointment_form" method="POST" action="<%= url_for :action => :update_appt, :id => @activity.object, :query => {:origin => @params['origin']} %>">
 		<%= offline_bar%>
 		<div data-role="header" data-theme="b" data-position="inline">
-			<a href="<%=url_for(:action=>:show_appt, :id => @activity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
+			<a href="<%=url_for(:action=>@cancelAction, :id => @activity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
 			<h1>Edit Appt 	<%= sync_spinner %></h1>
 			<span class="ui-btn-right">
 			<input type="submit" data-theme="b" class="standardButton" onclick="getLocationType(); return enableLocation();" value="Done"/>
 			</span>
 		</div>
+    <% if (@activity_title) %>
 		<div style="text-align:center" class="ui-bar ui-bar-c"> 
-			<%= "#{@activity.opportunity.contact.full_name} - #{to_date(@activity.opportunity.createdon)}" %><br/>
+			<%="#{@activity_title}"%><br/>
 		</div>
+    <% end %>
 		<div id="contentDiv" data-role="content">
 			<div class="ui-body ui-body-d">
 
-					<input type="hidden" name="opportunity_id" value="<%= @activity.opportunity.object %>" />
+					<input type="hidden" name="opportunity_id" value="<%=@opportunity.object if @opportunity%>" />
 					<input type="hidden" id="cssi_location" name="cssi_location" />
 					<input type="hidden" id="appointment_location" name="appointment_location" />
 					
@@ -46,15 +48,17 @@ document.getElementById('appointment_duration').focus();
 								<option <% if get_duration(@activity.scheduledstart, @activity.scheduledend) == 240.0 %> selected == "true" <% end %> value="240.0">4 Hours</option>
 							</select>
 						</div>
+            <% if (@activity_contact) %>
 						<div data-role="fieldcontain">
 							<label for="select_location" class="fieldLabel">Location:</label>
 				            <select name="select_location" id="select_location" onchange='updateAddress();' data-role="none" class="ins-drop-down">
-								<% @activity.opportunity.contact.addresses.each do |type, address| %>
+								<% @activity_contact.addresses.each do |type, address| %>
 									<option <% if @activity.cssi_location == address %> selected = "True" <% end %> value="<%= address %>"><%= type %></option>
 								<% end %>
 									<option value=" ">Ad Hoc</option>
 							</select><br />
 						</div>
+            <% end %>
 						<div data-role="fieldcontain">
 							<label for="location" class="fieldLabel">Address:</label>
 				            <input maxlength="200" type="text" id="location" name="location" value="<%= @activity.location %>" onkeypress="if(event.keyCode==13){return false;}" /><br />
