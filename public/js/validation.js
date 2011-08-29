@@ -410,6 +410,33 @@ $('#new_phonecall').live('pagecreate',function(event){
 	}, "Please specify a valid phone number in format ### ### ####");
 });
 
+
+// //Create Activity - Phone Call from a Contact
+$('#new_phonecall_contact_page').live('pagecreate',function(event){
+	$("#contact_phonecall_form").validate({
+	  rules: {
+		'phonecall_subject': {
+		  required: true
+	    },
+		'phone_number': {
+			required: true,
+			phoneUS: true
+		},
+		'callback_datetime' : {
+			required: true
+		}
+	  }
+	});
+	
+	// Creates a US phone number ('### ### ####') validator
+	jQuery.validator.addMethod("phoneUS", function(phone_number, element) {
+	    phone_number = phone_number.replace(/\s+/g, ""); 
+		return this.optional(element) || phone_number.length > 9 &&
+			phone_number.match(/^(\([0-9]\d{2}\)|[0-9]\d{2})-?[0-9]\d{2}-?\d{4}$/);
+	}, "Please specify a valid phone number in format ### ### ####");
+});
+
+
 //Create Activity - Appointment
 $('#new_appointment').live('pagecreate',function(event){
 	$("#new_appointment_form").validate({
@@ -462,6 +489,6 @@ $('#appointment_add_page, #appointment_edit_page').live('pagecreate',function(ev
 
 // HACK ATTACK! - This is a fix for a known issue with JQuery Mobile related to focus and loss of input issues. - twitty.6.14.11
 // Please check https://github.com/jquery/jquery-mobile/issues/756 to see if the issue has been addressed offically. - twitty.6.14.11
-$('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_page, #contact_edit_page, #contact_new_page, #appdetail_add_page, #appdetail_edit_page, #callback_create, #callback_edit, #appointment_add_page, #appointment_edit_page, #lost_other_page, #pin_reset_page','#mark_as_won_page','#new_task', '#new_appointment').live('pageshow',function(event){
+$('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_page, #contact_edit_page, #contact_new_page, #appdetail_add_page, #appdetail_edit_page, #callback_create, #callback_edit, #appointment_add_page, #appointment_edit_page, #lost_other_page, #pin_reset_page','#mark_as_won_page','#new_task', '#new_appointment', '#new_phonecall_contact_page').live('pageshow',function(event){
 	$('input').one('keypress',function(ev) { $('<div></div>').appendTo('body') });
 });
