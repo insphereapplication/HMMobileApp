@@ -153,7 +153,20 @@ class ActivityController < Rho::RhoController
   
   def edit
     @activity = Activity.find_activity(@params['id'])
+    @activity_contact = @activity.parent_contact
+    @opportunity = @activity.opportunity
+    @activity_title = @activity_contact.full_name if @activity_contact
+    @activity_title += " - #{to_date(@opportunity.createdon)}" if @activity_contact && @opportunity
     edit_action = "edit_#{@activity.type}".downcase.to_sym
+    @cancelAction = case edit_action
+      when 'edit_phonecall'
+        :show_callback
+      when 'edit_appointment'
+        :show_appt
+      else
+        :show_task
+    end
+    @cancelAction = :show if Rho::NativeTabbar.get_current_tab == 2
     Settings.record_activity
     render :action => edit_action, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
   end  
@@ -185,44 +198,44 @@ class ActivityController < Rho::RhoController
   def update_appt
     Settings.record_activity
     @appointment = Activity.find_activity(@params['id'])
+    @opportunity = @appointment.opportunity
     @appointment.update_attributes({
       :scheduledstart => DateUtil.date_build(@params['appointment_datetime']),
       :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
       :location => @params['location'],
       :description => @params['description'],
       :cssi_location => @params['cssi_location']  
-    }) if @appointment
-    
-    @appointment.opportunity.update_attributes({
+    })
+    @opportunity.update_attributes({
       :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-    }) if @appointment
-    
+    }) if @opportunity
     SyncUtil.start_sync
-    redirect :action => :show_appt, :back => 'callback:',
+    act = :show_appt
+    act = :show if Rho::NativeTabbar.get_current_tab == 2
+    redirect :action => act, :back => 'callback:',
               :id => @appointment.object,
               :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
   end
   
   #CR: careful with the inline 'if's; remove crufty old output; needs a transaction
   def update_callback
-
     @callback = Activity.find_activity(@params['id'])
+    @opportunity = @callback.opportunity
     Settings.record_activity
-    if @callback
-      @callback.update_attributes({
-          :scheduledend => DateUtil.date_build(@params['callback_datetime']),
-          :phonenumber => @params['phone_number'] 
-      })
-      @callback.opportunity.update_attributes({
-        :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-      })
-      
-      if @params['phoneList'] == 'ad-hoc'
-        @callback.update_attributes({:cssi_phonetype => "Ad Hoc"})
-      end      
+    @callback.update_attributes({
+        :scheduledend => DateUtil.date_build(@params['callback_datetime']),
+        :phonenumber => @params['phone_number'] 
+    })
+    if @params['phoneList'] == 'ad-hoc'
+      @callback.update_attributes({:cssi_phonetype => "Ad Hoc"})
     end
+    @opportunity.update_attributes({
+      :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+    }) if @opportunity
     SyncUtil.start_sync
-    redirect :action => :show_callback, :back => 'callback:',
+    act = :show_callback
+    act = :show if Rho::NativeTabbar.get_current_tab == 2
+    redirect :action => act, :back => 'callback:',
               :id => @callback.object,
               :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
   end
@@ -362,7 +375,7 @@ class ActivityController < Rho::RhoController
       })
     end  
     SyncUtil.start_sync
-    redirect :action => :activity_detail, :back => 'callback:',
+    redirect :action => :show, :back => 'callback:',
               :id => @task.object,
               :query =>{:origin => @params['origin'], :activity => @task.object}
 
@@ -622,10 +635,9 @@ class ActivityController < Rho::RhoController
   
   def verify_pin
      if @params['PIN'] == Settings.pin
-       puts @params.inspect
        Settings.pin_last_activity_time = Time.new
        Settings.pin_confirmed = true
-       render :action => :activity_detail, :query => {:origin => @params['origin']}
+       redirect :action => :show, :id => @params['id'], :query => {:origin => @params['origin']}
      else
        Alert.show_popup({
          :message => "Invalid PIN Entered", 
@@ -633,7 +645,7 @@ class ActivityController < Rho::RhoController
          :buttons => ["OK"]
        })
        @pinverified="false"
-       render :action => :activity_detail, :query => {:origin => @params['origin']}
+       redirect :action => :show, :id => @params['id'], :query => {:origin => @params['origin']}
      end    
    end
    

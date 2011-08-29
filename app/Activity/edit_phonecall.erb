@@ -10,15 +10,17 @@
 	<form name="call_back_form" id="call_back_form" method="POST" action="<%= url_for :action => :update_callback, :id => @activity.object, :query => {:origin => @params['origin']} %>">
 	<%= offline_bar%>
 	<div data-role="header" data-theme="b" data-position="inline">
-		<a href="<%=url_for(:action=>:show_callback, :id => @activity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
+		<a href="<%=url_for(:action=>@cancelAction, :id => @activity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
 		<h1>Edit Callback <%= sync_spinner %></h1>
 		<span class="ui-btn-right">
 		<input type="submit" data-theme="b" class="standardButton" onclick="getLocationType(); enablePhoneNumber();" value="Done"/>
 		</span>
 	</div>
+  <% if (@activity_title) %>
 	<div style="text-align:center" class="ui-bar ui-bar-c"> 
-		<%= "#{@activity.opportunity.contact.full_name} - #{to_date(@activity.opportunity.createdon)}" %>
+    <%="#{@activity_title}"%>
 	</div>
+	<% end %>
 	<div id="contentDiv" data-role="content">
 		<div class="ui-body ui-body-d">
 				<div data-role="fieldcontain">
@@ -26,15 +28,17 @@
 		            	<label for="callback_datetime">Call Back Date and Time:</label>
 						<input id="callback_datetime" type="text" class="required" name="callback_datetime" readonly value="<%= to_datetime(@activity.scheduledend) %>"  onClick="editpopupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime', '<%= @activity.scheduledend %>'); document.getElementById('callback_datetime').focus();"></input>
 					</div>
+          <% if (@activity_contact) %>
 					<div data-role="fieldcontain">
-					    <label for="phonelist">Phone Type:</label>            
+					    <label for="phonelist">Phone Type:</label>
 						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();" data-role="none" class="ins-drop-down">							
-							<% @activity.opportunity.contact.phone_numbers.each do |type, number| %>
+							<% @activity_contact.phone_numbers.each do |type, number| %>
 									<option <% if @activity.phone_type == type %> selected="True" <% end %> value="<%= number %>"><%= type %></option>
 							<% end %>
 								<option <% if @activity.phone_type == "Ad-Hoc" %> selected="True" <% end %> value='ad-hoc'>Ad-Hoc</option>
 						</select>
 					</div>
+          <% end %>
 					<div data-role="fieldcontain">
 						<label for="phone_number" class="fieldLabel">Phone Number:</label>
 						<% if System::get_property('platform') == 'APPLE' %>
