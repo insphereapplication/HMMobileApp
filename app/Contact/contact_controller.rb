@@ -350,5 +350,38 @@ class ContactController < Rho::RhoController
        db.rollback
     end
   end
+
+  def create_contact_phonecall
+    Settings.record_activity
+    @contact = Contact.find_contact(@params['id'])
+    db = ::Rho::RHO.get_src_db('Activity')
+    db.start_transaction
+    begin
+      task = Activity.create_new({
+        :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
+        :subject => "Phone Call - #{@params['phonecall_subject']}",
+        :cssi_phonetype => "Ad Hoc",
+        :phonenumber => @params['phonecall_number'],
+        :statuscode => 'Open',
+        :statecode => 'Open',
+        :type => 'PhoneCall',
+        :parent_type => 'Contact', 
+        :parent_id => @contact.object,
+        :parent_contact_id => @contact.object,
+        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+      })
+      db.commit
+      
+    rescue Exception => e
+      puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
+      db.rollback
+    end
+
+    SyncUtil.start_sync
+    redirect :controller => :Contact,
+             :action => :show, 
+             :id => @contact.object,
+  end
+
   
 end

@@ -1,0 +1,72 @@
+<div data-role="page" data-theme="b" id="new_phonecall_contact_page">	
+<script type='text/javascript'>
+	$(document).ready(function() {
+		populatePhone(document.getElementById('phoneList'));
+		disablePhone(document.getElementById('phoneList'), document.getElementById('phoneNumber'));
+	});
+
+	function PickDatePhonecallChangeFocus() {
+		popupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime');
+		document.getElementById('callback_datetime').focus();
+	}
+</script>
+	<%= offline_bar%>
+	<div data-role="header" data-theme="d" data-position="inline">
+		<a href="<%=url_for(:action=>:show, :id => @contact.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
+		<h1>Create Activity <%= sync_spinner %></h1>
+		<div style="text-align:center" class="ui-bar ui-bar-c"> 
+			<%= "#{@contact.full_name}" %>
+		</div>
+	</div>
+	<div id="contentDiv" data-role="content">
+		<div data-role="navbar">
+            <ul>
+                <li><a href="<%= url_for :action => :new_contact_task %>" data-theme="d">Task</a></li>
+                <li><a href="<%= url_for :action => :new_contact_phonecall %>" class="ui-btn-active" data-theme="d">Phone Call</a></li>
+                <li><a href="<%= url_for :action => :new_contact_appointment %>" data-theme="d">Appointment</a></li>
+            </ul>
+        </div>
+        
+		<div class="ui-body ui-body-d">
+			<form name="contact_phonecall_form" id="contact_phonecall_form" method="POST" action="<%= url_for  :action => :create_contact_phonecall, :id => @contact.object, :query => {:origin => @params['origin']} %>">
+                <div data-role="fieldcontain">
+                    <label for="phonecall_subject">
+                        Subject:<font color="red"> *</font></label>
+
+                    <input id="phonecall_subject" type="text" name="phonecall_subject"></input>
+                </div>
+				<div data-role="fieldcontain">
+					<div data-role="fieldcontain">
+		            	<label for="callback_datetime">Callback Date and Time:<font color="red"> *</font></label>
+						<input id="callback_datetime" type="text" class="required" name="callback_datetime" readonly value="<%= $choosed['0'] %>" onClick="PickDatePhonecallChangeFocus();"></input>
+					</div>
+					<div data-role="fieldcontain">
+					    <label for="phonelist">Phone Type:</label>            
+						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();" data-role="none" class="ins-drop-down">
+							<% @contact.phone_numbers.each do |type, number| %>
+								<% if @contact.cssi_preferredphone == type %>
+									<option selected value="<%= number %>"><%= type %></option>
+								<% else %>
+									<option value="<%= number %>"><%= type %></option>
+								<% end %>
+							<% end %>
+								<option value='ad-hoc'>Ad-Hoc</option>
+						</select>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="phone_number" class="fieldLabel">Phone Number:<font color="red"> *</font></label>
+						<% if System::get_property('platform') == 'APPLE' %>
+			            	<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" id="phoneNumber" name="phone_number" value="" /><br />
+						<% else %>
+							<input type="tel" id="phoneNumber" name="phone_number" onkeypress="if(event.keyCode==13){return false;}" /><br />
+						<% end %>
+					</div>
+					<div data-role="fieldcontain">
+						<input type="submit" class="standardButton" onclick="return enablePhoneNumber();" value="Create Phone Call"/>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+</div>
