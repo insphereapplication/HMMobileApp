@@ -1,0 +1,70 @@
+<div data-role="page" data-theme="b" id="new_contact_task">
+	<script type='text/javascript'>	
+		function PickTaskChangeFocus() {
+			popupDateTimeAJPicker('0', 'Task Due:', 'task_datetime');
+			document.getElementById('task_datetime').focus();
+		}
+	</script>
+        <div data-role="header" data-theme="d" data-position="inline">
+            <a href="<%= url_for(:action => :index)%>" rel="external" data-role="button" data-icon="back"><font color="black">Cancel</font></a>
+            <h1>
+                Create Task</h1>
+			<div style="text-align:center" class="ui-bar ui-bar-c"> 
+				<%= "#{@contact.full_name}" %>
+			</div>
+        </div>
+        <div id="contentDiv" data-role="content">
+			<div class="ui-body ui-body-d">
+				<form name="new_contact_task_form" id="new_contact_task_form" method="POST" action="<%= url_for :action => :create_new_contact_task, :id => @contact.object, :query => {:origin => @params['origin']} %>">
+            		<div data-role="navbar">
+		                <ul>
+		                    <li><a href="<%= url_for(:action => :new_contact_task)%>" class="ui-btn-active" data-theme="d">Task</a></li>
+		                    <li><a href="<%= url_for(:action => :new_contact_phonecall)%>" data-theme="d">Phone Call</a></li>
+		                    <li><a href="<%= url_for(:action => :new_contact_appointment)%>" data-theme="d">Appointment</a></li>
+
+		                </ul>
+		            </div>
+		            <!-- /navbar -->
+		            <div data-role="fieldcontain">
+		                <div data-role="fieldcontain">
+		                    <label for="task_subject">
+		                        Subject:<font color="red"> *</font></label>
+
+		                    <input id="task_subject" type="text" name="task_subject"></input>
+		                </div>
+		                <div data-role="fieldcontain">
+		                    <label for="callback_datetime">
+		                        Due Date:
+		                    </label>
+		                    <input id="task_datetime" type="text" name="task_datetime" readonly value="<%= $choosed['0'] %>"  onClick="PickTaskChangeFocus();"></input>
+		                </div>
+		                <div data-role="fieldcontain">
+
+		                    <label for="textarea">
+		                        Description:</label>
+		                    <textarea cols="40" rows="4" name="task_description" id="task_description"></textarea>
+		                </div>
+		                <div data-role="fieldcontain">
+		                    <div data-role="fieldcontain">
+		                        <div data-role="fieldcontain">
+		                            <fieldset data-role="controlgroup">
+
+		                                <legend>Priority:</legend>
+		                                <input type="checkbox" name="task_priority_checkbox" id="task_priority_checkbox" class="custom" />
+		                                <label for="task_priority_checkbox">
+		                                    <img src="/public/images/red_exclamation.png" style="width: 16px; height: 16px;" />
+		                                    High
+		                                </label>
+		                            </fieldset>
+		                        </div>
+		                    </div>
+						</div>
+	                    <div data-role="fieldcontain">
+	                        <input type="submit" class="standardButton" value="Create Task" />
+	                    </div>
+					</div>
+				</form>
+			</div>
+		</div>
+</div>
+

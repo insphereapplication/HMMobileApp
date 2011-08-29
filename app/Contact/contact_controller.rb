@@ -316,4 +316,39 @@ class ContactController < Rho::RhoController
              
   end
   
+  def new_contact_task
+      Settings.record_activity
+      @contact = Contact.find_contact(@params['id'])
+      render :action => :new_contact_task, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:origin => @params['origin']}
+  end
+  
+  def finished_contact_activity(contact, origin)
+    SyncUtil.start_sync
+    WebView.navigate(url_for(:action => :show, :id => contact.object, :back => 'callback:', :query => {:origin => origin}, :layout => 'layout_JQM_lite'))
+  end
+  
+  def create_new_contact_task
+     contact = Contact.find_contact(@params['id'])
+     db = ::Rho::RHO.get_src_db('Activity')
+     db.start_transaction
+     begin
+       task = Activity.create_new({
+         :scheduledend => DateUtil.date_build(@params['task_datetime']), 
+         :subject => "Task - #{@params['task_subject']}",
+         :description => @params['task_description'],
+         :parent_type => 'Contact', 
+         :parent_id => contact.object,
+         :statecode => 'Open',
+         :type => 'Task',
+         :prioritycode => @params['task_priority_checkbox'] ? 'High' : 'Normal',
+         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+       })
+       db.commit
+       finished_contact_activity(contact, @params['origin'])
+    rescue Exception => e
+       puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
+       db.rollback
+    end
+  end
+  
 end
