@@ -322,6 +322,12 @@ class ContactController < Rho::RhoController
       render :action => :new_contact_task, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:origin => @params['origin']}
   end
   
+  def new_contact_phonecall
+      Settings.record_activity
+      @contact = Contact.find_contact(@params['id'])
+      render :action => :new_contact_phonecall, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:origin => @params['origin']}
+  end
+  
   def finished_contact_activity(contact, origin)
     SyncUtil.start_sync
     WebView.navigate(url_for(:action => :show, :id => contact.object, :back => 'callback:', :query => {:origin => origin}, :layout => 'layout_JQM_lite'))

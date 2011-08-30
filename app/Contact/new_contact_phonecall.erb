@@ -21,9 +21,9 @@
 	<div id="contentDiv" data-role="content">
 		<div data-role="navbar">
             <ul>
-                <li><a href="<%= url_for :action => :new_contact_task %>" data-theme="d">Task</a></li>
-                <li><a href="<%= url_for :action => :new_contact_phonecall %>" class="ui-btn-active" data-theme="d">Phone Call</a></li>
-                <li><a href="<%= url_for :action => :new_contact_appointment %>" data-theme="d">Appointment</a></li>
+                <li><a href="<%= url_for :action => :new_contact_task, :id => @contact.object %>" data-theme="d">Task</a></li>
+                <li><a href="<%= url_for :action => :new_contact_phonecall, :id => @contact.object %>" class="ui-btn-active" data-theme="d">Phone Call</a></li>
+                <li><a href="<%= url_for :action => :new_contact_appointment, :id => @contact.object %>" data-theme="d">Appointment</a></li>
             </ul>
         </div>
         

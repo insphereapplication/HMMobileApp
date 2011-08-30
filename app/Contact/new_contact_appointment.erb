@@ -16,8 +16,8 @@
             <form name="new_appointment_form" id="new_appointment_form" method="POST" action="<%=url_for :action => :create_new_appointment%>">
                 <div data-role="navbar">
                     <ul>
-                        <li><a href="<%=url_for(:action => :new_task)%>" data-theme="d">Task</a></li>
-                        <li><a href="<%=url_for(:action => :new_phonecall)%>" data-theme="d">Phone Call</a></li>
+                        <li><a href="<%=url_for(:action => :new_contact_task, :id => @contact.object)%>" data-theme="d">Task</a></li>
+                        <li><a href="<%=url_for(:action => :new_contact_phonecall, :id => @contact.object)%>" data-theme="d">Phone Call</a></li>
                         <li><a href="#" class="ui-btn-active" data-theme="d">Appointment</a></li>
                     </ul>
                 </div>
