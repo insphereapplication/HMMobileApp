@@ -500,7 +500,7 @@ $('#appointment_add_page, #appointment_edit_page').live('pagecreate',function(ev
 
 // HACK ATTACK! - This is a fix for a known issue with JQuery Mobile related to focus and loss of input issues. - twitty.6.14.11
 // Please check https://github.com/jquery/jquery-mobile/issues/756 to see if the issue has been addressed offically. - twitty.6.14.11
-<<<<<<< HEAD
+
 $('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_page, #contact_edit_page, #contact_new_page, #appdetail_add_page, #appdetail_edit_page, #callback_create, #callback_edit, #appointment_add_page, #appointment_edit_page, #lost_other_page, #pin_reset_page','#mark_as_won_page','#new_task', '#new_appointment', '#new_contact_task', '#new_phonecall_contact_page').live('pageshow',function(event){
 	$('input').one('keypress',function(ev) { $('<div></div>').appendTo('body') });
 });
