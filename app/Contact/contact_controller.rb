@@ -383,5 +383,9 @@ class ContactController < Rho::RhoController
              :id => @contact.object,
   end
 
-  
+  def new_contact_appointment
+    Settings.record_activity
+    @contact = Contact.find_contact(@params['id'])
+    render :action => :new_contact_appointment, :back => 'callback:', :layout => 'layout_jquerymobile'
+  end
 end
