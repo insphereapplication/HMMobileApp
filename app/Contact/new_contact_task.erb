@@ -6,7 +6,7 @@
 		}
 	</script>
         <div data-role="header" data-theme="d" data-position="inline">
-            <a href="<%= url_for(:action => :index)%>" rel="external" data-role="button" data-icon="back"><font color="black">Cancel</font></a>
+            <a href="<%= url_for(:action => :show, :id => @contact.object, :query => {:origin => @params['origin']})%>" rel="external" data-role="button" data-icon="back"><font color="black">Cancel</font></a>
             <h1>
                 Create Task</h1>
 			<div style="text-align:center" class="ui-bar ui-bar-c"> 
@@ -18,9 +18,9 @@
 				<form name="new_contact_task_form" id="new_contact_task_form" method="POST" action="<%= url_for :action => :create_new_contact_task, :id => @contact.object, :query => {:origin => @params['origin']} %>">
             		<div data-role="navbar">
 		                <ul>
-		                    <li><a href="<%= url_for(:action => :new_contact_task,  :id => @contact.object)%>" class="ui-btn-active" data-theme="d">Task</a></li>
-		                    <li><a href="<%= url_for(:action => :new_contact_phonecall, :id => @contact.object)%>" data-theme="d">Phone Call</a></li>
-		                    <li><a href="<%= url_for(:action => :new_contact_appointment, :id => @contact.object)%>" data-theme="d">Appointment</a></li>
+		                    <li><a href="#" class="ui-btn-active" data-theme="d">Task</a></li>
+		                    <li><a href="<%= url_for(:action => :new_contact_phonecall, :id => @contact.object, :query => {:origin => @params['origin']})%>" data-theme="d">Phone Call</a></li>
+		                    <li><a href="<%= url_for(:action => :new_contact_appointment, :id => @contact.object, :query => {:origin => @params['origin']})%>" data-theme="d">Appointment</a></li>
 
 		                </ul>
 		            </div>
