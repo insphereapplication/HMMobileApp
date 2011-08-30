@@ -27,7 +27,7 @@ document.getElementById('callback_datetime').focus();
 				<% end %>
 				<div data-role="fieldcontain">
 					<div data-role="fieldcontain">
-		            	<label for="callback_datetime">Call Back Date and Time:</label>
+		            	<label for="callback_datetime">Call Back Date and Time:<font color="red"> *</font></label>
 						<input id="callback_datetime" type="text" class="required" name="callback_datetime" readonly value="<%= $choosed['0'] %>"  onClick="PickDateCallbackChangeFocus();"></input>
 					</div>
 					<div data-role="fieldcontain">

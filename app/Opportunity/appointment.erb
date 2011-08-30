@@ -30,7 +30,7 @@ document.getElementById('appointment_datetime').focus();
 					
 					<div data-role="fieldcontain">
 						<div data-role="fieldcontain">
-							<label for="appointment_datetime" class="fieldLabel">Appointment Start:</label>
+							<label for="appointment_datetime" class="fieldLabel">Appointment Start:<font color="red"> *</font></label>
 							<input id="appointment_datetime" type="text" class="required" name="appointment_datetime" readonly value="<%= $choosed['0'] %>"  onClick="PickDateAppointmentChangeFocus();"></input>
 						</div>
 						<div data-role="fieldcontain">
