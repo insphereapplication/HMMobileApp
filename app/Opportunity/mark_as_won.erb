@@ -1,9 +1,3 @@
-<script type="text/javascript">
-function PickDueDateChangeFocus() {
-popupDateTimeAJPicker('0', 'Due Time', 'task_due_datetime');
-document.getElementById('task_due_datetime').focus();
-}
-</script>
 <div data-role="page" data-theme="b" id="mark_as_won_page">
 	<%= offline_bar%>
 	<div data-role="header" data-theme="d" data-position="inline">
@@ -40,6 +34,12 @@ document.getElementById('task_due_datetime').focus();
 			</div>
 		</form>
 	</div>
+	<script type="text/javascript">
+	function PickDueDateChangeFocus() {
+	popupDateTimeAJPicker('0', 'Due Time', 'task_due_datetime');
+	document.getElementById('task_due_datetime').focus();
+	}
+	</script>
 </div>
 
 
