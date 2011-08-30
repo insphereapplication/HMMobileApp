@@ -356,6 +356,34 @@ class ContactController < Rho::RhoController
        db.rollback
     end
   end
+  
+  def create_new_appointment
+     contact = Contact.find_contact(@params['id'])
+     db = ::Rho::RHO.get_src_db('Activity')
+     db.start_transaction
+     begin
+       task = Activity.create_new({
+         :parent_type => 'Contact', 
+         :parent_id => contact.object,
+         :scheduledstart => DateUtil.date_build(@params['appointment_datetime']), 
+         :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
+         :subject => "Appointment - #{@params['appointment_subject']}",
+         :cssi_location => @params['cssi_location'],
+         :location => @params['location'],
+         :description => @params['appointment_description'],
+         :statuscode => "Busy",
+         :statecode => "Scheduled",
+         :type => 'Appointment',
+         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+       })
+       puts "!~!~!~!~!~!~!~!~!~ PARAMS FOR CREATE APPT ARE #{@params.inspect}"
+       db.commit
+       finished_contact_activity(contact, @params['origin'])
+    rescue Exception => e
+       puts "Exception in create new appointment, rolling back: #{e.inspect} -- #{@params.inspect}"
+       db.rollback
+    end
+  end
 
   def create_contact_phonecall
     Settings.record_activity
@@ -383,15 +411,12 @@ class ContactController < Rho::RhoController
       db.rollback
     end
 
-    SyncUtil.start_sync
-    redirect :controller => :Contact,
-             :action => :show, 
-             :id => @contact.object,
+    finished_contact_activity(@contact, @params['origin'])
   end
 
   def new_contact_appointment
     Settings.record_activity
     @contact = Contact.find_contact(@params['id'])
-    render :action => :new_contact_appointment, :back => 'callback:', :layout => 'layout_jquerymobile'
+    render :action => :new_contact_appointment, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:origin => @params['origin']}
   end
 end
