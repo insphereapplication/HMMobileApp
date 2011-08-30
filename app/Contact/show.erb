@@ -221,11 +221,11 @@
 		<% end %>
 		<fieldset class="ui-grid-custom ui-grid-a">
 			<div class="ui-block-a">
-				<a href="<%= url_for(:action => :new_contact_task, :id => @contact.object, :query => {:origin => @params['origin']}) %>" data-icon="add" data-role="button" style="white-space:normal" >Add <br />
+				<a href="<%= url_for(:action => :new_contact_task, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>" data-icon="add" data-role="button" style="white-space:normal" >Add <br />
 			  Activity</a> 
 			</div>
 			<div class="ui-block-b">
-					<a href="<%= url_for(:controller => :Activity, :action => :contact_activity_summary, :id => @contact.object, :query => {:origin => @params['origin']}) %>" data-icon="arrow-r" data-role="button" >View <br />
+					<a href="<%= url_for(:controller => :Activity, :action => :contact_activity_summary, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>" data-icon="arrow-r" data-role="button" >View <br />
 				 Activities</a> 
 			</div>
 		</fieldset>

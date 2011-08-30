@@ -319,18 +319,18 @@ class ContactController < Rho::RhoController
   def new_contact_task
       Settings.record_activity
       @contact = Contact.find_contact(@params['id'])
-      render :action => :new_contact_task, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:origin => @params['origin']}
+      render :action => :new_contact_task, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
   end
   
   def new_contact_phonecall
       Settings.record_activity
       @contact = Contact.find_contact(@params['id'])
-      render :action => :new_contact_phonecall, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:origin => @params['origin']}
+      render :action => :new_contact_phonecall, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
   end
   
-  def finished_contact_activity(contact, origin)
+  def finished_contact_activity(contact, origin, opportunity)
     SyncUtil.start_sync
-    WebView.navigate(url_for(:action => :show, :id => contact.object, :back => 'callback:', :query => {:origin => origin}, :layout => 'layout_JQM_lite'))
+    WebView.navigate(url_for(:action => :show, :id => contact.object, :back => 'callback:', :query => {:origin => origin, :opportunity => opportunity}, :layout => 'layout_JQM_lite'))
   end
   
   def create_new_contact_task
@@ -350,7 +350,7 @@ class ContactController < Rho::RhoController
          :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
        })
        db.commit
-       finished_contact_activity(contact, @params['origin'])
+       finished_contact_activity(contact, @params['origin'], @params['opportunity'])
     rescue Exception => e
        puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
        db.rollback
@@ -378,7 +378,7 @@ class ContactController < Rho::RhoController
        })
        puts "!~!~!~!~!~!~!~!~!~ PARAMS FOR CREATE APPT ARE #{@params.inspect}"
        db.commit
-       finished_contact_activity(contact, @params['origin'])
+       finished_contact_activity(contact, @params['origin'], @params['opportunity'])
     rescue Exception => e
        puts "Exception in create new appointment, rolling back: #{e.inspect} -- #{@params.inspect}"
        db.rollback
@@ -411,12 +411,12 @@ class ContactController < Rho::RhoController
       db.rollback
     end
 
-    finished_contact_activity(@contact, @params['origin'])
+    finished_contact_activity(@contact, @params['origin'], @params['opportunity'])
   end
 
   def new_contact_appointment
     Settings.record_activity
     @contact = Contact.find_contact(@params['id'])
-    render :action => :new_contact_appointment, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:origin => @params['origin']}
+    render :action => :new_contact_appointment, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
   end
 end
