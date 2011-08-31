@@ -1,4 +1,5 @@
 <div data-role="page" data-theme="b" data-cache="never">
+		<%= offline_bar%>
 		<div data-role="header" data-backbtn="false">
 			<a href="<%= url_for(:controller => :Opportunity, :action => :won, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>			
 			<h3>Application Details <%= sync_spinner %></h3>

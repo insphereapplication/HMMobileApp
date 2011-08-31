@@ -1,4 +1,5 @@
 <div data-role="page" data-theme="b" id="dependent_edit_page">
+	<%= offline_bar%>
 	<form method="post" id="dependent_form" action="<%= url_for(:action => :update, :id => @dependent.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" name="dependent_update">
 		<div data-role="header" data-backbtn="false" data-theme="b">
 			<a href="<%=url_for(:controller=>:Dependent, :action=>:show, :id => @dependent.object, :query=>{:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>

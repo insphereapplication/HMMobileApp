@@ -5,6 +5,7 @@
 			document.getElementById('task_datetime').focus();
 		}
 	</script>
+		<%= offline_bar%>
         <div data-role="header" data-theme="d" data-position="inline">
             <a href="<%= url_for(:action => :show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})%>" rel="external" data-role="button" data-icon="back"><font color="black">Cancel</font></a>
             <h1>
