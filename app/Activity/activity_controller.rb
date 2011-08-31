@@ -122,7 +122,8 @@ class ActivityController < Rho::RhoController
       @activity_list = @contact.activity_list
       render :action => :activity_summary, :id => @contact.object, :back => 'callback:',
              :layout => 'layout_jquerymobile',
-             :origin => @params['origin']
+             :origin => @params['origin'],
+             :opportunity => @params['opportunity']
     end
   end
 

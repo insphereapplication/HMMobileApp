@@ -1,6 +1,6 @@
 <div data-role="page" data-theme="b" id="new_contact_appointment">
     <div data-role="header" data-theme="d" data-position="inline">
-        <a href="<%=url_for(:action => :show, :id => @contact.object, :query => {:origin => @params['origin']})%>" rel="external" data-role="button" data-icon="back">
+        <a href="<%=url_for(:action => :show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})%>" rel="external" data-role="button" data-icon="back">
             <font color="black">Cancel</font>
         </a>
         <h1>Create Activity</h1>
@@ -10,13 +10,13 @@
     </div>
     <div id="contentDiv" data-role="content">
         <div class="ui-body ui-body-d">
-            <form name="new_contact_appointment_form" id="new_contact_appointment_form" method="POST" action="<%=url_for :action => :create_new_appointment, :id => @contact.object, :query => {:origin => @params['origin']}%>">
+            <form name="new_contact_appointment_form" id="new_contact_appointment_form" method="POST" action="<%=url_for :action => :create_new_appointment, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}%>">
                 <input type="hidden" id="cssi_location" name="cssi_location" />
 				<input type="hidden" id="appointment_location" name="appointment_location" />
 				<div data-role="navbar">
                     <ul>
-                        <li><a href="<%=url_for(:action => :new_contact_task, :id => @contact.object, :query => {:origin => @params['origin']})%>" data-theme="d">Task</a></li>
-                        <li><a href="<%=url_for(:action => :new_contact_phonecall, :id => @contact.object, :query => {:origin => @params['origin']})%>" data-theme="d">Phone Call</a></li>
+                        <li><a href="<%=url_for(:action => :new_contact_task, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-theme="d">Task</a></li>
+                        <li><a href="<%=url_for(:action => :new_contact_phonecall, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-theme="d">Phone Call</a></li>
                         <li><a href="#" class="ui-btn-active" data-theme="d">Appointment</a></li>
                     </ul>
                 </div>
