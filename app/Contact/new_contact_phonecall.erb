@@ -40,6 +40,7 @@
 		            	<label for="callback_datetime">Callback Date and Time:<font color="red"> *</font></label>
 						<input id="callback_datetime" type="text" class="required" name="callback_datetime" readonly value="<%= $choosed['0'] %>" onClick="PickDatePhonecallChangeFocus();"></input>
 					</div>
+					<input type="hidden" id="phone_type_selected" name="phone_type_selected" />
 					<div data-role="fieldcontain">
 					    <label for="phonelist">Phone Type:</label>            
 						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();" data-role="none" class="ins-drop-down">

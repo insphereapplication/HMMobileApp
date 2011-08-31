@@ -31,6 +31,7 @@ document.getElementById('callback_datetime').focus();
 						<input id="callback_datetime" type="text" class="required" name="callback_datetime" readonly value="<%= $choosed['0'] %>"  onClick="PickDateCallbackChangeFocus();"></input>
 					</div>
 					<div data-role="fieldcontain">
+						<input type="hidden" id="phone_type_selected" name="phone_type_selected" />
 					    <label for="phonelist">Phone Type:</label>            
 						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();" data-role="none" class="ins-drop-down">
 							<% @opportunity.contact.phone_numbers.each do |type, number| %>

@@ -582,6 +582,7 @@ class ActivityController < Rho::RhoController
       phone_call = Activity.create_new({
         :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
         :subject => "Phone Call - #{opportunity.contact.full_name}",
+        :cssi_phonetype => @params['phone_type_selected'],
         :phonenumber => @params['phone_number'],
         :parent_type => 'Opportunity', 
         :parent_id => opportunity.object,
@@ -592,10 +593,6 @@ class ActivityController < Rho::RhoController
         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
       })
       
-      if @params['phoneList'] == 'ad-hoc'
-        phone_call.update_attributes({:cssi_phonetype => "Ad Hoc"})
-      end
-        
       finished_update_status(opportunity, @params['origin'], @params['appointments'])
       db.commit
     rescue Exception => e

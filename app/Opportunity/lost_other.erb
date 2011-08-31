@@ -1,4 +1,18 @@
 <div data-role="page" id="lost_other_page" data-theme="b">
+	<script>
+	function validatelostother(){
+
+
+	return true;
+	}
+	</script>
+
+	<script type="text/javascript">
+	function PickDueDateChangeFocus() {
+	popupDateTimeAJPicker('0', 'Due Time', 'task_due_datetime');
+	document.getElementById('task_due_datetime').focus();
+	}
+	</script>
 	<%= offline_bar%>
 	<div data-role="header" data-theme="d" data-position="inline">
 		<a href="<%=url_for(:action=>:show, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
@@ -39,19 +53,5 @@
 		</div>
 	</div>
 	
-	<script>
-	function validatelostother(){
-
-
-	return true;
-	}
-	</script>
-
-	<script type="text/javascript">
-	function PickDueDateChangeFocus() {
-	popupDateTimeAJPicker('0', 'Due Time', 'task_due_datetime');
-	document.getElementById('task_due_datetime').focus();
-	}
-	</script>
 </div>
 

@@ -27,7 +27,9 @@ $(document).ready(function() {
 
 // Enable the phoneNumber text box so that it submits with the form
 function enablePhoneNumber(){
-	document.getElementById('phoneNumber').disabled=false; return true;
+	document.getElementById('phoneNumber').disabled=false; 
+	document.getElementById('phone_type_selected').disabled=false; 
+	return true;
 }
 
 function enableLocation(){
@@ -279,15 +281,18 @@ function populatePhone(dropdown)
       if (dropdown.options[i].selected==true){
         selected = dropdown.options[i].value;
 		text=document.getElementById("phoneList").text;
+		selected_text=dropdown.options[i].text
         break;
       }
     }
 	if (selected == 'ad-hoc'){
-		document.getElementById("phoneNumber").value=''
-		document.getElementById("phoneNumber").disabled = false
+		document.getElementById("phoneNumber").value='';
+		document.getElementById("phoneNumber").disabled = false;
+		document.getElementById("phone_type_selected").value='Ad Hoc';
 	}
 	else{
 	document.getElementById("phoneNumber").value=selected;
+	document.getElementById("phone_type_selected").value=selected_text;
 	}
     return true;
 }
@@ -339,6 +344,7 @@ function enableLocation()
 	textbox.disabled=false;
     return true;
 }
+
 
 function disablePhone(dropdown, phoneText)
 {

@@ -1,4 +1,10 @@
 <div data-role="page" data-theme="b" id="mark_as_won_page">
+	<script type="text/javascript">
+	function PickDueDateChangeFocus() {
+	popupDateTimeAJPicker('0', 'Due Time', 'task_due_datetime');
+	document.getElementById('task_due_datetime').focus();
+	}
+	</script>
 	<%= offline_bar%>
 	<div data-role="header" data-theme="d" data-position="inline">
 		<a href="<%=url_for(:action=>:show, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
@@ -34,12 +40,6 @@
 			</div>
 		</form>
 	</div>
-	<script type="text/javascript">
-	function PickDueDateChangeFocus() {
-	popupDateTimeAJPicker('0', 'Due Time', 'task_due_datetime');
-	document.getElementById('task_due_datetime').focus();
-	}
-	</script>
 </div>
 
 

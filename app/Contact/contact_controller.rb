@@ -391,11 +391,11 @@ class ContactController < Rho::RhoController
     db = ::Rho::RHO.get_src_db('Activity')
     db.start_transaction
     begin
-      task = Activity.create_new({
+      phone_call = Activity.create_new({
         :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
         :subject => "Phone Call - #{@params['phonecall_subject']}",
-        :cssi_phonetype => "Ad Hoc",
-        :phonenumber => @params['phonecall_number'],
+        :cssi_phonetype => @params['phone_type_selected'],
+        :phonenumber => @params['phone_number'],
         :statuscode => 'Open',
         :statecode => 'Open',
         :type => 'PhoneCall',
@@ -404,6 +404,7 @@ class ContactController < Rho::RhoController
         :parent_contact_id => @contact.object,
         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
       })
+   
       db.commit
       
     rescue Exception => e
