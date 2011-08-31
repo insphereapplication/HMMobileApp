@@ -166,7 +166,6 @@ class ActivityController < Rho::RhoController
       :show_task
     end
     @cancelAction = :show if Rho::NativeTabbar.get_current_tab == 2
-    puts "&&&&&&&&&&&&&&&&&&&&&&& EDIT ACTION: #{edit_action} CANCEL ACTION: #{@cancelAction}"
     Settings.record_activity
     render :action => edit_action.to_sym, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
   end  
