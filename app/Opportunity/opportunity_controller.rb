@@ -30,7 +30,7 @@ class OpportunityController < Rho::RhoController
       {
         :label => "Activities",
         :action => 'app/Activity',
-        :icon => "/public/images/iphone/tabs/activities_tab_icon.png"
+        :icon => "/public/images/glyphish-icons/117-todo.png"
       },
       { 
         :label => "Tools",  

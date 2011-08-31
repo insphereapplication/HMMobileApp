@@ -80,7 +80,7 @@ class ActivityController < Rho::RhoController
     end
     scheduled_time = activity.scheduled_time
     right_text = scheduled_time.blank? ? "&nbsp;" : to_datetime_noyear(scheduled_time)
-    is_priority = !activity.priority.blank? && activity.priority == 'High'
+    is_priority = !activity.prioritycode.blank? && activity.prioritycode == 'High'
     details = url_for(:action => :show, :id => activity.object)
     href = nil
     is_phone = activity.type == 'PhoneCall'
