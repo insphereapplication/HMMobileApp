@@ -237,13 +237,15 @@ class Activity
       
     find_by_sql(sql)
   end
-  
+
   def complete
-    update_attributes({
+    attrs = {
       :statuscode => 'Completed',
-      :statecode => 'Completed',
-      :cssi_disposition => 'Appointment Held'
-    })
+      :statecode => 'Completed'
+    }
+    attrs[:cssi_disposition] = 'Appointment Held' if type == 'Appointment'
+    attrs[:statuscode] = 'Made' if type == 'PhoneCall'
+    update_attributes(attrs)
   end
 
   def self.emails
@@ -308,6 +310,14 @@ class Activity
     end
   end
 
+  def self.activities_orderby_clause(operator)
+    if (operator == 'null' || operator == '')
+      "order by datetime(a.createdon) desc"
+    else
+      "order by datetime(scheduledtime)"
+    end
+  end
+
   def self.activities_sql(status, type, priority, operator, include_clause, page, page_size)
     %Q{
         select
@@ -318,6 +328,7 @@ class Activity
             #{activities_date_where_clause(operator)}
             #{activities_type_where_clause(type)}
             #{activities_priority_where_clause(priority)}
+        #{activities_orderby_clause(operator)}
         #{get_pagination_sql(page, page_size)}
     }
   end

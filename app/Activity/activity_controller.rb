@@ -80,7 +80,7 @@ class ActivityController < Rho::RhoController
     end
     scheduled_time = activity.scheduled_time
     right_text = scheduled_time.blank? ? "&nbsp;" : to_datetime_noyear(scheduled_time)
-    is_priority = !activity.priority.blank? && activity.priority == 'High'
+    is_priority = !activity.prioritycode.blank? && activity.prioritycode == 'High'
     details = url_for(:action => :show, :id => activity.object)
     href = nil
     is_phone = activity.type == 'PhoneCall'
@@ -150,7 +150,6 @@ class ActivityController < Rho::RhoController
     end
   end
 
-  
   def edit
     @activity = Activity.find_activity(@params['id'])
     @activity_contact = @activity.parent_contact
@@ -171,8 +170,6 @@ class ActivityController < Rho::RhoController
     render :action => edit_action, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
   end  
   
-  
-
   # GET /callback/{1}
 
   def show_callback
@@ -185,9 +182,8 @@ class ActivityController < Rho::RhoController
      else
        redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
      end
-   end
+  end
    
-  
   def get_duration(time1, time2)
     duration = (Time.parse(time2) - Time.parse(time1))/60
   end
@@ -667,7 +663,7 @@ class ActivityController < Rho::RhoController
        @pinverified="false"
        redirect :action => :show, :id => @params['id'], :query => {:origin => @params['origin']}
      end    
-   end
+  end
    
   def mark_as_complete
    activity = Activity.find_activity(@params['id'])

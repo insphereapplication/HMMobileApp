@@ -1,7 +1,11 @@
 <div data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar %>
 		<div data-role="header" data-backbtn="false">
-			<a href="<%= url_for(:controller => :Contact, :action => :show, :id => @policy.contact.object, :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}) %>" data-direction="reverse" data-icon="back">Contact</a>
+			<% if @params['origin'] == 'activity'%>
+					<a href="<%= url_for(:controller => :Activity, :action => :show, :id => @params['activity'], :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}) %>" data-direction="reverse" data-icon="back">Activity</a>
+			<% else %>
+				<a href="<%= url_for(:controller => :Contact, :action => :show, :id => @policy.contact.object, :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}) %>" data-direction="reverse" data-icon="back">Contact</a>
+			<% end %>
 			<h3>Policy Detail <%= sync_spinner %></h3>
 		</div>
 	<div data-role="content">
