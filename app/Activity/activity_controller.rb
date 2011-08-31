@@ -156,18 +156,19 @@ class ActivityController < Rho::RhoController
     @opportunity = @activity.opportunity
     @activity_title = @activity_contact.full_name if @activity_contact
     @activity_title += " - #{to_date(@opportunity.createdon)}" if @activity_contact && @opportunity
-    edit_action = "edit_#{@activity.type}".downcase.to_sym
+    edit_action = "edit_#{@activity.type}".downcase
     @cancelAction = case edit_action
-      when 'edit_phonecall'
-        :show_callback
-      when 'edit_appointment'
-        :show_appt
-      else
-        :show_task
+    when 'edit_phonecall'
+      :show_callback
+    when 'edit_appointment'
+      :show_appt
+    else
+      :show_task
     end
     @cancelAction = :show if Rho::NativeTabbar.get_current_tab == 2
+    puts "&&&&&&&&&&&&&&&&&&&&&&& EDIT ACTION: #{edit_action} CANCEL ACTION: #{@cancelAction}"
     Settings.record_activity
-    render :action => edit_action, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+    render :action => edit_action.to_sym, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
   end  
   
   # GET /callback/{1}
