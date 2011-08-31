@@ -5,6 +5,7 @@ document.getElementById('submit_button').focus();
 }
 </script>
 <div data-role="page" data-theme="b" id="appdetail_add_page">
+	<%= offline_bar%>
 	<form method="post" id="appdetail" action="<%= url_for(:action => :create, :query => {:opportunity => @opportunity.object, :origin => @params['origin']})%>" name="app_details_create">
 		<div data-role="header" data-backbtn="false" data-theme="b">
 			<a href="<%= url_for(:controller => :Opportunity, :action => :won, :id => @opportunity.object, :query =>{:opportunity => @opportunity.object, :origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>			

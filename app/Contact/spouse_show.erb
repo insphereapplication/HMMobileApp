@@ -1,4 +1,5 @@
 <div data-role="page" data-theme="b">
+	<%= offline_bar%>
 	<div data-role="header">
 		<a href="<%=url_for(:action=>:show, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-direction="reverse" data-icon="back">Back</a>
 		<h1>Spouse <%= sync_spinner %></h1>

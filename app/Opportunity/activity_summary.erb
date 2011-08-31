@@ -1,4 +1,5 @@
 <div data-role="page" data-theme="b">
+	<%= offline_bar%>
 	<div data-role="header" data-theme="d" data-position="inline">
 		<a href="<%=url_for(:action=>:show, :id => @opportunity.object, :query=>{:origin=>@params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
 		<h1>Activity Summary <%= sync_spinner %></h1>

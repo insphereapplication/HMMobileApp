@@ -1,4 +1,5 @@
 <div data-role="page" data-theme="b">
+	<%= offline_bar%>
 	<div data-role="header">
 		<a href="<%=url_for(:controller=>:Contact, :action=>:show, :id => @dependent.contact.object, :query=>{:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
 		<h1>Dependent Detail <%= sync_spinner %></h1>
