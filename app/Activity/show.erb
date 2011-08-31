@@ -95,6 +95,7 @@
 				<ul data-role="listview" data-filter="false" data-inset="true">
 					<li data-role="list-divider">Policy Info</li>
 					<li>
+						<a href="<%= url_for(:controller => :Policy, :action => :show, :id => @policy.object, :query => {:origin => 'activity', :activity => @activity.object}) %>">
 							<p></p><p>Carrier: <%= @policy.carrier_name %></p>
 							<p>Application Date: <%= to_date(@policy.cssi_applicationdate) %></p>
 							<p>Status: <%= @policy.cssi_statusreason %></p>

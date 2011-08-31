@@ -18,7 +18,7 @@ class PolicyController < Rho::RhoController
     @policy = Policy.find_policy(@params['id'])
     if Settings.pin_confirmed == true && @policy
       @contact = @policy.contact
-      render :action => :show, :back => 'callback:'
+      render :action => :show, :back => 'callback:', :query => {:origin => @params['origin'], :activity => @params['activity']}
     else
       redirect :controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
     end
