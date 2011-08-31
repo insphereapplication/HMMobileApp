@@ -457,9 +457,9 @@ class ActivityController < Rho::RhoController
         puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
         db.rollback
       end
-      unless @params['task_subject'].blank?
-        task = create_new_task(@params['task_subject'],@params['task_due_datetime'],@params['task_priority_checkbox'],opportunity)
-      end  
+      unless @params['task']['subject'].blank?
+        task = create_new_task(@params['task'],opportunity)
+      end
     else
       WebView.navigate(url_for :controller => :Opportunity, :action => :status_update, :id => @params['opportunity_id'], :query => {:origin => @params['origin']})
     end
@@ -505,8 +505,8 @@ class ActivityController < Rho::RhoController
           puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
           db.rollback
         end
-        unless @params['task_subject'].blank?
-          task = create_new_task(@params['task_subject'],@params['task_due_datetime'],@params['task_priority_checkbox'],opportunity)
+        unless @params['task']['subject'].blank?
+          task = create_new_task(@params['task'],opportunity)
         end
   end
 
