@@ -102,6 +102,14 @@ def model_build_yml
   })
 end
 
+def dev_build_yml
+  build_yml.merge({
+    :codesignidentity => '"iPhone Developer: Dave Sims (8A2526Z579)"',
+    :iphone_config => 'Release',
+    :provisionprofile => '57605487-01A2-48E5-93CE-A160E7631951'
+  })
+end
+
 def rhoconfig
   {
     :app_db_version => '4.0',
@@ -122,6 +130,17 @@ def model_rhoconfig
     :quick_quote_url => "https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
     :resource_center_url => "https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx",
     :log_server => 'https://mobileproxy.model.insphereis.net/clientlog'
+  })
+end
+
+def dev_rhoconfig
+  rhoconfig.merge({
+    :min_severity => '1',
+    :max_log_file_size => '2000000',
+    :sync_server => 'https://rhosync.dev.insphereis.net/application', 
+    :quick_quote_url => "https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
+    :resource_center_url => "https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx",
+    :log_server => 'https://devmobileproxy.insphereis.net/clientlog'
   })
 end
 
@@ -163,6 +182,13 @@ namespace :build do
     process_erb(RHO_CONFIG_TEMPLATE_PATH, RHO_CONFIG_PATH, binding)
     log "Successfully generated rhoconfig.txt for Model..."
   end
+
+  task :gen_rhoconfig_dev do
+    @rhoconfig = dev_rhoconfig
+    log "Generating rhoconfig.txt for Dev..."
+    process_erb(RHO_CONFIG_TEMPLATE_PATH, RHO_CONFIG_PATH, binding)
+    log "Successfully generated rhoconfig.txt for Dev..."
+  end
   
   task :gen_build_yml do 
     log "Generating build.yml for Production..."
@@ -177,6 +203,13 @@ namespace :build do
     process_erb(BUILD_YML_TEMPLATE_PATH, BUILD_YML_PATH, binding)
     log "Successfully generated build.yml for Model..."
   end
+
+  task :gen_build_yml_dev do 
+    log "Generating build.yml for Dev..."
+    @build_yml = dev_build_yml
+    process_erb(BUILD_YML_TEMPLATE_PATH, BUILD_YML_PATH, binding)
+    log "Successfully generated build.yml for Dev..."
+  end
   
   task :build_clients do
     log "Building clients for version: #{build_config['version']}"
@@ -190,10 +223,16 @@ namespace :build do
   
   task :copy_model_builds => [:copy_model_iphone_build, :copy_model_android_build] do 
   end
+
+  task :copy_dev_builds => [:copy_dev_iphone_build, :copy_dev_android_build] do 
+  end
   
   task :prep_for_model => [:gen_rhoconfig_model, :gen_build_yml_model, :update_rhodes, 'update_icons:model_uat'] do 
   end
-  
+
+  task :prep_for_dev => [:gen_rhoconfig_dev, :gen_build_yml_dev, :update_rhodes, 'update_icons:integ_dev'] do 
+  end
+
   task :prep_for_prod => [:gen_rhoconfig_prod, :gen_build_yml, :update_rhodes, 'update_icons:prod'] do 
   end
   
@@ -212,6 +251,22 @@ namespace :build do
     raise "Unable to copy model android build" unless system "cp #{android_target_dir}/*.apk #{android_target_dir}/model"
     log "android model build copied to model dir"
   end
+
+  task :copy_dev_iphone_build do
+    ios_target_dir = "#{IOS_BUILD_DIR}/#{build_config['iphone']['sdk']}"
+    log "Copying iphone dev build to dev dir: #{ios_target_dir}/dev"  
+    Dir.mkdir "#{ios_target_dir}/dev" unless File.exists?("#{ios_target_dir}/dev")
+    raise "Unable to copy dev iphone build" unless system "cp -r #{ios_target_dir}/release/* #{ios_target_dir}/dev"
+    log "iphone dev build copied to dev dir"
+  end
+    
+  task :copy_dev_android_build do
+    android_target_dir = "#{ANDROID_BUILD_DIR}"
+    log "Copying android dev build to dev dir: #{android_target_dir}/dev"  
+    Dir.mkdir "#{android_target_dir}/dev" unless File.exists?("#{android_target_dir}/dev")
+    raise "Unable to copy dev android build" unless system "cp #{android_target_dir}/*.apk #{android_target_dir}/dev"
+    log "android dev build copied to dev dir"
+  end
   
   task :prod => [:prep_for_prod] do
     Rake::Task["build:build_clients"].execute
@@ -221,12 +276,25 @@ namespace :build do
     Rake::Task["build:build_clients"].execute 
     Rake::Task["build:copy_model_builds"].invoke
   end
+
+  task :dev => [:prep_for_dev] do
+    Rake::Task["build:build_clients"].execute 
+    Rake::Task["build:copy_dev_builds"].invoke
+  end
   
   task :iphone_model => [:prep_for_model] do
     build_device "iPhone"
   end
   
   task :android_model => [:prep_for_model] do
+    build_device "Android"
+  end
+
+  task :iphone_dev => [:prep_for_dev] do
+    build_device "iPhone"
+  end
+    
+  task :android_dev => [:prep_for_dev] do
     build_device "Android"
   end
   
@@ -239,7 +307,6 @@ namespace :build do
   end
   
   # always build model first, so you don't overwrite the prod build for iphone
-  task :all =>  [:model_uat, :prod] do 
+  task :all =>  [:dev, :model_uat, :prod] do 
   end
 end
-
