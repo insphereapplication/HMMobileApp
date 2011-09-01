@@ -372,4 +372,8 @@ class Activity
       activity.complete if activity
     end
   end
+  
+  def self.is_activity_type?(type)
+    ['phonecall', 'appointment', 'task', 'email'].include?(type.downcase)
+  end
 end
