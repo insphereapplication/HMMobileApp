@@ -129,3 +129,11 @@ function completeSelectedActivities() {
         $.post('/app/Activity/complete_activities_alert');
     }
 }
+
+function onRowClick(e, width, url) {
+    if (e.pageX < width) {
+        $('input', $(e.target).parent()).click();
+    } else {
+        window.open(url);
+    }
+}
