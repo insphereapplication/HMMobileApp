@@ -335,7 +335,7 @@ class SettingsController < Rho::RhoController
   end
   
   def update_last_synced_time
-    Settings.last_synced = Time.now.to_s
+    Settings.last_synced = Time.now
   end
   
   def handle_new_integrated_leads
@@ -398,6 +398,9 @@ class SettingsController < Rho::RhoController
         SyncUtil.start_sync('new_opportunity')
         Settings.new_opportunity_sync_pending = false
       end
+      
+      # store device info
+      DeviceInfo.check_device_information
       
       @on_sync_complete.call
 
@@ -785,6 +788,7 @@ class SettingsController < Rho::RhoController
       puts "*** Client does not need to upgrade *** "
     end
   end
+
   
   def on_dismiss_popup
     id = @params['button_id']
@@ -814,4 +818,7 @@ class SettingsController < Rho::RhoController
     System.open_url(@params['upgrade_url'])
     render :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
   end
+  
+  
+
 end
