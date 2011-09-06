@@ -99,7 +99,7 @@ def model_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Dave Sims (8A2526Z579)"',
     :iphone_config => 'Release',
-    :provisionprofile => '57605487-01A2-48E5-93CE-A160E7631951'
+    :provisionprofile => '67DA87E7-38B6-4075-8B7C-1823C57EFDC3'
   })
 end
 
@@ -107,7 +107,7 @@ def dev_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Dave Sims (8A2526Z579)"',
     :iphone_config => 'Release',
-    :provisionprofile => '57605487-01A2-48E5-93CE-A160E7631951'
+    :provisionprofile => '67DA87E7-38B6-4075-8B7C-1823C57EFDC3'
   })
 end
 
