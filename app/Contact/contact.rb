@@ -119,6 +119,9 @@ class Contact
       union
       select distinct c.contactid, c.* from Contact c, Policy p where c.object = p.contact_id
       #{get_search_sql(terms)}
+      union
+      select distinct c.contactid, c.* from Contact c, Activity a where c.object = a.parent_id
+      #{get_search_sql(terms)}
       order by lastname collate nocase
       #{get_pagination_sql(page, page_size)}
     })
