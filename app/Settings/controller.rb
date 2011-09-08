@@ -199,6 +199,9 @@ class SettingsController < Rho::RhoController
         if ( enter_pin == verify_pin )
           if ( password == Settings.password )
             @msg = nil
+            AppInfo.instance.set_pin(enter_pin)
+            puts "SETTING APP INFO POLICY PIN TO #{enter_pin}"
+            puts "UPDATED PIN IS #{AppInfo.instance.policy_pin}"
             Settings.pin = verify_pin
             Settings.pin_confirmed = false
             @msg =  "Your PIN has been reset."
@@ -228,7 +231,7 @@ class SettingsController < Rho::RhoController
   end
   
   def verify_pin
-    if @params['PIN'] == Settings.pin
+    if @params['PIN'] == AppInfo.instance.policy_pin
       puts @params.inspect
       Settings.pin_last_activity_time = Time.new
       Settings.pin_confirmed = true

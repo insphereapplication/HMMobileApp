@@ -114,7 +114,7 @@ class ContactController < Rho::RhoController
   
   def verify_pin
     @contact= Contact.find(@params['id'])
-    if @params['PIN'] == Settings.pin
+    if @params['PIN'] == AppInfo.instance.policy_pin
       puts @params.inspect
       Settings.pin_last_activity_time = Time.new
       Settings.pin_confirmed = true
