@@ -220,11 +220,9 @@ class ActivityController < Rho::RhoController
     Settings.record_activity
     @callback.update_attributes({
         :scheduledend => DateUtil.date_build(@params['callback_datetime']),
-        :phonenumber => @params['phone_number'] 
+        :phonenumber => @params['phone_number'],
+        :cssi_phonetype => @params['phone_type_selected']
     })
-    if @params['phoneList'] == 'ad-hoc'
-      @callback.update_attributes({:cssi_phonetype => "Ad Hoc"})
-    end
     @opportunity.update_attributes({
       :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }) if @opportunity
