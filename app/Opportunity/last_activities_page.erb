@@ -6,8 +6,10 @@
 	<% end %>
 <% end %>
 <% @page.each do |opportunity| %>
+	<% contact = opportunity.contact %>
 	<%= render :partial =>"opportunity", :locals => { 
 		   	:opportunity => opportunity, 
+			:contact => contact,
 		    :color => 'yellow', 
 		    :top_right_text => opportunity.cssi_statusdetail,
 		    :bottom_right_text => (opportunity.cssi_lastactivitydate.blank? ? "" : "#{DateUtil.days_ago_relative(opportunity.cssi_lastactivitydate)}") ,
@@ -15,6 +17,6 @@
 		    :launcher => :phone_dialog,
 		    :icon => "phoneopp",
 		    :location => "blank"
-	   } if opportunity.contact 
+	   } if contact 
 	%>
 <% end%>

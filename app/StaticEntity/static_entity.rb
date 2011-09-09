@@ -25,4 +25,9 @@ class StaticEntity
     lead_source = StaticEntity.find_by_sql("select * from StaticEntity where type='lead_source'").first
     lead_source_names = lead_source.names.split('||')
   end
+
+  def self.reassign_flag?
+    flag = StaticEntity.find_by_sql("select * from StaticEntity where type='reassign_capability'").first
+    flag.names == 'true'
+  end
 end

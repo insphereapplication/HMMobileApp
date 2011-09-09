@@ -19,8 +19,12 @@
 			location = appointment.location
 		end
 		
+		opportunity = appointment.opportunity 
+		contact = opportunity.contact  if opportunity
+		
 		render :partial =>"opportunity", :back => 'callback:', :locals => { 
-              :opportunity => appointment.opportunity, 
+              :opportunity => opportunity, 
+			  :contact => contact,
               :color => @color, 
               :bottom_right_text => "Due #{DateUtil.days_calc_formatted(scheduledtime)}",
               :top_right_text => to_datetime_noyear(scheduledtime),
@@ -29,7 +33,7 @@
               :icon => icon,
               :location => location,
 			  :reference => "Scheduled"
-		} if appointment.opportunity 
+		} if opportunity && contact
 	 %>
 <% end%>
 

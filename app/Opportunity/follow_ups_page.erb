@@ -3,8 +3,10 @@
 <% end %>
 <% @page.each do |phone_call| %>
 <% opportunity = phone_call.opportunity %>
+    <% contact = opportunity.contact %>
 	<%= render :partial =>"opportunity", :back => 'callback:', :locals => { 
 		   	:opportunity => opportunity, 
+			:contact => contact,
 		    :color => @color, 
 		    :top_right_text => opportunity.cssi_statusdetail,
 		    :bottom_right_text => @date_proc.call(phone_call),
@@ -12,6 +14,6 @@
 		    :launcher => :phone_dialog,
 		    :icon => "phoneopp",
 		    :location => "blank"
-	   } if opportunity.contact 
+	   } if contact 
 	%>
 <% end%>
