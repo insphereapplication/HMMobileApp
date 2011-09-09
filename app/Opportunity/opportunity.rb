@@ -34,7 +34,8 @@ class Opportunity
   property :actualclosedate, :string
   property :opportunityratingcode, :string
   property :status_update_timestamp, :string
-  
+  property :ownerid, :string
+
   index :opportunity_pk_index, [:opportunityid]
   unique_index :unique_opp, [:opportunityid] 
   
