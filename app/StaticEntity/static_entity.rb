@@ -40,4 +40,9 @@ class StaticEntity
     found_agents = get_agents.find_all {|agent| agent['systemuserid'] == systemuserid}
     (found_agents.length > 0) ? found_agents[0] : nil
   end
+
+  def self.system_user_id
+    sys_user = StaticEntity.find_by_sql("select * from StaticEntity where type='systemuserid'").first
+    sys_user.names
+  end
 end
