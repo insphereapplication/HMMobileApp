@@ -65,17 +65,22 @@ class NoteController < Rho::RhoController
   def note_submit
     Settings.record_activity
     opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
-
-    db = ::Rho::RHO.get_src_db('Opportunity')
-    db.start_transaction
-    begin
     
-    opportunity.create_note(@params['notetext'])
-    finished_note_create(opportunity, @params['origin'])
-    db.commit
-    rescue Exception => e
-      puts "Exception in update status call back requested, rolling back: #{e.inspect} -- #{@params.inspect}"
-      db.rollback
+    if opportunity
+    db = ::Rho::RHO.get_src_db('Opportunity')
+      db.start_transaction
+      begin
+    
+      opportunity.create_note(@params['notetext'])
+      finished_note_create(opportunity, @params['origin'])
+      db.commit
+      rescue Exception => e
+        puts "Exception in update status call back requested, rolling back: #{e.inspect} -- #{@params.inspect}"
+        db.rollback
+      end
+    else
+      puts "The opportunity for {@params['opportunity_id'} was deleted before the note could be added"
+      WebView.navigate(url_for :controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite')
     end
   end
   

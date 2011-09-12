@@ -237,8 +237,8 @@ class OpportunityController < Rho::RhoController
     Settings.record_activity
     $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
-    @opportunity.create_note(@params['notes'])
     if @opportunity
+      @opportunity.create_note(@params['notes'])
       render :action => :callback_request, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
       redirect :action => :index, :back => 'callback:'
@@ -305,8 +305,8 @@ class OpportunityController < Rho::RhoController
   def appointment
     $choosed['0'] = ""
     @opportunity = Opportunity.find(@params['id'])
-    @opportunity.create_note(@params['notes'])
     if @opportunity
+      @opportunity.create_note(@params['notes'])
       render :action => :appointment, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
       redirect :action => :index, :back => 'callback:'
@@ -317,8 +317,8 @@ class OpportunityController < Rho::RhoController
     @lost_reasons = Constants::OTHER_LOST_REASONS
     @competitors = Constants::COMPETITORS
     @opportunity = Opportunity.find(@params['id'])
-    @opportunity.create_note(@params['notes'])
     if @opportunity
+      @opportunity.create_note(@params['notes'])
       render :action => :lost_other, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
       redirect :action => :index, :back => 'callback:'
