@@ -1,0 +1,13 @@
+<div data-role="page" data-theme="b">
+    <div data-role="header" data-theme="d" data-position="inline">
+        <h1>Reassign Opportunity</h1>
+    </div>
+    <div data-role="content" align="center" data-theme="c">
+        <p>Are you sure want to reassign</p>
+        <p><strong>Opportunity:</strong>&nbsp;<%=@opportunity_title%></p>
+        <p>to</p>
+        <p><strong>Agent:</strong>&nbsp;<%=@agent_title%>?</p>
+        <a href="<%=@yes_action%>" data-role="button" data-theme="b">Yes</a>       
+        <a href="<%=@cancel_action%>" data-role="button" data-theme="c" data-back="true">Cancel</a>
+    </div>
+</div>

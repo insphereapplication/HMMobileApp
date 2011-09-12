@@ -30,4 +30,14 @@ class StaticEntity
     flag = StaticEntity.find_by_sql("select * from StaticEntity where type='reassign_capability'").first
     flag.names == 'true'
   end
+
+  def self.get_agents
+    agents = StaticEntity.find_by_sql("select * from StaticEntity where type='downline_source'").first
+    Rho::JSON.parse(agents.names)
+  end
+
+  def self.find_agent(systemuserid)
+    found_agents = get_agents.find_all {|agent| agent['systemuserid'] == systemuserid}
+    (found_agents.length > 0) ? found_agents[0] : nil
+  end
 end

@@ -509,7 +509,6 @@ class OpportunityController < Rho::RhoController
     render :action => :new, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
   end
   
-  
   def create
     @contact = Contact.find_contact(@params['id'])
     @opp = Opportunity.create_new(@params['opportunity'])  
@@ -528,5 +527,62 @@ class OpportunityController < Rho::RhoController
              :back => 'callback:',
              :id => @contact.object,
              :query =>{:origin => @params['origin'], :opportunity => @opp.object}
+  end
+
+  def reassign
+    Settings.record_activity
+    opportunity = Opportunity.find_opportunity(@params['id'])
+    if opportunity
+      @opportunity_title = ""
+      @opportunity_title = "#{opportunity.contact.full_name} - " if opportunity.contact
+      @opportunity_title += "#{to_date(opportunity.createdon)}"
+      @cancel_action = url_for :action => :show, :id => opportunity.object,
+                               :query => {:origin => @params['origin']}
+      @form_action = url_for :action => :reassign_confirm, :id => opportunity.object,
+                             :query => {:origin => @params['origin']}
+      agents = StaticEntity.get_agents
+      selected_agent = @params['reassign_to']
+      selected_agent = agents[0]['systemuserid'] if selected_agent.blank? && agents.length > 0
+      @reassign_agent_options = agents.map {|agent|
+        selected = (agent['systemuserid'] == selected_agent) ? 'selected="true"' : ''
+        "<option class=\"ui-btn-text\" #{selected} value=\"#{agent['systemuserid']}\">#{agent['fullname']}</option>"
+      }.join("\n")
+      render :action => :reassign, :back => 'callback:',
+             :layout => 'layout_jquerymobile',
+             :origin => @params['origin']
+    end
+  end
+
+  def reassign_confirm
+    Settings.record_activity
+    opportunity = Opportunity.find_opportunity(@params['id'])
+    agent = StaticEntity.find_agent(@params['reassign_to'])
+    if opportunity && agent
+      @opportunity_title = ""
+      @opportunity_title = "#{opportunity.contact.full_name} - " if opportunity.contact
+      @opportunity_title += "#{to_date(opportunity.createdon)}"
+      @agent_title = agent['fullname']
+      @cancel_action = url_for :action => :reassign, :id => opportunity.object,
+                               :query => {:reassign_to => @params['reassign_to'],
+                                          :origin => @params['origin']}
+      @yes_action = url_for :action => :do_reassign, :id => opportunity.object,
+                            :query => {:reassign_to => @params['reassign_to'],
+                                       :origin => @params['origin']}
+      render :action => :reassign_confirm, :back => 'callback:',
+             :layout => 'layout_jquerymobile',
+             :origin => @params['origin']
+    end
+  end
+
+  def do_reassign
+    Settings.record_activity
+    opportunity = Opportunity.find_opportunity(@params['id'])
+    if opportunity
+      opportunity.update_attributes({
+        :ownerid => @params['reassign_to']
+      })
+      SyncUtil.start_sync
+    end
+    redirect :action => :index, :back => 'callback:'
   end
 end
