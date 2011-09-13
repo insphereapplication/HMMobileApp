@@ -106,7 +106,7 @@ class Opportunity
   
   def self.todays_new_leads(page=nil, page_size=DEFAULT_PAGE_SIZE)
     sql = %Q{
-      #{NEW_LEADS_SQL}
+      #{new_leads_sql}
       #{CREATED_ON_SQL} = #{NOW_SQL}
       #{ORDER_BY_CREATED_ON_DESC_SQL}
       #{get_pagination_sql(page, page_size)}
@@ -117,7 +117,7 @@ class Opportunity
   
   def self.previous_days_leads(page=nil, page_size=DEFAULT_PAGE_SIZE)
     sql = %Q{
-      #{NEW_LEADS_SQL}
+      #{new_leads_sql}
       #{CREATED_ON_SQL} < #{NOW_SQL}
       #{ORDER_BY_CREATED_ON_DESC_SQL}
       #{get_pagination_sql(page, page_size)}
@@ -173,7 +173,8 @@ class Opportunity
     # This query is complex; be sure you know what you are doing before modifying this
     sql = %Q{
       select * from Opportunity o 
-        where o.statecode not in ('Won', 'Lost') 
+        where o.ownerid = '#{StaticEntity.system_user_id}'
+        and o.statecode not in ('Won', 'Lost') 
         and (
           o.statuscode <> 'New Opportunity'
           or exists (

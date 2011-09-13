@@ -320,7 +320,7 @@ class Contact
   end
   
   def opportunities
-    Opportunity.find(:all, :conditions => {"contact_id" => self.object})
+    Opportunity.find(:all, :conditions => {"contact_id" => self.object, "ownerid" => StaticEntity.system_user_id})
   end
   
   def policies
