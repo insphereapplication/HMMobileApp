@@ -389,10 +389,6 @@ class SettingsController < Rho::RhoController
     if status == "complete"
       update_last_synced_time
             
-      if sourcename == 'AppInfo'
-        check_for_upgrade
-      end
-      
       puts "%"*80
       puts "SYNC COMPLETE"
       puts "new opp sync pending: " + Settings.new_opportunity_sync_pending.to_s
@@ -412,6 +408,9 @@ class SettingsController < Rho::RhoController
     elsif status == "ok"
       if sourcename == 'AppInfo'
         check_for_upgrade
+      elsif model_limits_exceeded?(sourcename, @params['total_count'])
+        # model limit exceeded, stop synchronization
+        return
       end
       
       if sourcename == 'Opportunity'
@@ -821,7 +820,19 @@ class SettingsController < Rho::RhoController
     System.open_url(@params['upgrade_url'])
     render :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
   end
-  
-  
 
+  def model_limits_exceeded?(model_name, total_count)
+    puts "*** Checking limits for #{model_name} with #{total_count} total rows ***"
+    result = false
+    max_count = AppInfo.instance.get_model_limits[model_name]
+    if max_count && (total_count.to_i > max_count.to_i)
+      puts "*** Limit #{max_count} exceeded for #{model_name} ***"
+      SyncEngine.set_pollinterval(0)
+      SyncEngine.stop_sync
+      Settings.initial_sync_complete = false
+      goto_login_override_auto("Error message. TODO:")
+      result = true
+    end
+    result
+  end
 end

@@ -35,6 +35,8 @@ class Opportunity
   property :opportunityratingcode, :string
   property :status_update_timestamp, :string
   property :ownerid, :string
+  property :cssi_assigneddate, :string
+  property :cssi_assetownerid, :string
 
   index :opportunity_pk_index, [:opportunityid]
   unique_index :unique_opp, [:opportunityid] 

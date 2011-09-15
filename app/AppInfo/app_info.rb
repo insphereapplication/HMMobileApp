@@ -16,7 +16,9 @@ class AppInfo
   property :android_soft_upgrade_url, :string
   
   property :mobile_crypt_key, :string
-  
+
+  property :model_limits, :string
+
   def self.instance
     AppInfo.find(:all).first
   end
@@ -25,5 +27,8 @@ class AppInfo
     self.update_attributes({"policy_pin" => value})
     SyncEngine.dosync
   end
-  
+
+  def get_model_limits
+    model_limits.blank? ? {} : Rho::JSON.parse(model_limits)
+  end
 end
