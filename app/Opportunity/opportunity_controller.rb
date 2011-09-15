@@ -328,6 +328,7 @@ class OpportunityController < Rho::RhoController
   def won
       @opportunity = Opportunity.find(@params['id'])
       if @opportunity
+        @opportunity.create_note(@params['notes'])
         render :action => :mark_as_won, :back => 'callback:', :layout => 'layout_jquerymobile'
       else
         redirect :action => :index, :back => 'callback:'
