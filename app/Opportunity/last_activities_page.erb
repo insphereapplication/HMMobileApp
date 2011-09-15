@@ -8,15 +8,16 @@
 <% @page.each do |opportunity| %>
 	<% contact = opportunity.contact %>
 	<%= render :partial =>"opportunity", :locals => { 
-		   	:opportunity => opportunity, 
-			:contact => contact,
-		    :color => 'yellow', 
-		    :top_right_text => opportunity.cssi_statusdetail,
-		    :bottom_right_text => (opportunity.cssi_lastactivitydate.blank? ? "" : "#{DateUtil.days_ago_relative(opportunity.cssi_lastactivitydate)}") ,
-		    :origin => "follow-ups",
-		    :launcher => :phone_dialog,
-		    :icon => "phoneopp",
-		    :location => "blank"
-	   } if contact 
+	        :opportunity => opportunity, 
+	        :contact => contact,
+	        :color => 'yellow', 
+	        :top_right_text => opportunity.cssi_statusdetail,
+	        :bottom_right_text => (opportunity.cssi_lastactivitydate.blank? ? "" : "#{DateUtil.days_ago_relative(opportunity.cssi_lastactivitydate)}"),
+	        :origin => "follow-ups",
+	        :launcher => :phone_dialog,
+	        :icon => "phoneopp",
+	        :location => "blank",
+                :show_icon => @self_id == opportunity.cssi_assetownerid
+	    } if contact 
 	%>
 <% end%>

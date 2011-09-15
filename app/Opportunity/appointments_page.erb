@@ -23,16 +23,17 @@
 		contact = opportunity.contact  if opportunity
 		
 		render :partial =>"opportunity", :back => 'callback:', :locals => { 
-              :opportunity => opportunity, 
-			  :contact => contact,
-              :color => @color, 
-              :bottom_right_text => "Due #{DateUtil.days_calc_formatted(scheduledtime)}",
-              :top_right_text => to_datetime_noyear(scheduledtime),
-              :origin => "appointments",
-              :launcher => launcher,
-              :icon => icon,
-              :location => location,
-			  :reference => "Scheduled"
+                    :opportunity => opportunity, 
+                    :contact => contact,
+                    :color => @color, 
+                    :bottom_right_text => "Due #{DateUtil.days_calc_formatted(scheduledtime)}",
+                    :top_right_text => to_datetime_noyear(scheduledtime),
+                    :origin => "appointments",
+                    :launcher => launcher,
+                    :icon => icon,
+                    :location => location,
+                    :reference => "Scheduled",
+                    :show_icon => @self_id == opportunity.cssi_assetownerid
 		} if opportunity && contact
 	 %>
 <% end%>
