@@ -241,7 +241,8 @@ class Activity
   def complete
     attrs = {
       :statuscode => 'Completed',
-      :statecode => 'Completed'
+      :statecode => 'Completed',
+      :actualend => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }
     attrs[:cssi_disposition] = 'Appointment Held' if type == 'Appointment'
     attrs[:statuscode] = 'Made' if type == 'PhoneCall'
