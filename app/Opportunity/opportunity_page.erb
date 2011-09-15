@@ -12,8 +12,8 @@
 			:origin => "new-leads",
 			:launcher => :phone_dialog,
 			:icon => "phoneopp",
-			:location => "blank"
+			:location => "blank",
+                        :show_icon => @self_id == opportunity.cssi_assetownerid
 		} if contact
 	 %>
 <% end%>
-

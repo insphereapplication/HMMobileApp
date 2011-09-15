@@ -116,6 +116,7 @@ class OpportunityController < Rho::RhoController
     @color = color
     @label = text
     @page = opportunities
+    @self_id = StaticEntity.system_user_id
     render :action => :opportunity_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
@@ -137,6 +138,7 @@ class OpportunityController < Rho::RhoController
     $follow_ups_nav_context += opportunities.map{|opp| opp.object }
     
     @page = opportunities
+    @self_id = StaticEntity.system_user_id
     render :action => :last_activities_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
   
@@ -152,6 +154,7 @@ class OpportunityController < Rho::RhoController
     @color = color
     @label = label
     @page = appointments
+    @self_id = StaticEntity.system_user_id
     
     render :action => :appointments_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
