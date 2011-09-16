@@ -4,7 +4,7 @@
             <input type="checkbox" class="task-checkbox" style="top: 25px; left: 3px;" <%='checked="checked" disabled="disabled"' if completed%>/>
         </div>
     </div>
-    <div onclick="window.open('<%=show_detail_url%>')" class="ui-btn-inner" style="padding-top: 6px; padding-bottom: 6px;">
+    <div onclick="onRowClick(event, 20, '<%=show_detail_url%>')" class="ui-btn-inner" style="padding-top: 6px; padding-bottom: 6px;">
         <div class="ui-btn-text">
             <a href="#" class="no-top-padding ui-link-inherit">
                 <h4 style="margin-top: 0px; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">

@@ -63,6 +63,10 @@
 	$(document).ready(function() {
 		// add the selected style to the selected tab button
 		$('a#<%= @params['selected_tab'] %>-button').addClass('ui-btn-active');
+		
+		// disable the filter buttons while page is loading
+		disableFilters('follow-ups');
+		disableFilters('scheduled');
 				
 		loadNewLeads(); 
 		loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val() );
@@ -121,6 +125,10 @@
 		
 		refreshFollowupFilterSummary();
 		refreshAppointmentFilterSummary();
+		
+		// enable the filter buttons after page is loaded
+		disableFilters('follow-ups');
+		disableFilters('scheduled');
 	});
 
 	var tempDate = new Date();

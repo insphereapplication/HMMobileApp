@@ -42,6 +42,19 @@ module SQLHelper
     def get_pagination_sql(page, page_size=DEFAULT_PAGE_SIZE) 
       "limit #{page_size} offset #{page.to_i * page_size.to_i}" if page
     end
+
+    def new_leads_sql
+      %Q{
+        select *
+        from Opportunity o
+        where o.ownerid = '#{StaticEntity.system_user_id}'
+            and o.statuscode='New Opportunity'
+            and not exists (select a.object from Activity a
+                            where parent_type='Opportunity'
+                                and parent_id=o.object
+                                and a.type <> 'Email')
+      }
+    end
   end
   
   SELECT_EMAILS_SQL = %Q{
@@ -54,6 +67,13 @@ module SQLHelper
     FROM Opportunity
     WHERE cssi_inputsource='Integrated'
     ORDER BY createdon DESC
+    LIMIT 1
+  }
+  
+  LATEST_ASSIGNED_LEAD = %Q{
+    SELECT cssi_assigneddate, createdon
+    FROM Opportunity
+    ORDER BY cssi_assigneddate DESC
     LIMIT 1
   }
   
@@ -104,12 +124,6 @@ module SQLHelper
   ORDER_BY_CREATED_ON_DESC_SQL = "order by datetime(o.createdon) desc"
   
   SELECT_FIRST_PER_OPPORTUNITY_SQL = "group by o.object order by datetime(a.scheduledend)"
-  
-  NEW_LEADS_SQL = "select * from Opportunity o where o.statuscode='New Opportunity' and not exists ( select a.object from Activity a 
-                                                                                                     where parent_type='Opportunity' and 
-                                                                                                     parent_id=o.object and a.type <> 'Email')"
-
-
 end
 
 module DateUtil

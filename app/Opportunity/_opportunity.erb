@@ -1,11 +1,15 @@
-<% contact = opportunity.contact %>
 <li role="option" tabindex="0" data-theme="c" class="opportunity-item ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-btn-up-c">
 	<a class="ui-li-sidebar-<%=color%> ui-btn-up-c"> </a> 
 	<div class="ui-btn-inner" onclick="window.open('<%= url_for(:action => :show, :id => opportunity.object, :query => {:origin => origin}) %>')">
 		<div class="ui-btn-text">
-			<p class="ui-li-aside ui-li-desc"><strong><%= top_right_text %></strong></p>
-			<h3 class="ui-li-heading">
-				<a href="<%= url_for(:action => :show, :id => opportunity.object, :query => {:origin => origin}) %>" class="ui-link-inherit ui-block-a"><%= contact.full_name %></a>
+			<h3 class="ui-li-heading" style="margin-top: 0px !important;">
+				<p class="ui-li-aside ui-li-desc"><strong><%= top_right_text %></strong></p>
+				<a href="<%= url_for(:action => :show, :id => opportunity.object, :query => {:origin => origin}) %>" class="ui-link-inherit ui-block-a">
+                                    <% if show_icon %>
+                                        <img src="/public/images/self_lead_icon.png"/>
+                                    <% end %>
+                                    <%= contact.full_name %>
+                                </a>
 			</h3>
 			<p class="ui-li-desc"></p>
 			<div class="ui-grid-a ui-li-desc">

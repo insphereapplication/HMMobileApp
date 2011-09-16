@@ -81,7 +81,7 @@
 			<% end %>
 		<% if @policy %>			
 	
-			<% if Settings.pin == "" %>
+			<% if !AppInfo.instance.policy_pin %>
 	
 				<ul data-role="none" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-filter="false" data-inset="true">
 					<li class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">Policy Info</li>
@@ -110,7 +110,7 @@
 						<li class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">Policy Info</li>
 						<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom">
 							<label class="fieldLabel ui-input-text" for="PIN" class="fieldLabel">Please Enter PIN:</label>
-							<input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-b" maxlength="4" type="password" id="PIN" name="PIN" value=""/>
+							<input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-b" maxlength="4" type="tel" onkeypress="this.type='password';" id="PIN" name="PIN" value=""/>
 							<fieldset class="ui-grid-a">
 								<div class="ui-block-a"><input type="submit" class="standardButton" data-theme="b" value="Submit"/></div>	
 								<div class="ui-block-b"><a type="button"  data-theme="b" value="Reset PIN" href="<%= url_for(:controller => :Settings, :action => :pin, :query => {:origin => @params['origin'], :activity => @activity.object}) %>">Reset PIN</a></div>

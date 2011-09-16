@@ -33,7 +33,7 @@ class AppApplication < Rho::RhoApplication
       # For example, WebView.refresh
   
       # poll once an hour on android devices when the app is backgrounded
-      SyncEngine.set_pollinterval(3600) if System::get_property('platform') == 'ANDROID'
+      SyncEngine.set_pollinterval(0) if System::get_property('platform') == 'ANDROID'
   
       # To stop local web server when application switched to 
       # background return "stop_local_server"

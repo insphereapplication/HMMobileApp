@@ -34,7 +34,10 @@ class Opportunity
   property :actualclosedate, :string
   property :opportunityratingcode, :string
   property :status_update_timestamp, :string
-  
+  property :ownerid, :string
+  property :cssi_assigneddate, :string
+  property :cssi_assetownerid, :string
+
   index :opportunity_pk_index, [:opportunityid]
   unique_index :unique_opp, [:opportunityid] 
   
@@ -99,13 +102,18 @@ class Opportunity
     find_by_sql(LATEST_INTEGRATED_LEAD)
   end
   
+  def self.latest_assigned_lead
+    find_by_sql(LATEST_ASSIGNED_LEAD).first
+  end
+    
+  
   def self.open_opportunities
     find(:all, :conditions => "statecode not in ('Won', 'Lost')")
   end
   
   def self.todays_new_leads(page=nil, page_size=DEFAULT_PAGE_SIZE)
     sql = %Q{
-      #{NEW_LEADS_SQL}
+      #{new_leads_sql}
       #{CREATED_ON_SQL} = #{NOW_SQL}
       #{ORDER_BY_CREATED_ON_DESC_SQL}
       #{get_pagination_sql(page, page_size)}
@@ -116,7 +124,7 @@ class Opportunity
   
   def self.previous_days_leads(page=nil, page_size=DEFAULT_PAGE_SIZE)
     sql = %Q{
-      #{NEW_LEADS_SQL}
+      #{new_leads_sql}
       #{CREATED_ON_SQL} < #{NOW_SQL}
       #{ORDER_BY_CREATED_ON_DESC_SQL}
       #{get_pagination_sql(page, page_size)}
@@ -172,7 +180,8 @@ class Opportunity
     # This query is complex; be sure you know what you are doing before modifying this
     sql = %Q{
       select * from Opportunity o 
-        where o.statecode not in ('Won', 'Lost') 
+        where o.ownerid = '#{StaticEntity.system_user_id}'
+        and o.statecode not in ('Won', 'Lost') 
         and (
           o.statuscode <> 'New Opportunity'
           or exists (

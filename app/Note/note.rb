@@ -18,18 +18,22 @@ class Note
    
   def parent
     if self.parent_type && self.parent_id
-      rhodes_parent_type = ['phonecall', 'appointment'].include?(self.parent_type.downcase) ? "Activity" : self.parent_type.capitalize
+      rhodes_parent_type = parent_is_activity? ? "Activity" : self.parent_type.capitalize
       parent = Object.const_get(rhodes_parent_type) 
       parent.send("find_#{rhodes_parent_type.downcase}", self.parent_id)
     end
+  end
+  
+  def parent_is_activity?
+    Activity.is_activity_type?(self.parent_type)
   end
   
   def opportunity
     parent if parent && parent_type.downcase == "opportunity"
   end
   
-  def phone_call
-    parent if parent && parent_type.downcase == "phonecall"
+  def activity
+    parent if parent_is_activity?
   end
   
   def self.find_note(id)
@@ -77,7 +81,7 @@ class Note
   end
   
   def parent_opportunity
-    phone_call ? phone_call.opportunity : opportunity
+    activity ? activity.opportunity : opportunity
   end
 
 end

@@ -226,7 +226,7 @@ class Activity
     
     sql = %Q{
         #{SELECT_SCHEDULED_NO_WHERE_SQL} #{type_where_clause} and
-        (c.contactid=o.contact_id) and
+        (c.object=o.contact_id) and
         #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
         #{SCHEDULED_TIME_SQL} #{time_compare} #{NOW_SQL} and
         #{SCHEDULED_OPEN_SQL}
@@ -241,7 +241,8 @@ class Activity
   def complete
     attrs = {
       :statuscode => 'Completed',
-      :statecode => 'Completed'
+      :statecode => 'Completed',
+      :actualend => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }
     attrs[:cssi_disposition] = 'Appointment Held' if type == 'Appointment'
     attrs[:statuscode] = 'Made' if type == 'PhoneCall'
@@ -371,5 +372,9 @@ class Activity
       activity = self.find_activity(activity_id)
       activity.complete if activity
     end
+  end
+  
+  def self.is_activity_type?(type)
+    ['phonecall', 'appointment', 'task', 'email'].include?(type.downcase)
   end
 end

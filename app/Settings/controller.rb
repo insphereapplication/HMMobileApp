@@ -110,7 +110,7 @@ class SettingsController < Rho::RhoController
       end
       
       if httpErrCode == "403" # User is not authorized to use the mobile device, so we need to purge the local database
-        @msg ||= "Sorry! The Insphere InSIte Mobile application is only available for download for authorized pilot users.  More to come regarding the Insphere InSite Mobile Program and roll-out schedule in July."
+        @msg ||= "Sorry! You are not eligible to use the mobile app. Please contact support at InSiteMobile@InsphereIS.com"
         Rhom::Rhom.database_fullclient_reset_and_logout
       elsif errCode == Rho::RhoError::ERR_NETWORK
         @msg ||= "Can't connect to the network. Please try again."
@@ -199,6 +199,9 @@ class SettingsController < Rho::RhoController
         if ( enter_pin == verify_pin )
           if ( password == Settings.password )
             @msg = nil
+            AppInfo.instance.set_pin(enter_pin)
+            puts "SETTING APP INFO POLICY PIN TO #{enter_pin}"
+            puts "UPDATED PIN IS #{AppInfo.instance.policy_pin}"
             Settings.pin = verify_pin
             Settings.pin_confirmed = false
             @msg =  "Your PIN has been reset."
@@ -228,7 +231,7 @@ class SettingsController < Rho::RhoController
   end
   
   def verify_pin
-    if @params['PIN'] == Settings.pin
+    if @params['PIN'] == AppInfo.instance.policy_pin
       puts @params.inspect
       Settings.pin_last_activity_time = Time.new
       Settings.pin_confirmed = true
@@ -334,18 +337,43 @@ class SettingsController < Rho::RhoController
     end
   end
   
+  def set_last_assigned_lead
+    Settings.last_assigned_lead = Opportunity.latest_assigned_lead.cssi_assigneddate
+  end
+  
   def update_last_synced_time
-    Settings.last_synced = Time.now.to_s
+    Settings.last_synced = Time.now
   end
   
   def handle_new_integrated_leads
-    former_last_lead = Settings.last_integrated_lead
-    set_last_integrated_lead
-    current_last_lead = Settings.last_integrated_lead
-    if Time.parse(current_last_lead)  > Time.parse(former_last_lead)
-      puts "NEW LEAD CREATED AT #{current_last_lead}"
-      new_leads_alert
+    if new_assigned_leads?
+      set_last_integrated_lead
+      reassigned_leads_alert
+    else
+      former_last_lead = Settings.last_integrated_lead
+      set_last_integrated_lead
+      current_last_lead = Settings.last_integrated_lead
+      if Time.parse(current_last_lead)  > Time.parse(former_last_lead)
+        puts "NEW LEAD CREATED AT #{current_last_lead}"
+        new_leads_alert
+      end
     end
+  end
+  
+  def new_assigned_leads?
+    former_assigned_lead = Settings.last_assigned_lead
+    puts "former_assigned_lead is: #{former_assigned_lead}"
+    set_last_assigned_lead
+    current_assigned_lead = Settings.last_assigned_lead
+    (created_today?) && (Time.parse(current_assigned_lead) > Time.parse(former_assigned_lead))
+  end
+  
+  def created_today?
+    puts "TIME.NOW IS: #{Time.now}"
+    puts "CREATED ON IS: #{Time.parse(Opportunity.latest_assigned_lead.createdon)}"
+    hours = (Time.now - Time.parse(Opportunity.latest_assigned_lead.createdon))/3600
+    puts "THE HOURS DIFFERENCE IS #{hours}"
+    hours <= 24
   end
   
   def new_leads_alert 
@@ -353,6 +381,17 @@ class SettingsController < Rho::RhoController
       Alert.show_popup({
         :title => 'View New Leads?',
         :message => "New lead(s) have been synced.\nWould you like to view them?", 
+        :buttons => ["Cancel", "View"],
+        :callback => url_for(:action => :on_dismiss_new_opportunity_popup, :back => 'callback:') 
+      })
+    end
+  end
+  
+  def reassigned_leads_alert
+    if Settings.has_verified_credentials?
+      Alert.show_popup({
+        :title => 'Reassigned Opportunities',
+        :message => "You have been assigned opportunities.\nWould you like to view them?", 
         :buttons => ["Cancel", "View"],
         :callback => url_for(:action => :on_dismiss_new_opportunity_popup, :back => 'callback:') 
       })
@@ -386,10 +425,6 @@ class SettingsController < Rho::RhoController
     if status == "complete"
       update_last_synced_time
             
-      if sourcename == 'AppInfo'
-        check_for_upgrade
-      end
-      
       puts "%"*80
       puts "SYNC COMPLETE"
       puts "new opp sync pending: " + Settings.new_opportunity_sync_pending.to_s
@@ -399,6 +434,9 @@ class SettingsController < Rho::RhoController
         Settings.new_opportunity_sync_pending = false
       end
       
+      # store device info
+      DeviceInfo.check_device_information
+      
       @on_sync_complete.call
 
       #if latest integrated lead createdon is greater than before sync, display popup alert
@@ -406,6 +444,9 @@ class SettingsController < Rho::RhoController
     elsif status == "ok"
       if sourcename == 'AppInfo'
         check_for_upgrade
+      elsif model_limits_exceeded?(sourcename, @params['total_count'])
+        # model limit exceeded, stop synchronization
+        return
       end
       
       if sourcename == 'Opportunity'
@@ -785,6 +826,7 @@ class SettingsController < Rho::RhoController
       puts "*** Client does not need to upgrade *** "
     end
   end
+
   
   def on_dismiss_popup
     id = @params['button_id']
@@ -813,5 +855,20 @@ class SettingsController < Rho::RhoController
   def launch_upgrade_site 
     System.open_url(@params['upgrade_url'])
     render :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+  end
+
+  def model_limits_exceeded?(model_name, total_count)
+    puts "*** Checking limits for #{model_name} with #{total_count} total rows ***"
+    result = false
+    max_count = AppInfo.instance.get_model_limits[model_name]
+    if max_count && (total_count.to_i > max_count.to_i)
+      puts "*** Limit #{max_count} exceeded for #{model_name} ***"
+      SyncEngine.set_pollinterval(0)
+      SyncEngine.stop_sync
+      Settings.initial_sync_complete = false
+      goto_login_override_auto("The maximum number of #{model_name} records that can be synced to InSite Mobile is #{max_count}. Currently you have #{total_count} record(s). Please reduce this number using the Activity Center and try again. If you have questions, please contact us at InSiteMobile@InsphereIS.com")
+      result = true
+    end
+    result
   end
 end
