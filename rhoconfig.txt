@@ -1,6 +1,6 @@
 start_path = '/app/Settings/init'
 options_path = '/app/Settings'
-app_db_version = 3.0
+app_db_version = 7.0
 
 MinSeverity  = 5
 LogToOutput = 1
