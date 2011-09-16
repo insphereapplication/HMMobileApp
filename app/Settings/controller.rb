@@ -830,7 +830,7 @@ class SettingsController < Rho::RhoController
       SyncEngine.set_pollinterval(0)
       SyncEngine.stop_sync
       Settings.initial_sync_complete = false
-      goto_login_override_auto("Error message. TODO:")
+      goto_login_override_auto("The maximum number of #{model_name} records that can be synced to InSite Mobile is #{max_count}. Currently you have #{total_count} record(s). Please reduce this number using the Activity Center and try again. If you have questions, please contact us at InSiteMobile@InsphereIS.com")
       result = true
     end
     result
