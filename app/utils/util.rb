@@ -70,6 +70,13 @@ module SQLHelper
     LIMIT 1
   }
   
+  LATEST_ASSIGNED_LEAD = %Q{
+    SELECT cssi_assigneddate, createdon
+    FROM Opportunity
+    ORDER BY cssi_assigneddate DESC
+    LIMIT 1
+  }
+  
   OPEN_STATE_CODES = ['Open', 'Scheduled']
     
   SELECT_OPEN_PHONE_CALL_SQL = %Q{

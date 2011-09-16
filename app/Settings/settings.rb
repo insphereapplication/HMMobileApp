@@ -217,5 +217,13 @@ class Settings
       instance.save
     end
     
+    def last_assigned_lead
+      instance.last_assigned_lead || ''
+    end
+    
+    def last_assigned_lead=(value)
+      instance.last_assigned_lead=value
+      instance.save
+    end
   end
 end

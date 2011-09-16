@@ -102,6 +102,11 @@ class Opportunity
     find_by_sql(LATEST_INTEGRATED_LEAD)
   end
   
+  def self.latest_assigned_lead
+    find_by_sql(LATEST_ASSIGNED_LEAD).first
+  end
+    
+  
   def self.open_opportunities
     find(:all, :conditions => "statecode not in ('Won', 'Lost')")
   end
