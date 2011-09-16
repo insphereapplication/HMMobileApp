@@ -110,7 +110,7 @@ class SettingsController < Rho::RhoController
       end
       
       if httpErrCode == "403" # User is not authorized to use the mobile device, so we need to purge the local database
-        @msg ||= "Sorry! The Insphere InSIte Mobile application is only available for download for authorized pilot users.  More to come regarding the Insphere InSite Mobile Program and roll-out schedule in July."
+        @msg ||= "Sorry! You are not eligible to use the mobile app. Please contact support at InSiteMobile@InsphereIS.com"
         Rhom::Rhom.database_fullclient_reset_and_logout
       elsif errCode == Rho::RhoError::ERR_NETWORK
         @msg ||= "Can't connect to the network. Please try again."
@@ -866,7 +866,7 @@ class SettingsController < Rho::RhoController
       SyncEngine.set_pollinterval(0)
       SyncEngine.stop_sync
       Settings.initial_sync_complete = false
-      goto_login_override_auto("Error message. TODO:")
+      goto_login_override_auto("The maximum number of #{model_name} records that can be synced to InSite Mobile is #{max_count}. Currently you have #{total_count} record(s). Please reduce this number using the Activity Center and try again. If you have questions, please contact us at InSiteMobile@InsphereIS.com")
       result = true
     end
     result
