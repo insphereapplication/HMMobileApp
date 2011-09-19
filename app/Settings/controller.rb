@@ -8,7 +8,9 @@ require 'helpers/crypto'
 class SettingsController < Rho::RhoController
   $prompted_for_upgrade = false
   include BrowserHelper
-  
+
+  ERR_403_MESSAGE = "Sorry! You are not eligible to use the mobile app. Please contact support at InSiteMobile@InsphereIS.com"
+
   def index
     $tab = 2
     @msg = @params['msg']
@@ -110,7 +112,7 @@ class SettingsController < Rho::RhoController
       end
       
       if httpErrCode == "403" # User is not authorized to use the mobile device, so we need to purge the local database
-        @msg ||= "Sorry! You are not eligible to use the mobile app. Please contact support at InSiteMobile@InsphereIS.com"
+        @msg ||= ERR_403_MESSAGE
         Rhom::Rhom.database_fullclient_reset_and_logout
       elsif errCode == Rho::RhoError::ERR_NETWORK
         @msg ||= "Can't connect to the network. Please try again."
@@ -144,7 +146,7 @@ class SettingsController < Rho::RhoController
       end
       
       if httpErrCode == "403" # User is not authorized to use the mobile device, so we need to purge the local database
-        @msg ||= "Sorry! The Insphere InSite Mobile application is only available for download for authorized pilot users.  More to come regarding the Insphere InSite Mobile Program and roll-out schedule in July."
+        @msg ||= ERR_403_MESSAGE
         Rhom::Rhom.database_fullclient_reset_and_logout
       else
         @msg ||= "The user name or password you entered is not valid"    
@@ -534,7 +536,7 @@ class SettingsController < Rho::RhoController
         
         full_reset_logout
         
-        msg = "Sorry! The Insphere InSite Mobile application is only available for download for authorized pilot users.  More to come regarding the Insphere InSite Mobile Program and roll-out schedule in July."
+        msg = ERR_403_MESSAGE
         goto_login(msg)
       elsif is_bad_request_data
         log_error("Bad request data","Bad request data, client sent invalid data to CRM proxy, proxy returned 406. Error params: #{@params.inspect}")
