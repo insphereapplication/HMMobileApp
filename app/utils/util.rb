@@ -52,7 +52,7 @@ module SQLHelper
             and not exists (select a.object from Activity a
                             where parent_type='Opportunity'
                                 and parent_id=o.object
-                                and a.type <> 'Email')
+                                and a.type in ('PhoneCall','Appointment'))
       }
     end
   end
