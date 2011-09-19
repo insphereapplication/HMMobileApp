@@ -188,7 +188,7 @@ class Opportunity
             select a1.object from Activity a1 where 
             a1.parent_type='Opportunity' and 
             a1.parent_id=o.object and 
-            a1.type <> 'Email' and
+            a1.type in ('PhoneCall','Appointment') and
             (a1.statecode not in ('Open', 'Scheduled') or a1.scheduledend = '' or a1.scheduledend is null)
           )
         )
@@ -196,7 +196,7 @@ class Opportunity
           select a2.object from Activity a2 where
           a2.parent_type='Opportunity' and 
           a2.parent_id=o.object and
-          a2.type <> 'Email' and
+          a2.type in ('PhoneCall','Appointment') and
           (a2.statecode in ('Open', 'Scheduled') and a2.scheduledend is not null and a2.scheduledend <> '')
         )
         #{statusReasonWhereClause}
