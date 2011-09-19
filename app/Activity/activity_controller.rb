@@ -100,7 +100,7 @@ class ActivityController < Rho::RhoController
       :show_detail_url => details,
       :completed => activity.statecode == 'Completed',
       :show_icon => is_priority,
-      :top_text => activity.subject,
+      :top_text => activity.subject.blank? ? "&nbsp;" : activity.subject,
       :bottom_left_text => left_text,
       :bottom_right_text => right_text,
       :href_text => href,
