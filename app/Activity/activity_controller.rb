@@ -32,10 +32,13 @@ class ActivityController < Rho::RhoController
     render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
 
-  def refresh_if_changed
-    if Activity.local_changed?
+  $first_render = true
+
+  def show_all_activities
+    if Activity.local_changed? || $first_render
       Activity.local_changed = false
-      WebView.navigate ( url_for :action => :index )
+      $first_render = false
+      WebView.navigate(url_for(:controller => :Activity, :action => :index), Constants::TAB_INDEX['Activities'])
     end
   end
 
