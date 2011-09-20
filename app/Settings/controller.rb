@@ -457,10 +457,7 @@ class SettingsController < Rho::RhoController
       
       if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
         klass = Object.const_get(@params['source_name'])
-        if (klass && klass.respond_to?(:local_changed=))
-          klass.local_changed=true
-          puts "#{sourcename} model has been changed"
-        end
+        klass.local_changed=true if klass && klass.respond_to?(:local_changed=)
       end
       
       @on_sync_ok.call
