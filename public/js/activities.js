@@ -1,5 +1,9 @@
 var activity_filter_enabled = false;
 
+function checkForActivityChanges() {
+    $.post('/app/Activity/refresh_if_changed');
+}
+
 function loadAllActivities() {
     var filter = getActivitiesFilter();
     $('#activity_filter_details').html('Filter: ' + filter.type + ', ' + filter.status + ', ' + filter.priority);

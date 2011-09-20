@@ -31,7 +31,14 @@ class ActivityController < Rho::RhoController
     ], selected)
     render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
-  
+
+  def refresh_if_changed
+    if Activity.local_changed?
+      Activity.local_changed = false
+      WebView.navigate ( url_for :action => :index )
+    end
+  end
+
   def show
     @activity = Activity.find_activity(@params['id'])
     @parent_contact = @activity.parent_contact

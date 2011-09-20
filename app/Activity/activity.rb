@@ -1,5 +1,6 @@
 class Activity
   include Rhom::FixedSchema
+  include ChangedFlag
   include SQLHelper
   
   property :statecode, :string
