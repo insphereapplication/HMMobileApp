@@ -68,6 +68,7 @@ class Opportunity
     opp.update_attributes( :opportunityratingcode => 'Warm')
     opp.update_attributes( :createdon => Time.now.strftime("%Y-%m-%d %H:%M:%S"))   
     opp.update_attributes( :cssi_inputsource => 'Manual')
+    opp.update_attributes( :ownerid => StaticEntity.system_user_id)  
     opp 
   end
   
