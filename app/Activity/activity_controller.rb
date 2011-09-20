@@ -84,12 +84,12 @@ class ActivityController < Rho::RhoController
     details = url_for(:action => :show, :id => activity.object)
     href = nil
     is_phone = activity.type == 'PhoneCall'
+    if (activity.open?)
+      opp = activity.opportunity
+      details = url_for(:action => :opportunity_details, :id => opp.object) if opp && !opp.closed?
+    end
     if (is_phone)
       href = activity.phonenumber.blank? ? "#" : "tel:#{activity.phonenumber}"
-      if (activity.open?)
-        opp = activity.opportunity
-        details = url_for(:action => :opportunity_details, :id => opp.object) if opp && !opp.closed?
-      end
     elsif (activity.type == 'Appointment')
       href = activity.location.blank? ? "#" :
                System::get_property('platform') == 'APPLE' ? "maps:q=#{Rho::RhoSupport.url_encode(activity.location)}" :
