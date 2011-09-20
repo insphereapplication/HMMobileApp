@@ -34,7 +34,8 @@
 
 quick_task_validation = {'task[subject]' : {	
    required: function(element) {
-	         return $("#task[high_priority_checkbox]:checked") || $("#task[due_datetime]:filled") ;
+			  var a = $("#task_due_datetime").val();
+	          return $("#task_priority_checkbox:checked").val() == 'on' || $("#task_due_datetime").val() != "" ;
 	      }
 		
 	}
