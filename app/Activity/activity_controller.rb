@@ -94,7 +94,7 @@ class ActivityController < Rho::RhoController
     details = url_for(:action => :show, :id => activity.object)
     href = nil
     is_phone = activity.type == 'PhoneCall'
-    if (activity.open?)
+    if (activity.open? && (activity.type=='Appointment' || activity.type=='PhoneCall'))
       opp = activity.opportunity
       details = url_for(:action => :opportunity_details, :id => opp.object) if opp && !opp.closed?
     end
