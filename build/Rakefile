@@ -83,11 +83,11 @@ def build_yml
     :sdk_path => "/Library/ParivedaInsite/rhodes",
     :sdk_version => "2.3.0",
     :build_type => "release",
-    :android_password => "5zW8e3ZuS7DWY0TsnCTyyWnpGSDUqUgj",
-    :android_push_send => "insphereapplication@insphereis.com",
-    :android_sdk_version => "2.2",
     :android_cert_path => "#{APP_PATH}/insphere_insite.keystore",
-    :android_push_sender => "push_sender",
+    :android_cert_password => "5zW8e3ZuS7DWY0TsnCTyyWnpGSDUqUgj",
+    :android_cert_alias => "Insite",
+    :android_push_sender => "insphereapplication@insphereis.com",
+    :android_sdk_version => "2.2",
     :encrypt_database => '1',
     :bundle_identifier => "com.insphere.insite",
     :bundle_url_scheme => 'insite',
@@ -113,7 +113,7 @@ end
 
 def rhoconfig
   {
-    :app_db_version => '4.0',
+    :app_db_version => '5.0', #This was last upticked after the 3.0.15 drop on 9/19/11
     :min_severity => '5',
     :max_log_file_size => '1000000',
     :sync_server => 'https://rhosync.insphereis.net/application',    

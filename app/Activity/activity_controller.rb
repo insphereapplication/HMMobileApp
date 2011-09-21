@@ -31,7 +31,17 @@ class ActivityController < Rho::RhoController
     ], selected)
     render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
-  
+
+  $first_render = true
+
+  def show_all_activities
+    if Activity.local_changed? || $first_render
+      Activity.local_changed = false
+      $first_render = false
+      WebView.navigate(url_for(:controller => :Activity, :action => :index), Constants::TAB_INDEX['Activities'])
+    end
+  end
+
   def show
     @activity = Activity.find_activity(@params['id'])
     @parent_contact = @activity.parent_contact
@@ -84,12 +94,12 @@ class ActivityController < Rho::RhoController
     details = url_for(:action => :show, :id => activity.object)
     href = nil
     is_phone = activity.type == 'PhoneCall'
+    if (activity.open?)
+      opp = activity.opportunity
+      details = url_for(:action => :opportunity_details, :id => opp.object) if opp && !opp.closed?
+    end
     if (is_phone)
       href = activity.phonenumber.blank? ? "#" : "tel:#{activity.phonenumber}"
-      if (activity.open?)
-        opp = activity.opportunity
-        details = url_for(:action => :opportunity_details, :id => opp.object) if opp && !opp.closed?
-      end
     elsif (activity.type == 'Appointment')
       href = activity.location.blank? ? "#" :
                System::get_property('platform') == 'APPLE' ? "maps:q=#{Rho::RhoSupport.url_encode(activity.location)}" :
@@ -279,7 +289,7 @@ class ActivityController < Rho::RhoController
       begin
         task = Activity.create_new({
           :scheduledend => DateUtil.date_build(task_params['due_datetime']), 
-          :subject => "Task - #{task_params['subject']}",
+          :subject => "#{task_params['subject']}",
           :parent_type => 'Contact', 
           :parent_id => opportunity.contact_id,
           :parent_contact_id => opportunity.contact_id,
@@ -301,7 +311,7 @@ class ActivityController < Rho::RhoController
     begin
       task = Activity.create_new({
         :scheduledend => DateUtil.date_build(@params['task_datetime']), 
-        :subject => "Task - #{@params['task_subject']}",
+        :subject => "#{@params['task_subject']}",
         :description => @params['task_description'],
         :statecode => 'Open',
         :type => 'Task',
@@ -323,7 +333,7 @@ class ActivityController < Rho::RhoController
      begin
        task = Activity.create_new({
          :scheduledend => DateUtil.date_build(@params['task_datetime']), 
-         :subject => "Task - #{@params['task_subject']}",
+         :subject => "#{@params['task_subject']}",
          :description => @params['task_description'],
          :parent_type => 'Contact', 
          :parent_id => contact.object,
@@ -346,7 +356,7 @@ class ActivityController < Rho::RhoController
     begin
       task = Activity.create_new({
         :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
-        :subject => "Phone Call - #{@params['phonecall_subject']}",
+        :subject => "#{@params['phonecall_subject']}",
         :cssi_phonetype => "Ad Hoc",
         :phonenumber => @params['phonecall_number'],
         :statuscode => 'Open',
@@ -369,7 +379,7 @@ class ActivityController < Rho::RhoController
       task = Activity.create_new({
         :scheduledstart => DateUtil.date_build(@params['appointment_datetime']), 
         :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
-        :subject => "Appointment - #{@params['appointment_subject']}",
+        :subject => "#{@params['appointment_subject']}",
         :cssi_location => "Ad Hoc",
         :location => @params['appointment_location'],
         :description => @params['appointment_description'],

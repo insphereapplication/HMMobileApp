@@ -71,7 +71,7 @@ module SQLHelper
   }
   
   LATEST_ASSIGNED_LEAD = %Q{
-    SELECT cssi_assigneddate, createdon
+    SELECT cssi_assigneddate, createdon, cssi_assetownerid, ownerid
     FROM Opportunity
     ORDER BY cssi_assigneddate DESC
     LIMIT 1
@@ -234,7 +234,8 @@ module Constants
   TAB_INDEX = {
     "Opportunities" => 0,
     "Contacts" => 1,
-    "Tools" => 2,        
+    "Activities" => 2,
+    "Tools" => 3        
   }
   
   OTHER_LOST_REASONS = [

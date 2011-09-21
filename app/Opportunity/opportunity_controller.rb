@@ -29,8 +29,9 @@ class OpportunityController < Rho::RhoController
       },
       {
         :label => "Activities",
-        :action => 'app/Activity',
-        :icon => "/public/images/glyphish-icons/117-todo.png"
+        :action => "callback:#{url_for(:controller => :Activity, :action => :show_all_activities)}",
+        :icon => "/public/images/glyphish-icons/117-todo.png",
+        :reload => true
       },
       { 
         :label => "Tools",  
