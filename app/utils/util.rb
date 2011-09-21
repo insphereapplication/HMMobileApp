@@ -234,7 +234,8 @@ module Constants
   TAB_INDEX = {
     "Opportunities" => 0,
     "Contacts" => 1,
-    "Tools" => 2,        
+    "Activities" => 2,
+    "Tools" => 3        
   }
   
   OTHER_LOST_REASONS = [
