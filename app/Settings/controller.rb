@@ -367,15 +367,16 @@ class SettingsController < Rho::RhoController
     puts "former_assigned_lead is: #{former_assigned_lead}"
     set_last_assigned_lead
     current_assigned_lead = Settings.last_assigned_lead
-    (created_today?) && (Time.parse(current_assigned_lead) > Time.parse(former_assigned_lead))
+    (created_today?) && (Time.parse(current_assigned_lead) > Time.parse(former_assigned_lead)) && reassigned_lead?
   end
   
   def created_today?
-    puts "TIME.NOW IS: #{Time.now}"
-    puts "CREATED ON IS: #{Time.parse(Opportunity.latest_assigned_lead.createdon)}"
     hours = (Time.now - Time.parse(Opportunity.latest_assigned_lead.createdon))/3600
-    puts "THE HOURS DIFFERENCE IS #{hours}"
     hours <= 24
+  end
+  
+  def reassigned_lead?
+    !(Opportunity.latest_assigned_lead.cssi_assetownerid == Opportunity.latest_assigned_lead.ownerid)
   end
   
   def new_leads_alert 
@@ -832,7 +833,6 @@ class SettingsController < Rho::RhoController
     end
   end
 
-  
   def on_dismiss_popup
     id = @params['button_id']
     title = @params['button_title']

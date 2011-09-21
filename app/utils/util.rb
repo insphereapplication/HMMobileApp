@@ -71,7 +71,7 @@ module SQLHelper
   }
   
   LATEST_ASSIGNED_LEAD = %Q{
-    SELECT cssi_assigneddate, createdon
+    SELECT cssi_assigneddate, createdon, cssi_assetownerid, ownerid
     FROM Opportunity
     ORDER BY cssi_assigneddate DESC
     LIMIT 1
