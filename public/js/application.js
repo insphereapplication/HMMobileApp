@@ -281,21 +281,22 @@ function populatePhone(dropdown)
       if (dropdown.options[i].selected==true){
         selected = dropdown.options[i].value;
 		text=document.getElementById("phoneList").text;
-		selected_text=dropdown.options[i].text
+		selected_type=dropdown.options[i].text
         break;
       }
     }
-	if (selected == 'ad-hoc'){
-		document.getElementById("phoneNumber").value='';
-		document.getElementById("phoneNumber").disabled = false;
-		document.getElementById("phone_type_selected").value='Ad Hoc';
-	}
-	else{
 	document.getElementById("phoneNumber").value=selected;
-	document.getElementById("phone_type_selected").value=selected_text;
+	document.getElementById("phone_type_selected").value=selected_type;
+	if (selected_type == 'Ad Hoc'){
+		document.getElementById("phoneNumber").disabled = false;
+	}
+	else
+	{
+		document.getElementById("phoneNumber").disabled = true;
 	}
     return true;
 }
+
 
 function populateAddress(dropdown, textbox)
 {
@@ -315,6 +316,8 @@ function populateAddress(dropdown, textbox)
 	}
     return true;
 }
+
+
 
 function updateAddress()
 {
@@ -351,36 +354,18 @@ function disablePhone(dropdown, phoneText)
 	for (var i=0; i<dropdown.options.length; i++){
       if (dropdown.options[i].selected==true){
         selected = dropdown.options[i].value;
+	    selected_type=dropdown.options[i].text;
         break;
       }
     }
 
-	if (selected != 'ad-hoc'){
+	if (selected_type != 'Ad Hoc'){
 		phoneText.disabled='true';
 	}
 	return true;
 }
 
-function enablePhone()
-{
-	var dropdown = document.getElementById('phoneList');
-	var phoneText = document.getElementById('phoneNumber');
-	for (var i=0; i<dropdown.options.length; i++){
-      if (dropdown.options[i].selected==true){
-        selected = dropdown.options[i].value;
-        break;
-      }
-    }
 
-	if (selected == 'ad-hoc'){
-		phoneText.disabled=false;
-	}
-	else
-	{
-		phoneText.disabled=true;
-	}
-	return true;
-}
 
 function populateAddress(dropdown)
 {

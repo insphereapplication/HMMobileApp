@@ -1,7 +1,6 @@
 <script type='text/javascript'>
 	$(document).ready(function() {
 		populatePhone(document.getElementById('phoneList'));
-		disablePhone(document.getElementById('phoneList'), document.getElementById('phoneNumber'));
 	});
 	
 function PickDateCallbackChangeFocus() {
@@ -33,7 +32,7 @@ document.getElementById('callback_datetime').focus();
 					<div data-role="fieldcontain">
 						<input type="hidden" id="phone_type_selected" name="phone_type_selected" />
 					    <label for="phonelist">Phone Type:</label>            
-						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();" data-role="none" class="ins-drop-down">
+						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);" data-role="none" class="ins-drop-down">
 							<% @opportunity.contact.phone_numbers.each do |type, number| %>
 								<% if @opportunity.contact.cssi_preferredphone == type %>
 									<option selected value="<%= number %>"><%= type %></option>
@@ -41,7 +40,7 @@ document.getElementById('callback_datetime').focus();
 									<option value="<%= number %>"><%= type %></option>
 								<% end %>
 							<% end %>
-								<option value='ad-hoc'>Ad-Hoc</option>
+								<option value=''>Ad Hoc</option>
 						</select>
 					</div>
 					<div data-role="fieldcontain">

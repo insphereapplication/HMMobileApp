@@ -152,7 +152,7 @@ class Activity
   
   def phone_type
     if self.phonenumber == "" || self.opportunity.nil?
-      return "Ad-Hoc"
+      return "Ad Hoc"
     end
     
     if self.phonenumber == self.opportunity.contact.telephone2
@@ -164,7 +164,7 @@ class Activity
     elsif self.phonenumber == self.opportunity.contact.telephone3
       "Alternate"
     else
-      "Ad-Hoc"
+      "Ad Hoc"
     end
   end
   

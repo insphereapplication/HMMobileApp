@@ -1,12 +1,9 @@
+<div data-role="page" data-theme="b" id="callback_edit">
 <script type='text/javascript'>
 	$(document).ready(function() {
 		populatePhone(document.getElementById('phoneList'));
-		disablePhone(document.getElementById('phoneList'), document.getElementById('phoneNumber'));
 	});
 </script>
-
-
-<div data-role="page" data-theme="b" id="callback_edit">
 	<form name="call_back_form" id="call_back_form" method="POST" action="<%= url_for :action => :update_callback, :id => @activity.object, :query => {:origin => @params['origin']} %>">
 	<%= offline_bar%>
 	<div data-role="header" data-theme="b" data-position="inline">
@@ -26,20 +23,33 @@
 				<div data-role="fieldcontain">
 					<div data-role="fieldcontain">
 						<input type="hidden" id="phone_type_selected" name="phone_type_selected" />
+						<% if !(@activity_contact) %>
+						  	  <div data-role="fieldcontain">
+					              <label for="phonecall_subject">
+					                  Subject:<font color="red"> *</font></label>
+					              <input id="phonecall_subject" type="text" name="phonecall_subject" value="<%= @activity.subject%>"></input>
+					          </div>
+		          		 <% end %>
+						
 		            	<label for="callback_datetime">Call Back Date and Time:</label>
 						<input id="callback_datetime" type="text" class="required" name="callback_datetime" readonly value="<%= to_datetime(@activity.scheduledend) %>"  onClick="editpopupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime', '<%= @activity.scheduledend %>'); document.getElementById('callback_datetime').focus();"></input>
 					</div>
-          <% if (@activity_contact) %>
-					<div data-role="fieldcontain">
-					    <label for="phonelist">Phone Type:</label>
-						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();" data-role="none" class="ins-drop-down">							
-							<% @activity_contact.phone_numbers.each do |type, number| %>
-									<option <% if @activity.phone_type == type %> selected="True" <% end %> value="<%= number %>"><%= type %></option>
-							<% end %>
-								<option <% if @activity.phone_type == "Ad-Hoc" %> selected="True" <% end %> value='ad-hoc'>Ad-Hoc</option>
-						</select>
-					</div>
-          <% end %>
+          			<% if (@activity_contact) %>
+						<div data-role="fieldcontain">
+						    <label for="phonelist">Phone Type:</label>
+							<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);" data-role="none" class="ins-drop-down">							
+								<% @activity_contact.phone_numbers.each do |type, number| %>
+										<option <% if @activity.phone_type == type %> selected="True" <% end %> value="<%= number %>"><%= type %></option>
+								<% end %>
+								
+								<% if @activity.phone_type == "Ad Hoc" %>
+									<option  selected="True" value="<%= @activity.phonenumber %>" >Ad Hoc</option>
+								<%else %>	
+								 	<option value="" >Ad Hoc</option>
+								<% end %> 
+							</select>
+						</div>
+          		   <% end %>
 					<div data-role="fieldcontain">
 						<label for="phone_number" class="fieldLabel">Phone Number:</label>
 						<% if System::get_property('platform') == 'APPLE' %>

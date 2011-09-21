@@ -363,7 +363,10 @@ $('#callback_create, #callback_edit').live('pagecreate',function(event){
 	    'phone_number' : {
 	      phoneUS: true,
 		  required: false
-	    }
+	    },
+		'phonecall_subject' : {
+		 required: true	
+		}
 	  }
 	});
 	

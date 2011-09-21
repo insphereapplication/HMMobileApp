@@ -34,7 +34,7 @@
 						<% adhoc_nums << activity.phonenumber %>
 						<a href="<%= url_for(:action => :call_number, :id=>@opportunity.object, :query => {:phone_number => activity.phonenumber, :opportunity => @opportunity.object, :origin => @params['origin']}, :redirect_action => :show) %>" data-role="button"  data-rel="back" data-theme="c" style="white-space:normal" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-c">
 						<span class="ui-btn-inner ui-btn-corner-all" style="white-space:normal">
-						<span class="ui-btn-text" style="white-space:normal"><Cancel>Ad-Hoc: <%= activity.phonenumber %></span>
+						<span class="ui-btn-text" style="white-space:normal"><Cancel>Ad Hoc: <%= activity.phonenumber %></span>
 						</span></a>
 			     <% end %>
 				<% end %>

@@ -2,7 +2,6 @@
 <script type='text/javascript'>
 	$(document).ready(function() {
 		populatePhone(document.getElementById('phoneList'));
-		disablePhone(document.getElementById('phoneList'), document.getElementById('phoneNumber'));
 	});
 
 	function PickDatePhonecallChangeFocus() {
@@ -43,7 +42,7 @@
 					<input type="hidden" id="phone_type_selected" name="phone_type_selected" />
 					<div data-role="fieldcontain">
 					    <label for="phonelist">Phone Type:</label>            
-						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);enablePhone();" data-role="none" class="ins-drop-down">
+						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);" data-role="none" class="ins-drop-down">
 							<% @contact.phone_numbers.each do |type, number| %>
 								<% if @contact.cssi_preferredphone == type %>
 									<option selected value="<%= number %>"><%= type %></option>
@@ -51,7 +50,7 @@
 									<option value="<%= number %>"><%= type %></option>
 								<% end %>
 							<% end %>
-								<option value='ad-hoc'>Ad-Hoc</option>
+								<option value=''>Ad Hoc</option>
 						</select>
 					</div>
 					<div data-role="fieldcontain">
