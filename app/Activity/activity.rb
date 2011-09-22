@@ -152,21 +152,7 @@ class Activity
   end
   
   def phone_type
-    if self.phonenumber == "" || self.opportunity.nil?
-      return "Ad Hoc"
-    end
-    
-    if self.phonenumber == self.opportunity.contact.telephone2
-      "Home"
-    elsif self.phonenumber == self.opportunity.contact.telephone1
-      "Business"
-    elsif self.phonenumber == self.opportunity.contact.mobilephone
-      "Mobile"
-    elsif self.phonenumber == self.opportunity.contact.telephone3
-      "Alternate"
-    else
-      "Ad Hoc"
-    end
+    self.cssi_phonetype.blank? ?  "Ad Hoc" : self.cssi_phonetype 
   end
   
   def create_note(note_text)
