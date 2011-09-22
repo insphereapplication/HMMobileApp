@@ -1,5 +1,5 @@
 	<div data-role="page" data-theme="b" id="appointment_edit_page">
-		<form name="appointment_form" method="POST" action="<%= url_for :action => :update_appt, :id => @activity.object, :query => {:origin => @params['origin']} %>">
+		<form id="appointment_edit_form" name="appointment_edit_form" method="POST" action="<%= url_for :action => :update_appt, :id => @activity.object, :query => {:origin => @params['origin']} %>">
 		<%= offline_bar%>
 		<div data-role="header" data-theme="b" data-position="inline">
 			<a href="<%=url_for(:action=>@cancelAction, :id => @activity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
@@ -21,6 +21,13 @@
 					<input type="hidden" id="appointment_location" name="appointment_location" />
 					
 					<div data-role="fieldcontain">
+						<% if  @activity.parent_type != 'Opportunity' %>
+						<div data-role="fieldcontain">
+		                    <label for="appointment_subject">
+		                        Subject:<font color="red"> *</font></label>
+		                    <input id="appointment_subject" type="text" name="appointment_subject" value="<%= @activity.subject %>"></input>
+		                </div>
+						<% end %>
 						<div data-role="fieldcontain">
 							<label for="appointment_datetime" class="fieldLabel">Appointment Start:</label>
 							<input id="appointment_datetime" type="text" class="required" name="appointment_datetime" readonly value="<%= to_datetime(@activity.scheduledstart) %>"  onClick="editpopupDateTimeAJPicker('0', 'Appointment Time', 'appointment_datetime', '<%= @activity.scheduledstart %>'); document.getElementById('appointment_datetime').focus();"></input>

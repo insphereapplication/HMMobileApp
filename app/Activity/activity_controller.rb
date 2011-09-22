@@ -211,7 +211,10 @@ class ActivityController < Rho::RhoController
       :location => @params['location'],
       :description => @params['description'],
       :cssi_location => @params['cssi_location']  
-    })
+    }) 
+    @appointment.update_attributes({
+      :subject => @params['appointment_subject']
+    }) unless @params['appointment_subject'].blank?
     @opportunity.update_attributes({
       :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }) if @opportunity

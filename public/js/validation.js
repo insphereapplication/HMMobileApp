@@ -515,8 +515,20 @@ $('#mark_as_won_page').live('pagecreate',function(event){
 
 
 // Appointment Add / Edit
-$('#appointment_add_page, #appointment_edit_page').live('pagecreate',function(event){
+$('#appointment_add_page').live('pagecreate',function(event){
 	$("#appointment_form").validate();
+});
+
+
+// Appointment Add 
+$('#appointment_edit_page').live('pagecreate',function(event){
+	$("#appointment_edit_form").validate({
+		rules: {
+		    'appointment_subject' : {
+			  required: true
+		    }
+		}
+	});
 });
 
 // HACK ATTACK! - This is a fix for a known issue with JQuery Mobile related to focus and loss of input issues. - twitty.6.14.11
