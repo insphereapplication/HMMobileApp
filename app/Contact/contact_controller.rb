@@ -340,7 +340,7 @@ class ContactController < Rho::RhoController
      begin
        task = Activity.create_new({
          :scheduledend => DateUtil.date_build(@params['task_datetime']), 
-         :subject => "Task - #{@params['task_subject']}",
+         :subject => "#{@params['task_subject']}",
          :description => @params['task_description'],
          :parent_type => 'Contact', 
          :parent_id => contact.object,
@@ -367,7 +367,7 @@ class ContactController < Rho::RhoController
          :parent_id => contact.object,
          :scheduledstart => DateUtil.date_build(@params['appointment_datetime']), 
          :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
-         :subject => "Appointment - #{@params['appointment_subject']}",
+         :subject => "#{@params['appointment_subject']}",
          :cssi_location => @params['cssi_location'],
          :location => @params['location'],
          :description => @params['appointment_description'],
@@ -393,7 +393,7 @@ class ContactController < Rho::RhoController
     begin
       phone_call = Activity.create_new({
         :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
-        :subject => "Phone Call - #{@params['phonecall_subject']}",
+        :subject => "#{@params['phonecall_subject']}",
         :cssi_phonetype => @params['phone_type_selected'],
         :phonenumber => @params['phone_number'],
         :statuscode => 'Open',
