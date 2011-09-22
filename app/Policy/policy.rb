@@ -31,7 +31,7 @@ class Policy
   property :temp_id, :string
   
   def contact
-    Contact.find_contact(self.contact_id)
+    Contact.find_contact(contact_id) unless contact_id.blank?
   end
   
   def self.create_new(params)
