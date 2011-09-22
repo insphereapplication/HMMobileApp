@@ -182,7 +182,11 @@ class OpportunityController < Rho::RhoController
       @contact = @opportunity.contact
       render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
-      redirect :action => :index, :back => 'callback:'
+       if @params['origin'] == 'contact'
+         WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'))
+       else   
+         redirect  :action => :index, :back => 'callback:'
+       end
     end
   end
   
