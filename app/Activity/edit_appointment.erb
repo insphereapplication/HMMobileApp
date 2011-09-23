@@ -48,9 +48,13 @@
 							<label for="select_location" class="fieldLabel">Location:</label>
 				            <select name="select_location" id="select_location" onchange='updateAddress();' data-role="none" class="ins-drop-down">
 								<% @activity_contact.addresses.each do |type, address| %>
-									<option <% if @activity.cssi_location == address %> selected = "True" <% end %> value="<%= address %>"><%= type %></option>
+									<option <% if @activity.cssi_location == type %> selected = "True" <% end %> value="<%= address %>"><%= type %></option>
 								<% end %>
-									<option value=" ">Ad Hoc</option>
+								<% if @activity.cssi_location == "Ad Hoc" %>
+								     <option   selected = "True" value="<%= @activity.location %>">Ad Hoc</option>>
+								<% else %>
+									<option value="">Ad Hoc</option>
+								<% end%>
 							</select><br />
 						</div>
             <% end %>

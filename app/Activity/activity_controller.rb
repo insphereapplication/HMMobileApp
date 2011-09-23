@@ -19,8 +19,9 @@ class ActivityController < Rho::RhoController
     selected = Settings.filter_values["activity_status"]
     selected = 'Open' if selected.blank?
     @status_filter = gen_options([
-        {:value => 'Open', :label => 'Open'},
-        {:value => 'Completed', :label => 'Completed'}
+        {:value => 'Today', :label => 'Today'},
+        {:value => 'ThisWeek', :label => 'This Week'},
+        {:value => 'NoDate', :label => 'No Date'}
     ], selected)
     selected = Settings.filter_values["activity_priority"]
     selected = 'All' if selected.blank?
@@ -70,10 +71,6 @@ class ActivityController < Rho::RhoController
 
   def future_activities
     get_new_activities('yellow', Activity.future_activities(@params['page'].to_i, @params['type'], @params['priority']))
-  end
-  
-  def completed_activities
-    get_new_activities('grey', Activity.completed_activities(@params['page'].to_i, @params['type'], @params['priority']))
   end
 
   def complete_activities_alert

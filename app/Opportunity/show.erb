@@ -170,7 +170,7 @@
 			
 			<a href="<%= url_for(:action => :activity_summary, :id => @opportunity.object, :query => {:origin => @params['origin']}) %>" data-role="button" data-icon="arrow-r" rel="external" data-iconpos="right">Activity Summary</a> 
 
-                        <% if StaticEntity.reassign_flag? && StaticEntity.get_agents.length > 0 %>
+                        <% if StaticEntity.reassign_flag? && StaticEntity.get_agents.length > 0 && !@opportunity.closed? %>
                             <a href="<%= url_for(:action => :reassign, :id => @opportunity.object, :query => {:origin => @params['origin']}) %>" data-role="button" data-icon="gear" rel="external" data-iconpos="right" data-theme="a">Reassign Opportunity</a>
                         <% end %>
 		</div>
