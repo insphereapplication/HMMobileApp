@@ -50,6 +50,9 @@ class Activity
   index :activity_parent_index, [:parent_id, :parent_type]
   index :activity_statuscode_index, [:statuscode]
   index :activity_statecode_index, [:statecode]
+  index :activity_object_index, [:object]
+  index :activity_createdon_index, [:createdon]
+  index :activity_type_index, [:type]
   
   enable :sync
   set :sync_priority, 40 # this needs to be loaded before opportunities so that opportunities can know their context
@@ -242,15 +245,6 @@ class Activity
       })
   end
 
-  def self.activities_status_where_clause(status)
-    case status
-      when 'Open'
-        "a.statecode in ('Open', 'Scheduled')"
-      else
-        "a.statecode = 'Completed'"
-    end
-  end
-
   def self.activities_type_where_clause(type)
     case type
       when 'Task'
@@ -277,8 +271,8 @@ class Activity
 
   def self.activities_date_where_clause(operator)
     case operator
-      when ''
-        ""
+      when '>'
+        "and date(scheduledtime) > date('now', 'localtime') and date(scheduledtime) <= date('now', 'localtime', '+7 days')"
       when 'null'
         "and date(scheduledtime) is null"
       else
@@ -286,33 +280,25 @@ class Activity
     end
   end
 
-  def self.activities_case_field_clause(include_clause)
-    if (include_clause)
-      "case
-           when a.scheduledstart is null then a.scheduledend
-           when a.scheduledstart = '' then a.scheduledend
-           else a.scheduledstart
-       end as scheduledtime,"
-    else
-      ""
-    end
-  end
-
   def self.activities_orderby_clause(operator)
-    if (operator == 'null' || operator == '')
+    if (operator == 'null')
       "order by datetime(a.createdon) desc"
     else
       "order by datetime(scheduledtime)"
     end
   end
 
-  def self.activities_sql(status, type, priority, operator, include_clause, page, page_size)
+  def self.activities_sql(type, priority, operator, page, page_size)
     %Q{
         select
-            #{activities_case_field_clause(include_clause)}
+            case
+                when a.scheduledstart is null then a.scheduledend
+                when a.scheduledstart = '' then a.scheduledend
+                else a.scheduledstart
+            end as scheduledtime,
             a.*
         from Activity a
-        where #{activities_status_where_clause(status)}
+        where a.statecode in ('Open', 'Scheduled')
             #{activities_date_where_clause(operator)}
             #{activities_type_where_clause(type)}
             #{activities_priority_where_clause(priority)}
@@ -322,23 +308,19 @@ class Activity
   end
 
   def self.past_due_activities(page=nil, page_size=DEFAULT_PAGE_SIZE, type, priority)
-    find_by_sql(activities_sql('Open', type, priority, '<', true, page, page_size))
+    find_by_sql(activities_sql(type, priority, '<', page, page_size))
   end
 
   def self.no_date_activities(page=nil, page_size=DEFAULT_PAGE_SIZE, type, priority)
-    find_by_sql(activities_sql('Open', type, priority, 'null', true, page, page_size))
+    find_by_sql(activities_sql(type, priority, 'null', page, page_size))
   end
 
   def self.today_activities(page=nil, page_size=DEFAULT_PAGE_SIZE, type, priority)
-    find_by_sql(activities_sql('Open', type, priority, '=', true, page, page_size))
+    find_by_sql(activities_sql(type, priority, '=', page, page_size))
   end
 
   def self.future_activities(page=nil, page_size=DEFAULT_PAGE_SIZE, type, priority)
-    find_by_sql(activities_sql('Open', type, priority, '>', true, page, page_size))
-  end
-
-  def self.completed_activities(page=nil, page_size=DEFAULT_PAGE_SIZE, type, priority)
-    find_by_sql(activities_sql('Completed', type, priority, '', false, page, page_size))
+    find_by_sql(activities_sql(type, priority, '>', page, page_size))
   end
 
   def parent_contact

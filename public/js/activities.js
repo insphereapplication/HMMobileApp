@@ -1,32 +1,30 @@
-var activity_filter_enabled = false;
-
 function loadAllActivities() {
     var filter = getActivitiesFilter();
     $('#activity_filter_details').html('Filter: ' + filter.type + ', ' + filter.status + ', ' + filter.priority);
     var buckets = [];
-    if (filter.status == 'Open') {
+    if (filter.status == 'Today') {
+        buckets.push(
+            {activity_method: 'past_due_activities', list_selector: '#no_date_activities', insert_before: true, next: null},
+            {activity_method: 'no_date_activities', list_selector: '#today_activities', insert_before: true, next: null},
+            {activity_method: 'today_activities', list_selector: '#future_activities', insert_before: true, next: null}
+        );
+        $('#future_activities').hide();
+    }
+    else if (filter.status == 'ThisWeek') {
         buckets.push(
             {activity_method: 'past_due_activities', list_selector: '#no_date_activities', insert_before: true, next: null},
             {activity_method: 'no_date_activities', list_selector: '#today_activities', insert_before: true, next: null},
             {activity_method: 'today_activities', list_selector: '#future_activities', insert_before: true, next: null},
-            {activity_method: 'future_activities', list_selector: '#completed_activities', insert_before: true, next: null}
+            {activity_method: 'future_activities', list_selector: '#all_activities', insert_before: false, next: null}
         );
-        $('#past_due_activities').show();
-        $('#no_date_activities').show();
-        $('#today_activities').show();
-        $('#future_activities').show();
-        $('#completed_activities').hide();
-        $('#activity_complete_button').attr('href', 'javascript:completeSelectedActivities()').show();
-    } else {
+    }
+    else {
         buckets.push(
-            {activity_method: 'completed_activities', list_selector: '#all_activities', insert_before: false, next: null}
+            {activity_method: 'no_date_activities', list_selector: '#today_activities', insert_before: true, next: null}
         );
         $('#past_due_activities').hide();
-        $('#no_date_activities').hide();
         $('#today_activities').hide();
         $('#future_activities').hide();
-        $('#completed_activities').show();
-        $('#activity_complete_button').attr('href', '#').hide();
     }
     loadActivities(getLinkedBucketList(buckets), 0, filter);
 }
@@ -50,12 +48,11 @@ function loadActivities(activityBucket, activity_page, jsonParams) {
                 loadActivities(activityBucket, activity_page + 1, jsonParams);
             }
             else if (activityBucket.next != null) {
-            	checkForNoActivities(activityBucket.activity_method);
+                checkForNoActivities(activityBucket.activity_method);
                 loadActivities(activityBucket.next, 0, jsonParams);
             }
             else {
-            	checkForNoActivities(activityBucket.activity_method);
-                activity_filter_enabled = true;
+                checkForNoActivities(activityBucket.activity_method);
             }
         });
 }
@@ -72,9 +69,6 @@ function checkForNoActivities(activity_method) {
     }
     else if ('future_activities' == activity_method) {
         insertEmptyMessageIfEmpty('future_activities', 'future activities');
-    }
-    else if ('completed_activities' == activity_method) {
-        insertEmptyMessageIfEmpty('completed_activities', 'completed activities');
     }
 }
 
@@ -105,20 +99,14 @@ function getActivitiesFilter() {
 }
 
 function clearActivitiesFilter() {
-    if (activity_filter_enabled) {
-        activity_filter_enabled = false;
-        $('#activity_type_filter').val('All');
-        $('#activity_status_filter').val('Open');
-        $('#activity_priority_filter').val('All');
-        location.href = location.href.replace(/\?.*$/, '') + '?' + $.param(getActivitiesFilter());
-    }
+    $('#activity_type_filter').val('All');
+    $('#activity_status_filter').val('Today');
+    $('#activity_priority_filter').val('All');
+    location.href = location.href.replace(/\?.*$/, '') + '?' + $.param(getActivitiesFilter());
 }
 
 function filterActivities() {
-    if (activity_filter_enabled) {
-        activity_filter_enabled = false;
-        location.href = location.href.replace(/\?.*$/, '') + '?' + $.param(getActivitiesFilter());
-    }
+    location.href = location.href.replace(/\?.*$/, '') + '?' + $.param(getActivitiesFilter());
 }
 
 function completeSelectedActivities() {
