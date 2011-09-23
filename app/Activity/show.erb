@@ -64,7 +64,7 @@
 			}.join("\n")
 			%>
 			<%=
-			href = @parent_contact.emailaddress1.blank? ? '#' : "mailto:@parent_contact.emailaddress1"
+			href = @parent_contact.emailaddress1.blank? ? '#' : "mailto:#{@parent_contact.emailaddress1}"
 			%Q{<li data-icon="false"><a href="#{href}">Email: #{@parent_contact.emailaddress1}</a></li>}
 			%>
 		</ul>
