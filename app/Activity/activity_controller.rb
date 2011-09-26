@@ -95,12 +95,13 @@ class ActivityController < Rho::RhoController
       opp = activity.opportunity
       details = url_for(:action => :opportunity_details, :id => opp.object) if opp && !opp.closed?
     end
+    isApple = System::get_property('platform') == 'APPLE'
     if (is_phone)
       href = activity.phonenumber.blank? ? "#" : "tel:#{activity.phonenumber}"
     elsif (activity.type == 'Appointment')
       href = activity.location.blank? ? "#" :
-               System::get_property('platform') == 'APPLE' ? "maps:q=#{Rho::RhoSupport.url_encode(activity.location)}" :
-                 "http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(activity.location)}"
+              isApple ? "maps:q=#{Rho::RhoSupport.url_encode(activity.location)}" :
+                      "http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(activity.location)}"
     end
     {
       :id => activity.object,
@@ -111,7 +112,10 @@ class ActivityController < Rho::RhoController
       :bottom_left_text => left_text,
       :bottom_right_text => right_text,
       :href_text => href,
-      :show_phone => is_phone
+      :show_phone => is_phone,
+      :check_top => isApple ? "25" : "15",
+      :check_left => isApple ? "7" : "2",
+      :check_width => "25"
     }
   end
 

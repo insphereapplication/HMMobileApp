@@ -1,10 +1,10 @@
 <li role="option" tabindex="0" data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-btn-up-c">
-    <div class="ui-li-sidebar-<%=color%> ui-btn-up-c" style="width: 20px;">
+    <div class="ui-li-sidebar-<%=color%> ui-btn-up-c" style="width: <%=check_width%>px;">
         <div class="ui-checkbox" activity-id="<%=id%>">
-            <input type="checkbox" class="task-checkbox" style="top: 25px; left: 3px;" <%='checked="checked" disabled="disabled"' if completed%>/>
+            <input type="checkbox" class="task-checkbox" style="top: <%=check_top%>px; left: <%=check_left%>px;" <%='checked="checked" disabled="disabled"' if completed%>/>
         </div>
     </div>
-    <div onclick="onRowClick(event, 20, '<%=show_detail_url%>')" class="ui-btn-inner" style="padding-top: 6px; padding-bottom: 6px;">
+    <div onclick="onRowClick(event, <%=check_width%>, '<%=show_detail_url%>')" class="ui-btn-inner" style="padding-top: 6px; padding-bottom: 6px;">
         <div class="ui-btn-text">
             <a href="#" class="no-top-padding ui-link-inherit">
                 <h4 style="margin-top: 0px; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
