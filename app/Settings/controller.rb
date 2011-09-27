@@ -181,6 +181,8 @@ class SettingsController < Rho::RhoController
   def do_logout
     Settings.clear_credentials
     SyncEngine.set_pollinterval(0)
+    Settings.last_integrated_lead = ''
+    Settings.last_assigned_lead = ''
     Settings.flush_instance
     
     Rho::NativeTabbar.remove

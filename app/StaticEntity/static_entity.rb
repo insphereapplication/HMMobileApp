@@ -4,6 +4,7 @@ class StaticEntity
   property :type, :string
   
   enable :sync
+  set :sync_priority, 20 # this needs to be loaded before opportunities so that opportunities can know their context
   set :schema_version, '1.0'
   
   def self.get_carrier_names
