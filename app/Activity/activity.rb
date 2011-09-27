@@ -272,7 +272,7 @@ class Activity
   def self.activities_date_where_clause(operator)
     case operator
       when '>'
-        "and date(scheduledtime) > date('now', 'localtime') and date(scheduledtime) <= date('now', 'localtime', '+7 days')"
+        "and date(scheduledtime) > date('now', 'localtime') and date(scheduledtime) <= date('now', 'localtime', '+8 days')"
       when 'null'
         "and date(scheduledtime) is null"
       else
