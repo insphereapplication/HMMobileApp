@@ -646,7 +646,7 @@ class ActivityController < Rho::RhoController
             :scheduledstart => DateUtil.date_build(@params['appointment_datetime']),
             :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
             :location => @params['location'],
-            :subject => "#{contact.firstname}, #{contact.lastname} - #{opportunity.createdon}",
+            :subject => "#{contact.full_name} - #{opportunity.createdon}",
             :description => @params['description'],
             :type => 'Appointment',
             :cssi_location => @params['cssi_location'],
