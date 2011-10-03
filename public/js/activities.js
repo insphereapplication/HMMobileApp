@@ -10,7 +10,7 @@ function loadAllActivities() {
         );
         $('#future_activities').hide();
     }
-    else if (filter.status == 'ThisWeek') {
+    else if (filter.status == 'Next7Days') {
         buckets.push(
             {activity_method: 'past_due_activities', list_selector: '#no_date_activities', insert_before: true, next: null},
             {activity_method: 'no_date_activities', list_selector: '#today_activities', insert_before: true, next: null},
