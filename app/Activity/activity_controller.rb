@@ -20,7 +20,7 @@ class ActivityController < Rho::RhoController
     selected = 'Open' if selected.blank?
     @status_filter = gen_options([
         {:value => 'Today', :label => 'Today'},
-        {:value => 'ThisWeek', :label => 'Next 7 Days'},
+        {:value => 'Next7Days', :label => 'Next 7 Days'},
         {:value => 'NoDate', :label => 'No Date'}
     ], selected)
     selected = Settings.filter_values["activity_priority"]
