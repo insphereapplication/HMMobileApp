@@ -9,16 +9,8 @@
 		<ul data-role="listview" data-theme="d" data-inset="true">
 			<li data-role="list-divider">Callback Detail</li>
 			<li>Callback Date and Time: <br/><%= "#{to_datetime(@callback.scheduledend)}" %></li>
-				<% if @callback.phonenumber == @callback.opportunity.contact.telephone2 %>
-            		<li>Phone Type: Home </li>
-				<% elsif @callback.phonenumber == @callback.opportunity.contact.mobilephone  %>
-					<li>Phone Type: Mobile </li>
-				<% elsif @callback.phonenumber == @callback.opportunity.contact.telephone1  %>
-					<li>Phone Type: Business </li>
-				<% else %>
-					<li>Phone Type: Ad Hoc </li>
-				<% end %>
-			<li>Phone Number: <%= @callback.phonenumber %></li>
+            	<li>Phone Type: <%= @callback.cssi_phonetype %> </li>
+		    	<li>Phone Number: <%= @callback.phonenumber %></li>
 			<% @notes.each do |note| %>
 				<li>Notes: <%= note.notetext %></li>
 			<% end %>			

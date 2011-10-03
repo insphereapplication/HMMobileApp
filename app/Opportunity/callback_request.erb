@@ -44,7 +44,7 @@ document.getElementById('callback_datetime').focus();
 						</select>
 					</div>
 					<div data-role="fieldcontain">
-						<label for="phone_number" class="fieldLabel">Phone Number:</label>
+						<label for="phone_number" class="fieldLabel">Phone Number: <font color="red"> *</font></label>
 						<% if System::get_property('platform') == 'APPLE' %>
 			            	<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" id="phoneNumber" name="phone_number" value="" /><br />
 						<% else %>

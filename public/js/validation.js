@@ -362,7 +362,7 @@ $('#callback_create, #callback_edit').live('pagecreate',function(event){
 	  rules: {
 	    'phone_number' : {
 	      phoneUS: true,
-		  required: false
+		  required: true
 	    },
 		'phonecall_subject' : {
 		 required: true	
