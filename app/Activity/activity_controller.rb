@@ -45,10 +45,14 @@ class ActivityController < Rho::RhoController
 
   def show
     @activity = Activity.find_activity(@params['id'])
-    @parent_contact = @activity.parent_contact
-    @opportunity = @activity.opportunity
-    @policy = @activity.policy
-    render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
+    if @activity
+      @parent_contact = @activity.parent_contact
+      @opportunity = @activity.opportunity
+      @policy = @activity.policy
+      render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
+    else
+      show_all_activities
+    end
   end
 
   def get_new_activities(color, activities)
