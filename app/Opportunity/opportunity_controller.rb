@@ -206,12 +206,14 @@ class OpportunityController < Rho::RhoController
     end
     
     @opportunity = Opportunity.find_opportunity(opp_id)
+    @contact = @opportunity.contact unless @opportunity.blank?
     
-    if @opportunity
+    if @opportunity && @contact
       @notes = @opportunity.notes
       current_nav_context.orient!(@opportunity.object)
-      @contact = @opportunity.contact
       render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile', :origin => @params['origin']
+    else
+      show_opportunity_from_nav(direction)
     end
   end
   
