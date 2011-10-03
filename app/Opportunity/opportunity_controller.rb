@@ -213,7 +213,12 @@ class OpportunityController < Rho::RhoController
       current_nav_context.orient!(@opportunity.object)
       render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile', :origin => @params['origin']
     else
-      show_opportunity_from_nav(direction)
+      current_nav_context.delete(opp_id)
+      if current_nav_context.count >= 1
+        show_opportunity_from_nav(direction)
+      else
+        WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))
+      end  
     end
   end
   
