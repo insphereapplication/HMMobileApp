@@ -354,12 +354,13 @@ class OpportunityController < Rho::RhoController
   def activity_summary
     Settings.record_activity
     @opportunity = Opportunity.find_opportunity(@params['id'])
-    @activities = @opportunity.activities
-    @activity_list = @opportunity.activity_list
+    @activity_list = @opportunity.activity_list unless @opportunity.blank?
     if @opportunity
       render :action => :activity_summary, :back => 'callback:',
               :layout => 'layout_jquerymobile',
               :origin => @params['origin']
+    else
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))    
     end
   end
 
@@ -568,7 +569,10 @@ class OpportunityController < Rho::RhoController
       render :action => :reassign, :back => 'callback:',
              :layout => 'layout_jquerymobile',
              :origin => @params['origin']
+    else
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))
     end
+  
   end
 
   def reassign_confirm
