@@ -366,9 +366,12 @@ class OpportunityController < Rho::RhoController
 
   def phone_dialog
     @opportunity = Opportunity.find_opportunity(@params['id'])
+    @contact = @opportunity.contact unless @opportunity.blank?
     phone_number=''
-    if @opportunity.contact.phone_numbers.size == 1
-      @opportunity.contact.phone_numbers.each do |type, number|
+    if @contact.blank?
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))  
+    elsif @contact.phone_numbers.size == 1
+      @contact.phone_numbers.each do |type, number|
         phone_number = number
       end
       
@@ -487,23 +490,25 @@ class OpportunityController < Rho::RhoController
   
   def quick_quote
     opportunity = Opportunity.find_opportunity(@params['id'])
-    contact = opportunity.contact
-
-    formatted_dob = ''
+    contact = opportunity.contact unless opportunity.blank?
+    quote_param =""
+    if contact 
+      formatted_dob = ''
          
-    unless contact.birthdate.blank?
-     parsed_dob = (Date.strptime(contact.birthdate, DateUtil::DEFAULT_TIME_FORMAT))
-     formatted_dob = parsed_dob.strftime('%m/%d/%Y')
+      unless contact.birthdate.blank?
+       parsed_dob = (Date.strptime(contact.birthdate, DateUtil::DEFAULT_TIME_FORMAT))
+       formatted_dob = parsed_dob.strftime('%m/%d/%Y')
+      end
+
+      quote_param = ",dob=#{formatted_dob},gender=#{contact.gendercode}"
+
+      unless contact.cssi_state1id.blank?
+        quote_param += ",statecode=#{contact.cssi_state1id}"
+      else
+        quote_param += ",statecode=#{contact.cssi_state2id}"
+      end
     end
-
-    quote_param = ",dob=#{formatted_dob},gender=#{contact.gendercode}"
-
-    unless contact.cssi_state1id.blank?
-      quote_param += ",statecode=#{contact.cssi_state1id}"
-    else
-      quote_param += ",statecode=#{contact.cssi_state2id}"
-    end
-
+    
     quote_url="#{Rho::RhoConfig.quick_quote_url}#{quote_param}"
     redirect :action => :show, :id => @params['id'], :layout => 'layout_jquerymobile', :query=>{:origin => @params['origin']}
     System.open_url("#{quote_url}")
