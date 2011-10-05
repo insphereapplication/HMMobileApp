@@ -20,7 +20,7 @@ class NoteController < Rho::RhoController
     if @note
       render :action => :show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
     else
-      redirect :action => :index, :back => 'callback:'
+       WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))   
     end
   end
 

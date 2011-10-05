@@ -161,7 +161,7 @@ class ActivityController < Rho::RhoController
       Settings.record_activity
       render :action => :show_appt, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
     else
-      redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))    
     end
   end
 
@@ -195,7 +195,7 @@ class ActivityController < Rho::RhoController
        Settings.record_activity
        render :action => :show_callback, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
      else
-       redirect :Controller => :Opportunity, :action => :index, :back => 'callback:'
+       WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))   
      end
   end
    
