@@ -188,43 +188,52 @@ class Contact
       asl += " " + age
     end
     if(address1_city && cssi_state1id)
-      asl += " " + address1_city + ", " + cssi_state1id
+      state = cssi_state1id.blank? ? "" : ", " + cssi_state1id
+      asl += " " + address1_city + state
     else
       if(address2_city && cssi_state2id)
-        asl += " " + address2_city + ", " + cssi_state2id
+        state = cssi_state2id.blank? ? "" : ", " + cssi_state2id
+        asl += " " + address2_city + state
       end
     end
     asl
   end
   
-  def age_sex
+  def age_sex(label = false)
     result = ""
     if gendercode != nil
       result += gendercode
     end
     if(age != nil)
-      result += " " + age
+      space = label ? result.blank? ? "Age " : ", Age " : " "
+      result += space + age
     end
     result
   end
   
   def city_summary
     if address1_city
-      " #{address1_city}, #{cssi_state1id}, #{address1_postalcode}"
+      state = cssi_state1id.blank? ? "" : ", " + cssi_state1id
+      zip = address1_postalcode.blank? ? "" : ", " + address1_postalcode
+      " #{address1_city}#{state}#{zip}"
     elsif address2_city
-      " #{address2_city}, #{cssi_state2id}, #{address2_postalcode}"
+      state = cssi_state2id.blank? ? "" : ", " + cssi_state2id
+      zip = address2_postalcode.blank? ? "" : ", " + address2_postalcode
+      " #{address2_city}#{state}#{zip}"
     end
   end
   
   def home_city
     if address1_city
-    "#{address1_city}, #{cssi_state1id} #{address1_postalcode}"
+      state = cssi_state1id.blank? ? "" : ", " + cssi_state1id
+      "#{address1_city}#{state} #{address1_postalcode}"
     end
   end
 
   def business_city
     if address2_city
-      "#{address2_city}, #{cssi_state2id} #{address2_postalcode}"
+      state = cssi_state2id.blank? ? "" : ", " + cssi_state2id
+      "#{address2_city}#{state} #{address2_postalcode}"
     end
   end
   
