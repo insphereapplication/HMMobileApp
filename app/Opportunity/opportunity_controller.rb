@@ -225,10 +225,11 @@ class OpportunityController < Rho::RhoController
   def status_update
     Settings.record_activity
     @opportunity = Opportunity.find_opportunity(@params['id'])
-    if @opportunity
+    @contact = @opportunity.contact
+    if @opportunity && @contact
       render :action => :status_update, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
-      redirect :action => :index, :back => 'callback:'
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))
     end
   end 
   

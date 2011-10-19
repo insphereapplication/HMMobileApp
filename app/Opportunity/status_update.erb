@@ -4,7 +4,7 @@
 		<a href="<%=url_for(:action=>:show, :id => @opportunity.object, :query => {:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
 		<h1>Update Status <%= sync_spinner %></h1>
 		<div style="text-align:center" class="ui-bar ui-bar-c"> 
-			<%= "#{@opportunity.contact.full_name} - #{to_date(@opportunity.createdon)}" %>
+			<%= "#{@contact.full_name} - #{to_date(@opportunity.createdon)}" %>
 		</div>
 	</div>
 	<div id="contentDiv" data-role="content">
