@@ -342,7 +342,9 @@ class SettingsController < Rho::RhoController
   end
   
   def set_last_assigned_lead
-    Settings.last_assigned_lead = Opportunity.latest_assigned_lead.cssi_assigneddate
+    last_opportunity = Opportunity.latest_assigned_lead
+    Settings.last_assigned_lead = last_opportunity.cssi_assigneddate if last_opportunity
+    last_opportunity
   end
   
   def update_last_synced_time
@@ -366,19 +368,17 @@ class SettingsController < Rho::RhoController
   
   def new_assigned_leads?
     former_assigned_lead = Settings.last_assigned_lead
-    puts "former_assigned_lead is: #{former_assigned_lead}"
-    set_last_assigned_lead
-    current_assigned_lead = Settings.last_assigned_lead
-    (created_today?) && (Time.parse(current_assigned_lead) > Time.parse(former_assigned_lead)) && reassigned_lead?
+    @current_assigned_lead = set_last_assigned_lead
+    @current_assigned_lead && (created_today?) && (Time.parse(@current_assigned_lead.cssi_assigneddate) > Time.parse(former_assigned_lead)) && (reassigned_lead?)
   end
   
   def created_today?
-    hours = (Time.now - Time.parse(Opportunity.latest_assigned_lead.createdon))/3600
+    hours = (Time.now - Time.parse(@current_assigned_lead.createdon))/3600
     hours <= 24
   end
   
   def reassigned_lead?
-    !(Opportunity.latest_assigned_lead.cssi_assetownerid == Opportunity.latest_assigned_lead.ownerid)
+    !(@current_assigned_lead.cssi_assetownerid == @current_assigned_lead.ownerid)
   end
   
   def new_leads_alert 
