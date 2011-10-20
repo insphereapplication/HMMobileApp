@@ -344,6 +344,7 @@ class ContactController < Rho::RhoController
          :description => @params['task_description'],
          :parent_type => 'Contact', 
          :parent_id => contact.object,
+         :parent_contact_id => contact.object,
          :statecode => 'Open',
          :type => 'Task',
          :prioritycode => @params['task_priority_checkbox'] ? 'High' : 'Normal',
@@ -365,6 +366,7 @@ class ContactController < Rho::RhoController
        task = Activity.create_new({
          :parent_type => 'Contact', 
          :parent_id => contact.object,
+         :parent_contact_id => contact.object,
          :scheduledstart => DateUtil.date_build(@params['appointment_datetime']), 
          :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
          :subject => "#{@params['appointment_subject']}",
