@@ -327,8 +327,8 @@ class Activity
     if (parent_type == 'Contact')
       parent
     else
-      this_parent = parent
-      this_parent && (parent_type == 'Opportunity' || parent_type == 'Policy') ? this_parent.contact : nil
+      this_parent = parent if (parent_type == 'Opportunity' || parent_type == 'Policy')
+      this_parent ? this_parent.contact : nil
     end
   end
 
