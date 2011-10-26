@@ -15,7 +15,7 @@
     </div>
     <div id="contentDiv" data-role="content">
         <div class="ui-body ui-body-d">
-        <form id="won_form" name="won_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_won_status, :query => {:origin => @params['origin'], :opportunity_id => @opportunity.object} %>">
+        <form id="won_form" name="won_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_won_status, :query => {:origin => @params['origin'], :opportunity_id => @opportunity.object, :appointments => @params['appointments']} %>">
             <ul data-role="listview" data-filter="false" data-inset="true">
                 <li data-role="list-divider">Application Detail</li>
                 <li data-icon="plus"><a class="UpdateStatus" href="<%= url_for(:controller => :ApplicationDetail, :action => :new, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-transition="slide">Add Application Detail</a></li>
