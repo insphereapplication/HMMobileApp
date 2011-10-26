@@ -275,8 +275,8 @@ class ActivityController < Rho::RhoController
           :status_update_timestamp => Time.now.utc.to_s
         })
 
-        
-        finished_win_status(opportunity, @params['origin'])
+        appointmentids = get_appointment_ids(@params['appointments'])
+        finished_win_status(opportunity, @params['origin'], appointmentids)
 
         db.commit
         
