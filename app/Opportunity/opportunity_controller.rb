@@ -225,7 +225,7 @@ class OpportunityController < Rho::RhoController
   def status_update
     Settings.record_activity
     @opportunity = Opportunity.find_opportunity(@params['id'])
-    @contact = @opportunity.contact
+    @contact = @opportunity.contact if @opportunity
     if @opportunity && @contact
       render :action => :status_update, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
