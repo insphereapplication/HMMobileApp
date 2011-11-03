@@ -34,7 +34,7 @@ end
 
 def update_rhodes
   log "Updating #{build_config['sdk']}..."
-  system "cd #{build_config['sdk']} && git remote update && git reset --hard origin/#{RHODES_BRANCH}"
+  system "cd #{build_config['sdk']} && git remote update && git checkout #{RHODES_BRANCH} && git reset --hard origin/#{RHODES_BRANCH}"
 end
 
 def update_icons(icon_folder)
@@ -80,7 +80,7 @@ def build_yml
     :codesignidentity => '"iPhone Distribution: Insphere Insurance Solutions, Inc"',
     :provisionprofile => 'DBC56EAB-6D57-4161-958E-55533E7642A0',
     :package_name => 'com.insphere.insite',
-    :sdk_path => "/Library/ParivedaInsite/rhodes",
+    :sdk_path => "/Library/insphereapplication/rhodes",
     :sdk_version => "2.3.0",
     :build_type => "release",
     :android_cert_path => "#{APP_PATH}/insphere_insite.keystore",
