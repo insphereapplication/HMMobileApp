@@ -683,7 +683,7 @@ class ActivityController < Rho::RhoController
   end
   
   def verify_pin
-     if @params['PIN'] == Settings.pin
+     if @params['PIN'] == AppInfo.instance.policy_pin
        Settings.pin_last_activity_time = Time.new
        Settings.pin_confirmed = true
        redirect :action => :show, :id => @params['id'], :query => {:origin => @params['origin']}

@@ -20,7 +20,11 @@ class PolicyController < Rho::RhoController
       @contact = @policy.contact
       render :action => :show, :back => 'callback:', :query => {:origin => @params['origin'], :activity => @params['activity']}
     else
-      redirect :controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
+      if @params['origin'] == 'activity'
+        redirect :controller => :Activity, :action => :show, :id => @params['activity'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
+      else    
+        redirect :controller => :Contact, :action => :show, :id => @params['contact'], :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
+      end
     end
   end
 
