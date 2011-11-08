@@ -176,10 +176,10 @@ class OpportunityController < Rho::RhoController
   def show
     Settings.record_activity
     @opportunity = Opportunity.find_opportunity(@params['id'])
-    if @opportunity
-      @notes = @opportunity.notes
-      current_nav_context.orient!(@opportunity.object)
-      @contact = @opportunity.contact
+    @notes = @opportunity.notes if @opportunity
+    current_nav_context.orient!(@opportunity.object) if @opportunity
+    @contact = @opportunity.contact if @opportunity
+    if @opportunity && @contact
       render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
        if @params['origin'] == 'contact'
