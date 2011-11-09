@@ -49,6 +49,22 @@ class ActivityController < Rho::RhoController
       @parent_contact = @activity.parent_contact
       @opportunity = @activity.opportunity
       @policy = @activity.policy
+      @contact_info = ""
+      if @parent_contact
+        @contact_info = "#{@parent_contact.gendercode}" unless @parent_contact.gendercode.blank?
+        if !@parent_contact.age.blank?
+          @contact_info = @contact_info + " " unless @contact_info.blank?
+          @contact_info = @contact_info + "#{@parent_contact.age}"
+        end
+        if !@parent_contact.address1_city.blank?
+          @contact_info = @contact_info + " - " unless @contact_info.blank?
+          @contact_info = @contact_info + "#{@parent_contact.address1_city}"
+        end
+        if !@parent_contact.address1_state.blank?
+          @contact_info = @contact_info + ", " unless @contact_info.blank?
+          @contact_info = @contact_info + "#{@parent_contact.address1_state}"
+        end
+      end
       render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
       show_all_activities

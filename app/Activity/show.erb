@@ -49,7 +49,7 @@
 			<li data-role="list-divider">Contact Info</li>
 			<li>
 					<h3><%= @parent_contact.full_name %></h3>
-					<p><%= "#{@parent_contact.gendercode} #{@parent_contact.age} - #{@parent_contact.address1_city}, #{@parent_contact.address1_state}" %></p>		
+					<p><%= @contact_info %></p>		
 			</li>
 			<%=
 			@parent_contact.map_phone_numbers{ |type,number,do_not_call,preferred|
