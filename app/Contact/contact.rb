@@ -92,6 +92,12 @@ class Contact
         union
         select distinct c.object as 'contactid' from Contact c, Policy p
         where p.contact_id=c.object and c.object in ('#{contact_ids.join("', '")}')
+        union
+        select distinct c.object as 'contactid' from Contact c, Activity a
+        where a.parent_contact_id=c.object and c.object in ('#{contact_ids.join("', '")}')
+        union
+        select distinct c.object as 'contactid' from Contact c, Activity a
+        where a.parent_id=c.object and c.object in ('#{contact_ids.join("', '")}')
       }).map{|contact| contact.contactid } 
   end  
   
