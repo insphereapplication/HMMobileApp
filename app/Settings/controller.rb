@@ -368,8 +368,16 @@ class SettingsController < Rho::RhoController
   
   def new_assigned_leads?
     former_assigned_lead = Settings.last_assigned_lead
+    puts "!!!!! former_assigned_lead #{former_assigned_lead} "
     @current_assigned_lead = set_last_assigned_lead
-    @current_assigned_lead && (created_today?) && (Time.parse(@current_assigned_lead.cssi_assigneddate) > Time.parse(former_assigned_lead)) && (reassigned_lead?)
+    puts "????? current_assigned_lead #{@current_assigned_lead} "
+    if former_assigned_lead.blank? && @current_assigned_lead.nil?
+      false
+    elsif former_assigned_lead.blank? && @current_assigned_lead
+      (created_today?) && (reassigned_lead?)
+    else   
+      @current_assigned_lead && (created_today?)  && (Time.parse(@current_assigned_lead.cssi_assigneddate) > Time.parse(former_assigned_lead)) && (reassigned_lead?)
+    end
   end
   
   def created_today?
