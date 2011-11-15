@@ -356,7 +356,8 @@ class OpportunityController < Rho::RhoController
     Settings.record_activity
     @opportunity = Opportunity.find_opportunity(@params['id'])
     @activity_list = @opportunity.activity_list unless @opportunity.blank?
-    if @opportunity
+    @contact = @opportunity.contact  unless @opportunity.blank?
+    if @opportunity && @contact
       render :action => :activity_summary, :back => 'callback:',
               :layout => 'layout_jquerymobile',
               :origin => @params['origin']
