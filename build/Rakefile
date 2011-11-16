@@ -99,6 +99,7 @@ def model_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Dwayne Smith (PHY3ZNA9A7)"',
     :iphone_config => 'Release',
+    :bundle_identifier => "com.insphere.insitemobile",
     :provisionprofile => '4F694BBE-F8F4-4260-A17D-D78D7DD783CE'
   })
 end
@@ -107,6 +108,7 @@ def dev_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Dwayne Smith (PHY3ZNA9A7)"',
     :iphone_config => 'Release',
+    :bundle_identifier => "com.insphere.insitemobile",
     :provisionprofile => '4F694BBE-F8F4-4260-A17D-D78D7DD783CE'
   })
 end
