@@ -89,7 +89,7 @@ def build_yml
     :android_push_sender => "insphereapplication@insphereis.com",
     :android_sdk_version => "2.2",
     :encrypt_database => '1',
-    :bundle_identifier => "com.insphere.insitemobile",
+    :bundle_identifier => "com.insphere.insite",
     :bundle_url_scheme => 'insite',
     :extensions => '["json", "another-extension", "fileutils", "mspec", "crypt"]'
   }
@@ -97,17 +97,17 @@ end
 
 def model_build_yml
   build_yml.merge({
-    :codesignidentity => '"iPhone Developer: Dwayne Smith (PHY3ZNA9A7)"',
+    :codesignidentity => '"iPhone Developer: Alex Mitrofanov (2Z2H9LGCB2)"',
     :iphone_config => 'Release',
-    :provisionprofile => '4F694BBE-F8F4-4260-A17D-D78D7DD783CE'
+    :provisionprofile => '2B2653CE-B976-4714-BE63-C89C51FB3DCF'
   })
 end
 
 def dev_build_yml
   build_yml.merge({
-    :codesignidentity => '"iPhone Developer: Dwayne Smith (PHY3ZNA9A7)"',
+    :codesignidentity => '"iPhone Developer: Alex Mitrofanov (2Z2H9LGCB2)"',
     :iphone_config => 'Release',
-    :provisionprofile => '4F694BBE-F8F4-4260-A17D-D78D7DD783CE'
+    :provisionprofile => '2B2653CE-B976-4714-BE63-C89C51FB3DCF'
   })
 end
 
