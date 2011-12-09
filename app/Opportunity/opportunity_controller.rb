@@ -545,7 +545,9 @@ class OpportunityController < Rho::RhoController
     @opp.update_attributes( :opportunityratingcode => 'Warm')
     @opp.update_attributes( :cssi_inputsource => 'Manual')
     @opp.update_attributes( :ownerid => StaticEntity.system_user_id)  
-    @opp.update_attributes( :cssi_assetownerid => StaticEntity.system_user_id)    
+    @opp.update_attributes( :cssi_assetownerid => StaticEntity.system_user_id)
+
+    Opportunity.local_changed=true
     
     SyncEngine.dosync
     redirect  :controller => :Contact,
