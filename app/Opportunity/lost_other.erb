@@ -23,11 +23,8 @@
 	</div>
 	<div id="contentDiv" data-role="content">
 		<div class="ui-body ui-body-d">
-			<form id='lost_opportunity_other_form' method="POST" action="<%= url_for :controller => :Activity, :action => :update_lost_other_status, :query => {:origin => @params['origin']} %>">
+			<form id='lost_opportunity_other_form' method="POST" action="<%= url_for :controller => :Activity, :action => :update_lost_other_status, :query => {:origin => @params['origin'], :appointments => @params['appointments'] } %>">
 				<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
-				<% @params['appointments'].each do |appt| %>
-					<input type="hidden" name="appointments[]" value="<%= @params['appointments'].join(',') %>" />
-				<% end %>
 				<div data-role="fieldcontain">
 				<label for="status_codeid" class="select">Lost Reason:<font color="red">&nbsp;&nbsp;*<br/></font></label>
 				<select data-role="none" class="ins-drop-down" name="status_code" id="status_codeid">
