@@ -20,11 +20,8 @@ document.getElementById('appointment_datetime').focus();
 		</div>
 		<div id="contentDiv" data-role="content">
 			<div class="ui-body ui-body-d">
-				<form id="appointment_form" name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_appointment_set, :query => {:origin => @params['origin']} %>">
+				<form id="appointment_form" name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_appointment_set, :query => {:origin => @params['origin'], :appointments => @params['appointments']} %>">
 					<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
-					<% @params['appointments'].each do |appt| %>
-						<input type="hidden" name="appointments[]" value="<%= appt %>" />
-					<% end %>
 					<input type="hidden" id="cssi_location" name="cssi_location" />
 					<input type="hidden" id="appointment_location" name="appointment_location" />
 					

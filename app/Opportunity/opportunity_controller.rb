@@ -226,6 +226,7 @@ class OpportunityController < Rho::RhoController
     Settings.record_activity
     @opportunity = Opportunity.find_opportunity(@params['id'])
     @contact = @opportunity.contact if @opportunity
+    @incomplete_appointments = @opportunity.incomplete_appointments if @opportunity
     if @opportunity && @contact
       render :action => :status_update, :back => 'callback:', :layout => 'layout_jquerymobile'
     else

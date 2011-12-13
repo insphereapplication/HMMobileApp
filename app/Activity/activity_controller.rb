@@ -545,7 +545,8 @@ class ActivityController < Rho::RhoController
       
           opportunity.record_phone_call_made_now
       
-          finished_loss_status(opportunity, @params['origin'], @params['appointments'])
+          appointmentids = get_appointment_ids(@params['appointments'])
+          finished_loss_status(opportunity, @params['origin'], appointmentids)
           db.commit
         rescue Exception => e
           puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
@@ -638,7 +639,8 @@ class ActivityController < Rho::RhoController
         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
       })
       
-      finished_update_status(opportunity, @params['origin'], @params['appointments'])
+      appointmentids = get_appointment_ids(@params['appointments'])
+      finished_update_status(opportunity, @params['origin'], appointmentids)
       db.commit
     rescue Exception => e
       puts "Exception in update status call back requested, rolling back: #{e.inspect} -- #{@params.inspect}"
@@ -685,8 +687,9 @@ class ActivityController < Rho::RhoController
             :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
           }
         )
-  
-        finished_update_status(opportunity, @params['origin'], @params['appointments'])
+        
+        appointmentids = get_appointment_ids(@params['appointments'])
+        finished_update_status(opportunity, @params['origin'], appointmentids)
         db.commit
       rescue Exception => e
         puts "Exception in update status appointment set, rolling back: #{e.inspect} -- #{@params.inspect}"
