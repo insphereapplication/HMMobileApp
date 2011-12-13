@@ -31,6 +31,7 @@ class DeviceInfo
       :app_version => Rho::RhoConfig.app_version,
       :phone_id => System.get_property('phone_id'),
       :os_platform => System.get_property('platform'),
+      :device_name => System.get_property('device_name'),
       :os_version => System.get_property('os_version'),
       :last_sync => Settings.last_synced.getgm.to_s,
       :emulator => System.get_property("is_emulator"),
