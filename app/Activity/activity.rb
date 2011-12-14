@@ -99,6 +99,9 @@ class Activity
   def self.create_new(params)
       new_activity = Activity.create(params)
       new_activity.update_attributes( :temp_id => new_activity.object )
+
+      Activity.local_changed=true
+
       new_activity
   end
   
