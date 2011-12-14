@@ -726,7 +726,7 @@ class ActivityController < Rho::RhoController
   private
   
   def get_appointment_ids(appointment_params)
-    ids = appointment_params.gsub(/[\[\]"\s]/, '')
+    ids = appointment_params.gsub(/[\[\]"\s]/, '') if appointment_params
     ids.split(",") if ids
   end
   
