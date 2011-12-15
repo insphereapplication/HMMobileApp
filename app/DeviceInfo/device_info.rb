@@ -27,6 +27,8 @@ class DeviceInfo
   
   def self.check_device_information
     
+   push_pin =  System.get_property('device_id') && System.get_property('device_id').length > 0  ? System.get_property('device_id') : Rho::RhoConfig.push_pin   
+    
    @device_data = {
       :app_version => Rho::RhoConfig.app_version,
       :phone_id => System.get_property('phone_id'),
@@ -36,7 +38,7 @@ class DeviceInfo
       :last_sync => Settings.last_synced.getgm.to_s,
       :emulator => System.get_property("is_emulator"),
       :client_id => Rhom::Rhom::client_id, 
-      :push_pin => Rho::RhoConfig.push_pin       
+      :push_pin => System.get_property('device_id') && System.get_property('device_id').length > 0  ? System.get_property('device_id') : Rho::RhoConfig.push_pin    
     }
     
 
