@@ -17,7 +17,8 @@ class NoteController < Rho::RhoController
   def show
     Settings.record_activity
     @note = Note.find_note(@params['id'])
-    if @note
+    @parent_opportunity = @note.parent_opportunity if @note
+    if @note && @parent_opportunity
       render :action => :show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
     else
        WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))   
