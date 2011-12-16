@@ -15,12 +15,11 @@ class ApplicationDetailController < Rho::RhoController
   def show
     Settings.record_activity
     @appdetail = ApplicationDetail.find_application(@params['id'])
-    if @appdetail
-      puts @appdetail.inspect
-      @opportunity = Opportunity.find_opportunity(@params['opportunity'])
+    @opportunity = Opportunity.find_opportunity(@params['opportunity'])
+    if @appdetail && @opportunity
       render :action => :show, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
     else
-      redirect :action => :index
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))  
     end
   end
 
@@ -93,7 +92,7 @@ class ApplicationDetailController < Rho::RhoController
   def app_detail_delete
     if @params['button_id'] == "Ok"
       @appdetail = ApplicationDetail.find_application(@params['id'])
-      opportunityid = @appdetail.opportunity_id
+      opportunityid = @appdetail ? @appdetail.opportunity_id : @params['opportunity'] 
       @appdetail.destroy if @appdetail
       SyncEngine.dosync
       WebView.navigate(url_for :controller => :Opportunity, :action => :won, :id => opportunityid, :origin => @params['origin'], :opportunity => opportunityid)
