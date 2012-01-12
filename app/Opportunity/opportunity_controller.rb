@@ -41,7 +41,8 @@ class OpportunityController < Rho::RhoController
     ]
     
     # Rho::NativeTabbar.create(tabbar)
-    Rho::NativeTabbar.create(:tabs => tabbar, :place_tabs_bottom => true)    
+    Rho::NativeTabbar.create(:tabs => tabbar, :place_tabs_bottom => true,
+            :on_change_tab_callback => url_for(:action => :tab_switch_callback))    
     Rho::NativeTabbar.switch_tab(0)
     
     $new_leads_nav_context = []
@@ -49,6 +50,11 @@ class OpportunityController < Rho::RhoController
     $appointments_nav_context = []
     $first_render = true
     
+  end
+  
+  def tab_switch_callback
+    # refresh opportunities page if changed locally
+    WebView.refresh(0) if Opportunity.local_changed? && (@params['tab_index'].to_i == 0)
   end
   
   def refresh_if_changed
