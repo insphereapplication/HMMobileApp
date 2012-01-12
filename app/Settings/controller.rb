@@ -89,6 +89,7 @@ class SettingsController < Rho::RhoController
   end
 
   def login_callback
+	puts "Entering login_callback"
     errCode = @params['error_code'].to_i
     httpErrCode = @params['error_message'].split[0]
 
