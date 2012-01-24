@@ -54,7 +54,9 @@ class OpportunityController < Rho::RhoController
   
   def tab_switch_callback
     # refresh opportunities page if changed locally
-    WebView.refresh(0) if Opportunity.local_changed? && (@params['tab_index'].to_i == 0)
+    if Opportunity.local_changed? && (@params['tab_index'].to_i == 0)
+      WebView.navigate(url_for(:action => :index, :back => 'callback:', :query => {:selected_tab => $current_nav_context}))
+    end
   end
   
   def refresh_if_changed
