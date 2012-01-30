@@ -83,7 +83,7 @@ class OpportunityController < Rho::RhoController
     if SyncEngine::logged_in == 1
       intialize_nav_contexts
       Opportunity.local_changed = false
-      @params['selected_tab'] ||= 'new-leads'
+      @params['selected_tab'] = @params['selected_tab'].blank? ? 'new-leads' : @params['selected_tab']
       @persisted_scheduled_search = Settings.get_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS)['search']
       set_opportunities_nav_context(@params['selected_tab']);    
       render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
