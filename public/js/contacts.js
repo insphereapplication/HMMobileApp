@@ -51,11 +51,13 @@ function clearContacts(){
 function initializeSearchAC(){
 	firstName = $('input#search_first_name').val();
 	lastName = $('input#search_last_name').val();
+	emailAddress = $('input#search_email').val();
+	phoneNumber = $('input#search_phone').val();
 
 	disableACSearchButtons();
 	showACSpin();
 	// The callback function is empty except for error handling -- Rhosync's search method is asynchronous and will trigger a separate redirect 
-	$.get("/app/SearchContacts/search_contacts", {first_name: firstName, last_name: lastName},
+	$.get("/app/SearchContacts/search_contacts", {first_name: firstName, last_name: lastName, email: emailAddress, phone: phoneNumber},
 		function(result) {	
 			if (result.match(/Error/) == "Error"){
 					alert("There was a server error.");

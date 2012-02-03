@@ -14,6 +14,10 @@
 			  <input type="text" id="search_first_name" name="search_first_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%= @last_search.nil? ? "" : @last_search.search_terms['first_name'].to_s %>"></input>
 			  <label for="search_last_name" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Last Name: </label>
 			  <input type="text" id="search_last_name" name="search_last_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%= @last_search.nil? ? "" : @last_search.search_terms['last_name'].to_s %>" ></input>
+			  <label for="search_email" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Email Address: </label>
+			  <input type="text" id="search_email" name="search_email" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%= @last_search.nil? ? "" : @last_search.search_terms['email'].to_s %>"></input>
+			  <label for="search_phone" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Phone Number: </label>
+			  <input type="text" id="search_phone" name="search_phone" maxlength="14" class="ui-search-text ui-body-null ui-corner-all" value="<%= @last_search.nil? ? "" : @last_search.search_terms['phone'].to_s %>" ></input>
 
 			<fieldset class="ui-grid-custom ui-grid-a">
 				<div class="ui-block-a">

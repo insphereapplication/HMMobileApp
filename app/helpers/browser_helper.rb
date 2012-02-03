@@ -36,6 +36,83 @@ module BrowserHelper
     }
   end
   
+  def  display_contact_record(contact,criteria)
+    serarch_criteria = ""
+    search_criteria = criteria.gsub("(","\\(")
+    search_criteria.gsub!(")","\\)")
+
+    #puts "made it to contact record create, search #{search_criteria}"
+
+    
+    html_string = ''
+    if search_criteria.blank?  || ((contact.emailaddress1.blank? || !contact.emailaddress1.downcase.match(search_criteria.downcase)) && (contact.mobilephone.blank? || !contact.mobilephone.downcase.match(search_criteria)  ) && (contact.telephone2.blank? || !contact.telephone2.match(search_criteria))  && (contact.telephone1.blank? || !contact.telephone1.match(search_criteria)) && (contact.telephone3.blank? || !contact.telephone3.match(search_criteria)))
+
+    html_string =  %Q{
+          <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
+                 <div class="ui-btn-inner" onclick="window.open('#{url_for(:action => :show, :id => contact.object, :query => {:origin => 'contact'})} ')">
+                   <div class="ui-btn-text">
+                     <h3 class="ui-li-heading" style="margin-top: 0px; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> <a href="#{url_for(:action => :show, :id => contact.object, :query => {:origin => 'contact'}) }" class="ui-link-inherit" style="padding-left: 0px !important">#{contact.last_first}</a></h3> 
+                   </div>
+                   <span class="ui-icon ui-icon-arrow-r"></span>
+                 </div>
+          </li>
+        }  
+    else
+       if contact.emailaddress1 && contact.emailaddress1.downcase.match(search_criteria.downcase)
+       html_string =  %Q{
+          <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
+                 <div class="ui-btn-inner" onclick="window.open('#{url_for(:action => :show, :id => contact.object, :query => {:origin => 'contact'})} ')">
+                   <div class="ui-btn-text">
+                     <h3 class="ui-li-heading" style="margin-top: 0px; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> <a href="#{url_for(:action => :show, :id => contact.object, :query => {:origin => 'contact'}) }" class="ui-link-inherit" style="padding-left: 0px !important">#{contact.last_first}</a></h3> 
+                     <div class="ui-grid-a ui-li-desc" >
+                              <div class="ui-block-a" style="margin-bottom: 0px">
+                                 #{contact.emailaddress1}
+                              </div>
+                     </div>
+                   </div>
+                   <span class="ui-icon ui-icon-arrow-r"></span>
+                 </div>
+               </li>
+          }
+        end
+        if contact.mobilephone && contact.mobilephone.match(search_criteria)
+            html_string =  html_string +  create_phone_contact_record(contact,contact.mobilephone, 'M')
+        end
+        if contact.telephone2 && contact.telephone2.match(search_criteria)
+            html_string =  html_string +  create_phone_contact_record(contact,contact.telephone2, 'H')
+        end
+        if contact.telephone1 && contact.telephone1.match(search_criteria)
+            html_string =  html_string +  create_phone_contact_record(contact,contact.telephone1, 'B')
+            
+        end
+        if contact.telephone3 && contact.telephone3.match(search_criteria)
+            html_string =  html_string +  create_phone_contact_record(contact,contact.telephone3, 'A')
+        end
+
+    end
+    #puts "contact list #{html_string}"  
+    html_string
+    
+  end  
+  
+  def create_phone_contact_record(contact, phone_number, type)
+    %Q{
+       <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
+              <div class="ui-btn-inner" onclick="window.open('#{url_for(:action => :show, :id => contact.object, :query => {:origin => 'contact'})} ')">
+                <div class="ui-btn-text">
+                  <h3 class="ui-li-heading" style="margin-top: 0px; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> <a href="#{url_for(:action => :show, :id => contact.object, :query => {:origin => 'contact'}) }" class="ui-link-inherit" style="padding-left: 0px !important">#{contact.last_first}</a></h3> 
+                  <div class="ui-grid-a ui-li-desc" >
+                           <div class="ui-block-a" style="margin-bottom: 0px">
+                                #{type}: #{phone_number}
+                           </div>
+                  </div>
+                </div>
+                <span class="ui-icon ui-icon-arrow-r"></span>
+              </div>
+            </li>
+       }
+  end  
+  
   def quick_task_add_panel
     %Q{
       <div data-role="collapsible" data-collapsed="true" >

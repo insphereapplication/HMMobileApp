@@ -17,7 +17,9 @@ class SearchContactsController < Rho::RhoController
       # perform new search    
       @last_search_terms = { 
         :first_name => @params['first_name'],
-        :last_name => @params['last_name']
+        :last_name => @params['last_name'],
+        :email => @params['email'],
+        :phone => @params['phone']
       }
       SearchContacts.search({
         :from => 'search',
