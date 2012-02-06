@@ -381,7 +381,7 @@ class OpportunityController < Rho::RhoController
     phone_number=''
     if @contact.blank?
       WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))  
-    elsif @contact.phone_numbers.size == 1
+    elsif @contact.phone_numbers.size < 2
       @contact.phone_numbers.each do |type, number|
         phone_number = number
       end
