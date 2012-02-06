@@ -60,9 +60,9 @@ class ActivityController < Rho::RhoController
           @contact_info = @contact_info + " - " unless @contact_info.blank?
           @contact_info = @contact_info + "#{@parent_contact.address1_city}"
         end
-        if !@parent_contact.address1_state.blank?
+        if !@parent_contact.cssi_state1id.blank?
           @contact_info = @contact_info + ", " unless @contact_info.blank?
-          @contact_info = @contact_info + "#{@parent_contact.address1_state}"
+          @contact_info = @contact_info + "#{@parent_contact.cssi_state1id}"
         end
       end
       render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
