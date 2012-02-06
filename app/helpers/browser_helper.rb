@@ -37,7 +37,7 @@ module BrowserHelper
   end
   
   def  display_contact_record(contact,criteria)
-    serarch_criteria = ""
+
     search_criteria = criteria.gsub("(","\\(")
     search_criteria.gsub!(")","\\)")
 
@@ -111,6 +111,140 @@ module BrowserHelper
               </div>
             </li>
        }
+  end  
+  
+  def display_search_ac_contact(result, contacts_on_device, email_criteria, phone_criteria)
+				
+				html_string = ""
+				if (email_criteria.blank? && phone_criteria.blank?)
+					if (contacts_on_device.include?(result[0])
+					  )
+					 
+					   html_string =  %Q{ 
+					     <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
+             			<div class="ui-btn-inner">
+             				<div class="ui-btn-text"> 
+             				   <h3 class="ui-li-heading" ><a href="#{url_for(:action => :show, :controller => :Contact, :id => result[0], :query => {:origin =>'SearchContacts'})}" class="ui-link-inherit" style="padding-left: 0px !important"> #{result[1]['lastname']}, #{result[1]['firstname']}</a></h3>
+								     </div>
+							     </div>
+							  <img class="search-icon" src="/public/images/mobile_phone.png">
+				    </li> }
+					else
+					   html_string = html_string + %Q{
+					     <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
+             			<div class="ui-btn-inner">
+             				<div class="ui-btn-text">
+             				  <h3 class="ui-li-heading" ><a href="#{url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })}" class="ui-link-inherit" style="padding-left: 0px !important"> #{result[1]['lastname']}, #{result[1]['firstname']}</a></h3>
+								     </div>
+							    </div>
+							<img class="search-icon" src="/public/images/computer_icon.png">
+				    </li>}
+					end
+				end	
+				if (!email_criteria.blank?)
+				  if (contacts_on_device.include?(result[0])
+					  ) 
+					   html_string =  %Q{ 
+					     <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
+             			<div class="ui-btn-inner">
+             				<div class="ui-btn-text">
+             				  <h3 class="ui-li-heading"><a href="#{url_for(:action => :show, :controller => :Contact, :id => result[0], :query => {:origin =>'SearchContacts'})}" class="ui-link-inherit" style="padding-left: 0px !important"> #{result[1]['lastname']}, #{result[1]['firstname']}</a></h3>
+  							     	      <div class="ui-grid-a ui-li-desc" >
+                              <div class="ui-block-a" style="margin-bottom: 0px">
+                               #{result[1]['emailaddress1']}
+                               </div>
+                            </div>						
+								    </div>
+							   </div>
+							<img class="search-icon" src="/public/images/mobile_phone.png">
+				    </li> }
+					else
+					   html_string =  %Q{
+					     <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
+             			<div class="ui-btn-inner">
+             				<div class="ui-btn-text">
+             				  <h3 class="ui-li-heading" ><a href="#{url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })}" class="ui-link-inherit" style="padding-left: 0px !important"> #{result[1]['lastname']}, #{result[1]['firstname']}</a></h3>
+  							      	<div class="ui-grid-a ui-li-desc" >
+                            <div class="ui-block-a" style="margin-bottom: 0px">
+                               #{result[1]['emailaddress1']}
+                            </div>
+                        </div>
+								     </div>
+						   	</div>
+							<img class="search-icon" src="/public/images/computer_icon.png">
+				    </li>}
+					end 
+				end
+				if (!phone_criteria.blank?)
+				    search_criteria = phone_criteria.gsub("(","\\(")
+            search_criteria.gsub!(")","\\)")
+            
+            on_device = contacts_on_device.include?(result[0])
+           
+            if result[1]['mobilephone'] && result[1]['mobilephone'].match(search_criteria)
+                html_string =  html_string +  create_search_ac_record(result,result[1]['mobilephone'], 'M', on_device)
+            end
+            if result[1]['telephone2'] && result[1]['telephone2'].match(search_criteria)
+                html_string =  html_string +  create_search_ac_record(result,result[1]['telephone2'], 'H', on_device)
+            end
+            if result[1]['telephone1'] && result[1]['telephone1'].match(search_criteria)
+                html_string =  html_string +  create_search_ac_record(result,result[1]['telephone1'], 'B' , on_device)
+
+            end
+            if result[1]['telephone3'] && result[1]['telephone3'].match(search_criteria)
+                html_string =  html_string +  create_search_ac_record(result,result[1]['telephone3'], 'A', on_device)
+            end
+				    
+				end  
+   html_string
+  end
+  
+  def create_search_ac_record(result, phone_number, type, on_device)
+    html_string = ""
+    if (on_device)
+     html_string = create_search_ac_record_device(result, phone_number, type)
+    else
+     html_string = create_search_ac_record_computer(result, phone_number, type)
+    end    
+    html_string
+  end
+  
+  def create_search_ac_record_device(result, phone_number, type)
+    
+    %Q{ 
+	     <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
+     			<div class="ui-btn-inner">
+     				<div class="ui-btn-text">
+     				  <h3 class="ui-li-heading" ><a href="#{url_for(:action => :show, :controller => :Contact, :id => result[0], :query => {:origin =>'SearchContacts'})}" class="ui-link-inherit" style="padding-left: 0px !important"> #{result[1]['lastname']}, #{result[1]['firstname']}</a></h3>
+				     	      <div class="ui-grid-a ui-li-desc" >
+                             <div class="ui-block-a" style="margin-bottom: 0px">
+                                  #{type}: #{phone_number}
+                           </div>
+                    </div>				
+				    </div>
+			   </div>
+			<img class="search-icon" src="/public/images/mobile_phone.png">
+    </li> }
+  
+  end
+  
+  def create_search_ac_record_computer(result, phone_number, type)
+    
+    %Q{
+	     <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
+     			<div class="ui-btn-inner">
+     				<div class="ui-btn-text">
+     				  <h3 class="ui-li-heading" ><a href="#{url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })}" class="ui-link-inherit" style="padding-left: 0px !important"> #{result[1]['lastname']}, #{result[1]['firstname']}</a></h3>
+				      	<div class="ui-grid-a ui-li-desc" >
+                         <div class="ui-block-a" style="margin-bottom: 0px">
+                              #{type}: #{phone_number}
+                       </div>
+                </div>
+				     </div>
+		   	</div>
+			<img class="search-icon" src="/public/images/computer_icon.png">
+    </li>}
+  
   end  
   
   def quick_task_add_panel

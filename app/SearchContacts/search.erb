@@ -50,7 +50,7 @@
 					<li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No Contacts Found </li>
 				<% else %>
 					<% @last_search.search_results.each do |result| %>
-						<li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
+						<!-- <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
 							<div class="ui-btn-inner">
 								<div class="ui-btn-text">
 									<% if @contacts_already_on_device.include?(result[0]) %>
@@ -65,7 +65,9 @@
 											</div>
 											<img class="search-icon" src="/public/images/computer_icon.png">
 								    </li>
-									<%end%>
+									<%end%> -->
+								
+							<%=  display_search_ac_contact(result, @contacts_already_on_device, @last_search.search_terms['email'], @last_search.search_terms['phone']) %>
 					<% end %>
 					<% if @last_search.search_results.size == 50 %>
 					<li style="display:block; margin-left:auto; margin-right:auto; text-align: center;"> More than 50 results were found.  Please specify additional search parameters to narrow the results. </li>
