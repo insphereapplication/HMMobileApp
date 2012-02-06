@@ -359,6 +359,7 @@ $('#lost_other_page').live('pagecreate',function(event){
 // Callback Add / Edit
 $('#callback_create, #callback_edit').live('pagecreate',function(event){
 	$("#call_back_form").validate({
+          focusInvalid: navigator.userAgent.toLowerCase().indexOf("android") < 0,
 	  rules: {
 	    'phone_number' : {
 	      phoneUS: true,
@@ -537,3 +538,43 @@ $('#appointment_edit_page').live('pagecreate',function(event){
 $('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_page, #contact_edit_page, #contact_new_page, #appdetail_add_page, #appdetail_edit_page, #callback_create, #callback_edit, #appointment_add_page, #appointment_edit_page, #lost_other_page, #pin_reset_page','#mark_as_won_page','#new_task', '#new_appointment', '#new_contact_task', '#new_phonecall_contact_page', '#new_contact_appointment').live('pageshow',function(event){
 	$('input').one('keypress',function(ev) { $('<div></div>').appendTo('body') });
 });
+
+// Emulate iOS phone numbers formatting on Android
+if (navigator.userAgent.toLowerCase().indexOf("android") >= 0) {
+    $.fn.usphone = function() {
+        this.keyup(function(e) {
+            // do not process del, backspace, escape, arrow left and arrow right characters
+            var k = e.which;
+            if (k == 8 || k == 46 || k == 27 || k == 37 || k == 39)
+                return;
+            // remove invalid characters
+            var value = "";
+            for (var i = 0; i < this.value.length; i++) {
+                var ch = this.value[i];
+                if (ch >= "0" && ch <= "9")
+                    value += ch;
+            }
+            // remove extra characters
+            if (value.length > 10)
+                value = value.substring(0, 10);
+            // insert formatting characters
+            if (value.length >= 3)
+                value = "(" + value.substring(0, 3) + ")" + value.substring(3);
+            if (value.length > 5)
+                value = value.substring(0, 5) + " " + value.substring(5);
+            if (value.length > 9)
+                value = value.substring(0, 9) + "-" + value.substring(9);
+            // set new value
+            var $this = this;
+            var length = value.length;
+            setTimeout(function() {
+                $this.value = value;
+                $this.setSelectionRange(length, length);
+            }, 0);
+        });
+    };
+
+    $('#contact_edit_page, #contact_new_page, #callback_create, #callback_edit, #new_phonecall_contact_page').live('pagecreate', function() {
+        $('[type^="tel"]').usphone();
+    });
+}
