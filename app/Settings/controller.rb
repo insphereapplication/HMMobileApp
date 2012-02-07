@@ -781,12 +781,40 @@ class SettingsController < Rho::RhoController
         Settings.record_activity
         if Settings.pin_confirmed == true
           resource_url=Rho::RhoConfig.resource_center_url
+          resource_target=Rho::RhoConfig.resource_center_target
           ctime = Time.new.utc
           ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
           user_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.login}Delimit"))
           pwd_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.password}Delimit"))
             
-          resource_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}"
+          resource_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}&ReturnURL=#{resource_target}"
+        
+          puts "Resource URL parameters are: ****#{resource_params_enc}****"
+          puts "Current UTC is:  #{ctime}"
+
+          rc_url ="#{resource_url}?#{resource_params_enc}"
+       
+          redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+        
+          System.open_url("#{resource_url}?#{resource_params_enc}")
+          
+      else
+          redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+      end
+      
+  end
+  
+  def lead_forward
+        Settings.record_activity
+        if Settings.pin_confirmed == true
+          resource_url=Rho::RhoConfig.resource_center_url
+          lead_forward_target=Rho::RhoConfig.lead_forward_target
+          ctime = Time.new.utc
+          ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
+          user_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.login}Delimit"))
+          pwd_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.password}Delimit"))
+            
+          resource_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}&ReturnURL=#{lead_forward_target}"
         
           puts "Resource URL parameters are: ****#{resource_params_enc}****"
           puts "Current UTC is:  #{ctime}"
