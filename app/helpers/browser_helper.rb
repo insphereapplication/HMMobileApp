@@ -37,8 +37,9 @@ module BrowserHelper
   end
   
   def  display_contact_record(contact,criteria)
-
-    search_criteria = criteria.gsub("(","\\(")
+    
+    search_criteria = ''
+    search_criteria = criteria.gsub("(","\\(") if criteria
     search_criteria.gsub!(")","\\)")
 
     #puts "made it to contact record create, search #{search_criteria}"
