@@ -9,20 +9,15 @@
 
 	<form name="contact_filter_form" id="contact_filter_form">	
 		<div id="filter" data-role="none">
-			  <label for="search_first_name" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;First Name: </label>
-					 			  <input type="text" id="search_first_name" name="search_first_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%= @last_search.nil? ? "" : @last_search.search_terms['first_name'].to_s %>"></input>
-					  <label for="search_last_name" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Last Name: </label>
-					  <input type="text" id="search_last_name" name="search_last_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%= @last_search.nil? ? "" : @last_search.search_terms['last_name'].to_s %>" ></input>
-			  <!-- <label for="search_fullnamename" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Name: </label>
-			  <input type="text" id="search_fullname" name="search_fullname" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%= @last_search.nil? ? "" : @last_search.search_terms['fullname'].to_s %>" ></input> -->
+			  <!-- <label for="search_first_name" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;First Name: </label>
+							 			  <input type="text" id="search_first_name" name="search_first_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%= @last_search.nil? ? "" : @last_search.search_terms['first_name'].to_s %>"></input>
+							  <label for="search_last_name" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Last Name: </label>
+							  <input type="text" id="search_last_name" name="search_last_name" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%= @last_search.nil? ? "" : @last_search.search_terms['last_name'].to_s %>" ></input> -->
+			  <label for="search_fullname" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Name: </label>
+			  <input type="text" id="search_fullname" name="search_fullname" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%= @last_search.nil? ? "" : @last_search.search_terms['full_name'].to_s %>" ></input>
 			  <label for="search_email" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Email Address: </label>
 			  <input type="text" id="search_email" name="search_email" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%= @last_search.nil? ? "" : @last_search.search_terms['email'].to_s %>"></input>
 			  <label for="search_phone" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Phone Number: </label>
-					<!-- <% if System::get_property('platform') == 'APPLE' %>
-						<input type="text"   pattern="\d*" class="ui-search-text ui-body-null ui-corner-all" id="search_phone" name="search_phone" value="<%= @last_search.nil? ? "" : @last_search.search_terms['phone'].to_s %>">
-					<% else %>
-						<input type="number" id="search_phone" class="required_group" name="search_phone" value="<%= @last_search.nil? ? "" : @last_search.search_terms['phone'].to_s %>>
-					<% end %> -->
 			  <input type="number"  id="search_phone" name="search_phone" maxlength="14" class="ui-search-text ui-body-null ui-corner-all" value="<%= @last_search.nil? ? "" : @last_search.search_terms['phone'].to_s %>" ></input>
 
 			<fieldset class="ui-grid-custom ui-grid-a">
