@@ -420,7 +420,7 @@ class OpportunityController < Rho::RhoController
     redirect :action => action, :back => 'callback:',
               :id => @params['id'],
               :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}
-    System.open_url("tel:#{telephone}")
+    System.open_url("tel:#{telephone}") if !telephone.blank?
   end
 
   def birthpopup
