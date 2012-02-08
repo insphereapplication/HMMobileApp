@@ -578,3 +578,33 @@ if (navigator.userAgent.toLowerCase().indexOf("android") >= 0) {
         $('[type^="tel"]').usphone();
     });
 }
+
+// Automatically format 10 digits to phone number
+$.fn.autoFormatPhone = function() {
+    this.keyup(function(e) {
+        // do not process del, backspace, escape, arrow left and arrow right characters
+        var k = e.which;
+        if (k == 8 || k == 46 || k == 27 || k == 37 || k == 39)
+            return;
+        var value = this.value;
+        if (value.length == 10) {
+            // check for all numbers
+            for (var i = 0; i < value.length; i++) {
+                var ch = value[i];
+                if (ch < "0" || ch > "9")
+                    return;
+            }
+            // insert formatting characters
+            value = "(" + value.substring(0, 3) + ")" + value.substring(3);
+            value = value.substring(0, 5) + " " + value.substring(5);
+            value = value.substring(0, 9) + "-" + value.substring(9);
+            // set new value
+            var $this = this;
+            var length = value.length;
+            setTimeout(function() {
+                $this.value = value;
+                $this.setSelectionRange(length, length);
+            }, 0);
+        }
+    });
+};
