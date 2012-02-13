@@ -574,7 +574,7 @@ if (navigator.userAgent.toLowerCase().indexOf("android") >= 0) {
         });
     };
 
-    $('#contact_edit_page, #contact_new_page, #callback_create, #callback_edit, #new_phonecall_contact_page').live('pagecreate', function() {
+    $('#contact_edit_page, #contact_new_page, #callback_create, #callback_edit, #new_phonecall_contact_page, #new_phonecall').live('pagecreate', function() {
         $('[type^="tel"]').usphone();
     });
 }
