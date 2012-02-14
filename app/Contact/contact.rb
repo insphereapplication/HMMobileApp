@@ -164,9 +164,10 @@ class Contact
     })
   end
   
-  def self.get_search_sql(terms)
-    terms_ary = terms.split(/[\s,]/).reject{|term| term.blank? }
-    terms_ary.blank? ? '' : "and (#{terms_ary.map{|term| "c.firstname like '#{term}%' OR c.lastname like '#{term}%' OR c.emailaddress1 like '#{term}%' OR c.telephone1 like '%#{term}%' OR c.telephone2 like '%#{term}%' OR c.telephone3 like '%#{term}%' OR c.mobilephone like '%#{term}%'" }.join(' OR ')})"
+  def self.get_search_sql(term)
+    #terms_ary = terms.split(/[\s,]/).reject{|term| term.blank? }
+    #terms_ary = terms
+    term.blank? ? '' : "and (c.firstname like '#{term}%' OR c.lastname like '#{term}%' OR c.emailaddress1 like '#{term}%' OR c.telephone1 like '%#{term}%' OR c.telephone2 like '%#{term}%' OR c.telephone3 like '%#{term}%' OR c.mobilephone like '%#{term}%')"
   end
   
   def full_name
