@@ -123,22 +123,22 @@ module BrowserHelper
 					 
 					   html_string =  %Q{ 
 					     <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
-             			<div class="ui-btn-inner">
+					      <div class="ui-btn-inner" onclick="window.open('#{url_for(:action => :show, :controller => :Contact, :id => result[0], :query => {:origin =>'SearchContacts'})} ')">
              				<div class="ui-btn-text"> 
              				   <h3 class="ui-li-heading" ><a href="#{url_for(:action => :show, :controller => :Contact, :id => result[0], :query => {:origin =>'SearchContacts'})}" class="ui-link-inherit" style="padding-left: 0px !important"> #{result[1]['lastname']}, #{result[1]['firstname']}</a></h3>
-								     </div>
 							     </div>
 							  <img class="search-icon" src="/public/images/mobile_phone.png">
+							  </div>
 				    </li> }
 					else
 					   html_string = html_string + %Q{
 					     <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
-             			<div class="ui-btn-inner">
+					      <div class="ui-btn-inner" onclick="window.open('#{url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })} ')">
              				<div class="ui-btn-text">
              				  <h3 class="ui-li-heading" ><a href="#{url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })}" class="ui-link-inherit" style="padding-left: 0px !important"> #{result[1]['lastname']}, #{result[1]['firstname']}</a></h3>
 								     </div>
-							    </div>
 							<img class="search-icon" src="/public/images/computer_icon.png">
+							</div>
 				    </li>}
 					end
 				end	
@@ -147,7 +147,7 @@ module BrowserHelper
 					  ) 
 					   html_string =  %Q{ 
 					     <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
-             			<div class="ui-btn-inner">
+					       <div class="ui-btn-inner" onclick="window.open('#{url_for(:action => :show, :controller => :Contact, :id => result[0], :query => {:origin =>'SearchContacts'})} ')">
              				<div class="ui-btn-text">
              				  <h3 class="ui-li-heading"><a href="#{url_for(:action => :show, :controller => :Contact, :id => result[0], :query => {:origin =>'SearchContacts'})}" class="ui-link-inherit" style="padding-left: 0px !important"> #{result[1]['lastname']}, #{result[1]['firstname']}</a></h3>
   							     	      <div class="ui-grid-a ui-li-desc" >
@@ -155,14 +155,14 @@ module BrowserHelper
                                #{result[1]['emailaddress1']}
                                </div>
                             </div>						
-								    </div>
 							   </div>
-							<img class="search-icon" src="/public/images/mobile_phone.png">
+							 <img class="search-icon" src="/public/images/mobile_phone.png">
+							</div>
 				    </li> }
 					else
 					   html_string =  %Q{
 					     <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
-             			<div class="ui-btn-inner">
+					      <div class="ui-btn-inner" onclick="window.open('#{url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })} ')">
              				<div class="ui-btn-text">
              				  <h3 class="ui-li-heading" ><a href="#{url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })}" class="ui-link-inherit" style="padding-left: 0px !important"> #{result[1]['lastname']}, #{result[1]['firstname']}</a></h3>
   							      	<div class="ui-grid-a ui-li-desc" >
@@ -170,9 +170,9 @@ module BrowserHelper
                                #{result[1]['emailaddress1']}
                             </div>
                         </div>
-								     </div>
 						   	</div>
 							<img class="search-icon" src="/public/images/computer_icon.png">
+							</div>
 				    </li>}
 					end 
 				end
@@ -214,7 +214,7 @@ module BrowserHelper
     
     %Q{ 
 	     <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
-     			<div class="ui-btn-inner">
+	       <div class="ui-btn-inner" onclick="window.open('#{url_for(:action => :show, :controller => :Contact, :id => result[0], :query => {:origin =>'SearchContacts'})} ')">
      				<div class="ui-btn-text">
      				  <h3 class="ui-li-heading" ><a href="#{url_for(:action => :show, :controller => :Contact, :id => result[0], :query => {:origin =>'SearchContacts'})}" class="ui-link-inherit" style="padding-left: 0px !important"> #{result[1]['lastname']}, #{result[1]['firstname']}</a></h3>
 				     	      <div class="ui-grid-a ui-li-desc" >
@@ -222,9 +222,9 @@ module BrowserHelper
                                   #{type}: #{phone_number}
                            </div>
                     </div>				
-				    </div>
 			   </div>
 			<img class="search-icon" src="/public/images/mobile_phone.png">
+			</div>
     </li> }
   
   end
@@ -233,7 +233,7 @@ module BrowserHelper
     
     %Q{
 	     <li role="option" tabindex="0" data-theme="c" class="contact-item ui-btn ui-btn-icon-right ui-li ui-btn-down-c ui-btn-up-c">
-     			<div class="ui-btn-inner">
+	     <div class="ui-btn-inner" onclick="window.open('#{url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })} ')">
      				<div class="ui-btn-text">
      				  <h3 class="ui-li-heading" ><a href="#{url_for(:action => :show_AC_contact, :controller => 'Contact', :query => {:origin =>'SearchContacts', :id => result[0] })}" class="ui-link-inherit" style="padding-left: 0px !important"> #{result[1]['lastname']}, #{result[1]['firstname']}</a></h3>
 				      	<div class="ui-grid-a ui-li-desc" >
@@ -241,9 +241,9 @@ module BrowserHelper
                               #{type}: #{phone_number}
                        </div>
                 </div>
-				     </div>
 		   	</div>
 			<img class="search-icon" src="/public/images/computer_icon.png">
+			</div>
     </li>}
   
   end  
