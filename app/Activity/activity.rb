@@ -23,11 +23,11 @@ class Activity
   property :parent_contact_id, :string
   property :createdon, :string
   property :temp_id, :string
+  property :prioritycode, :string
   
   #######email properties########
   property :torecipients, :string
   property :actualstart, :string
-  property :prioritycode, :string
   property :sender, :string
   property :actualend, :string
   property :ownerid, :string
@@ -37,9 +37,6 @@ class Activity
   property :email_from, :string
   ################################
   
-  #####Task properties ##########
-  property :prioritycode, :string
-  ###############################
   
   belongs_to :parent_id, 'Opportunity'
   belongs_to :parent_contact_id, 'Contact'

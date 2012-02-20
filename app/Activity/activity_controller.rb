@@ -265,6 +265,7 @@ class ActivityController < Rho::RhoController
     Settings.record_activity
     @callback.update_attributes({
         :scheduledend => DateUtil.date_build(@params['callback_datetime']),
+        :prioritycode => @params['callback_priority_checkbox'] ? 'High' : 'Normal',
         :phonenumber => @params['phone_number']
     })
     @callback.update_attributes({
@@ -397,6 +398,7 @@ class ActivityController < Rho::RhoController
         :statuscode => 'Open',
         :statecode => 'Open',
         :type => 'PhoneCall',
+        :prioritycode => @params['callback_priority_checkbox'] ? 'High' : 'Normal',
         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
       })
       db.commit
@@ -636,6 +638,7 @@ class ActivityController < Rho::RhoController
         :statuscode => 'Open',
         :statecode => 'Open',
         :type => 'PhoneCall',
+        :prioritycode => @params['callback_priority_checkbox'] ? 'High' : 'Normal',
         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
       })
       
