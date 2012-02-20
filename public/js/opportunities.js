@@ -67,7 +67,7 @@ function loadNewLeads(){
 	loadOpportunities('new-leads', newLeadBuckets, 0);
 }
 
-function loadFollowUps( statusReasonFilter, sortByFilter, createdFilter )
+function loadFollowUps( statusReasonFilter, sortByFilter, createdFilter, isDaily )
 {
 	$('#by-last-activities-list').empty();
 	
@@ -76,8 +76,9 @@ function loadFollowUps( statusReasonFilter, sortByFilter, createdFilter )
 	]);
 	
 	var jsonParams = { statusReason: statusReasonFilter,
-					   sortBy: sortByFilter,
-					   created: createdFilter };
+	                   sortBy: sortByFilter,
+	                   created: createdFilter,
+	                   isDaily: isDaily };
 					
 	loadOpportunities('follow-ups', followUpBucket, 0, jsonParams, true );
 }

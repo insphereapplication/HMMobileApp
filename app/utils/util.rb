@@ -387,7 +387,8 @@ module Constants
   FOLLOWUP_FILTERS = [
     {:name => 'statusReason', :default_value => 'All'},
     {:name => 'sortBy', :default_value => 'LastActivityDateAscending'},
-    {:name => 'created', :default_value => 'All'}
+    {:name => 'created', :default_value => 'All'},
+    {:name => 'isDaily', :default_value => 'false'}
   ]
   
   PERSISTED_SCHEDULED_FILTER_PREFIX = 'scheduled_'

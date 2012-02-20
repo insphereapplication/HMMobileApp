@@ -399,6 +399,11 @@ module BrowserHelper
     gen_options(options, persisted_selection)
   end
   
+  def followup_daily_filter_options
+    persisted_selection = Settings.filter_values["#{Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX}isDaily"]
+    " checked='checked' " if persisted_selection == 'true'
+  end
+  
   def contact_filter_options
     options = [
       {:value => 'all', :label => 'All'},
