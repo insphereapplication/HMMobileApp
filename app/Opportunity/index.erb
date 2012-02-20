@@ -48,7 +48,8 @@
 		filter_status=getSelectedText('followup','status_reason');
 		sort_by_status=getSelectedText('followup','sort_by');
 		created_status=getSelectedText('followup','created');
-		filter=filter_status+', '+sort_by_status+', '+created_status
+                var isDaily = $('#followup_daily_filter').attr('checked') ? ", Daily" : "";
+		filter=filter_status+', '+sort_by_status+', '+created_status+isDaily;
 		showFilterParams(filter, 'followup');
 	}
 	
@@ -60,6 +61,11 @@
 		showFilterParams(filter, 'scheduled');
 	}
 	
+	function getDailyFilterValue()
+	{
+		return $('#followup_daily_filter').attr('checked') ? 'true' : 'false';
+	}
+	
 	$(document).ready(function() {
 		// add the selected style to the selected tab button
 		$('a#<%= @params['selected_tab'] %>-button').addClass('ui-btn-active');
@@ -69,7 +75,7 @@
 		disableFilters('scheduled');
 				
 		loadNewLeads(); 
-		loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val() );
+		loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val(), getDailyFilterValue() );
 		loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
 	
 		$('#followup_filter_button').click( function()
@@ -79,7 +85,7 @@
 				disableFilters('follow-ups');
 				toggleFilterArea('followup');
 				refreshFollowupFilterSummary();
-				loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val() );
+				loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val(), getDailyFilterValue() );
 			}
 			return false;
 		});
@@ -92,8 +98,9 @@
 				$('#followup_status_reason_filter').val('All');
 				$('#followup_sort_by_filter').val('LastActivityDateAscending');
 				$('#followup_created_filter').val('All');
+                                $('#followup_daily_filter').removeAttr('checked');
 				refreshFollowupFilterSummary();
-				loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val() );
+				loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val(), getDailyFilterValue() );
 			}
 			return false;
 		});
@@ -228,10 +235,16 @@
 					<select class="ui-custom-dropdown" name="followup_sort_by_filter" id="followup_sort_by_filter" tabindex="-1" onchange="addtext();">
 						<%= followup_sort_by_filter_options %>
 					</select>
+                                        <table border="0" cellspacing="0" cellpadding="0"><tr><td>
 					<label for="followup_created_filter" class="fieldLabel ui-input-text">&nbsp;&nbsp;&nbsp;&nbsp;Created:</label>
-					<select class="ui-custom-dropdown" data-native-menu="true" name="followup_created_filter" id="followup_created_filter" tabindex="-1">
+                                        </td><td></td></tr><td>
+					<select class="ui-custom-dropdown" data-native-menu="true" name="followup_created_filter" id="followup_created_filter" tabindex="-1" style="margin-left: 20px;">
 						<%= followup_created_filter_options %>
 					</select>
+                                        </td><td>
+                                          <input type="checkbox" name="followup_daily_filter" id="followup_daily_filter" style="margin-left: 30px; margin-bottom: 6px;"<%= followup_daily_filter_options %>/>
+                                          <span onclick="$('#followup_daily_filter').click();">&nbsp;Daily Call</span>
+                                        </td></tr></table>
 					<fieldset class="ui-grid-custom ui-grid-a">
 						<div class="ui-block-a">
 							<div data-theme="b" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">

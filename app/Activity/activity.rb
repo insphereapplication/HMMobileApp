@@ -212,7 +212,7 @@ class Activity
     end
   end
   
-  def self.appointment_list(page=nil, page_size=DEFAULT_PAGE_SIZE, filter, search, scheduled_time)
+  def self.appointment_list(page, filter, search, scheduled_time, page_size=DEFAULT_PAGE_SIZE)
     type_where_clause = appointment_type_where_clause(filter)  
     like_clause       = appointment_like_clause(search)
     time_compare      = appointment_time_compare(scheduled_time)
@@ -310,19 +310,19 @@ class Activity
     }
   end
 
-  def self.past_due_activities(page=nil, page_size=DEFAULT_PAGE_SIZE, type, priority)
+  def self.past_due_activities(page, type, priority, page_size=DEFAULT_PAGE_SIZE)
     find_by_sql(activities_sql(type, priority, '<', page, page_size))
   end
 
-  def self.no_date_activities(page=nil, page_size=DEFAULT_PAGE_SIZE, type, priority)
+  def self.no_date_activities(page, type, priority, page_size=DEFAULT_PAGE_SIZE)
     find_by_sql(activities_sql(type, priority, 'null', page, page_size))
   end
 
-  def self.today_activities(page=nil, page_size=DEFAULT_PAGE_SIZE, type, priority)
+  def self.today_activities(page, type, priority, page_size=DEFAULT_PAGE_SIZE)
     find_by_sql(activities_sql(type, priority, '=', page, page_size))
   end
 
-  def self.future_activities(page=nil, page_size=DEFAULT_PAGE_SIZE, type, priority)
+  def self.future_activities(page, type, priority, page_size=DEFAULT_PAGE_SIZE)
     find_by_sql(activities_sql(type, priority, '>', page, page_size))
   end
 

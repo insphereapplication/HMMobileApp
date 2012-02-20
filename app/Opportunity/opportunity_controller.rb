@@ -141,7 +141,7 @@ class OpportunityController < Rho::RhoController
     Settings.update_persisted_filter_values(Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX, Constants::FOLLOWUP_FILTERS.map{|filter| filter[:name]}, @params)
     persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX, Constants::FOLLOWUP_FILTERS)
     
-    opportunities = Opportunity.by_last_activities(@params['page'].to_i, persisted_filter_values['statusReason'], persisted_filter_values['sortBy'], persisted_filter_values['created'])
+    opportunities = Opportunity.by_last_activities(@params['page'].to_i, persisted_filter_values['statusReason'], persisted_filter_values['sortBy'], persisted_filter_values['created'], persisted_filter_values['isDaily'])
     
     check_for_context_reset('follow-ups')
     $follow_ups_nav_context += opportunities.map{|opp| opp.object }

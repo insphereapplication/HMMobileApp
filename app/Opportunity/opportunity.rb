@@ -136,7 +136,7 @@ class Opportunity
   end
   
   # TODO: not an optimal query. find a better one.
-  def self.by_last_activities( page=nil, page_size=DEFAULT_PAGE_SIZE, statusReasonFilter, sortByFilter, createdFilter )
+  def self.by_last_activities(page, statusReasonFilter, sortByFilter, createdFilter, isDailyFilter, page_size=DEFAULT_PAGE_SIZE)
     #Find all opportunities that have activities of which none are open or scheduled
     #Also include opportunities that have no activities and have a status code != "New Opportunity"
     #Sort by the opportunity's last activity date
@@ -179,6 +179,18 @@ class Opportunity
         createdClause = ''
     end
     
+    dailyClause = ''
+    if isDailyFilter == 'true'
+      dailyClause = %Q{
+        and not exists (
+          select a0.object
+          from Activity a0
+          where a0.parent_type='Opportunity' and a0.parent_id=o.object
+            and a0.type='PhoneCall' and a0.statuscode = 'Made' and date(a0.actualend)=#{NOW_SQL}
+        )
+      }
+    end
+    
     # This query is complex; be sure you know what you are doing before modifying this
     sql = %Q{
       select * from Opportunity o 
@@ -201,6 +213,7 @@ class Opportunity
           a2.type in ('PhoneCall','Appointment') and
           (a2.statecode in ('Open', 'Scheduled') and a2.scheduledend is not null and a2.scheduledend <> '')
         )
+        #{dailyClause}
         #{statusReasonWhereClause}
         #{createdClause}
         #{sortByClause}
