@@ -11,7 +11,7 @@
 	<div data-role="content">
 		<ul data-role="listview" data-theme="d" data-inset="true" > 
 			
-			<%puts  @contact_details.each.inspect %>
+
 			<% @contact_details.each do |field, value| %>
 				<input type="hidden" name="contact[<%= field %>]" value="<%= value %>" />
 			<% end %>

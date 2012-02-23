@@ -113,13 +113,14 @@ end
 
 def rhoconfig
   {
-    :app_db_version => '8.0', #This was last upticked after the 3.2.9 drop on 01/10/2011
+    :app_db_version => '9.0', #This was last upticked after the 3.3.16 drop on 02/22/2012
     :min_severity => '5',
     :max_log_file_size => '1000000',
     :sync_server => 'https://rhosync.insphereis.net/application',    
     :quick_quote_url => "https://mobile.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
     :resource_center_url => "https://mobile-rc.insphereis.net/_layouts/InsphereLogin.aspx",
-    :log_server => 'https://mobileproxy.insphereis.net/clientlog'
+    :log_server => 'https://mobileproxy.insphereis.net/clientlog',
+    :crm_url => 'https://mobileproxy.insphereis.net'
   }
 end
 
@@ -130,7 +131,8 @@ def model_rhoconfig
     :sync_server => 'https://rhosync.model.insphereis.net/application', 
     :quick_quote_url => "https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
     :resource_center_url => "https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx",
-    :log_server => 'https://mobileproxy.model.insphereis.net/clientlog'
+    :log_server => 'https://mobileproxy.model.insphereis.net/clientlog',
+    :crm_url => 'https://mobileproxy.model.insphereis.net'
   })
 end
 
@@ -141,7 +143,8 @@ def dev_rhoconfig
     :sync_server => 'https://rhosync.dev.insphereis.net/application', 
     :quick_quote_url => "https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
     :resource_center_url => "https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx",
-    :log_server => 'https://devmobileproxy.insphereis.net/clientlog'
+    :log_server => 'https://devmobileproxy.insphereis.net/clientlog',
+    :crm_url => 'https://mobileproxy.dev.insphereis.net'
   })
 end
 
