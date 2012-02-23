@@ -36,11 +36,11 @@ class ActivityController < Rho::RhoController
   $first_render = true
 
   def show_all_activities
-    if Activity.local_changed? || $first_render
+    #if Activity.local_changed? || $first_render
       Activity.local_changed = false
       $first_render = false
       WebView.navigate(url_for(:controller => :Activity, :action => :index), Constants::TAB_INDEX['Activities'])
-    end
+   #end
   end
 
   def show

@@ -19,7 +19,8 @@ class OpportunityController < Rho::RhoController
         :label => "Opportunities", 
         :action => '/app/Opportunity', 
         :icon => "/public/images/dollar.png", 
-        :web_bkg_color => 0x7F7F7F 
+        :web_bkg_color => 0x7F7F7F,  
+        :reload => true 
       }, 
       { 
         :label => "Contacts", 
@@ -36,7 +37,8 @@ class OpportunityController < Rho::RhoController
       { 
         :label => "Tools",  
         :action => '/app/Settings',  
-        :icon => "/public/images/iphone/tabs/settings_tab_icon.png" 
+        :icon => "/public/images/iphone/tabs/settings_tab_icon.png",  
+        :reload => true 
       }
     ]
     

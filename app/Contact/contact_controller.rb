@@ -19,11 +19,11 @@ class ContactController < Rho::RhoController
   end
   
   def show_all_contacts
-    if Contact.local_changed? || $first_render
+    #if Contact.local_changed? || $first_render
       WebView.navigate(url_for(:controller => :Contact, :action => :index), Constants::TAB_INDEX['Contacts'])
       Contact.local_changed = false
       $first_render = false
-    end
+    #end
   end
   
   def self.is_first_render?
