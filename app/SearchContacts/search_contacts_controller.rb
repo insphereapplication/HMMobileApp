@@ -1,4 +1,5 @@
 require 'helpers/browser_helper'
+require 'rho/rhoerror'
 
 class SearchContactsController < Rho::RhoController
   include BrowserHelper
@@ -35,6 +36,8 @@ class SearchContactsController < Rho::RhoController
       end
      rescue Exception => e
             puts "There was an error attempting to search contacts rolling back: #{e.inspect}"
+            ExceptionUtil.log_exception_to_server(e, "Search Contacts Error" )
+            puts "Rho Error:  #{Rho::RHO.current_exception}"
             WebView.navigate(url_for(:action => :search, :controller => :SearchContacts, :query => {:show_results => 'true', :msg => 'Unable to retrieve Contacts from Activity Center,  please try narrowing your search'}), Constants::TAB_INDEX['Contacts'])
      end
   end
