@@ -8,7 +8,7 @@
 		launcher = :map
 		
 		if appointment.type == 'PhoneCall'
-			scheduledtime = appointment.scheduledend
+			scheduledtime = appointment.scheduledstart
 			icon = "phoneopp"
 			launcher = :phone_dialog
 			location = appointment.phonenumber

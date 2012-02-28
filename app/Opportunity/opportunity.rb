@@ -245,10 +245,10 @@ class Opportunity
   def activity_list
     Activity.find_by_sql(%Q{
         select type, scheduledstart as "displaytime", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
-        AND type = 'Appointment' AND scheduledstart IS NOT NULL
+        AND type in ('Appointment','PhoneCall') AND scheduledstart IS NOT NULL
         UNION
         select type, scheduledend as "displaytime", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
-        AND type in ('PhoneCall', 'Task') AND scheduledend IS NOT NULL
+        AND type = 'Task' AND scheduledend IS NOT NULL
         UNION
         select type, createdon as "displaytime", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
         AND scheduledstart IS NULL AND scheduledend IS NULL order by "displaytime" desc

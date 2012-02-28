@@ -394,9 +394,11 @@ class ContactController < Rho::RhoController
     db.start_transaction
     begin
       phone_call = Activity.create_new({
-        :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
+        :scheduledstart => DateUtil.date_build(@params['callback_datetime']), 
         :subject => "#{@params['phonecall_subject']}",
         :prioritycode => @params['callback_priority_checkbox'] ? 'High' : 'Normal',
+        :scheduleddurationminutes => Rho::RhoConfig.phonecall_duration_default_minutes.to_i,
+        :scheduledend => DateUtil.end_date_time(@params['callback_datetime'], Rho::RhoConfig.phonecall_duration_default_minutes.to_i),
         :cssi_phonetype => @params['phone_type_selected'],
         :phonenumber => @params['phone_number'],
         :statuscode => 'Open',

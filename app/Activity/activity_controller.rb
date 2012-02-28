@@ -262,9 +262,12 @@ class ActivityController < Rho::RhoController
   def update_callback
     @callback = Activity.find_activity(@params['id'])
     @opportunity = @callback.opportunity
+    duration = @callback.scheduleddurationminutes ? @callback.scheduleddurationminutes : Rho::RhoConfig.phonecall_duration_default_minutes.to_i
     Settings.record_activity
     @callback.update_attributes({
-        :scheduledend => DateUtil.date_build(@params['callback_datetime']),
+        :scheduledstart=> DateUtil.date_build(@params['callback_datetime']),
+        :scheduleddurationminutes => duration,
+        :scheduledend => DateUtil.end_date_time(@params['callback_datetime'], duration),
         :prioritycode => @params['callback_priority_checkbox'] ? 'High' : 'Normal',
         :phonenumber => @params['phone_number']
     })
@@ -391,7 +394,9 @@ class ActivityController < Rho::RhoController
     db.start_transaction
     begin
       task = Activity.create_new({
-        :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
+        :scheduledstart => DateUtil.date_build(@params['callback_datetime']), 
+        :scheduleddurationminutes => Rho::RhoConfig.phonecall_duration_default_minutes.to_i,
+        :scheduledend => DateUtil.end_date_time(@params['callback_datetime'], Rho::RhoConfig.phonecall_duration_default_minutes.to_i),
         :subject => "#{@params['phonecall_subject']}",
         :cssi_phonetype => "Ad Hoc",
         :phonenumber => @params['phonecall_number'],
@@ -625,10 +630,12 @@ class ActivityController < Rho::RhoController
       begin
       opportunity.update_attributes(opp_attrs)
       opportunity.record_phone_call_made_now('Call Back Requested')
-    
+     
       # create the requested callback
       phone_call = Activity.create_new({
-        :scheduledend => DateUtil.date_build(@params['callback_datetime']), 
+        :scheduledstart => DateUtil.date_build(@params['callback_datetime']), 
+        :scheduleddurationminutes => Rho::RhoConfig.phonecall_duration_default_minutes.to_i,
+        :scheduledend => DateUtil.end_date_time(@params['callback_datetime'], Rho::RhoConfig.phonecall_duration_default_minutes.to_i),
         :subject => "Phone Call - #{opportunity.contact.full_name}",
         :cssi_phonetype => @params['phone_type_selected'],
         :phonenumber => @params['phone_number'],

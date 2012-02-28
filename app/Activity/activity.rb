@@ -14,6 +14,7 @@ class Activity
   property :parent_id, :string
   property :scheduledstart, :string
   property :scheduledend, :string
+  property :scheduleddurationminutes, :string
   property :cssi_disposition, :string
   property :statuscode, :string
   property :location, :string

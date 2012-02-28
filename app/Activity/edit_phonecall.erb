@@ -32,7 +32,7 @@
 		          		 <% end %>
 						
 		            	<label for="callback_datetime">Call Back Date and Time:</label>
-						<input id="callback_datetime" type="text" class="required" name="callback_datetime" readonly value="<%= to_datetime(@activity.scheduledend) %>"  onClick="editpopupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime', '<%= @activity.scheduledend %>'); document.getElementById('callback_datetime').focus();"></input>
+						<input id="callback_datetime" type="text" class="required" name="callback_datetime" readonly value="<%= to_datetime(@activity.scheduledstart) %>"  onClick="editpopupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime', '<%= @activity.scheduledstart %>'); document.getElementById('callback_datetime').focus();"></input>
 					</div>
           			<% if (@activity_contact) %>
 						<div data-role="fieldcontain">

@@ -121,6 +121,7 @@ def rhoconfig
     :resource_center_url => "https://mobile-rc.insphereis.net/_layouts/InsphereLogin.aspx",
     :log_server => 'https://mobileproxy.insphereis.net/clientlog',
     :crm_url => 'https://mobileproxy.insphereis.net'
+    :phonecall_duration_default_minutes = '15'
   }
 end
 

@@ -14,7 +14,7 @@
 			<li data-role="list-divider">Phone Call Info</li>
 			<%= generate_listview_items([
 				{:label => "Subject", :value => @activity.subject},	
-				{:label => "Scheduled Time", :value => to_datetime(@activity.scheduledend)},
+				{:label => "Scheduled Time", :value => to_datetime(@activity.scheduledstart)},
 				{:label => "Priority", :value => @activity.prioritycode},
 				{:label => "Phone Type", :value => @activity.cssi_phonetype},
 				{:label => "Phone Number", :value => @activity.phonenumber}
