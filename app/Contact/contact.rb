@@ -66,6 +66,9 @@ class Contact
   end
   
   def self.create_new(params)
+    # capitalize names
+    params['firstname'] = params['firstname'].capitalize_words if params['firstname']
+    params['lastname'] = params['lastname'].capitalize_words if params['lastname']
     new_contact = Contact.create(params)
     new_contact.update_attributes( :temp_id => new_contact.object )
     new_contact

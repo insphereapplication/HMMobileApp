@@ -213,7 +213,14 @@ class ContactController < Rho::RhoController
     Settings.record_activity
     puts "SPOUSE UPDATE: #{@params.inspect}"
     @contact = Contact.find_contact(@params['id'])
-    @contact.update_attributes(@params['contact']) if @contact
+    # capitalize names
+    cp = @params['contact']
+    if @contact.cssi_spousename.blank? && @contact.cssi_spouselastname.blank?
+      # first time update, capitalize
+      cp['cssi_spousename'] = cp['cssi_spousename'].capitalize_words if cp['cssi_spousename']
+      cp['cssi_spouselastname'] = cp['cssi_spouselastname'].capitalize_words if cp['cssi_spouselastname']
+    end
+    @contact.update_attributes(cp) if @contact
     @contact.update_attributes(:cssi_spousebirthdate => DateUtil.birthdate_build(@contact.cssi_spousebirthdate))
     SyncEngine.dosync
     redirect :action => :show, :back => 'callback:',

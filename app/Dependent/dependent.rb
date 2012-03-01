@@ -29,9 +29,12 @@ class Dependent
   end
   
   def self.create_new(params)
-      new_dependent = Dependent.create(params)
-      new_dependent.update_attributes( :temp_id => new_dependent.object )
-      new_dependent
+    # capitalize names
+    params['cssi_name'] = params['cssi_name'].capitalize_words if params['cssi_name']
+    params['cssi_lastname'] = params['cssi_lastname'].capitalize_words if params['cssi_lastname']
+    new_dependent = Dependent.create(params)
+    new_dependent.update_attributes( :temp_id => new_dependent.object )
+    new_dependent
   end
   
   def self.find_dependent(id)
