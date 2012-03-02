@@ -143,7 +143,7 @@
 						<div class="ui-btn-text">
 							<a class="ui-link-inherit" href="<%= url_for(:controller => :Activity, :action => :show_callback, :id => phonecall.object, :query => {:origin => @params['origin']}) %>">
 								<br/>
-								<p class="ui-li-desc"><b><%= "#{to_datetime(phonecall.scheduledend)}" %></b></p>
+								<p class="ui-li-desc"><b><%= "#{to_datetime(phonecall.scheduledstart)}" %></b></p>
 								<p class="ui-li-desc"> <%= phonecall.phonenumber %> </p>
 							</a>
 						</div>
