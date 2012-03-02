@@ -25,6 +25,7 @@ class AppApplication < Rho::RhoApplication
   
   def on_activate_app
       # put your application activation code here
+      SyncEngine.dosync if (@app_deactivated && !SyncEngine.is_syncing && Time.new - Settings.last_synced > 60)
       SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
   end
   
@@ -34,6 +35,7 @@ class AppApplication < Rho::RhoApplication
   
       # poll once an hour on android devices when the app is backgrounded
       SyncEngine.set_pollinterval(0) if System::get_property('platform') == 'ANDROID'
+      @app_deactivated = true
   
       # To stop local web server when application switched to 
       # background return "stop_local_server"
