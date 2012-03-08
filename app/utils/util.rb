@@ -3,10 +3,11 @@ module ExceptionUtil
     unless exception.kind_of?(Exception)
       exception = new Exception(exception)
     end
-    
+    message = exception.message  ? exception.message[0,2000] : ""
+    backtrace = exception.backtrace ? exception.backtrace[0,2000] : ""
     exception_data = {
-      :message => exception.message,
-      :backtrace => exception.backtrace,
+      :message => message,
+      :backtrace => backtrace,
       :exception_id => Time.now.to_f.to_s.gsub(/\./,''),
       :client_created_on => Time.now.utc.to_s,
       :exception_type => type

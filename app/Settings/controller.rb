@@ -5,6 +5,7 @@ require 'helpers/browser_helper'
 require 'rho/rhotabbar'
 require 'helpers/crypto'
 
+
 class SettingsController < Rho::RhoController
   $prompted_for_upgrade = false
   include BrowserHelper
@@ -46,10 +47,20 @@ class SettingsController < Rho::RhoController
   end
   
   def get_connection_status
-    connection_status = DeviceCapabilities.connection_status
-    sync_status = DeviceCapabilities.sync_status
-    @result = "#{connection_status},#{sync_status}"
-    render :action => :get_connection_status, :back => 'callback:', :layout => false
+    if AppApplication.activated?
+      connection_status = DeviceCapabilities.connection_status
+      sync_status = DeviceCapabilities.sync_status
+      @result = "#{connection_status},#{sync_status}"
+      #render :action => :get_connection_status, :back => 'callback:', :layout => false
+      @result
+    else  
+      if System::get_property('platform') == 'ANDROID' &&  SyncEngine.get_pollinterval > 0 
+        SyncEngine.set_pollinterval(0) 
+        puts "????????????????????????????? Resetting Sync Connection  ?????????????????????????????"
+        log_error("Application Restarted in background", "The sync connection polling interval is being reset")
+      end
+    end  
+    
   end
   
   def detailed_logging_enabled?
@@ -517,7 +528,7 @@ class SettingsController < Rho::RhoController
         
         SyncEngine.set_pollinterval(0)
         SyncEngine.stop_sync
-        
+
         full_reset_logout
         
         goto_login("Unknown client, please log in again.")

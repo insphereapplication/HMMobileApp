@@ -6,6 +6,7 @@ require 'lib/libs'
 
 class AppApplication < Rho::RhoApplication
   def initialize
+    puts "Calling App Initialize"
     @@toolbar = nil
     super
     @default_menu = { 
@@ -15,6 +16,7 @@ class AppApplication < Rho::RhoApplication
 
     SyncEngine.set_notification(-1, "/app/Settings/sync_notify", '') 
     System.set_push_notification("/app/Settings/push_notify", '')
+    SyncEngine.set_pollinterval(0)
   end
   
   #wipe the database and force a resync if a different user logs in
@@ -24,9 +26,10 @@ class AppApplication < Rho::RhoApplication
   end
   
   def on_activate_app
-      # put your application activation code here
+      puts "calling on_activate_app"
       SyncEngine.dosync if (@app_deactivated && !SyncEngine.is_syncing && Time.new - Settings.last_synced > 60)
       SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
+      $app_activated = true
   end
   
   def on_deactivate_app
@@ -34,12 +37,17 @@ class AppApplication < Rho::RhoApplication
       # For example, WebView.refresh
   
       # poll once an hour on android devices when the app is backgrounded
+      puts "calling on_deactivate_app"
       SyncEngine.set_pollinterval(0) if System::get_property('platform') == 'ANDROID'
-      @app_deactivated = true
+      $app_activated = false
   
       # To stop local web server when application switched to 
       # background return "stop_local_server"
       #return "stop_local_server" 
+  end
+  
+  def self.activated?
+    $app_activated
   end
   
   def on_ui_created
