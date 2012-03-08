@@ -32,11 +32,9 @@ function disableACSearchButtons(){
 }
 
 function initializeSearch(){
-	toggleDiv('filter'); 
-	toggleDiv('plus'); 
-	toggleDiv('minus');
-	refreshFilterSummary();
-	loadPage();	
+    toggleCollapsible('contact_filter');
+    refreshFilterSummary();
+    loadPage();	
 }
 
 function clearContacts(){
@@ -81,9 +79,7 @@ function loadPage(){
 	disableSearchButtons();
 	filterType = $('#contact_filter').val();
 	searchTerms = $('input#search_input').val();
-	$("div#load-more-div").remove();
-	$('.contacts-list li').remove();
-	$('#no-contacts-found').remove();
+	$("ul#contact-list").empty();
 	loadContactsAsync(filterType, 0, 0, searchTerms);
 }
 
@@ -97,14 +93,6 @@ function loadContactsAsync(filterType, page, startPage, searchTerms){
 			
 			if (contacts && $.trim(contacts) != "" && page < (startPage + pageLimit)){
 				$("ul#contact-list").append(contacts);
-
-				// remove any possible redundant letter-divider list items ('A', 'B', etc.)				
-				$(".group-divider").each(function(){
-				  var ids = $('[id='+this.id+']');
-				  if(ids.length>1 && ids[0]==this)
-				    $(ids[1]).remove();
-				});
-				
 				loadContactsAsync(filterType, page + 1, startPage, searchTerms);
 			} 
 			else {
@@ -151,7 +139,11 @@ function refreshFilterSummary(){
 }
 
 function showFilterParams(filter, input){
-	filterparams = '<span id="filter-params" style="margin-top:5px;font-size:12px;">Filter: ' + filter + ', "' + input + '"</span>'
-	$('#filter-params').remove();
-	$('#filter-details').append( filterparams );
+    $('#contact_filter_details').html('Filter: ' + filter + ', "' + input + '"');
+}
+
+function toggleCollapsible(id) {
+    $('#' + id + '_icon').toggleClass('ui-icon-plus ui-icon-minus');
+    $('#' + id + '_content').toggleClass('ui-collapsible-content-collapsed');
+    $('#' + id + '_details').toggle();
 }

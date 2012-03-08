@@ -58,13 +58,6 @@ class ContactController < Rho::RhoController
     end
   end
   
-  def filter_contact
-      Settings.record_activity
-      $search_input1, $search_input2 = @params['search_input'].split(' ', 2)
-      $filter = @params['contact_filter']
-      WebView.navigate(url_for(:controller => :Contact, :action => :index_filter, :query => {:search_input1 => search_in}), Constants::TAB_INDEX['Contacts'])
-  end
-  
   def check_preferred_and_donotcall(phone_type, preferred, allow_call, company_dnc)
     Settings.record_activity
     is_preferred = phone_type == preferred
