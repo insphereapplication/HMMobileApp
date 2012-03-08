@@ -27,7 +27,7 @@ class AppApplication < Rho::RhoApplication
   
   def on_activate_app
       puts "calling on_activate_app"
-      SyncEngine.dosync if (@app_deactivated && !SyncEngine.is_syncing && Time.new - Settings.last_synced > 60)
+      SyncEngine.dosync if (!$app_activated && !SyncEngine.is_syncing && Time.new - Settings.last_synced > 60)
       SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
       $app_activated = true
   end
