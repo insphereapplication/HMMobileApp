@@ -15,7 +15,7 @@ module ExceptionUtil
     
     begin
       exception_data.merge!({
-        :device_id => System.get_property('device_id'),
+        :device_id => System.get_property('phone_id'),
         :rho_device_id => Rhom::Rhom::client_id, 
         :client_platform => System.get_property('platform'),
         :has_network => System.get_property('has_network'),

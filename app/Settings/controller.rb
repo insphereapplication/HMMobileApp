@@ -47,6 +47,7 @@ class SettingsController < Rho::RhoController
   end
   
   def get_connection_status
+    puts "^^^^^^^^^^^^^^^ Calling get connection status ^^^^^^^^^^^^^^^^^^^"
     if AppApplication.activated?
       connection_status = DeviceCapabilities.connection_status
       sync_status = DeviceCapabilities.sync_status
@@ -55,7 +56,7 @@ class SettingsController < Rho::RhoController
       @result
     else  
       puts "????????????????????????????? Get connection status is call from the background  ?????????????????????????????"
-      if System::get_property('platform') == 'ANDROID' and SyncEngine.get_pollinterval > 0
+      if System::get_property('platform') == 'ANDROID' 
         puts "????????????????????????????? Get connection status is call from the background with a sync interval  ?????????????????????????????"
         log_error("Application Restarted in background", "Get connection status is call from the background with a sync interval")
       end
@@ -464,6 +465,8 @@ class SettingsController < Rho::RhoController
       DeviceInfo.check_device_information
       
       @on_sync_complete.call
+      
+       WebView.execute_js("stopSyncSpin();") 
 
       #if latest integrated lead createdon is greater than before sync, display popup alert
       # handle_new_integrated_leads

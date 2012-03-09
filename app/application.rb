@@ -32,7 +32,7 @@ class AppApplication < Rho::RhoApplication
       SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
       $app_activated = "true"
       puts "In app active: #{$app_activated}"
-      result = WebView.execute_js("setAppActive();") 
+      WebView.execute_js("setAppActive();")
   end
   
   def on_deactivate_app
@@ -44,8 +44,8 @@ class AppApplication < Rho::RhoApplication
       SyncEngine.set_pollinterval(0) if System::get_property('platform') == 'ANDROID'
       $app_activated = "false"
       puts "In app decactive: #{$app_activated}"
-      result = WebView.execute_js("setAppDeactive();") 
-  
+      WebView.execute_js("setAppDeactive();") 
+
       # To stop local web server when application switched to 
       # background return "stop_local_server"
       #return "stop_local_server" 

@@ -526,32 +526,33 @@ function startSyncSpin(){
 
 function pollConnectionStatus()
 {
-	if (appActive == true)
-	{
-		updateConnectionStatusIndicator();
-	}
-	setTimeout("pollConnectionStatus()", pollInterval);
+	updateConnectionStatusIndicator();
+	//update connection status every 30000 ms. declared in application.js.
+	timeoutID = setTimeout("pollConnectionStatus()", 30000);
 }
 
 function setAppActive()
 {
-	appActive = true;
+	if (timeoutID == null)	
+   		pollConnectionStatus();
 }
 
 function setAppDeactive()
 {
-	appActive = false;
+	if (timeoutID != null) {
+ 		clearTimeout(timeoutID);
+		timeoutID = null;
+	}
 }
 
-var pollInterval = 30000;
-var appActive = true;
+var timeoutID = null;
 
 $(document).ready(function() {
 	$.ajaxSetup ({  
 		cache: false  
 	});
-	//update connection status every 30000 ms. declared in application.js.
-	pollConnectionStatus();
+	if (timeoutID == null)
+		pollConnectionStatus();	
 });
 
 // If a contact number is set as both preferred and DNC, this adjusts the styles to display correctly.

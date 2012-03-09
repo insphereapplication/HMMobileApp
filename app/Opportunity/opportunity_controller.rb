@@ -53,8 +53,15 @@ class OpportunityController < Rho::RhoController
   end
   
   def tab_switch_callback
+    current_index = @params['tab_index'].to_i
+    WebView.execute_js("setAppDeactive();", 0) 
+    WebView.execute_js("setAppDeactive();", 1) 
+    WebView.execute_js("setAppDeactive();", 2) 
+    WebView.execute_js("setAppDeactive();", 3) 
+    WebView.execute_js("setAppActive();",current_index) 
+    
     # refresh opportunities page if changed locally
-    if Opportunity.local_changed? && (@params['tab_index'].to_i == 0)
+    if Opportunity.local_changed? && (current_index == 0)
       WebView.navigate(url_for(:action => :index, :back => 'callback:', :query => {:selected_tab => $current_nav_context}))
     end
   end
