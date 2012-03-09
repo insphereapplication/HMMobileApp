@@ -524,18 +524,34 @@ function startSyncSpin(){
 	spinner.style.visibility = 'visible'
 }
 
-function pollConnectionStatus(interval_ms)
+function pollConnectionStatus()
 {
-	updateConnectionStatusIndicator();
-	setTimeout("pollConnectionStatus("+ interval_ms +")",interval_ms);
+	if (appActive == true)
+	{
+		updateConnectionStatusIndicator();
+	}
+	setTimeout("pollConnectionStatus()", pollInterval);
 }
+
+function setAppActive()
+{
+	appActive = true;
+}
+
+function setAppDeactive()
+{
+	appActive = false;
+}
+
+var pollInterval = 30000;
+var appActive = true;
 
 $(document).ready(function() {
 	$.ajaxSetup ({  
 		cache: false  
 	});
-	//update connection status every 5000 ms. declared in application.js.
-	pollConnectionStatus(5000);
+	//update connection status every 30000 ms. declared in application.js.
+	pollConnectionStatus();
 });
 
 // If a contact number is set as both preferred and DNC, this adjusts the styles to display correctly.
