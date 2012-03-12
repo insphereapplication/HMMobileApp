@@ -322,7 +322,7 @@ class Opportunity
   
   def record_phone_call_made_now(disposition="")
     phone_call_attrs = {
-      :scheduledend => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT), 
+      :scheduledstart => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
       :subject => "Phone Call - #{self.contact.full_name}",
       :cssi_disposition => disposition,
       :statecode => 'Completed',
