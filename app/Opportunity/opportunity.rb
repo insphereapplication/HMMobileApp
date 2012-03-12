@@ -186,7 +186,7 @@ class Opportunity
           select a0.object
           from Activity a0
           where a0.parent_type='Opportunity' and a0.parent_id=o.object
-            and a0.type='PhoneCall' and a0.statuscode = 'Made' and date(a0.actualend)=#{NOW_SQL}
+            and a0.type='PhoneCall' and a0.statuscode = 'Made' and date(a0.scheduledend)=#{NOW_SQL}
         )
       }
     end
