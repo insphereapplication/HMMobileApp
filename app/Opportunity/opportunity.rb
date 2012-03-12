@@ -258,7 +258,7 @@ class Opportunity
   def phone_calls
     sql = %Q{
         select * from Activity where type='PhoneCall' and #{is_owned_by_this_opportunity_sql}
-        order by scheduledend
+        order by scheduledstart
       }
       
     Activity.find_by_sql(sql)
@@ -322,12 +322,10 @@ class Opportunity
   
   def record_phone_call_made_now(disposition="")
     phone_call_attrs = {
-      :scheduledstart => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
-      :subject => "Phone Call - #{self.contact.full_name}",
+      :scheduledstart => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),  
       :cssi_disposition => disposition,
       :statecode => 'Completed',
-      :statuscode => 'Made',
-      :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+      :statuscode => 'Made'
     }
     
     if phone_call = most_recent_open_phone_call   
@@ -335,6 +333,8 @@ class Opportunity
     else
       phone_call = Activity.create_new(phone_call_attrs.merge({
         :parent_type => 'Opportunity', 
+        :subject => "Phone Call - #{self.contact.full_name}",
+        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
         :parent_id => self.object,
         :type => 'PhoneCall',
         :parent_contact_id => self.contact_id
