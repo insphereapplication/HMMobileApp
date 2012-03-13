@@ -281,6 +281,7 @@ class ActivityController < Rho::RhoController
     @opportunity.update_attributes({
       :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
     }) if @opportunity
+    Activity.local_changed = true
     SyncUtil.start_sync
     act = :show_callback
     act = :show if Rho::NativeTabbar.get_current_tab == 2
