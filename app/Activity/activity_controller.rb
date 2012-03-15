@@ -487,12 +487,22 @@ class ActivityController < Rho::RhoController
   def udpate_lost_status
     if @params['button_id'] == "Ok"
       Settings.record_activity
+      opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
+      db_activity = ::Rho::RHO.get_src_db('Activity')
+      db_activity.start_transaction
+      begin
+        opportunity.complete_most_recent_open_call
+        db_activity.commit
+      rescue Exception => ea
+        puts "Exception in close open phone call for lost status, rolling back: #{ea.inspect} -- #{@params.inspect}"
+        db_activity.rollback
+      end
+      SyncEngine.dosync_source("Activity", false)
       db = ::Rho::RHO.get_src_db('Opportunity')
       db.start_transaction
       begin
-        opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
+        
         opportunity.create_note(@params['notes'])
-        opportunity.complete_most_recent_open_call
         opportunity.update_attributes({
           :statecode => 'Lost',
           :statuscode => @params['status_code'],
@@ -537,11 +547,20 @@ class ActivityController < Rho::RhoController
   
   def update_lost_other_status
         Settings.record_activity
+        opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
+        db_activity = ::Rho::RHO.get_src_db('Activity')
+        db_activity.start_transaction
+        begin
+          opportunity.complete_most_recent_open_call
+          db_activity.commit
+        rescue Exception => ea
+          puts "Exception in close open phone call for lost status, rolling back: #{ea.inspect} -- #{@params.inspect}"
+          db_activity.rollback
+        end
+        SyncEngine.dosync_source("Activity", false)
         db = ::Rho::RHO.get_src_db('Opportunity')
         db.start_transaction
         begin
-          opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
-          opportunity.complete_most_recent_open_call
           opportunity.update_attributes({
             :statecode => 'Lost',
             :statuscode => @params['status_code'],
