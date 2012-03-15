@@ -1,8 +1,11 @@
-<% @grouped_contacts.each do |group| %>
-  		  <li id="<%= group[0] %>-group-divider" data-role="list-divider" role="heading" tabindex="0" class="group-divider ui-li ui-li-divider ui-btn ui-bar-b ui-btn-up-undefined">
-		    <%= group[0].upcase %>
-		  </li>
-		  <% group[1].each do |contact| %>
-		    <%= display_contact_record(contact,@params['search_terms']) %>
-		  <% end %>
+<% @grouped_contacts.each do |group|
+    id_str = group[0]
+    id_str = 'comma' if id_str == ','
+%>
+    <li id="<%= id_str %>-group-divider" data-role="list-divider" role="heading" tabindex="0" class="group-divider ui-li ui-li-divider ui-btn ui-bar-b ui-btn-up-undefined">
+        <%= group[0].upcase %>
+    </li>
+    <% group[1].each do |contact| %>
+        <%= display_contact_record(contact, @params['search_terms']) %>
+    <% end %>
 <% end %>

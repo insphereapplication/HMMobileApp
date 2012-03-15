@@ -86,13 +86,19 @@ function loadPage(){
 function loadContactsAsync(filterType, page, startPage, searchTerms){	
 	$.get("/app/Contact/get_contacts_page", { filter: filterType, page: page, search_terms: searchTerms },
 		function(contacts) {	
-			if (contacts.match(/Error/) == "Error"){
-					alert("There was a server error.");
+			if (contacts.match(/^Error/) == "Error"){
+					alert("There was a server error.\n" + contacts);
 					return;
 			}
 			
 			if (contacts && $.trim(contacts) != "" && page < (startPage + pageLimit)){
 				$("ul#contact-list").append(contacts);
+                                // remove any possible redundant letter-divider list items ('A', 'B', etc.)
+                                $(".group-divider").each(function() {
+                                    var ids = $('[id=' + this.id + ']');
+                                    if (ids.length > 1 && ids[0] == this)
+                                        $(ids[1]).remove();
+                                });
 				loadContactsAsync(filterType, page + 1, startPage, searchTerms);
 			} 
 			else {
