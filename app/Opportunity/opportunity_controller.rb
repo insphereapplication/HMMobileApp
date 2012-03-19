@@ -595,7 +595,12 @@ class OpportunityController < Rho::RhoController
              :layout => 'layout_jquerymobile',
              :origin => @params['origin']
     else
-      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))
+      if @params['origin'] == 'contact'
+         WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'))
+       else   
+         WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))
+       end
+      
     end
   
   end
@@ -618,6 +623,12 @@ class OpportunityController < Rho::RhoController
       render :action => :reassign_confirm, :back => 'callback:',
              :layout => 'layout_jquerymobile',
              :origin => @params['origin']
+    else
+      if @params['origin'] == 'contact'
+         WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'))
+      else   
+         WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))
+      end  
     end
   end
 
@@ -633,7 +644,7 @@ class OpportunityController < Rho::RhoController
     if @params['origin'] == 'contact'
        WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'))
      else   
-       redirect  :action => :index, :back => 'callback:'
+       WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))
      end
   end
 end
