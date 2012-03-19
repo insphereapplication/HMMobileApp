@@ -512,7 +512,7 @@ class ActivityController < Rho::RhoController
           :status_update_timestamp => Time.now.utc.to_s
         })
       
-        opportunity.record_phone_call_made_now
+        opportunity.record_phone_call_made_now("Lost")
         appointmentids = get_appointment_ids(@params['appointments'])
         
         finished_loss_status(opportunity, @params['origin'], appointmentids)
@@ -570,7 +570,7 @@ class ActivityController < Rho::RhoController
             :status_update_timestamp => Time.now.utc.to_s
           })
       
-          opportunity.record_phone_call_made_now
+          opportunity.record_phone_call_made_now("Lost")
       
           appointmentids = get_appointment_ids(@params['appointments'])
           finished_loss_status(opportunity, @params['origin'], appointmentids)
