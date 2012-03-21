@@ -52,8 +52,8 @@ class SettingsController < Rho::RhoController
       connection_status = DeviceCapabilities.connection_status
       sync_status = DeviceCapabilities.sync_status
       @result = "#{connection_status},#{sync_status}"
-      #render :action => :get_connection_status, :back => 'callback:', :layout => false
-      @result
+      #Do not remove rendor below even though it is just returning results above.  It currently keeps android back button return to same page instead of back a page
+      render :action => :get_connection_status, :back => 'callback:', :layout => false
     else  
       puts "????????????????????????????? Get connection status is call from the background  ?????????????????????????????"
       if System::get_property('platform') == 'ANDROID' 
