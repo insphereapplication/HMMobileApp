@@ -141,8 +141,9 @@ class ActivityController < Rho::RhoController
 
   def opportunity_details
     Rho::NativeTabbar.switch_tab(0)
-    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :id => @params['id']), 0)
     redirect :action => :index
+    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :id => @params['id']), 0)
+ 
   end
 
   # GET /Contact/activity_summary
