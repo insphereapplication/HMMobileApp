@@ -28,7 +28,7 @@ class AppApplication < Rho::RhoApplication
   
   def on_activate_app
       puts "calling on_activate_app"
-      SyncEngine.dosync if (!$app_activated.blank? && !SyncEngine.is_syncing && Settings.last_synced && Time.new - Settings.last_synced > 60)
+      SyncEngine.dosync if (!$app_activated.blank? && !SyncEngine.is_syncing && Settings.last_synced && !Settings.last_synced.blank? && Time.new - Settings.last_synced > 60)
       SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
       $app_activated = "true"
       puts "In app active: #{$app_activated}"
