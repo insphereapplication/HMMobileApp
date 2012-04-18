@@ -113,7 +113,7 @@ end
 
 def rhoconfig
   {
-    :app_db_version => '9.1', #This was last upticked after the 3.3.19 drop on 02/28/2012
+    :app_db_version => '9.2', #This was last upticked for the 3.4.3 drop on 04/18/2012
     :min_severity => '5',
     :max_log_file_size => '1000000',
     :sync_server => 'https://rhosync.insphereis.net/application',    
