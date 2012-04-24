@@ -17,7 +17,9 @@
 	        :launcher => :phone_dialog,
 	        :icon => "phoneopp",
 	        :location => "blank",
-                :show_icon => @self_id == opportunity.cssi_assetownerid
+                :show_person_icon => @self_id == opportunity.cssi_assetownerid && opportunity.opportunityratingcode == 'Warm',
+				:show_lead_exclamation_icon => @self_id == opportunity.cssi_assetownerid && opportunity.opportunityratingcode == 'Hot',
+				:show_exclamation_icon => !(@self_id == opportunity.cssi_assetownerid) && opportunity.opportunityratingcode == 'Hot'
 	    } if contact 
 	%>
 <% end%>
