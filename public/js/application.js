@@ -528,7 +528,7 @@ function pollConnectionStatus()
 {
 	updateConnectionStatusIndicator();
 	//update connection status every 30000 ms. declared in application.js.
-	timeoutID = setTimeout("pollConnectionStatus()", 30000);
+	timeoutID = setTimeout("pollConnectionStatus()", 60000);
 }
 
 function setAppActive()

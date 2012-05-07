@@ -51,6 +51,7 @@ class SettingsController < Rho::RhoController
     if AppApplication.activated?
       connection_status = DeviceCapabilities.connection_status
       sync_status = DeviceCapabilities.sync_status
+
       @result = "#{connection_status},#{sync_status}"
       #Do not remove rendor below even though it is just returning results above.  It currently keeps android back button return to same page instead of back a page
       render :action => :get_connection_status, :back => 'callback:', :layout => false
@@ -463,6 +464,26 @@ class SettingsController < Rho::RhoController
       
       # store device info
       DeviceInfo.check_device_information
+      
+      #this is for testing only and should not be release to production
+      $test_count = 100 unless $test_count 
+           if $test_count >= 130
+             $test_count +=5
+           elsif $test_count > 100
+               $test_count +=10
+           else
+               $test_count +=20
+           end
+           $test_round = 1 unless $test_round
+              
+           i = 0
+           puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Create #{$test_count} exceptions"
+           while i < $test_count do
+             log_error("Application Restarted in background", "Get connection status is call from the background with a sync interval. round: #{$test_round}  : count #{i}")
+             i +=1
+           end
+           $test_round +=1
+           puts "Finished Creating exceptions #{$test_count}"
       
       @on_sync_complete.call
       
