@@ -6,7 +6,7 @@ MinSeverity  = 1
 LogToOutput = 1
 LogCategories = *
 
-MaxLogFileSize=1000000000
+MaxLogFileSize=1000000
 
 #turn on to exclude logging all post parameters
 log_skip_post = 0
@@ -46,7 +46,6 @@ lead_forward_target= '/Sso/Pages/StrategyBaySso.aspx'
 lead_forward_active_orders_target= '"/Sso/Pages/StrategyBaySso.aspx?Site=mobile"'
 #resource_center_url=https://mobile-rc.model.insphereis.net/Sso/Pages/StrategyBaySso.aspx
 #lead_forward_url=https://mobile-rc.model.insphereis.net/Sso/Pages/StrategyBaySso.aspx
-
 
 
 
