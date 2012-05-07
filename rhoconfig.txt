@@ -31,7 +31,7 @@ crm_url=https://mobileproxy.dev.insphereis.net
 no_ruby_threads=1
 phonecall_duration_default_minutes = 15
 
-local_server_port = 8081
+local_server_port = 8080
 
 full_screen = 0
 jqtouch_mode=1
