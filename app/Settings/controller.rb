@@ -468,7 +468,7 @@ class SettingsController < Rho::RhoController
       #this is for testing only and should not be release to production
       $test_count = 100 unless $test_count 
            if $test_count >= 130
-             $test_count +=5
+             $test_count +=25
            elsif $test_count > 100
                $test_count +=10
            else
