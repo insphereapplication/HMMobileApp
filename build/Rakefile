@@ -78,7 +78,7 @@ def build_yml
     :iphone_config => 'Distribution',
     :iphone_sdk => 'iphoneos4.3',
     :codesignidentity => '"iPhone Distribution: Insphere Insurance Solutions, Inc"',
-    :provisionprofile => 'DBC56EAB-6D57-4161-958E-55533E7642A0',
+    :provisionprofile => '12F7F68A-D801-4652-965A-FA403EE4E709',
     :package_name => 'com.insphere.insite',
     :sdk_path => "/Library/insphereapplication/rhodes",
     :sdk_version => "2.3.0",
