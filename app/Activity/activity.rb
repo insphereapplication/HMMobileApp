@@ -237,7 +237,11 @@ class Activity
     }
     attrs[:cssi_disposition] = 'Appointment Held' if type == 'Appointment'
     attrs[:statuscode] = 'Made' if type == 'PhoneCall'
+    
+    Activity.local_changed=true
+    
     update_attributes(attrs)
+    
   end
 
   def self.emails
