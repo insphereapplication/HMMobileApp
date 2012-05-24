@@ -329,7 +329,10 @@ class Opportunity
     }
     
     if phone_call = most_recent_open_phone_call   
+      ## if updating an open phone call update the activity page as a precaution
+      Activity.local_changed=true
       phone_call.update_attributes(phone_call_attrs)
+      
     else
       phone_call = Activity.create_new(phone_call_attrs.merge({
         :parent_type => 'Opportunity', 
