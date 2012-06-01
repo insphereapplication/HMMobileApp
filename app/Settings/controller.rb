@@ -4,6 +4,8 @@ require 'rho/rhoerror'
 require 'helpers/browser_helper'
 require 'rho/rhotabbar'
 require 'helpers/crypto'
+require 'contact/contact_controller'
+require 'activity/activity_controller'
 
 
 class SettingsController < Rho::RhoController
@@ -196,6 +198,11 @@ class SettingsController < Rho::RhoController
     Settings.last_integrated_lead = ''
     Settings.last_assigned_lead = ''
     Settings.flush_instance
+    
+    #Reset the first render flags to true for activity and contact pages
+    ContactController.reset_first_render
+    ActivityController.reset_first_render
+
     
     Rho::NativeTabbar.remove
     redirect :action => :login, :query => {:msg => "You have been logged out."}

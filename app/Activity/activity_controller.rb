@@ -4,6 +4,10 @@ require 'date'
 
 class ActivityController < Rho::RhoController
   include BrowserHelper
+  
+ 
+  @@first_render = true
+
 
   def index
     Activity.complete_activities(@params['selected-activity']) if @params['selected-activity']
@@ -33,15 +37,21 @@ class ActivityController < Rho::RhoController
     render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
 
-  $first_render = true
 
   def show_all_activities
-    if Activity.local_changed? || $first_render
+    #puts "^^*^^ Activity.local_changed #{Activity.local_changed?}"
+    #puts "^^*^^ Activity first render #{@@first_render}"
+    if Activity.local_changed? || @@first_render
       Activity.local_changed = false
-      $first_render = false
+      @@first_render = false
       WebView.navigate(url_for(:controller => :Activity, :action => :index), Constants::TAB_INDEX['Activities'])
     end
   end
+  
+  def self.reset_first_render
+    @@first_render = true
+  end
+  
 
   def show
     @activity = Activity.find_activity(@params['id'])

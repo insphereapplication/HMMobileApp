@@ -48,7 +48,10 @@ class OpportunityController < Rho::RhoController
     $new_leads_nav_context = []
     $follow_ups_nav_context = []
     $appointments_nav_context = []
-    $first_render = true
+    
+    #Reset the first render flags to true for activity and contact pages
+    ContactController.reset_first_render
+    ActivityController.reset_first_render
     
   end
   

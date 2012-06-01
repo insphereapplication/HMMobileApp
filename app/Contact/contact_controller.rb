@@ -7,7 +7,9 @@ require 'rho/rhotabbar'
 class ContactController < Rho::RhoController
   include BrowserHelper
 
-  $first_render = true
+
+  @@first_render = true
+
 
   #GET /Contact
   def index
@@ -19,12 +21,20 @@ class ContactController < Rho::RhoController
   end
   
   def show_all_contacts
-    if Contact.local_changed? || $first_render
-      WebView.navigate(url_for(:controller => :Contact, :action => :index), Constants::TAB_INDEX['Contacts'])
+    #puts "^^*^^ Contact.local_changed #{Contact.local_changed?}"
+    #puts "^^*^^ Contact first render #{@@first_render}"
+    if Contact.local_changed? || @@first_render
       Contact.local_changed = false
-      $first_render = false
+      @@first_render = false
+      WebView.navigate(url_for(:controller => :Contact, :action => :index), Constants::TAB_INDEX['Contacts'])
+
     end
   end
+  
+  def self.reset_first_render
+    @@first_render = true
+  end
+   
   
   def self.is_first_render?
     rendered = !!@rendered
