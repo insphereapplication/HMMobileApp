@@ -4,13 +4,14 @@ require 'rho/rhoerror'
 require 'helpers/browser_helper'
 require 'rho/rhotabbar'
 require 'helpers/crypto'
-require 'contact/contact_controller'
-require 'activity/activity_controller'
+require 'Contact/contact_controller'
+require 'Activity/activity_controller'
 
 
 class SettingsController < Rho::RhoController
   $prompted_for_upgrade = false
   include BrowserHelper
+ 
 
   ERR_403_MESSAGE = "Sorry! You are not eligible to use the mobile app. Please contact support at InSiteMobile@InsphereIS.com"
 

@@ -3,8 +3,8 @@ require 'rho/rhotabbar'
 require 'utils/util'
 require 'initializers/extensions'
 require 'lib/libs'
-require 'contact/contact_controller'
-require 'activity/activity_controller'
+require 'Contact/contact_controller'
+require 'Activity/activity_controller'
 
 class AppApplication < Rho::RhoApplication
   def initialize
@@ -61,8 +61,8 @@ class AppApplication < Rho::RhoApplication
     puts "calling ui_created!!!"
     #  Remove first render and adding to Activity and Contact 
     #Reset the first render flags to true for activity and contact pages
-    ContactController.reset_first_render
-    ActivityController.reset_first_render
+    #ContactController.reset_first_render
+    #ActivityController.reset_first_render
     # put your application UI creation code here
     # for example, create tab bar:
     # NativeBar.create(Rho::RhoApplication::TABBAR_TYPE, tabs)
