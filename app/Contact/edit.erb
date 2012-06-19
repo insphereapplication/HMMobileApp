@@ -1,11 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html>
-	<head>
-		<title></title>
-	</head>
-	<body>
-		<div data-role="page" data-theme="b" id="contact_edit_page">
-			<form method="post" id="contact_edit" action="<%= url_for :action => :update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" name="contact_edit">
+<div data-role="page" data-theme="b" id="contact_edit_page">
+			<form method="post" id="contact_edit" name="contact_edit" action="<%= url_for :action => :update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" name="contact_edit">
 				<div data-inline="true">
 					<%= offline_bar %>
 					<div data-role="header" data-backbtn="false" data-theme="b">
@@ -96,7 +90,7 @@
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
 								<label for="contact[cssi_businessphoneext]" class="fieldLabel">Business Extension:</label>
-								<input maxlength="10" type="tel" name="contact[cssi_businessphoneext]" value="<%= @contact.cssi_businessphoneext %>" <%= placeholder( "Business Ext" ) %>>
+								<input maxlength="10" type="number" id="contact_cssi_businessphoneext" name="contact[cssi_businessphoneext]" value="<%= @contact.cssi_businessphoneext %>" <%= placeholder( "Business Ext" ) %>>
 							</div>
 						</div>
 						<div data-role="fieldcontain">
@@ -307,5 +301,4 @@
 				</div>
 			</form>
 		</div>
-	</body>
-</html>
+

@@ -287,8 +287,8 @@ class Contact
   end  
   
   def business_phone
-    phone_number = telephone1
-    phone_number += " x#{cssi_businessphoneext}" unless cssi_businessphoneext.blank?
+    phone_number = telephone1 
+    phone_number += " x#{cssi_businessphoneext}" unless phone_number.blank? || cssi_businessphoneext.blank? 
     phone_number
   end
   

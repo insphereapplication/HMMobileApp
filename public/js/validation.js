@@ -150,7 +150,10 @@ $('#contact_edit_page').live('pagecreate',function(event){
 	    },
 		'contact[telephone1]' : {
 		  phoneUS: true,
-		  preferredBusiness: true
+		  preferredBusiness: true,
+		  required: function(element) {
+			          return  $("#contact_cssi_businessphoneext").val() != null && $("#contact_cssi_businessphoneext").val() != '' ;
+			      }
 		},
 		'contact[telephone2]' : {
 		  phoneUS: true,
