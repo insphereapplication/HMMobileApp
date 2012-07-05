@@ -99,7 +99,7 @@ def model_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Alex Mitrofanov (2Z2H9LGCB2)"',
     :iphone_config => 'Release',
-    :provisionprofile => '2B2653CE-B976-4714-BE63-C89C51FB3DCF'
+    :provisionprofile => 'A1D1EB2F-2732-4F64-8BF5-24D4A574E873'
   })
 end
 
@@ -107,7 +107,7 @@ def dev_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Alex Mitrofanov (2Z2H9LGCB2)"',
     :iphone_config => 'Release',
-    :provisionprofile => '2B2653CE-B976-4714-BE63-C89C51FB3DCF'
+    :provisionprofile => 'A1D1EB2F-2732-4F64-8BF5-24D4A574E873'
   })
 end
 
