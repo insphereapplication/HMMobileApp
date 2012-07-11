@@ -32,8 +32,8 @@ class AppApplication < Rho::RhoApplication
       puts "calling on_activate_app"
       begin
       SyncEngine.dosync if (!$app_activated.blank? && !SyncEngine.is_syncing && Settings.last_synced && !Settings.last_synced.blank? && Time.new - Settings.last_synced > 60)
-      rescue => msg  
-         puts "Error attempting to see if we should sync on start / forground of app.  Skipping sync check on activate  ("+msg+")"  
+      rescue Exception => e 
+         puts "Error attempting to see if we should sync on start / forground of app.  Skipping sync check on activate.  Error message:  #{e.message}"  
       end   
       SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
       $app_activated = "true"
