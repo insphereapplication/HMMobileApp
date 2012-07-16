@@ -34,7 +34,7 @@ end
 
 def update_rhodes
   log "Updating #{build_config['sdk']}..."
-  system "cd #{build_config['sdk']} && git remote update && git checkout #{RHODES_BRANCH} && git reset --hard origin/#{RHODES_BRANCH}"
+  system "cd #{build_config['sdk']} && git remote update && git checkout #{RHODES_BRANCH} -f && git reset --hard origin/#{RHODES_BRANCH}"
 end
 
 def update_icons(icon_folder)
