@@ -19,7 +19,7 @@ class OpportunityController < Rho::RhoController
         :label => "Opportunities", 
         :action => '/app/Opportunity', 
         :icon => "/public/images/dollar.png", 
-        :web_bkg_color => 0x7F7F7F 
+        :web_bkg_color => 0x7F7F7F
       }, 
       { 
         :label => "Contacts", 
@@ -457,7 +457,11 @@ class OpportunityController < Rho::RhoController
      flag = @params['flag']
       if ['0', '1', '2'].include?(flag)
         ttt = $choosed[flag]
+        if  @params['preset'].blank?
+          preset_time = Time.new - 1157000000
+        else
           preset_time= Time.parse(@params['preset'])
+        end
         DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
       end
       render :back => 'callback:'
@@ -467,8 +471,8 @@ class OpportunityController < Rho::RhoController
       flag = @params['flag']
       if ['0', '1', '2'].include?(flag)
         ttt = $choosed[flag]
-        if @params['preset'].nil?
-          preset_time = Time.new
+        if @params['preset'].blank?
+          preset_time = Time.new - 1157000000
         else 
           preset_time = Time.parse(@params['preset'])
         end
