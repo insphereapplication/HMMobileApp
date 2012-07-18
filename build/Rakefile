@@ -99,7 +99,7 @@ def model_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Alex Mitrofanov (2Z2H9LGCB2)"',
     :iphone_config => 'Release',
-    :provisionprofile => 'A1D1EB2F-2732-4F64-8BF5-24D4A574E873'
+    :provisionprofile => '1A79B04B-C163-42D4-B591-91B06246E335'
   })
 end
 
@@ -107,13 +107,13 @@ def dev_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Alex Mitrofanov (2Z2H9LGCB2)"',
     :iphone_config => 'Release',
-    :provisionprofile => 'A1D1EB2F-2732-4F64-8BF5-24D4A574E873'
+    :provisionprofile => '1A79B04B-C163-42D4-B591-91B06246E335'
   })
 end
 
 def rhoconfig
   {
-    :app_db_version => '9.2', #This was last upticked for the 3.4.3 drop on 04/18/2012
+    :app_db_version => '9.3', #This was last upticked for the 3.4.30 drop on 07/18/2012
     :min_severity => '5',
     :max_log_file_size => '1000000',
     :sync_server => 'https://rhosync.insphereis.net/application',    
