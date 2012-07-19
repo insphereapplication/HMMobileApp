@@ -379,7 +379,7 @@ class SettingsController < Rho::RhoController
       former_last_lead = Settings.last_integrated_lead
       set_last_integrated_lead
       current_last_lead = Settings.last_integrated_lead
-      if Time.parse(current_last_lead)  > Time.parse(former_last_lead)
+      if (former_last_lead.blank? && !current_last_lead.blank? && created_last_hour(current_last_lead)) || (!former_last_lead.blank? && current_last_lead.blank? && Time.parse(current_last_lead)  > Time.parse(former_last_lead))
         puts "NEW LEAD CREATED AT #{current_last_lead}"
         new_leads_alert
       end
@@ -399,6 +399,15 @@ class SettingsController < Rho::RhoController
       @current_assigned_lead && (created_today?)  && (Time.parse(@current_assigned_lead.cssi_assigneddate) > Time.parse(former_assigned_lead)) && (reassigned_lead?)
     end
   end
+  
+  def created_last_hour(create_date)
+    if (create_date)
+      hours = (Time.now - Time.parse(create_date))/3600
+      puts "Created in the last hour?  hours: #{hours}"
+      hours < 1
+    end
+  end
+
   
   def created_today?
     if (@current_assigned_lead.createdon)
