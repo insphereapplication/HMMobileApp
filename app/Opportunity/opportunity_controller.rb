@@ -381,7 +381,11 @@ class OpportunityController < Rho::RhoController
               :layout => 'layout_jquerymobile',
               :origin => @params['origin']
     else
-      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))    
+      if @params['origin'] == 'contact'
+         WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'),Constants::TAB_INDEX['Contacts'])
+      else   
+         WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'),Constants::TAB_INDEX['Opportunities'])
+      end
     end
   end
 
@@ -390,7 +394,7 @@ class OpportunityController < Rho::RhoController
     @contact = @opportunity.contact unless @opportunity.blank?
     phone_number=''
     if @contact.blank?
-      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))  
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'),Constants::TAB_INDEX['Opportunities'])  
     elsif @contact.phone_numbers.size < 2
       @contact.phone_numbers.each do |type, number|
         phone_number = number
