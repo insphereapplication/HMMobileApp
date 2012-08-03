@@ -50,7 +50,13 @@ class Opportunity
   belongs_to :contact_id, 'Contact'
     
   def contact
-    Contact.find_contact(contact_id) unless contact_id.blank?
+    contact = Contact.find_contact(contact_id) unless contact_id.blank?
+    if (!contact_id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}') && contact.object.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+       #This should be handled by the rhodes framework but we have seen a couple of issues
+       puts "Updating oppportunity contact id temp #{contact_id} with #{contact.object}"
+       update_attributes( :contact_id => contact.object)
+    end
+    contact
   end
   
   def self.create_new(params)
@@ -224,7 +230,7 @@ class Opportunity
   end
   
   def is_owned_by_this_opportunity_sql
-    "parent_type = 'Opportunity' and parent_id = '#{object}'"
+    "parent_type = 'Opportunity' and parent_id in ('#{object}','#{temp_id}')"
   end
   
   def appointments

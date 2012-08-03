@@ -62,7 +62,13 @@ class Activity
   def parent
     if self.parent_type && self.parent_id
       parent = Object.const_get(self.parent_type.capitalize)
-      parent.send("find_#{self.parent_type.downcase}", self.parent_id)
+      result = parent.send("find_#{self.parent_type.downcase}", self.parent_id)
+      if (!parent_id.blank? && !parent_id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}') && !result.object.blank? && result.object.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+         #This should be handled by the rhodes framework but we have seen a couple of issues
+         puts "Updating activity parent_id temp #{parent_id} with #{result.object}"
+         update_attributes( :parent_id => result.object)
+      end
+      result
     end
   end
   
@@ -333,7 +339,13 @@ class Activity
       parent
     else
       this_parent = parent if (parent_type == 'Opportunity' || parent_type == 'Policy')
-      this_parent ? this_parent.contact : nil
+      result = this_parent ? this_parent.contact : nil
+      if (!parent_contact_id.blank? && !parent_contact_id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}')  && !result.blank? && result.object.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+         #This should be handled by the rhodes framework but we have seen a couple of issues
+         puts "Updating activity parent contact id temp #{parent_contact_id} with #{result.object}"
+         update_attributes( :parent_contact_id => result.object)
+      end
+      result
     end
   end
 

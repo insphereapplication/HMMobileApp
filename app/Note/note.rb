@@ -20,7 +20,13 @@ class Note
     if self.parent_type && self.parent_id
       rhodes_parent_type = parent_is_activity? ? "Activity" : self.parent_type.capitalize
       parent = Object.const_get(rhodes_parent_type) 
-      parent.send("find_#{rhodes_parent_type.downcase}", self.parent_id)
+      result = parent.send("find_#{rhodes_parent_type.downcase}", self.parent_id)
+      if (!parent_id.blank? && !parent_id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}') && !result.object.blank? && result.object.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+          #This should be handled by the rhodes framework but we have seen a couple of issues
+          puts "Updating note parent_id temp #{parent_id} with #{result.object}"
+          update_attributes( :parent_id => result.object)
+       end
+       result
     end
   end
   

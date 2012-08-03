@@ -350,7 +350,7 @@ class Contact
   end
   
   def dependents
-    Dependent.find(:all, :conditions => {"contact_id" => self.object})
+    Dependent.find(:all, :conditions =>{{:name => "contact_id", :op => "IN" } => [self.object,self.temp_id]})
   end
   
   def business_map
