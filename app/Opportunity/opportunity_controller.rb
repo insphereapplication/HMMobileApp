@@ -16,8 +16,8 @@ class OpportunityController < Rho::RhoController
     
     tabbar = [
       { 
-        :label => "Opportunities", 
-        :action => url_for(:controller => :Opportunity, :action => :index), 
+        :label => "Customers", 
+        :action => '/app/Customer', 
         :icon => "/public/images/dollar.png", 
         :web_bkg_color => 0x7F7F7F
       }, 
@@ -43,6 +43,7 @@ class OpportunityController < Rho::RhoController
     # Rho::NativeTabbar.create(tabbar)
     Rho::NativeTabbar.create(:tabs => tabbar, :place_tabs_bottom => true,
             :on_change_tab_callback => url_for(:action => :tab_switch_callback))    
+    puts "setting switch tab to 0"        
     Rho::NativeTabbar.switch_tab(0)
     
     $new_leads_nav_context = []
@@ -53,6 +54,7 @@ class OpportunityController < Rho::RhoController
     ContactController.reset_first_render
     ActivityController.reset_first_render
     
+    puts "leaving tab init"
   end
   
   def tab_switch_callback
@@ -89,14 +91,18 @@ class OpportunityController < Rho::RhoController
   
   # since this is the default entry point on startup, check here for login
   def index
+      puts "********************************* opp index enter *********************************"
     $tab = 0
     if SyncEngine::logged_in == 1
+      puts "********************************* opp index calling SyncEngine:: logged_in == 1 *********************************"
       intialize_nav_contexts
       Opportunity.local_changed = false
       @params['selected_tab'] = @params['selected_tab'].blank? ? 'new-leads' : @params['selected_tab']
+      puts "********************************* opp index before persisted search *********************************"
       @persisted_scheduled_search = Settings.get_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS)['search']
       set_opportunities_nav_context(@params['selected_tab']);    
-      render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
+      puts "********************************* opp index calling erb *********************************"
+      WebView.navigate(url_for(:controller => Customer, :action => :index, :back => 'callback:'))
     else
       redirect :controller => Settings, :action => :login, :back => 'callback:', :layout => 'layout_JQM_Lite'
     end
@@ -108,10 +114,12 @@ class OpportunityController < Rho::RhoController
   end
   
   def current_nav_context
+    puts "calling current_nav_context #{current_nav_context}"
     case $current_nav_context
       when 'new-leads' then $new_leads_nav_context
       when 'follow-ups' then $follow_ups_nav_context
       when 'appointments' then $appointments_nav_context
+      else $new_leads_nav_context
     end
   end
 
@@ -195,7 +203,7 @@ class OpportunityController < Rho::RhoController
     Settings.record_activity
     @opportunity = Opportunity.find_opportunity(@params['id'])
     @notes = @opportunity.notes if @opportunity
-    current_nav_context.orient!(@opportunity.object) if @opportunity
+    current_nav_context.orient!(@opportunity.object) if @opportunity && current_nav_context
     @contact = @opportunity.contact if @opportunity
     if @opportunity && @contact
       render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'

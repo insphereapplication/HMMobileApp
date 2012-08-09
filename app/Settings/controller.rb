@@ -55,6 +55,10 @@ class SettingsController < Rho::RhoController
       connection_status = DeviceCapabilities.connection_status
       sync_status = DeviceCapabilities.sync_status
       @result = "#{connection_status},#{sync_status}"
+      puts "^^^^^^^^^^^^^^^^^  Connnection status check results: #{@result}  ^^^^^^^^^^^^^^^^^^"
+      if (connection_status == "Offline" && sync_status == "Syncing")
+        SyncEngine.stop_sync
+      end
       #Do not remove rendor below even though it is just returning results above.  It currently keeps android back button return to same page instead of back a page
       render :action => :get_connection_status, :back => 'callback:', :layout => false
     else  
@@ -108,11 +112,14 @@ class SettingsController < Rho::RhoController
     httpErrCode = @params['error_message'].split[0]
 
     if errCode == 0
+      puts "No error:  In the login_callback"
       Settings.credentials_verified = true
       SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
       #setup the sync event handlers for the application init sequence, start sync
-      SyncUtil.start_sync('init')
+      #SyncUtil.start_sync('init')
       update_login_wait_progress("Login successful, starting sync...")
+      puts "In login callback:  calling opportunity index"
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'),Constants::TAB_INDEX['Opportunities'])
     elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
@@ -137,6 +144,7 @@ class SettingsController < Rho::RhoController
       
       goto_login(@msg)
     end
+     puts "In login_callback. Should we be doing something here?"
   end
   
   def background_login_callback
@@ -146,7 +154,9 @@ class SettingsController < Rho::RhoController
     if errCode == 0
       SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
       #perform a sync in the background
-      SyncUtil.start_sync
+      puts "Callback ground sync login"
+      #SyncUtil.start_sync
+       WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'),Constants::TAB_INDEX['Opportunities'])
     elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
@@ -169,6 +179,7 @@ class SettingsController < Rho::RhoController
         
       goto_login(@msg)
     end
+    puts "In background_login_callback. Should we be doing something here?"
   end
 
   def do_login

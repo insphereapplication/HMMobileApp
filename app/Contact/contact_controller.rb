@@ -42,6 +42,14 @@ class ContactController < Rho::RhoController
     !rendered
   end
   
+  def take_picture
+    Camera::take_picture(url_for(:controller => :Contact, :action => :take_picture_callback))
+  end
+  
+  def take_picture_callback
+    WebView.navigate(url_for(:action => :display_picture))
+  end
+  
   def get_contacts_page
     Settings.record_activity
     

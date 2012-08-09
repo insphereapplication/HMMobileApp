@@ -14,6 +14,7 @@
 				<a href="<%=url_for(:action=>:edit, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-direction="forward" data-icon="edit"> Edit </a>
 	</div>
 	<div data-role="content">
+		<a href="<%= url_for :action => :take_picture, :id =>@contact.object, :query =>{:origin => @params['origin']} %>" rel="external" data-transition="none" data-role="button" >Take picture</a>
 		<ul data-role="listview" data-theme="d" data-inset="true" > 
 			<li>
 					<h3><%= @contact.full_name %></h3>
