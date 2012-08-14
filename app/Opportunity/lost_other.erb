@@ -30,8 +30,8 @@
 				<select data-role="none" class="ins-drop-down" name="status_code" id="status_codeid">
 					<option data-placeholder="true"></option>
 					<% @lost_reasons.each do |reason| %>
-					    <% selected =  ( @params['selected_option'] != 'Other' && @params['selected_option'] == reason[0] ) ? '"selected="selected"' : "" %>
-						<option value="<%=reason[1]%>" <%= selected %>><%=reason[0]%></option>
+					    <% selected =  ( @params['selected_option'] != 'Other' && @params['selected_option'] == reason[0] ) ? 'selected="true"' : "" %>
+						<option <%=selected%> value="<%=reason[1]%>"><%=reason[0]%></option>
 					<% end %>
 				<br/></select>
 				</div>

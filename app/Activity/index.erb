@@ -3,7 +3,9 @@
         $.ajaxSetup ({  
             cache: false  
         });
+	
         loadAllActivities();
+		
     });
 </script>
 
@@ -30,7 +32,7 @@
     <div id="contentDiv" data-role="content" class="ui-content" role="main">
         <div data-role="collapsible" data-collapsed="true" class="ui-collapsible-contain" style="margin-top: 0px; margin-bottom: 0px;">
             <h3 class="ui-collapsible-heading ui-collapsible-heading-collapsed">
-                <a href="javascript:toggleActivitiesFilter()" class="ui-collapsible-heading-toggle ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-b" data-theme="b">
+                <a href="javascript:toggleActivitiesFilter()" id="activity-collapsible-bar" class="ui-collapsible-heading-toggle ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-b" data-theme="b">
                     <span class="ui-btn-inner ui-corner-all">
                         <span class="ui-btn-text">Filter...
                             <span class="ui-collapsible-heading-status">click to expand contents</span>
@@ -60,14 +62,14 @@
                 </select>
                 <fieldset class="ui-grid-custom ui-grid-a">
                     <div class="ui-block-a">
-                        <div onclick="javascript:filterActivities()" data-theme="b" class="ui-btn ui-btn-up-b ui-btn-corner-all ui-shadow">
+                        <div onclick="javascript:filterActivities()" id='activity-search-button'data-theme="b" class="ui-btn ui-btn-up-b ui-btn-corner-all ui-shadow">
                             <span class="ui-btn-inner ui-btn-corner-all">
                                 <span class="ui-btn-text">Filter</span>
                             </span>
                         </div>
                     </div>
                     <div class="ui-block-b">
-                        <div onclick="javascript:clearActivitiesFilter()" data-theme="b" class="ui-btn ui-btn-up-b ui-btn-corner-all ui-shadow">
+                        <div onclick="javascript:clearActivitiesFilter()" id='activity_filter_clear'data-theme="b" class="ui-btn ui-btn-up-b ui-btn-corner-all ui-shadow">
                             <span class="ui-btn-inner ui-btn-corner-all">
                                 <span class="ui-btn-text">Clear</span>
                             </span>
@@ -83,6 +85,11 @@
             <li id="today_activities" data-role="list-divider" class="ui-bar-orange no-top-padding ui-li ui-li-divider ui-btn ui-bar-b ui-btn-up-undefined" role="heading" tabindex="-1">Today</li>
             <li id="future_activities" data-role="list-divider" class="ui-bar-yellow no-top-padding ui-li ui-li-divider ui-btn ui-bar-b ui-btn-up-undefined" role="heading" tabindex="-1">Next 7 Days</li>
         </ul>
+    </div>
+    <div onclick="javascript:void(0)" id="do-nothing-button" data-theme="b" class="ui-btn ui-btn-up-b ui-btn-corner-all ui-shadow">
+        <span class="ui-btn-inner ui-btn-corner-all">
+            <span class="ui-btn-text">Filter</span>
+        </span>
     </div>
     <div data-role="footer" data-theme="a" class="ui-bar-a ui-footer" role="contentinfo">
     </div>

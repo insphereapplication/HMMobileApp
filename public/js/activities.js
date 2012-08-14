@@ -1,4 +1,5 @@
 function loadAllActivities() {
+	disableSearchButtons();
     var filter = getActivitiesFilter();
     $('#activity_filter_details').html('Filter: ' + filter.type + ', ' + filter.status + ', ' + filter.priority);
     var buckets = [];
@@ -26,8 +27,35 @@ function loadAllActivities() {
         $('#today_activities').hide();
         $('#future_activities').hide();
     }
+    // disable filter
     loadActivities(getLinkedBucketList(buckets), 0, filter);
+	
 }
+
+// this creates two one-time handlers for the 'clear' and 'filter' buttons. They must be removed during a page load, and will be re-added when the load is done.
+function initializeFilterButtonHandlers(){
+	$('#activity-search-button').click(function(){
+		filterActivities();
+	});
+	
+	$('#activity_filter_clear').click( function()
+	{
+	  		clearActivitiesFilter();
+	});
+	//$('#activity-collapsible-bar').show();
+	$('#do-nothing-button').hide();
+
+}
+
+function disableSearchButtons(){
+	$('#activity-search-button').unbind('click');
+	$('#activity_filter_clear').unbind('click');
+	//$('#activity-collapsible-bar').hide();
+	$('#do-nothing-button').hide();
+
+
+}
+
 
 function getLinkedBucketList(bucketArray) {
 	for(var i = 0; i < bucketArray.length; i++) {
@@ -36,7 +64,9 @@ function getLinkedBucketList(bucketArray) {
 	return bucketArray[0];
 }
 
+var counter = 0;
 function loadActivities(activityBucket, activity_page, jsonParams) {
+	counter++;
     jsonParams.page = activity_page;
     $.post('/app/Activity/' + activityBucket.activity_method, jsonParams,
         function(activities) {
@@ -54,6 +84,9 @@ function loadActivities(activityBucket, activity_page, jsonParams) {
             else {
                 checkForNoActivities(activityBucket.activity_method);
             }
+            counter--;
+            if (counter == 0)
+                initializeFilterButtonHandlers();
         });
 }
 
@@ -83,11 +116,12 @@ function insertEmptyMessageIfEmpty(folderId, message) {
 function toggleCollapsible(id) {
     $('#' + id + '_icon').toggleClass('ui-icon-plus ui-icon-minus');
     $('#' + id + '_content').toggleClass('ui-collapsible-content-collapsed');
+	$('#' + id + '_details').toggle();
 }
 
 function toggleActivitiesFilter() {
+	
     toggleCollapsible('activity_filter');
-    $('#activity_filter_details').toggle();
 }
 
 function getActivitiesFilter() {
@@ -106,7 +140,16 @@ function clearActivitiesFilter() {
 }
 
 function filterActivities() {
+	disableSearchButtons();
+	toggleCollapsible('activity_filter');
+	showFilterParams();
     location.href = location.href.replace(/\?.*$/, '') + '?' + $.param(getActivitiesFilter());
+}
+
+
+function showFilterParams(){
+    var filter = getActivitiesFilter();
+    $('#activity_filter_details').html('Filter: ' + filter.type + ', ' + filter.status + ', ' + filter.priority);
 }
 
 function completeSelectedActivities() {
@@ -117,6 +160,7 @@ function completeSelectedActivities() {
         $.post('/app/Activity/complete_activities_alert');
     }
 }
+
 
 function onRowClick(e, width, url) {
     if (e.pageX < width) {
