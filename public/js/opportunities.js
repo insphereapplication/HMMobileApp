@@ -4,7 +4,7 @@ tabLoading['follow-ups'] = false;
 tabLoading['scheduled'] = false;
 
 $(document).ready(function() {
-	
+	$('#opportunity-do-nothing-button').hide();
    	$('#new-leads-button').live('click', function() {
 		checkForChanges('new-leads');
 		setNavContext('new-leads');
@@ -102,8 +102,10 @@ function loadScheduled( scheduledSelectFilter, scheduledSearchInput )
 	loadOpportunities('scheduled', appointmentBucket, 0, jsonParams, true);
 }
 
+var tab_counter = 0;
 function loadOpportunities(tab, opportunityBucket, opportunity_page, jsonParams, initTabLoad)
 {
+	tab_counter++;
 	if ( jsonParams == undefined )
 	{
 		jsonParams = { page: opportunity_page };
@@ -148,8 +150,12 @@ function loadOpportunities(tab, opportunityBucket, opportunity_page, jsonParams,
 				checkForNoOpportunities( opportunityBucket.opportunity_method );
 				enableFilters(tab);
 			}
-		}
+			tab_counter--;
+			if (tab_counter == 0)
+				$('#opportunity-do-nothing-button').hide();
+		}	
 	);
+	
 }
 
 function checkForNoOpportunities( opportunityMethod )
