@@ -1,5 +1,5 @@
 function loadAllActivities() {
-	disableSearchButtons();
+	disableActivitySearchButtons();
     var filter = getActivitiesFilter();
     $('#activity_filter_details').html('Filter: ' + filter.type + ', ' + filter.status + ', ' + filter.priority);
     var buckets = [];
@@ -33,7 +33,7 @@ function loadAllActivities() {
 }
 
 // this creates two one-time handlers for the 'clear' and 'filter' buttons. They must be removed during a page load, and will be re-added when the load is done.
-function initializeFilterButtonHandlers(){
+function initializeActivityFilterButtonHandlers(){
 	$('#activity-search-button').click(function(){
 		filterActivities();
 	});
@@ -43,15 +43,15 @@ function initializeFilterButtonHandlers(){
 	  		clearActivitiesFilter();
 	});
 	//$('#activity-collapsible-bar').show();
-	$('#do-nothing-button').hide();
+	$('#activity-do-nothing-button').hide();
 
 }
 
-function disableSearchButtons(){
+function disableActivitySearchButtons(){
 	$('#activity-search-button').unbind('click');
 	$('#activity_filter_clear').unbind('click');
 	//$('#activity-collapsible-bar').hide();
-	$('#do-nothing-button').hide();
+	$('#activity-do-nothing-button').hide();
 
 
 }
@@ -86,7 +86,7 @@ function loadActivities(activityBucket, activity_page, jsonParams) {
             }
             counter--;
             if (counter == 0)
-                initializeFilterButtonHandlers();
+                initializeActivityFilterButtonHandlers();
         });
 }
 

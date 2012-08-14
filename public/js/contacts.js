@@ -20,15 +20,18 @@ function initializeFilterButtonHandlers(){
 	{
   	clearContacts();
 	});
+	$('#contact-do-nothing-button').hide();
 }
 
 function disableSearchButtons(){
 	$('#submit-search-button').unbind('click');
 	$('#contact_filter_clear').unbind('click');
+	$('#contact-do-nothing-button').hide();
 }
 
 function disableACSearchButtons(){
 	$('#submit-ac-search').unbind('click');
+	$('#contact-do-nothing-button').hide();
 }
 
 function initializeSearch(){
