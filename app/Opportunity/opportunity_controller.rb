@@ -17,7 +17,7 @@ class OpportunityController < Rho::RhoController
     tabbar = [
       { 
         :label => "Opportunities", 
-        :action => url_for(:controller => :Opportunity, :action => :index), 
+        :action => '/app/Opportunity', 
         :icon => "/public/images/dollar.png", 
         :web_bkg_color => 0x7F7F7F
       }, 
