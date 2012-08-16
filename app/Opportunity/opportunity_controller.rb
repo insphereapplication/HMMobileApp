@@ -16,8 +16,8 @@ class OpportunityController < Rho::RhoController
     
     tabbar = [
       { 
-        :label => "Customers", 
-        :action => '/app/Customer', 
+        :label => "Opportunities", 
+        :action => "#{url_for(:controller => :Opportunity, :action => :index)}", 
         :icon => "/public/images/dollar.png", 
         :web_bkg_color => 0x7F7F7F
       }, 
@@ -43,7 +43,7 @@ class OpportunityController < Rho::RhoController
     # Rho::NativeTabbar.create(tabbar)
     Rho::NativeTabbar.create(:tabs => tabbar, :place_tabs_bottom => true,
             :on_change_tab_callback => url_for(:action => :tab_switch_callback))    
-    puts "setting switch tab to 0"        
+    puts "******************setting switch tab to 0"        
     Rho::NativeTabbar.switch_tab(0)
     
     $new_leads_nav_context = []
@@ -58,16 +58,25 @@ class OpportunityController < Rho::RhoController
   end
   
   def tab_switch_callback
+    puts "%%%%%%%%%%%%%%%%%%%%%%% We are in the tab switch back call"
     current_index = @params['tab_index'].to_i
-    WebView.execute_js("setAppDeactive();", 0) 
-    WebView.execute_js("setAppDeactive();", 1) 
-    WebView.execute_js("setAppDeactive();", 2) 
-    WebView.execute_js("setAppDeactive();", 3) 
-    WebView.execute_js("setAppActive();",current_index) 
+    # WebView.execute_js("setAppDeactive();", 0) 
+    # WebView.execute_js("setAppDeactive();", 1) 
+    # WebView.execute_js("setAppDeactive();", 2) 
+    # WebView.execute_js("setAppDeactive();", 3) 
+    # WebView.execute_js("setAppActive();",current_index) 
     
     # refresh opportunities page if changed locally
-    if Opportunity.local_changed? && (current_index == 0)
-      WebView.navigate(url_for(:action => :index, :back => 'callback:', :query => {:selected_tab => $current_nav_context}))
+    puts "%%%%%%%%%%%%%%%%%%%%%%% We are before the local opportunity change"
+   # if Opportunity.local_changed? && (current_index == 0)
+      if (current_index == 0)
+      puts "%%%%%%%%%%%%%%%%%%%%% We are call opportunity webview navigate from from tab switch back"
+      #WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :query => {:selected_tab => $current_nav_context}))
+      #WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :query => {:selected_tab => $current_nav_context}))
+     WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :layout => 'layout_JQM_Lite'),Constants::TAB_INDEX['Opportunities'])  
+
+    else
+      puts "%%%%%%%%%%%%%%%%%%%%% We DID NOT call opportunity webview navigate from from tab switch back, but going to call the index to test."
     end
   end
   
@@ -102,7 +111,8 @@ class OpportunityController < Rho::RhoController
       @persisted_scheduled_search = Settings.get_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS)['search']
       set_opportunities_nav_context(@params['selected_tab']);    
       puts "********************************* opp index calling erb *********************************"
-      WebView.navigate(url_for(:controller => Customer, :action => :index, :back => 'callback:'))
+      #WebView.navigate(url_for(:controller => Customer, :action => :index, :back => 'callback:'))
+       render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
     else
       redirect :controller => Settings, :action => :login, :back => 'callback:', :layout => 'layout_JQM_Lite'
     end
