@@ -142,12 +142,12 @@ function clearActivitiesFilter() {
 function filterActivities() {
 	disableSearchButtons();
 	toggleCollapsible('activity_filter');
-	showFilterParams();
+	showActivityFilterParams();
     location.href = location.href.replace(/\?.*$/, '') + '?' + $.param(getActivitiesFilter());
 }
 
 
-function showFilterParams(){
+function showActivityFilterParams(){
     var filter = getActivitiesFilter();
     $('#activity_filter_details').html('Filter: ' + filter.type + ', ' + filter.status + ', ' + filter.priority);
 }
