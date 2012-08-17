@@ -557,6 +557,11 @@ if (navigator.userAgent.toLowerCase().indexOf("android") >= 0) {
                 if (ch >= "0" && ch <= "9")
                     value += ch;
             }
+			var ua = navigator.userAgent
+			var androidversion = parseFloat(ua.slice(ua.indexOf("Android")+8)); 
+
+			if ((androidversion >= 4.0 && value.length >= 10) || androidversion < 4.0)
+			{				
             // remove extra characters
             if (value.length > 10)
                 value = value.substring(0, 10);
@@ -567,13 +572,15 @@ if (navigator.userAgent.toLowerCase().indexOf("android") >= 0) {
                 value = value.substring(0, 5) + " " + value.substring(5);
             if (value.length > 9)
                 value = value.substring(0, 9) + "-" + value.substring(9);
-            // set new value
+			// set new value
             var $this = this;
             var length = value.length;
             setTimeout(function() {
                 $this.value = value;
                 $this.setSelectionRange(length, length);
             }, 0);
+			}
+            
         });
     };
 
