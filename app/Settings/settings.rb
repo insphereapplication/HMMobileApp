@@ -191,7 +191,7 @@ class Settings
      end
     
     def record_activity
-     
+      puts "entering record activity"
       if Settings.pin_last_activity_time.class==String
         Settings.pin_last_activity_time = Time.parse(Settings.pin_last_activity_time)
       end
@@ -206,6 +206,7 @@ class Settings
           Settings.pin_confirmed=false
           Settings.pin_last_activity_time=Time.new
       end
+      puts "exiting record activity"
     end
     
     def last_integrated_lead

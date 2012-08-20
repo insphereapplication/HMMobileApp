@@ -76,10 +76,12 @@ class SettingsController < Rho::RhoController
   end
   
   def login
+    puts "we are in the login"
     @msg = @params['msg']
     override_auto_login = @params['override_auto_login']
     # if the user has stored successful login credentials, attempt to auto-login with them
     if Settings.has_verified_credentials? and override_auto_login.to_s != 'true'
+      puts "we are logging with cached credentials"
       update_login_wait_progress("Logging in with cached credentials")
       SyncEngine.login(Settings.login, Settings.password, "/app/Settings/login_callback")
       @working = true # if @working is true, page will show spinner
@@ -87,6 +89,7 @@ class SettingsController < Rho::RhoController
     
     Rho::NativeTabbar.remove
     @menu = { "Log" => :log }
+    puts "we are leaving the login"
     render :action => :login, :back => '/app/Settings/login', :layout => 'layout_jquerymobile'
   end
   

@@ -124,12 +124,10 @@ class OpportunityController < Rho::RhoController
   end
   
   def current_nav_context
-    puts "calling current_nav_context #{current_nav_context}"
     case $current_nav_context
       when 'new-leads' then $new_leads_nav_context
       when 'follow-ups' then $follow_ups_nav_context
       when 'appointments' then $appointments_nav_context
-      else $new_leads_nav_context
     end
   end
 
@@ -210,14 +208,22 @@ class OpportunityController < Rho::RhoController
   
   # GET /Opportunity/{1}
   def show
+    puts "we are in the opportunity show"
     Settings.record_activity
+    puts "We recorded activity"
     @opportunity = Opportunity.find_opportunity(@params['id'])
+    puts "We opportunity {@opportunity}"
     @notes = @opportunity.notes if @opportunity
-    current_nav_context.orient!(@opportunity.object) if @opportunity && current_nav_context
+    puts "We found notes @{notes}"
+    current_nav_context.orient!(@opportunity.object) if @opportunity 
+    puts "We found current_nav_context"
     @contact = @opportunity.contact if @opportunity
+    puts "We contact {@contact}"
     if @opportunity && @contact
+      puts "we are in the opportunity render show"
       render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
+       puts "we are in the opportunity else portion"
        if @params['origin'] == 'contact'
          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'))
        else   
