@@ -567,8 +567,8 @@ module BrowserHelper
   def generate_listview_item(item)
     if item[:label] == 'Description'
       #the gsub below is used to remove 'href' from the text so any link in the text/html are not clickable
-      value = item[:value].gsub('href=', ' ')
-      value.gsub!('href =', ' ')
+      value = item[:value].gsub('href=', ' ') if item[:value]
+      value.gsub!('href =', ' ') if value
       "<li data-icon=\"false\"><p><strong>#{item[:label]}:</strong>&nbsp;#{value}</p></li>"
     else
      "<li data-icon=\"false\"><p><strong>#{item[:label]}:</strong>&nbsp;#{item[:value]}</p></li>"
