@@ -373,13 +373,17 @@ class SettingsController < Rho::RhoController
   
   def handle_new_integrated_leads
     if new_assigned_leads?
+      puts "In new_assigned_leads?"
       set_last_integrated_lead
       reassigned_leads_alert
     else
+      puts "In else handle_new_integrated_leads"
       former_last_lead = Settings.last_integrated_lead
+      puts "former_last_lead: #{former_last_lead}"
       set_last_integrated_lead
       current_last_lead = Settings.last_integrated_lead
-      if (former_last_lead.blank? && !current_last_lead.blank? && created_last_hour(current_last_lead)) || (!former_last_lead.blank? && current_last_lead.blank? && Time.parse(current_last_lead)  > Time.parse(former_last_lead))
+      puts "current_last_lead: #{current_last_lead}"
+      if (former_last_lead.blank? && !current_last_lead.blank? && created_last_hour(current_last_lead)) || (!former_last_lead.blank? && !current_last_lead.blank? && Time.parse(current_last_lead)  > Time.parse(former_last_lead))
         puts "NEW LEAD CREATED AT #{current_last_lead}"
         new_leads_alert
       end
