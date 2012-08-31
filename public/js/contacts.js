@@ -86,7 +86,9 @@ function loadPage(){
 	loadContactsAsync(filterType, 0, 0, searchTerms);
 }
 
+var contact_counter = 0;
 function loadContactsAsync(filterType, page, startPage, searchTerms){	
+	contact_counter++;
 	$.get("/app/Contact/get_contacts_page", { filter: filterType, page: page, search_terms: searchTerms },
 		function(contacts) {	
 			if (contacts.match(/^Error/) == "Error"){
@@ -108,14 +110,20 @@ function loadContactsAsync(filterType, page, startPage, searchTerms){
 				if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
 					$("ul#contact-list").append(getLoadMoreButton("Load More", page));
 				}
-				// re-initialize one-time filter and clear button handlers -- they were removed during the page load
-				initializeFilterButtonHandlers();
+				contact_counter--;
+		        if (counter == 0){
+					// re-initialize one-time filter and clear button handlers -- they were removed during the page load
+					initializeFilterButtonHandlers();
+				}
+			
 			}
 			
 			if ( $.trim(contacts) == "" ) // No contacts found with the current filter settings
 			{
 				checkForNoContacts();
 			}
+			
+
 		}
 	);
 }
