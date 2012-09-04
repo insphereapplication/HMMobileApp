@@ -77,7 +77,7 @@ class OpportunityController < Rho::RhoController
   
   def create_note
     puts "*^*^*^*^*^*^*^*^*^*^*^ CREATE_NOTE ^*^*^*^*^*^*^*^*^*^*^*^*^*"
-    @opportunity = Opportunity.find(@params['id'])
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     @opportunity.create_note(@params['note_text'])
   end
   
@@ -271,7 +271,7 @@ class OpportunityController < Rho::RhoController
   def callback_request
     Settings.record_activity
     $choosed['0'] = ""
-    @opportunity = Opportunity.find(@params['id'])
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     if @opportunity
       @opportunity.create_note(@params['notes'])
       render :action => :callback_request, :back => 'callback:', :layout => 'layout_jquerymobile'
@@ -282,7 +282,7 @@ class OpportunityController < Rho::RhoController
   
   def app_detail_add
     Settings.record_activity
-      @opportunity = Opportunity.find(@params['id'])
+      @opportunity = Opportunity.find_opportunity(@params['id'])
       if @opportunity
         render :Controller => :ApplicationDetail, :action => :new, :back => 'callback:', :layout => 'layout_jquerymobile'
       else
@@ -301,7 +301,7 @@ class OpportunityController < Rho::RhoController
     
   def app_detail_edit
     Settings.record_activity
-    @appdetail = Opportunity.find(@params['id'])
+    @appdetail = Opportunity.find_opportunity(@params['id'])
     if @appdetail
       render :Controller => :ApplicationDetail, :action => :edit, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -310,7 +310,7 @@ class OpportunityController < Rho::RhoController
   end
     
   def app_detail_create
-    opportunity = Opportunity.find(@params['opportunity_id'])
+    opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
     db = ::Rho::RHO.get_src_db('Opportunity')
     db.start_transaction
       begin
@@ -324,7 +324,7 @@ class OpportunityController < Rho::RhoController
   end
   
   def app_detail_update
-    opportunity = Opportunity.find(@params['opportunity_id'])
+    opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
     db = ::Rho::RHO.get_src_db('Opportunity')
     db.start_transaction
       begin
@@ -339,7 +339,7 @@ class OpportunityController < Rho::RhoController
   
   def appointment
     $choosed['0'] = ""
-    @opportunity = Opportunity.find(@params['id'])
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     if @opportunity
       @opportunity.create_note(@params['notes'])
       render :action => :appointment, :back => 'callback:', :layout => 'layout_jquerymobile'
@@ -351,7 +351,7 @@ class OpportunityController < Rho::RhoController
   def lost_other
     @lost_reasons = Constants::OTHER_LOST_REASONS
     @competitors = Constants::COMPETITORS
-    @opportunity = Opportunity.find(@params['id'])
+    @opportunity = Opportunity.find_opportunity(@params['id'])
     if @opportunity
       @opportunity.create_note(@params['notes'])
       render :action => :lost_other, :back => 'callback:', :layout => 'layout_jquerymobile'
@@ -361,7 +361,7 @@ class OpportunityController < Rho::RhoController
   end
   
   def won
-      @opportunity = Opportunity.find(@params['id'])
+      @opportunity = Opportunity.find_opportunity(@params['id'])
       if @opportunity
         @opportunity.create_note(@params['notes'])
         render :action => :mark_as_won, :back => 'callback:', :layout => 'layout_jquerymobile'
