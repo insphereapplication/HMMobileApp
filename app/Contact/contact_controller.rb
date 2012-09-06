@@ -6,7 +6,7 @@ require 'rho/rhotabbar'
 
 class ContactController < Rho::RhoController
   include BrowserHelper
-
+  include SQLHelper
 
   @@first_render = true
 
@@ -15,7 +15,7 @@ class ContactController < Rho::RhoController
   def index
     $tab = 1
     Settings.record_activity
-    @page_limit = System.get_property('platform') == "ANDROID" ? 3 : 10
+    @page_limit = System.get_property('platform') == "ANDROID" ? 1 : 1
     @persisted_search_terms = Settings.get_persisted_filter_values(Constants::PERSISTED_CONTACT_FILTER_PREFIX, Constants::CONTACT_FILTERS)['search_terms']
     render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
   end
@@ -52,6 +52,8 @@ class ContactController < Rho::RhoController
     @contacts = Contact.get_filtered_contacts(@params['page'], persisted_filter_values['filter'], persisted_filter_values['search_terms'])  
     @grouped_contacts = @contacts.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first}
     
+    @contact_load_size = @contacts.size
+    puts "Did we reach last?   size: #{@contacts.size}"
     render :action => :contact_page, :back => 'callback:'
   end
 

@@ -35,6 +35,7 @@ end
 module SQLHelper
   # SQL snippets to avoid duplication. Use with caution.
   DEFAULT_PAGE_SIZE = 20
+  CONTACT_DEFAULT_PAGE_SIZE = 100
   def self.included(model)
     model.extend(ClassMethods)
   end
@@ -231,6 +232,7 @@ module Constants
   DEFAULT_POLL_INTERVAL = 60
   BACKGROUND_POLL_INTERVAL = 600
   PIN_EXPIRE_SECONDS = 900
+
   
   TAB_INDEX = {
     "Opportunities" => 0,

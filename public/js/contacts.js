@@ -1,8 +1,7 @@
 $(document).ready(function() {
-	$('input#load-more-button').live('click', function(){
+	$('#load-more-button').live('click', function(){
 		loadMore();
 	});
-	
 	$('#submit-ac-search').click(function(){
 		initializeSearchAC();
 	});
@@ -70,11 +69,12 @@ function initializeSearchAC(){
 }
 
 function loadMore(){
+	$("div#load-more-button").text("Loading ...");
+	$("div#load-more-button").show(1000);
 	disableSearchButtons();
 	filterType = $('#contact_filter').val();
 	searchTerms = $('input#search_input').val();
-	page = parseInt($('input#load-more-button').attr('page'));
-	$("div#load-more-div").remove();
+	page = 	parseInt($('input#current_page').val());
 	loadContactsAsync(filterType, page, page, searchTerms);
 }
 
@@ -86,16 +86,16 @@ function loadPage(){
 	loadContactsAsync(filterType, 0, 0, searchTerms);
 }
 
-var contact_counter = 0;
+
 function loadContactsAsync(filterType, page, startPage, searchTerms){	
-	contact_counter++;
 	$.get("/app/Contact/get_contacts_page", { filter: filterType, page: page, search_terms: searchTerms },
 		function(contacts) {	
 			if (contacts.match(/^Error/) == "Error"){
 					alert("There was a server error.\n" + contacts);
 					return;
 			}
-			
+	    	//alert ("In contact async page");
+			$("div#load-more-button").remove();
 			if (contacts && $.trim(contacts) != "" && page < (startPage + pageLimit)){
 				$("ul#contact-list").append(contacts);
                                 // remove any possible redundant letter-divider list items ('A', 'B', etc.)
@@ -104,29 +104,42 @@ function loadContactsAsync(filterType, page, startPage, searchTerms){
                                     if (ids.length > 1 && ids[0] == this)
                                         $(ids[1]).remove();
                                 });
+			    if (page + 1 < (startPage + pageLimit))
+				{
+				//This should not be used unless we start making multiple db call per load again
 				loadContactsAsync(filterType, page + 1, startPage, searchTerms);
-			} 
-			else {
-				if (page == (startPage + pageLimit) && contacts && $.trim(contacts) != "") {
-					$("ul#contact-list").append(getLoadMoreButton("Load More", page));
 				}
-				contact_counter--;
-		        if (counter == 0){
-					// re-initialize one-time filter and clear button handlers -- they were removed during the page load
-					initializeFilterButtonHandlers();
+				else 
+				{
+				 	
+					$('input#current_page').val(page + 1);
+				
+				
+					previous_row_count = parseInt($('input#last_row_count').val());
+					new_row_count = $("li").length;
+					
+					if (previous_row_count + 100 < new_row_count)
+					{
+					 $("ul#contact-list").append(getLoadMoreButton("Load More"));
+					}
+					$('input#last_row_count').val(new_row_count);
 				}
+
 			
-			}
+			} 
+
 			
 			if ( $.trim(contacts) == "" ) // No contacts found with the current filter settings
 			{
 				checkForNoContacts();
 			}
-			
+			// re-initialize one-time filter and clear button handlers -- they were removed during the page load
+			initializeFilterButtonHandlers();
 
 		}
 	);
 }
+
 
 function checkForNoContacts()
 {
@@ -137,13 +150,12 @@ function checkForNoContacts()
 	}
 }
 
-function getLoadMoreButton(text, page){
+function getLoadMoreButton(text){
 	return '\
-	<div id="load-more-div" data-theme="b" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">											\
+	<div id="load-more-button" data-theme="b" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">											\
 		<span class="ui-btn-inner ui-btn-corner-all">																																			\
 			<span class="ui-btn-text">' + text + '</span>																																		\
 		</span>																																																						\
-		<input id="load-more-button" class="standardButton ui-btn-hidden" page="' + page + '" data-theme="b"/>						\
 	</div>'
 }
 

@@ -119,7 +119,7 @@ class Contact
     end
   end
   
-  def self.all_open(page=nil, terms=nil, page_size=DEFAULT_PAGE_SIZE)  
+  def self.all_open(page=nil, terms=nil, page_size=CONTACT_DEFAULT_PAGE_SIZE)  
     Contact.find_by_sql(%Q{
       select distinct c.contactid, c.* from Contact c, Opportunity o 
             where o.contact_id=c.object and 
@@ -136,7 +136,7 @@ class Contact
     })
   end
   
-  def self.with_policies(page=nil, statuscode='', terms=nil, page_size=DEFAULT_PAGE_SIZE)    
+  def self.with_policies(page=nil, statuscode='', terms=nil, page_size=CONTACT_DEFAULT_PAGE_SIZE)    
     Contact.find_by_sql(%Q{
       select distinct c.contactid, c.* from Contact c, Policy p where c.object = p.contact_id and p.statuscode = '#{statuscode}'
       #{get_search_sql(terms)}
@@ -145,7 +145,7 @@ class Contact
     })
   end
   
-  def self.with_open_opps(page=nil, terms=nil, page_size=DEFAULT_PAGE_SIZE)    
+  def self.with_open_opps(page=nil, terms=nil, page_size=CONTACT_DEFAULT_PAGE_SIZE)    
     Contact.find_by_sql(%Q{
       select distinct c.contactid, c.* from Contact c, Opportunity o 
             where o.contact_id=c.object and 
@@ -156,7 +156,7 @@ class Contact
     })
   end
   
-  def self.with_won_opps(page=nil, terms=nil, page_size=DEFAULT_PAGE_SIZE)    
+  def self.with_won_opps(page=nil, terms=nil, page_size=CONTACT_DEFAULT_PAGE_SIZE)    
     Contact.find_by_sql(%Q{
       select distinct c.contactid, c.* from Contact c, Opportunity o 
             where o.contact_id=c.object and 
