@@ -83,6 +83,7 @@ function loadPage(){
 	filterType = $('#contact_filter').val();
 	searchTerms = $('input#search_input').val();
 	$("ul#contact-list").empty();
+	$('input#last_row_count').val(0);
 	loadContactsAsync(filterType, 0, 0, searchTerms);
 }
 
