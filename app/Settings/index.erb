@@ -26,6 +26,10 @@
 								<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
 								<h3><a href="<%= url_for :action => :lead_forward_active_orders %>">LeadForwardActiveOrders</a></h3>
 							</li>
+							<li>
+								<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
+								<h3><a href="<%= url_for :action => :medicare_soa %>">Medicare Scope of Appointment (SOA)</a></h3>
+							</li>
 					 	</ul>				
 			<% else %>
 					<form name="pin_form" method="POST" action="<%= url_for(:action => :verify_pin, :query => {:origin => @params['origin']}) %>">
