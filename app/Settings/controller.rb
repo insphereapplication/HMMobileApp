@@ -184,13 +184,12 @@ class SettingsController < Rho::RhoController
       rescue Rho::RhoError => e
         Settings.clear_credentials
         @msg = e.message
-        render :action => :login, :back => 'callback:', :layout => 'layout_jquerymobile'
       end
     else
       Settings.clear_credentials
-      @msg = Rho::RhoError.err_message(Rho::RhoError::ERR_UNATHORIZED) unless @msg && @msg.length > 0
-      render :action => :login, :back => 'callback:', :layout => 'layout_jquerymobile'
+      @msg = Rho::RhoError.err_message(Rho::RhoError::ERR_UNATHORIZED) unless @msg && @msg.length > 0   
     end
+    render :action => :login, :back => 'callback:', :layout => 'layout_jquerymobile'
   end
   
   def do_logout
