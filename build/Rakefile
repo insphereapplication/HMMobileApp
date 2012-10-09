@@ -76,7 +76,7 @@ def build_yml
     :name => 'Insite',
     :version => ENV['BUILD_NUMBER'] || '2.1.10',
     :iphone_config => 'Distribution',
-    :iphone_sdk => 'iphoneos4.3',
+    :iphone_sdk => 'iphoneos5.0',
     :codesignidentity => '"iPhone Distribution: Insphere Insurance Solutions, Inc"',
     :provisionprofile => '12F7F68A-D801-4652-965A-FA403EE4E709',
     :package_name => 'com.insphere.insite',
