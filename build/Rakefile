@@ -19,7 +19,7 @@ BUILD_YML_TEMPLATE_PATH = "#{APP_PATH}/build/build.yml.erb"
 BUILD_YML_PATH = "#{APP_PATH}/build.yml"
 
 BUILD_DIR = "#{APP_PATH}/bin/target"
-ANDROID_BUILD_DIR = "#{BUILD_DIR}"
+ANDROID_BUILD_DIR = "#{BUILD_DIR}/android"
 IOS_BUILD_DIR = "#{BUILD_DIR}/iOS"
 SUCCESS = 0
 
