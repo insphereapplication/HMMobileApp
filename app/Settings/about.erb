@@ -20,7 +20,7 @@
 </head>
 
 <body <% if @working %> onLoad="showSpin(null)" <% end %>>		
-    <div data-role="page" data-theme="b" data-cache="never">
+    <div data-role="page" data-theme="c" data-cache="never">
 	<%= offline_bar%>
 		<div data-role="header">
 			<a href="/app/Settings/index" data-direction="reverse" data-icon="back">Tools</a>
@@ -50,8 +50,8 @@
 				<li><a href="<%= url_for :action => :send_log %>"><h1>Send Log</h1></a></li>
 				<li><h3><a href="<%= url_for :action => :toggle_log_level %>"><%= detailed_logging_enabled? ? 'Disable' : 'Enable' %> Detailed Logging</a></h3></li>
 			</ul>
-			<div>
-	</div>
+		</div>
+    </div>
 </body>
 
 

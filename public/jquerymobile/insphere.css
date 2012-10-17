@@ -290,3 +290,6 @@ img.dncIcon{
 	width:12px;
 }
 
+.ui-page-active {
+    display: block !important;
+}
