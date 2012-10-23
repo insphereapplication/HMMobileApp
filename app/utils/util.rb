@@ -376,8 +376,7 @@ module Constants
     "8",
     "9",
     "10",
-    "11",
-    "12"
+    "11"
   ]
   
   PERSISTED_CONTACT_FILTER_PREFIX = 'contact_'
