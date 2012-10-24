@@ -104,18 +104,18 @@ class Contact
       }).map{|contact| contact.contactid } 
   end  
   
-  def self.get_filtered_contacts(page, filter, search_terms)
+  def self.get_filtered_contacts(page, filter, search_terms, page_size=CONTACT_DEFAULT_PAGE_SIZE)
     case filter
     when 'all' 
-      all_open(page, search_terms)
+      all_open(page, search_terms, page_size)
     when 'active-policies'
-      with_policies(page, 'Active', search_terms)
+      with_policies(page, 'Active', search_terms, page_size)
     when 'pending-policies'
-      with_policies(page, 'Pending', search_terms)
+      with_policies(page, 'Pending', search_terms, page_size)
     when 'open-opps'
-      with_open_opps(page, search_terms)
+      with_open_opps(page, search_terms, page_size)
     when 'won-opps'
-      with_won_opps(page, search_terms)
+      with_won_opps(page, search_terms, page_size)
     end
   end
   

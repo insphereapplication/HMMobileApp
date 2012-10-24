@@ -1,0 +1,10 @@
+<div data-role="fieldcontain">
+    <label for="contact_filter" class="select">View Contacts With:</label>
+    <select name="contact_filter" id="contact_filter">
+        <%= contact_filter_jqm_options %>
+    </select>
+</div>
+<div data-role="fieldcontain">
+    <label for="search_input">Search:</label>
+    <input type="text" name="search_input" id="search_input" maxlength="30" value="<%= @persisted_search_terms %>"/>
+</div>

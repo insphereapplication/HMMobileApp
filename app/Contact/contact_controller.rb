@@ -12,14 +12,55 @@ class ContactController < Rho::RhoController
 
 
   #GET /Contact
+  #def index
+  #  $tab = 1
+  #  Settings.record_activity
+  #  @page_limit = System.get_property('platform') == "ANDROID" ? 1 : 1
+  #  @persisted_search_terms = Settings.get_persisted_filter_values(Constants::PERSISTED_CONTACT_FILTER_PREFIX, Constants::CONTACT_FILTERS)['search_terms']
+  #  render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
+  #end
+
   def index
     $tab = 1
     Settings.record_activity
-    @page_limit = System.get_property('platform') == "ANDROID" ? 1 : 1
-    @persisted_search_terms = Settings.get_persisted_filter_values(Constants::PERSISTED_CONTACT_FILTER_PREFIX, Constants::CONTACT_FILTERS)['search_terms']
-    render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
+    persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_CONTACT_FILTER_PREFIX, Constants::CONTACT_FILTERS)
+    @persisted_search_terms = persisted_filter_values['search_terms']
+    @page_name = 'Contacts'
+    @firstBtnUrl = url_for :action => :new, :query => {:origin => 'contact'}
+    @secondBtnText = 'Search AC'
+    @secondBtnIcon = ''
+    @secondBtnUrl = url_for :action=>:search, :controller => 'SearchContacts', :query => {:origin => 'contact'}
+    @scriptName = 'contacts';
+    @pageSize = 25;
+    @items = Contact.get_filtered_contacts(0, persisted_filter_values['filter'], @persisted_search_terms, 25)
+    @itemTemplate = 'contact'
+    render :action => :filter, :back => 'callback:', :layout => 'layout_jqm_list'
   end
-  
+  def gen_jqm_options(options, selected_value)
+    options.map{|option|
+      selected_text = (option[:value] == selected_value) ? ' selected="true"' : ''
+      "<option value=\"#{option[:value]}\"#{selected_text}>#{option[:label]}</option>"
+    }.join("\n")
+  end
+  def contact_filter_jqm_options
+    options = [
+      {:value => 'all', :label => 'All'},
+      {:value => 'active-policies', :label => 'Active Policies'},
+      {:value => 'pending-policies', :label => 'Pending Policies'},
+      {:value => 'open-opps', :label => 'Open Opportunities'},
+      {:value => 'won-opps', :label => 'Won Opportunities'}
+    ]
+    persisted_selection = Settings.filter_values["#{Constants::PERSISTED_CONTACT_FILTER_PREFIX}filter"]
+    persisted_selection = 'all' if persisted_selection.blank?
+    gen_jqm_options(options, persisted_selection)
+  end
+  def get_jqm_contacts_page
+    persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_CONTACT_FILTER_PREFIX, Constants::CONTACT_FILTERS)
+    @persisted_search_terms = persisted_filter_values['search_terms']
+    @items = Contact.get_filtered_contacts(@params['page'], persisted_filter_values['filter'], @persisted_search_terms, @params['pageSize'])
+    render :partial => 'contact', :locals => { :items => @items, :search => @persisted_search_terms }
+  end
+
   def show_all_contacts
     #puts "^^*^^ Contact.local_changed #{Contact.local_changed?}"
     #puts "^^*^^ Contact first render #{@@first_render}"

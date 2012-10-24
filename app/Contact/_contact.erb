@@ -1,0 +1,7 @@
+<%
+search_criteria = ''
+search_criteria = search.gsub("(","\\(") if search
+search_criteria.gsub!(")","\\)")
+items.each do |contact| %>
+    <li><a href="<%= url_for :action => :show, :id => contact.object, :query => {:origin => 'contact'} %>"><%= contact.last_first %></a></li>
+<% end %>
