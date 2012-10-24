@@ -24,7 +24,7 @@ function updateConnectionStatusIndicator() {
                 $offline_bar_selector.show();
             else
                 $offline_bar_selector.hide();
-            $sync_spinner_selector = $(sync_spinner_selector);
+            var $sync_spinner_selector = $(sync_spinner_selector);
             if ($sync_spinner_selector.length > 0)
                 if (sync_status === "Syncing")
                     $sync_spinner_selector.show();
