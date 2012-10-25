@@ -1,20 +1,16 @@
 <div id="opportunity_show" data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar%>
 	<% if @params['origin'] == "contact" || @params['origin'] == "SearchContacts" %>
-	<div data-role="header" data-backbtn="false">
+	<div data-role="header" data-backbtn="false" data-theme="b">
 		<a data-transition="slideback" href="<%= url_for(:controller => :Contact, :action => :show, :id => @opportunity.contact.object, :query =>{:origin => @params['origin']}) %>" data-direction="reverse" data-icon="back">Contact</a>
 		<h3>
 			Opportunity<%= sync_spinner %>
 		</h3>
 	</div>
 	<% else %>
-	<div data-role="header" data-backbtn="false">
+	<div data-role="header" data-backbtn="false" data-theme="b">
 		<%= opp_detail_backbutton(@params['origin']) %>
-		<h3>
-			Opportunity
-			<%= sync_spinner %>
-		</h3>
-
+		<h3>Opportunity <%= sync_spinner %></h3>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right" style="margin-top:-1px;">
 	       	<a href="<%= url_for(:action=>:show_previous, :id => @opportunity.object, :query =>{:origin => @params['origin']}) %>"  data-icon="arrow-l" data-iconpos="left" data-transition="slideback" data-role="button">&nbsp;</a>
 	       	<a href="<%= url_for(:action=>:show_next, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>"  data-icon="arrow-r" data-iconpos="right" data-role="button">&nbsp;</a>
@@ -31,15 +27,19 @@
 			</div>
 		<a href="<%= url_for :action => :quick_quote, :id =>@opportunity.object, :query =>{:origin => @params['origin']} %>" rel="external" data-transition="none" data-role="button" >Term Life Quick Quote</a>
 			<% end %> 
-			<ul data-role="listview" data-theme="d" data-inset="true"> 
+			<ul data-role="listview" data-theme="c" data-inset="true"> 
 				<li>
 					<% if @params['origin'] == "contact" %>
-					<h3><%= @contact.full_name %></h3>
+						<h3><%= @contact.full_name %></h3>
+						<p><%= @contact.age_sex %></p> 
+						<p><%= @contact.city_summary %></p>
 					<% else %>
-					<h3><a href="<%= url_for(:controller => :Contact, :action => :show, :id => @contact.object, :query =>{:opportunity => @opportunity.object, :origin => @params['origin']}) %>"><%= @contact.full_name %></a></h3> 
+						<a href="<%= url_for(:controller => :Contact, :action => :show, :id => @contact.object, :query =>{:opportunity => @opportunity.object, :origin => @params['origin']}) %>"><h3><%= @contact.full_name %></h3> 
+				
+						<p><%= @contact.age_sex %></p> 
+						<p><%= @contact.city_summary %></p> 
+						</a>
 					<% end %>
-					<p><%= @contact.age_sex %></p> 
-					<p><%= @contact.city_summary %></p> 
 				</li> 
 				
 				<%=
@@ -71,7 +71,7 @@
 				<li><p><strong> Last Activity:	</strong> <%= to_datetime(@opportunity.cssi_lastactivitydate) %> </li> 
 				<li><p><strong> Call Count: 	</strong> <%= @opportunity.phone_calls.size %> </li> 
 			</ul>	
-			<ul data-role="listview" data-filter="false" data-inset="true">
+			<ul data-role="listview" data-filter="false" data-inset="true" data-theme="c">
 				<li data-role="list-divider">Notes</li>
 				<li data-icon="plus"><a class="UpdateStatus" href="<%= url_for(:action => :note_create, :id => @opportunity.object, :query =>{:test => "test", :origin => @params['origin']})%>" data-transition="slide">Add Note</a></li>
 				<% @notes.each do |note| %>

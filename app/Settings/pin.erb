@@ -1,18 +1,16 @@
 <div data-role="page" data-theme="b" id="pin_reset_page">
 	<%= offline_bar %>
-    <div data-role="header" data-backbtn="false">
+    <div data-role="header" data-backbtn="false" data-theme="b">
         <h1><img src="/public/images/logo.png" alt="Login" /></h1>
     </div>
 
-    <div data-role="content">
+    <div data-role="content" data-theme="b">
 	 <form id="reset_pin_form" method="POST" action="<%= url_for :action => :validate_pin, :query => {:origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity'], :activity => @params['activity'] } %>">
 	   <% if @msg %>
 		 <p style="color: red"><%= @msg %></p>
 	   <% end %>
-       <ul data-role="listview" data-inset="true">
-			<li>
-				Login: <%= Settings.login %>
-		   </li>	
+       <ul data-role="listview" data-inset="true" data-theme="c">	
+		 <li data-role="list-divider">Login: <%= Settings.login %></li> 
            <li>
 				<div data-role="fieldcontain" style="border: none">
 	       			<label for="enter_pin" style="display: inline">Enter PIN <small>(Should consist of 4 numbers)</small></label>

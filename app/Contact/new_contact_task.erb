@@ -6,15 +6,14 @@
 		}
 	</script>
 		<%= offline_bar%>
-        <div data-role="header" data-theme="d" data-position="inline">
-            <a href="<%= url_for(:action => :show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})%>" rel="external" data-role="button" data-icon="back"><font color="black">Cancel</font></a>
-            <h1>
-                Create Activity <%= sync_spinner %></h1>
+        <div data-role="header" data-theme="b" data-position="inline">
+            <a href="<%= url_for(:action => :show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})%>" rel="external" data-role="button" data-icon="back">Cancel</a>
+            <h1>Create Activity <%= sync_spinner %></h1>
+        </div>
+        <div id="contentDiv" data-role="content">
 			<div style="text-align:center" class="ui-bar ui-bar-c"> 
 				<%= "#{@contact.full_name}" %>
 			</div>
-        </div>
-        <div id="contentDiv" data-role="content">
 			<div class="ui-body ui-body-d">
 				<form name="new_contact_task_form" id="new_contact_task_form" method="POST" action="<%= url_for :action => :create_new_contact_task, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']} %>">
             		<div data-role="navbar">
@@ -26,11 +25,9 @@
 		                </ul>
 		            </div>
 		            <!-- /navbar -->
-		            <div data-role="fieldcontain">
 		                <div data-role="fieldcontain">
 		                    <label for="task_subject">
 		                        Subject:<font color="red"> *</font></label>
-
 		                    <input id="task_subject" type="text" name="task_subject"></input>
 		                </div>
 		                <div data-role="fieldcontain">
@@ -61,9 +58,8 @@
 		                    </div>
 						</div>
 	                    <div data-role="fieldcontain">
-	                        <input type="submit" class="standardButton" value="Create Task" />
+	                        <input type="submit" class="standardButton" data-theme="b" value="Create Task" />
 	                    </div>
-					</div>
 				</form>
 			</div>
 		</div>

@@ -24,19 +24,21 @@
 			</div>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-					<label for="contact[cssi_spouseheightft]" class="fieldLabel">Height:</label>
-					<select name="contact[cssi_spouseheightft]" data-role="none" class="ins-narrow-drop-down" id="contact[cssi_spouseheightft]">
-						<option value=""></option>
-						<% (0..10).each do |i| %>
+					<fieldset data-role="controlgroup" data-type="horizontal">
+					<legend>Height:</legend>
+					<label for="contact[cssi_spouseheightft]">Feet:</label>
+					<select name="contact[cssi_spouseheightft]" id="contact[cssi_spouseheightft]">
+						<option value="">Feet</option>
+						<% Constants::HEIGHT_FEET.each do |i| %>
 							<option value="<%= i %>"><%= i %></option>
 						<% end %>				
-					</select>'&nbsp;
-					<select name="contact[cssi_spouseheightin]" data-role="none" class="ins-narrow-drop-down" id="contact[cssi_spouseheightin]">
-						<option value=""></option>
-						<% (0..12).each do |i| %>
+					</select>
+					<select name="contact[cssi_spouseheightin]" id="contact[cssi_spouseheightin]">
+						<option value="">Inches</option>
+						<% Constants::HEIGHT_INCHES.each do |i| %>
 							<option value="<%= i %>"><%= i %></option>
 						<% end %>
-					</select>"
+					</select>
 				</div>
 			</div>
 			<div data-role="fieldcontain">

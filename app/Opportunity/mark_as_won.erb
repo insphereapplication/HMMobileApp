@@ -6,14 +6,14 @@
         }
     </script>
     <%= offline_bar%>
-    <div data-role="header" data-theme="d" data-position="inline">
+    <div data-role="header" data-theme="b" data-position="inline">
         <a href="<%=url_for(:action=>:show, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
         <h1>Opportunity Won <%= sync_spinner %></h1>
-        <div style="text-align:center" class="ui-bar ui-bar-c">
-            <%= "#{@opportunity.contact.full_name} - #{to_date(@opportunity.createdon)}" %>
-        </div>
     </div>
     <div id="contentDiv" data-role="content">
+		<div style="text-align:center" class="ui-bar ui-bar-c">
+            <%= "#{@opportunity.contact.full_name} - #{to_date(@opportunity.createdon)}" %>
+        </div>
         <div class="ui-body ui-body-d">
         <form id="won_form" name="won_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_won_status, :query => {:origin => @params['origin'], :opportunity_id => @opportunity.object, :appointments => @params['appointments']} %>">
             <ul data-role="listview" data-filter="false" data-inset="true">
@@ -34,7 +34,7 @@
                 <% end %>
             </ul>
             <%= quick_task_add_panel %>
-            <input type="submit" class="standardButton" data-direction="reverse" value="Mark as Won"/>
+            <input type="submit" class="standardButton" data-direction="reverse" value="Mark as Won" data-theme="b"/>
         </form>
         </div>
     </div>

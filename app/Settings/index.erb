@@ -1,61 +1,49 @@
-<div data-role="page" data-theme="c" data-cache="never">
+<div data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar %>
-	<div data-role="header" data-backbtn="false">
+	<div data-role="header" data-theme="b" data-backbtn="false">
 		<h1>Tools <%= sync_spinner %></h1>
 	</div>
 	<div id="contentDiv" data-role="content">
 			<% if !AppInfo.instance.policy_pin %>
-				<ul data-role="none" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-filter="false" data-inset="true">
+				<ul data-role="none"  class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-filter="false" data-inset="true">
 					<li class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">Quick Links</li>
 					<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom">
-								<a type="button" data-theme="b" value="Submit" href="<%= url_for(:controller => :Settings, :action => :pin, :query => {:origin => @params['origin']}) %>">Create PIN to view Links</a>
+								<a type="button" value="Submit" href="<%= url_for(:controller => :Settings, :action => :pin, :query => {:origin => @params['origin']}) %>">Create PIN to view Links</a>
 					</li>						
 				</ul>
 			<% elsif Settings.pin_confirmed == true && Settings.pin_is_current? %>	
-						<ul data-role="listview" data-inset="true">
+						<ul data-role="listview" data-theme="c" data-inset="true" >
 							<li data-role="list-divider">Quick Links</li>
-							<li>
-								<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
-								<h3><a href="<%= url_for :action => :resource_center %>">Resource Center</a></h3>
-							</li>
-							<li>
-								<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
-								<h3><a href="<%= url_for :action => :lead_forward %>">LeadForward</a></h3>
-							</li>
-							<li>
-								<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
-								<h3><a href="<%= url_for :action => :lead_forward_active_orders %>">LeadForwardActiveOrders</a></h3>
-							</li>
+							 <li><a href="<%= url_for :action => :resource_center %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon">Resource Center</a></li>
+							<li><a href="<%= url_for :action => :lead_forward %>"> <img src="/public/images/logo_icon_small.png" class="ui-li-icon">LeadForward</a></li>
+							<li><a href="<%= url_for :action => :lead_forward_active_orders %>"> <img src="/public/images/logo_icon_small.png" class="ui-li-icon" >LeadForwardActiveOrders</a></li>
 					 	</ul>				
 			<% else %>
 					<form name="pin_form" method="POST" action="<%= url_for(:action => :verify_pin, :query => {:origin => @params['origin']}) %>">
-						<ul data-role="none" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-filter="false" data-inset="true">
+						<ul data-role="none"  data-theme="c" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-filter="false" data-inset="true">
 							<li class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">Quick Links</li>
 							<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom">
 								<label class="fieldLabel ui-input-text" for="PIN" class="fieldLabel">Please Enter PIN:</label>
 								<input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-b" maxlength="4" type="tel" onkeypress="this.type='password';" id="PIN" name="PIN" value=""/>
 								<fieldset class="ui-grid-a">
-									<div class="ui-block-a"><input type="submit" class="standardButton" data-theme="b" value="Submit"/></div>	
-									<div class="ui-block-b"><a type="button"  data-theme="b" value="Reset PIN" href="<%= url_for(:controller => :Settings, :action => :pin, :query => {:origin => @params['origin']}) %>">Reset PIN</a></div>
+									<div class="ui-block-a"><input type="submit" class="standardButton"  value="Submit"/></div>	
+									<div class="ui-block-b"><a type="button"  value="Reset PIN" href="<%= url_for(:controller => :Settings, :action => :pin, :query => {:origin => @params['origin']}) %>">Reset PIN</a></div>
 							    </fieldset>
 							</li>						
 						</ul>				
 					</form>
 			<% end %>
 		
- 		<ul data-role="listview" data-inset="true">
-			<li data-role="list-divider">Tools</li>
+ 		<ul data-role="listview" data-theme="c" data-inset="true">
+			<li data-role="list-divider" >Tools</li>
 			<li>
-				<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
-				<h3><a href="<%= url_for :action => :quick_quote %>">Term Life Quick Quote</a></h3>
+				<a href="<%= url_for :action => :quick_quote %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon">Term Life Quick Quote</a>
 			</li>
-			<li>
-				<img src="/public/images/phone_small.png" class="ui-li-icon" style="margin-top:8px">
-				<h3><a href="tel:8887314447">Call Support</a></h3>
+			<li>	
+				<a href="tel:8887314447"><img src="/public/images/phone_small.png" class="ui-li-icon">Call Support</a>
 			</li> 
-			<li>
-				<img src="/public/images/email_icon.jpeg" class="ui-li-icon" style="margin-top:8px">
-				<h3><a href="mailto:InSiteMobile@insphereis.com">Email Support</a></h3>
+			<li>		
+				<a href="mailto:InSiteMobile@insphereis.com"><img src="/public/images/email_icon.jpeg" class="ui-li-icon">Email Support</a>
 			</li>
 			<%
 			  latest_version = AppInfo.instance.latest_version
@@ -77,31 +65,25 @@
 			</li>
 			<% end %>
 		</ul>
-		<ul data-role="listview" data-inset="true">
+		<ul data-role="listview" data-theme="c" data-inset="true">
 			<% if @msg %>
         		<li style="color: red; text-align: center"><%= @msg %></li>
     		<% end %>
 			<li data-role="list-divider">Settings</li>
 			<li>
-				<img src="/public/images/login-key.png" class="ui-li-icon" style="margin-top:8px">
+				
 				<% if SyncEngine::logged_in > 0 %>
-				<h3><a href="<%= url_for :action => :do_logout %>">Logout <%= SyncEngine.get_user_name %></a></h3>
+				<a href="<%= url_for :action => :do_logout %>"> <img src="/public/images/login-key.png" class="ui-li-icon">Logout <%= SyncEngine.get_user_name %></a>
    				<% else %>
-				<h3><a href="<%= url_for :action => :login %>">Login</a></h3>
+				<a href="<%= url_for :action => :login %>"><img src="/public/images/login-key.png" class="ui-li-icon">Login</a>
 				<% end %>
 			</li>
-			<li>
-				<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
-				<h3><a href="<%= url_for :action => :pin %>">Reset PIN</a></h3>
+			<li>			
+			   <a href="<%= url_for :action => :pin %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon">Reset PIN</a>
 			</li>
-			<li>
-				<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
-				<h3><a href="<%= url_for :action => :about %>">About</a></h3>
+			<li>				
+				<a href="<%= url_for :action => :about %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon"> About</a>
 			</li>
-    		<!-- <li><a href="<%= url_for :action => :do_reset %>">Reset Database</a></li>
-    		<li><a href="<%= url_for :action => :do_sync %>">Perform Sync</a></li>
-       		<li><a href="<%= url_for :action => :show_log %>">Show Log</a></li>
-       		<li><a href="<%= url_for :action => :test_exception %>">Test Log Exception</a></li> -->	
   		</ul>
 	</div>
 </div>

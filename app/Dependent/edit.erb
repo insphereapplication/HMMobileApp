@@ -4,9 +4,7 @@
 		<div data-role="header" data-backbtn="false" data-theme="b">
 			<a href="<%=url_for(:controller=>:Dependent, :action=>:show, :id => @dependent.object, :query=>{:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
 			<h1>Edit Dependent <%= sync_spinner %></h1>
-			<span class="ui-btn-right">
-				<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
-			</span>
+			<input type="submit" href="#" data-theme="b" data-direction="reverse" class="ui-btn-right" value="Done"/>
 		</div>
 		<div id="contentDiv" data-role="content">
 			<input type="hidden" name="dependent[cssi_dependentsid]" value="<%= @dependent.cssi_dependentsid %>"/>
@@ -25,19 +23,21 @@
 			</div>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-					<label for="dependent[cssi_heightft]" class="fieldLabel">Height:</label>
-					<select name="dependent[cssi_heightft]" data-role="none" class="ins-narrow-drop-down" id="dependent[cssi_heightft]">
-						<option value=""></option>
+					<fieldset data-role="controlgroup" data-type="horizontal">
+					<legend>Height:</legend>
+					<label for="dependent[cssi_heightft]">Feet:</label>
+					<select name="dependent[cssi_heightft]"  id="dependent[cssi_heightft]">
+						<option value="">Feet</option>
 						<% Constants::HEIGHT_FEET.each do |height_feet| %>
 							<option <% if @dependent.cssi_heightft == height_feet %> selected = "true" <% end %> value="<%=height_feet%>"><%=height_feet%></option>
 						<% end %>				
-					</select>'&nbsp;
-					<select name="dependent[cssi_heightin]" data-role="none" class="ins-narrow-drop-down" id="dependent[cssi_heightin]">
-						<option value=""></option>
+					</select>
+					<select name="dependent[cssi_heightin]" id="dependent[cssi_heightin]">
+						<option value="">Inches</option>
 						<% Constants::HEIGHT_INCHES.each do |height_inches| %>
 							<option <% if @dependent.cssi_heightin == height_inches %> selected = "true" <% end %>value="<%=height_inches%>"><%=height_inches%></option>
 								<% end %>
-					</select>"
+					</select>
 				</div>
 			</div>
 			<div data-role="fieldcontain">
@@ -54,8 +54,8 @@
 			</div>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-					<label for="dependent[cssi_gender]" class="fieldLabel">Gender:</label>
-					<select name="dependent[cssi_gender]" data-role="none" class="ins-drop-down" id="dependent[cssi_gender]">
+					<label for="dependent[cssi_gender]" class="select">Gender:</label>
+					<select name="dependent[cssi_gender]"  id="dependent[cssi_gender]">
 						<option value=""></option>
 						<option value="Male" <% if @dependent.cssi_gender == "Male" %> selected="selected" <% end %>>Male</option>
 						<option value="Female" <% if @dependent.cssi_gender == "Female" %> selected="selected" <% end %>>Female</option>

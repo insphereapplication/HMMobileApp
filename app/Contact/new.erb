@@ -1,18 +1,13 @@
 <div data-role="page" data-theme="b" id="contact_new_page">
   <form method="POST" id="contact_new" action="<%= url_for :action => :create %>">
 	<input type="hidden" name="origin" value="<%=@params['origin']%>">
-	<div data-inline="true">
-		<%= offline_bar%>
-		<div data-role="header" data-backbtn="false" data-theme="b">		
-			<%= cancelbutton_by_origin(@params['origin']) %>
-			<h1>Add Contact/Opp <%= sync_spinner %></h1>
-			<span class="ui-btn-right">
-				<input type="submit" data-theme="b" class="standardButton" value="Done" />
-			</span>
-		</div>
+	<%= offline_bar%>
+	<div data-role="header" data-backbtn="false" data-theme="b" data-position="fixed">		
+		<%= cancelbutton_by_origin(@params['origin']) %>
+		<h1>Add Contact/Opp <%= sync_spinner %></h1>		
+		<input type="submit" class="ui-btn-right" value="Done" /> 
 	</div>
-	
-	<div data-role="content">
+	<div data-role="content" data-theme="c">
 		
 		<div align="center">
 			<label class="fieldLabel"><b>Add Contact</b></label>
@@ -21,17 +16,13 @@
 		<div>
 			<br />
 			<b>General Information</b>
-			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
+			<div data-role="fieldcontain" data-theme="d">
 	        		<label for="contact[firstname]" class="fieldLabel">First Name:<font color="red">&nbsp;&nbsp;*</font></label>
-	        		<input id="contact[firstname]" maxlength="50" type="text" name="contact[firstname]" <%= placeholder( "First Name" ) %> />
-				</div>
+	        		<input id="contact[firstname]" maxlength="50" type="text" name="contact[firstname]"  <%= placeholder( "First Name" ) %> />
 			</div>
-			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
+			<div data-role="fieldcontain" data-theme="d">
 	        		<label for="contact[lastname]" class="fieldLabel">Last Name:<font color="red">&nbsp;&nbsp;*</font></label>
-	        		<input id="contact[lastname]" maxlength="50" type="text" name="contact[lastname]" <%= placeholder( "Last Name" ) %> />
-				</div>
+	        		<input id="contact[lastname]" maxlength="50" type="text" name="contact[lastname]" data-theme="d" <%= placeholder( "Last Name" ) %> />
 			</div>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
@@ -85,7 +76,7 @@
 				<div class="ui-body ui-body-d">
 	            	<label for="contact_preferredphone" class="select">Preferred Phone:</label>
 					<div>
-						<select id="contact_preferredphone" name="contact[cssi_preferredphone]" data-role="none" class="ins-drop-down">
+						<select id="contact_preferredphone" name="contact[cssi_preferredphone]" >
 							<option value="" selected="true"></option>
 							<option value="Business">Business</option>
 							<option value="Mobile">Mobile</option>
@@ -100,7 +91,7 @@
 				<div class="ui-body ui-body-d">
 	            	<label for="contact_gendercode" class="select">Gender:</label>
 					<div>
-						<select id="contact_gendercode" name="contact[gendercode]" data-role="none" class="ins-drop-down">
+						<select id="contact_gendercode" name="contact[gendercode]">
 							<option value="" selected="true"></option>
 							<option value="Male">Male</option>
 							<option value="Female">Female</option>
@@ -124,25 +115,22 @@
 				<div class="ui-body ui-body-d">
 	        		<label for="opportunity_lineofbusiness" class="select">LOB:</label>
 					<div>
-					
-						<select id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]"  data-role="none" class="ins-drop-down" >
+						<select id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]"  >
 							<option value="" selected="true"></option>
 								<% StaticEntity.get_rawlead_lob_names.each do |lob_name| %>
 									<option value="<%=lob_name%>">
 										<%=lob_name%>
 									</option>
 								<% end %> 
-						</select>
-						
+						</select>		
 				   </div>	
 				</div>
 			</div>		
-
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 	        		<label for="opportunity_inputsource" class="select">Source:</label>
 					  <div>
-						<select id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]" data-role="none" class="ins-drop-down" >
+						<select id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]" >
 							<option value="" selected="true"></option>
 								<% StaticEntity.get_lead_source_names.each do |lead_source_name| %>
 									<option value="<%=lead_source_name%>">
@@ -183,7 +171,7 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="contact[cssi_state1id]" class="select">State:</label>
-					<select name="contact[cssi_state1id]" data-role="none" class="ins-drop-down"id="contact[cssi_state1id]">
+					<select name="contact[cssi_state1id]"  id="contact[cssi_state1id]">
 						<option data-placeholder="true">
 							<%= @contact.cssi_state1id %>
 						</option>
@@ -233,7 +221,7 @@
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
 					<label for="contact[cssi_state2id]" class="select">State:</label>
-					<select name="contact[cssi_state2id]" data-role="none" class="ins-drop-down" id="contact[cssi_state2id]">
+					<select name="contact[cssi_state2id]" id="contact[cssi_state2id]">
 						<option data-placeholder="true">
 							<%= @contact.cssi_state2id %>
 						</option>

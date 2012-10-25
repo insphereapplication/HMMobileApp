@@ -4,17 +4,15 @@
 		<div data-role="header" data-backbtn="false" data-theme="b">
 			<a href="<%= url_for(:controller => :Opportunity, :action => :won, :id => @params['opportunity'], :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>			
 			<h1>Application Details <%= sync_spinner %></h1>
-			<span class="ui-btn-right">
-				<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
-			</span>
+			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done" class="ui-btn-right"/>
 		</div>
 		<div id="contentDiv" data-role="content">
 			<input type="hidden" name="appdetail[opportunity_id]" value="<%= @appdetail.opportunity_id %>"/>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-					<label for="cssi_carrierid" class="fieldLabel">Carrier:<font color="red">&nbsp;&nbsp;*</font></label>
+					<label for="cssi_carrierid" class="select">Carrier:<font color="red">&nbsp;&nbsp;*</font></label>
 					<div>
-						<select id="cssi_carrierid" name="appdetail[cssi_carrierid]" data-role="none" class="ins-drop-down">
+						<select id="cssi_carrierid" name="appdetail[cssi_carrierid]">
 								<% StaticEntity.get_carrier_names.each do |carrier_name| %>
 									<option <% if @appdetail.cssi_carrierid == carrier_name %> selected="true" <% end %> value="<%=carrier_name%>">
 										<%=carrier_name%>
@@ -26,9 +24,9 @@
 			</div>
 			<div data-role="fieldcontain">
 				<div class="ui-body ui-body-d">
-	        		<label for="cssi_lineofbusinessid" class="fieldLabel">LOB:<font color="red">&nbsp;&nbsp;*</font></label>
+	        		<label for="cssi_lineofbusinessid" class="select">LOB:<font color="red">&nbsp;&nbsp;*</font></label>
 					<div>
-						<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]" data-role="none" class="ins-drop-down">
+						<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]">
 								<% StaticEntity.get_lob_names.each do |lob_name| %>
 									<option <% if @appdetail.cssi_lineofbusinessid == lob_name %> selected="True" <% end %>value="<%=lob_name%>">
 										<%=lob_name%>
@@ -57,8 +55,8 @@
 					<input id="cssi_applicationdate" type="text" class="required" name="cssi_applicationdate" readonly value="<%= to_date(@appdetail.cssi_applicationdate) %>"  onClick="popupAppDateAJPicker('1', 'Application Date', 'cssi_applicationdate', '<%= @appdetail.cssi_applicationdate %>');document.getElementById('submit_button').focus();"></input>
 				</div>
 			</div>
-			<input id="submit_button" type="submit" href="#" data-theme="b" data-direction="reverse" value="Done"/>
-			<a href="<%= url_for(:action => :confirm_app_detail_delete, :query => {:id => @appdetail.object, :opportunity => @appdetail.opportunity_id, :origin => @params['origin']})%>" data-theme="f" data-direction="reverse" data-role="button">Delete</a>
+			<input id="submit_button" type="submit" href="#" data-theme="b" data-icon="arrow-r" data-iconpos="right"data-direction="reverse" value="Done"/>
+			<a href="<%= url_for(:action => :confirm_app_detail_delete, :query => {:id => @appdetail.object, :opportunity => @appdetail.opportunity_id, :origin => @params['origin']})%>" data-theme="a" data-icon="delete" data-iconpos="right" data-direction="reverse" data-role="button">Delete</a>
 			
 		</div>
 	</form>

@@ -2,11 +2,11 @@ start_path = '/app/Settings/init'
 options_path = '/app/Settings'
 app_db_version = 7.0
 
-MinSeverity  = 5
+MinSeverity  = 1
 LogToOutput = 1
 LogCategories = *
 
-MaxLogFileSize=1000000
+MaxLogFileSize=10000000
 
 #turn on to exclude logging all post parameters
 log_skip_post = 0
@@ -20,7 +20,8 @@ logname='InsiteMobile-rhodes'
 
 KeepTrackOfLastVisitedPage = 0 
 LastVisitedPage = ''
-syncserver = https://rhosync.model.insphereis.net/application
+#syncserver = https://rhosync.model.insphereis.net/application
+syncserver = https://rhoconnect.dev.insphereis.net/application
 
 full_screen = 0
 jqtouch_mode=1
@@ -29,6 +30,13 @@ splash_screen='zoom'
 lead_cost_threshold = 100
 
 quick_quote_url =  https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
-resource_center_url=https: https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx
+resource_center_url = 'https://mobile-rc.dev.insphereis.net/_layouts/InsphereLogin.aspx',
+log_server = 'https://mobileproxy.dev.net/clientlog',
+crm_url = 'https://mobileproxy.dev.insphereis.net'
 
+resource_center_target= '/Pages/Home.aspx'
+lead_forward_target= '/Sso/Pages/StrategyBaySso.aspx'
+lead_forward_active_orders_target= '"/Sso/Pages/StrategyBaySso.aspx?Site=mobile"'
 local_server_port = 8080
+
+net_timeout = 120

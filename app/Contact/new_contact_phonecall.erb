@@ -10,14 +10,14 @@
 	}
 </script>
 	<%= offline_bar%>
-	<div data-role="header" data-theme="d" data-position="inline">
+	<div data-role="header" data-theme="b" data-position="inline">
 		<a href="<%=url_for(:action=>:show, :id => @contact.object, :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
 		<h1>Create Activity <%= sync_spinner %></h1>
+	</div>
+	<div id="contentDiv" data-role="content">
 		<div style="text-align:center" class="ui-bar ui-bar-c"> 
 			<%= "#{@contact.full_name}" %>
 		</div>
-	</div>
-	<div id="contentDiv" data-role="content">
 		<div data-role="navbar">
             <ul>
                 <li><a href="<%= url_for :action => :new_contact_task, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']} %>" data-theme="d">Task</a></li>
@@ -41,8 +41,8 @@
 					</div>
 					<input type="hidden" id="phone_type_selected" name="phone_type_selected" />
 					<div data-role="fieldcontain">
-					    <label for="phonelist">Phone Type:</label>            
-						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);" data-role="none" class="ins-drop-down">
+					    <label for="phonelist" class="select">Phone Type:</label>            
+						<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);">
 							<% @contact.phone_numbers.each do |type, number| %>
 								<% if @contact.cssi_preferredphone == type %>
 									<option selected value="<%= number %>"><%= type %></option>
@@ -72,7 +72,7 @@
                         </fieldset>
                     </div>
 					<div data-role="fieldcontain">
-						<input type="submit" class="standardButton" onclick="return enablePhoneNumber();" value="Create Phone Call"/>
+						<input type="submit" class="standardButton" onclick="return enablePhoneNumber();" data-theme="b" value="Create Phone Call"/>
 					</div>
 				</div>
 			</form>

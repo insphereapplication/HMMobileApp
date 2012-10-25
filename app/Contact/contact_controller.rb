@@ -32,7 +32,7 @@ class ContactController < Rho::RhoController
     @secondBtnUrl = url_for :action=>:search, :controller => 'SearchContacts', :query => {:origin => 'contact'}
     @scriptName = 'contacts';
     @pageSize = 25;
-    @items = Contact.get_filtered_contacts(0, persisted_filter_values['filter'], @persisted_search_terms, 25)
+    @items = Contact.get_filtered_contacts(0, 'all', @persisted_search_terms, 25)
     @itemTemplate = 'contact'
     render :action => :filter, :back => 'callback:', :layout => 'layout_jqm_list'
   end
@@ -57,7 +57,7 @@ class ContactController < Rho::RhoController
   def get_jqm_contacts_page
     persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_CONTACT_FILTER_PREFIX, Constants::CONTACT_FILTERS)
     @persisted_search_terms = persisted_filter_values['search_terms']
-    @items = Contact.get_filtered_contacts(@params['page'], persisted_filter_values['filter'], @persisted_search_terms, @params['pageSize'])
+    @items = Contact.get_filtered_contacts(@params['page'], 'all', @persisted_search_terms, @params['pageSize'])
     render :partial => 'contact', :locals => { :items => @items, :search => @persisted_search_terms }
   end
 

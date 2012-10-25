@@ -250,7 +250,7 @@ module BrowserHelper
   
   def quick_task_add_panel
     %Q{
-      <div data-role="collapsible" data-collapsed="true" >
+      <div data-role="collapsible" data-collapsed="true" data-theme="b">
   			<h3>Follow-up Task...</h3>
   		    <div class="ui-body ui-body-d">
   			  	<label for="task_subject" class="fieldLabel">Subject:<font color="red">&nbsp;&nbsp;*</font></label>
@@ -322,15 +322,15 @@ module BrowserHelper
     case origin
       when "new-leads"
         # we've removed the icon as it overlaps with the header text; to put it back, add 'data-icon="back"' to the tag
-        '<a href="/app/Opportunity?selected_tab=new-leads" data-direction="reverse" rel="external">Cancel</a>'
+        '<a href="/app/Opportunity?selected_tab=new-leads"   rel="external">Cancel</a>'
       when "follow-ups"
-        '<a href="/app/Opportunity?selected_tab=follow-ups" data-direction="reverse" rel="external">Cancel</a>'
+        '<a href="/app/Opportunity?selected_tab=follow-ups"   rel="external">Cancel</a>'
       when "appointments"
-        '<a href="/app/Opportunity?selected_tab=appointments" data-direction="reverse" rel="external">Cancel</a>'
+        '<a href="/app/Opportunity?selected_tab=appointments"   rel="external">Cancel</a>'
       when "contact"
-         '<a href="/app/Contact" data-direction="reverse" rel="external">Cancel</a>'
+         '<a href="/app/Contact"   rel="external">Cancel</a>'
       else
-        '<a href="/app/Opportunity" data-direction="reverse" rel="external">Cancel</a>'
+        '<a href="/app/Opportunity" rel="external">Cancel</a>'
     end
   end
   

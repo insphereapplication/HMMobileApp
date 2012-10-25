@@ -1,15 +1,13 @@
 <div data-role="page" data-theme="b" id="new_contact_appointment">
 	<%= offline_bar%>
-    <div data-role="header" data-theme="d" data-position="inline">
-        <a href="<%=url_for(:action => :show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})%>" rel="external" data-role="button" data-icon="back">
-            <font color="black">Cancel</font>
-        </a>
+    <div data-role="header" data-theme="b">
+        <a href="<%=url_for(:action => :show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})%>" rel="external" data-role="button" data-icon="back">Cancel</a>
         <h1>Create Activity <%= sync_spinner %></h1>
-        <div style="text-align:center" class="ui-bar ui-bar-c">
-            <%="#{@contact.full_name}"%>
-        </div>
     </div>
     <div id="contentDiv" data-role="content">
+	    <div style="text-align:center" class="ui-bar ui-bar-c">
+            <%="#{@contact.full_name}"%>
+        </div>
         <div class="ui-body ui-body-d">
             <form name="new_contact_appointment_form" id="new_contact_appointment_form" method="POST" action="<%=url_for :action => :create_new_appointment, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}%>">
                 <input type="hidden" id="cssi_location" name="cssi_location" />
@@ -35,8 +33,8 @@
                         <input id="appointment_datetime" type="text" name="appointment_datetime" readonly value="<%=$choosed['0']%>" onClick="PickappointmentChangeFocus();"></input>
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="appointment_duration" class="fieldLabel">Duration:</label>
-                        <select name="appointment_duration" id="appointment_duration" data-role="none" class="ins-drop-down">
+                        <label for="appointment_duration" class="select">Duration:</label>
+                        <select name="appointment_duration" id="appointment_duration">
                             <option value="90.0">1.5 Hours</option>
                             <option value="30.0">30 Minutes</option>
                             <option value="60.0">1 Hour</option>
@@ -46,8 +44,8 @@
                         </select>
                     </div>
                     <div data-role="fieldcontain">
-                        <label for="select_location" class="fieldLabel">Location:</label>
-                        <select name="select_location" id="select_location" onchange='updateAddress();' data-role="none" class="ins-drop-down">
+                        <label for="select_location" class="select">Location:</label>
+                        <select name="select_location" id="select_location" onchange='updateAddress();'>
                             <% @contact.addresses.each do |type, address| %>
                             <option value="<%=address%>"><%=type%></option>
                             <% end %>
@@ -60,7 +58,7 @@
                         <input id="location" name="location" type="text"></input>
                     </div>
                     <div data-role="fieldcontain">
-                        <input type="submit" class="standardButton" onclick="getLocationType(); enableLocation();" value="Create Appointment" />
+                        <input type="submit" class="standardButton" onclick="getLocationType(); enableLocation();" data-theme="b" value="Create Appointment" />
                     </div>
                 </div>
             </form>

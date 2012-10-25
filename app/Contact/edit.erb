@@ -5,10 +5,7 @@
 					<div data-role="header" data-backbtn="false" data-theme="b">
 						<a href="<%= url_for :action => :show, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" data-transition="slideback" data-icon="back">Cancel</a>
 						<h1>Edit <%= sync_spinner %></h1>
-						<!-- <a href="JAVASCRIPT:contact_edit.submit()" data-transition="slideback">Done</a> -->
-						<span class="ui-btn-right">
-							<input type="submit" data-theme="b" data-transition="none" data-icon="false" value="Done"/>
-						</span>
+						<input type="submit" data-theme="b" data-transition="none" data-icon="false" class="ui-btn-right" value="Done"/>
 					</div>
 					<div class="toolbar">
 						<div class="leftItem backButton"></div>
@@ -168,7 +165,7 @@
 							<div class="ui-body ui-body-d">
 				            	<label for="contact_gendercode" class="select">Gender:</label>
 								<div>
-									<select id="contact_gendercode" name="contact[gendercode]" data-role="none" class="ins-drop-down">
+									<select id="contact_gendercode" name="contact[gendercode]">
 										<option data-placeholder="true" value=""></option>
 										<option <% if @contact.gendercode=='Male' %> selected="true" <% end %> value="Male">Male</option>
 										<option <% if @contact.gendercode=='Female' %> selected="true" <% end %> value="Female">Female</option>
@@ -185,19 +182,21 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
-											<label for="select-choice-heightft" class="fieldLabel">Height:</label>
-											<select name="contact[cssi_heightft]" id="select-choice-heightft" data-role="none" class="ins-narrow-drop-down" >
-												<option data-placeholder="true"></option>
-												<% Constants::HEIGHT_FEET.each do |height_feet| %>
-												<option <% if @contact.cssi_heightft == height_feet %> selected = "true" <% end %> value="<%=height_feet%>"><%=height_feet%></option>
-												<% end %>
-											</select>'&nbsp;
-											<select name="contact[cssi_heightin]" id="select-choice-heightin" data-role="none" class="ins-narrow-drop-down" >
-												<option data-placeholder="true"></option>
-												<% Constants::HEIGHT_INCHES.each do |height_inches| %>
-												<option <% if @contact.cssi_heightin == height_inches %> selected = "true" <% end %>value="<%=height_inches%>"><%=height_inches%></option>
-												<% end %>
-											</select>"			
+								<fieldset data-role="controlgroup" data-type="horizontal">
+								<legend>Height:</legend>
+									<label for="select-choice-heightft" >Feet:</label>
+									<select name="contact[cssi_heightft]" id="select-choice-heightft" >
+										<option value="">Feet</option>
+										<% Constants::HEIGHT_FEET.each do |height_feet| %>
+										<option <% if @contact.cssi_heightft == height_feet %> selected = "true" <% end %> value="<%=height_feet%>"><%=height_feet%></option>
+										<% end %>
+									</select>
+									<select name="contact[cssi_heightin]" id="select-choice-heightin" >
+										<option value="">Inches</option>
+										<% Constants::HEIGHT_INCHES.each do |height_inches| %>
+										<option <% if @contact.cssi_heightin == height_inches %> selected = "true" <% end %>value="<%=height_inches%>"><%=height_inches%></option>
+										<% end %>
+									</select>			
 							</div>
 						</div>	
 						<div data-role="fieldcontain">
@@ -217,8 +216,8 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
-								<label for="select-choice-familystatuscode" class="fieldLabel">Marital Status:</label> 
-								<select name="contact[familystatuscode]" id="select-choice-familystatuscode" data-role="none" class="ins-drop-down">
+								<label for="select-choice-familystatuscode" class="select">Marital Status:</label> 
+								<select name="contact[familystatuscode]" id="select-choice-familystatuscode">
 									<option data-placeholder="true"></option>
 									<option <% if @contact.familystatuscode == "Single" %> selected="true" <% end %> value="Single">Single</option>
 									<option <% if @contact.familystatuscode == "Married" %> selected="true" <% end %>value="Married">Married</option>
@@ -246,7 +245,7 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
-								<label for="contact[cssi_state1id]" class="fieldLabel">State:</label> <select name="contact[cssi_state1id]" id="contact[cssi_state1id]" data-role="none" class="ins-drop-down" id="select-choice-2">
+								<label for="contact[cssi_state1id]" class="select">State:</label> <select name="contact[cssi_state1id]" id="contact[cssi_state1id]" id="select-choice-2">
 									<option value="">--</option>
 									<% Constants::STATE_CODES.each do |state_code| %>
 										<option value="<%=state_code[0]%>" <% if @contact.cssi_state1id == state_code[0] %> selected="selected" <% end %>>
@@ -279,7 +278,7 @@
 						</div>
 						<div data-role="fieldcontain">
 							<div class="ui-body ui-body-d">
-								<label for="contact[cssi_state2id]" class="fieldLabel">State:</label> <select id="contact[cssi_state2id]" name="contact[cssi_state2id]" data-role="none" class="ins-drop-down" id="select-choice-3">
+								<label for="contact[cssi_state2id]" class="select">State:</label> <select id="contact[cssi_state2id]" name="contact[cssi_state2id]"  id="select-choice-3">
 									<option value="">--</option>
 									<% Constants::STATE_CODES.each do |state_code| %>
 										<option value="<%=state_code[0]%>" <% if @contact.cssi_state2id == state_code[0] %> selected="selected" <% end %>>
@@ -295,7 +294,7 @@
 							</div>
 						</div>
 						<div data-theme="b">
-							<input type="submit" data-theme="b" data-direction="reverse" data-icon="false" value="Done"/>
+							<input type="submit" data-theme="a" data-direction="reverse" data-icon="false" value="Done"/>
 						</div>
 					</div>
 				</div>

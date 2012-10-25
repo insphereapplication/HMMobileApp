@@ -11,14 +11,14 @@ document.getElementById('appointment_datetime').focus();
 </script>
 	<div data-role="page" data-theme="b" id="appointment_add_page">
 		<%= offline_bar%>
-		<div data-role="header" data-theme="d" data-position="inline">
+		<div data-role="header" data-theme="b" data-position="inline">
 			<a href="<%=url_for(:action=>:show, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
 			<h1>Appointment <%= sync_spinner %></h1>
+		</div>
+		<div id="contentDiv" data-role="content">
 			<div style="text-align:center" class="ui-bar ui-bar-c"> 
 				<%= "#{@opportunity.contact.full_name} - #{to_date(@opportunity.createdon)}" %>
 			</div>
-		</div>
-		<div id="contentDiv" data-role="content">
 			<div class="ui-body ui-body-d">
 				<form id="appointment_form" name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_appointment_set, :query => {:origin => @params['origin'], :appointments => @params['appointments']} %>">
 					<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
@@ -32,7 +32,7 @@ document.getElementById('appointment_datetime').focus();
 						</div>
 						<div data-role="fieldcontain">
 							<label for="appointment_duration" class="fieldLabel">Duration:</label>
-							<select name="appointment_duration" id="appointment_duration" data-role="none" class="ins-drop-down">
+							<select name="appointment_duration" id="appointment_duration"  class="select">
 								<option value="90.0">1.5 Hours</option>
 								<option value="30.0">30 Minutes</option>
 								<option value="60.0">1 Hour</option>
@@ -43,7 +43,7 @@ document.getElementById('appointment_datetime').focus();
 						</div>
 						<div data-role="fieldcontain">
 							<label for="select_location" class="fieldLabel">Location:</label>
-				            <select name="select_location" id="select_location" onchange='updateAddress();' data-role="none" class="ins-drop-down">
+				            <select name="select_location" id="select_location" onchange='updateAddress();' class="select">
 								<% @opportunity.contact.addresses.each do |type, address| %>
 									<option value="<%= address %>"><%= type %></option>
 								<% end %>
@@ -58,8 +58,8 @@ document.getElementById('appointment_datetime').focus();
 							<label for="description">Description:</label>
 							<textarea cols="40" rows="8" name="description" id="notetext"></textarea>
 						</div>
-						<div data-role="fieldcontain">
-							<input type="submit" class="standardButton" onclick="getLocationType(); enableLocation();" value="Create Appointment"/>
+						<div data-role="fieldcontain" data-theme="b">
+							<input type="submit" class="standardButton" onclick="getLocationType(); enableLocation();" value="Create Appointment" data-theme="b"/>
 						</div>    
 					</div>
 				</form>

@@ -198,7 +198,7 @@ class ActivityController < Rho::RhoController
     @opportunity = @activity.opportunity if @activity
     @activity_title = @activity_contact.full_name if @activity_contact
     @activity_title += " - #{to_date(@opportunity.createdon)}" if @activity_contact && @opportunity
-    puts "Activity edit page origin: #{@params['origin']}"
+    puts "Activity edit page origin: #{@params['origin']} , id: #{@params['id']}"
     if @activity
      edit_action = "edit_#{@activity.type}".downcase 
       @cancelAction = case edit_action
@@ -211,6 +211,7 @@ class ActivityController < Rho::RhoController
       end
       @cancelAction = :show if Rho::NativeTabbar.get_current_tab == 2
       Settings.record_activity
+      puts "The edit action is #{edit_action.to_sym}"
      render :action => edit_action.to_sym, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
     else
       if @params['origin'] == 'appointments'
