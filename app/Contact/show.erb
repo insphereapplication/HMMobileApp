@@ -14,7 +14,7 @@
 				<a href="<%=url_for(:action=>:edit, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-direction="forward" data-icon="edit"> Edit </a>
 	</div>
 	<div data-role="content">
-		<ul data-role="listview" data-theme="c" data-inset="true" > 
+		<ul data-role="listview" data-theme="d" data-inset="true" > 
 			<li>
 					<h3><%= @contact.full_name %></h3>
 					<p><%= @contact.age_sex(true) %> </p>
@@ -23,12 +23,13 @@
 			
 			<%=
 			@contact.map_phone_numbers{ |type,number,do_not_call,preferred|
-				link = %Q{<a href="tel: #{number}">#{type}: #{number}</a>}
+				link = %Q{<a href="tel: #{number}">#{type}: #{number}}
 				icons = generate_phone_number_icons(preferred,do_not_call)
 				%Q{
 					<li data-icon="false">
 						#{link}
 						#{icons}
+						</a>
 					</li>
 				}
 			}.join("\n")
@@ -136,7 +137,7 @@
 			<% else %>	
 				<h3>Dependents - <%= @contact.dependents.size %></h3>
 			<% end %>
-			<ul data-role="listview" data-filter="false" data-inset="true" data-theme="c">
+			<ul data-role="listview" data-filter="false" data-inset="true" data-theme="d">
 				<li data-role="list-divider">Dependents</li>
 				<li data-icon="add">
 					<a href="<%= url_for(:controller => :Dependent, :action => :new, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>">Add Dependent</a>
@@ -155,7 +156,7 @@
 
 		<% if @contact.policies.size == 0 %>	
 
-			<ul data-role="listview" data-filter="false" data-inset="true" data-theme="c">
+			<ul data-role="listview" data-filter="false" data-inset="true" data-theme="d">
 				<li data-role="list-divider">Policies - 0</li>
 				<li><div style="text-align:center"><i> (No Policies) </i></div></li>
 			</ul>			
@@ -171,7 +172,7 @@
 					
 		<% elsif Settings.pin_confirmed == true && Settings.pin_is_current? %>
 	
-		<ul data-role="listview" data-filter="false" data-inset="true" data-theme="c">
+		<ul data-role="listview" data-filter="false" data-inset="true" data-theme="d">
 			<li data-role="list-divider">Policies - <%= @contact.policies.size %></li>
 
 			<% @contact.policies.each do |policy| %>
@@ -205,8 +206,8 @@
 		<% end %>	
 	
 		<% if @params['origin'] == "contact" || @params['origin'] == "SearchContacts" %>		
-		 <ul data-role="listview" data-filter="false" data-inset="true" data-theme="c">
-			<li data-role="list-divider" data-theme="c">Opportunities</li>
+		 <ul data-role="listview" data-filter="false" data-inset="true" data-theme="d">
+			<li data-role="list-divider" data-theme="d">Opportunities</li>
 			<li data-icon="plus">
 				<a href="<%= url_for(:controller => :Opportunity, :action => :new, :id => @contact.object, :query => {:origin => @params['origin']}) %>" data-transition="slide">Add Opportunity</a>
 			</li>

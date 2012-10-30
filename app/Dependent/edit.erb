@@ -6,79 +6,63 @@
 			<h1>Edit Dependent <%= sync_spinner %></h1>
 			<input type="submit" href="#" data-theme="b" data-direction="reverse" class="ui-btn-right" value="Done"/>
 		</div>
-		<div id="contentDiv" data-role="content">
+		<div id="contentDiv" data-role="content" data-theme="b">
 			<input type="hidden" name="dependent[cssi_dependentsid]" value="<%= @dependent.cssi_dependentsid %>"/>
 			<input type="hidden" name="dependent[contact_id]" value="<%= @dependent.contact_id %>"/>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="dependent[cssi_name]" class="fieldLabel">First Name:<font color="red">  *</font></label>
-					<input type="text" maxlength="100" id="dependent[cssi_name]" name="dependent[cssi_name]" value="<%= @dependent.cssi_name %>" />
-				</div>
+				<label for="dependent[cssi_name]" class="fieldLabel">First Name:<font color="red">  *</font></label>
+				<input type="text" maxlength="100" id="dependent[cssi_name]" name="dependent[cssi_name]" data-theme="d" value="<%= @dependent.cssi_name %>" />
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="dependent[cssi_lastname]" class="fieldLabel">Last Name:</label>
-					<input type="text" maxlength="100" id="dependent[cssi_lastname]" name="dependent[cssi_lastname]" value="<%= @dependent.cssi_lastname %>" />
-				</div>
+				<label for="dependent[cssi_lastname]" class="fieldLabel">Last Name:</label>
+				<input type="text" maxlength="100" id="dependent[cssi_lastname]" name="dependent[cssi_lastname]" data-theme="d" value="<%= @dependent.cssi_lastname %>" />
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<fieldset data-role="controlgroup" data-type="horizontal">
-					<legend>Height:</legend>
-					<label for="dependent[cssi_heightft]">Feet:</label>
-					<select name="dependent[cssi_heightft]"  id="dependent[cssi_heightft]">
-						<option value="">Feet</option>
-						<% Constants::HEIGHT_FEET.each do |height_feet| %>
-							<option <% if @dependent.cssi_heightft == height_feet %> selected = "true" <% end %> value="<%=height_feet%>"><%=height_feet%></option>
-						<% end %>				
-					</select>
-					<select name="dependent[cssi_heightin]" id="dependent[cssi_heightin]">
-						<option value="">Inches</option>
-						<% Constants::HEIGHT_INCHES.each do |height_inches| %>
-							<option <% if @dependent.cssi_heightin == height_inches %> selected = "true" <% end %>value="<%=height_inches%>"><%=height_inches%></option>
-								<% end %>
-					</select>
-				</div>
+				<fieldset data-role="controlgroup" data-type="horizontal">
+				<legend>Height:</legend>
+				<label for="dependent[cssi_heightft]">Feet:</label>
+				<select name="dependent[cssi_heightft]"  id="dependent[cssi_heightft]" data-theme="d">
+					<option value="">Feet</option>
+					<% Constants::HEIGHT_FEET.each do |height_feet| %>
+						<option <% if @dependent.cssi_heightft == height_feet %> selected = "true" <% end %> value="<%=height_feet%>"><%=height_feet%></option>
+					<% end %>				
+				</select>
+				<select name="dependent[cssi_heightin]" id="dependent[cssi_heightin]" data-theme="d">
+					<option value="">Inches</option>
+					<% Constants::HEIGHT_INCHES.each do |height_inches| %>
+						<option <% if @dependent.cssi_heightin == height_inches %> selected = "true" <% end %>value="<%=height_inches%>"><%=height_inches%></option>
+							<% end %>
+				</select>
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="dependent[cssi_weight]" class="fieldLabel">Weight (lbs):</label>
-					<input type="number" id="dependent[cssi_weight]" name="dependent[cssi_weight]" value="<%= @dependent.cssi_weight %>" />					
-				</div>
+				<label for="dependent[cssi_weight]" class="fieldLabel">Weight (lbs):</label>
+				<input type="number" id="dependent[cssi_weight]" name="dependent[cssi_weight]" data-theme="d" value="<%= @dependent.cssi_weight %>" />					
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="dependent[cssi_dateofbirth]" class="fieldLabel">Date of Birth:</label>
-					<input id="dependent[cssi_dateofbirth]" type="text" name="dependent[cssi_dateofbirth]" readonly value="<%= to_date(@dependent.cssi_dateofbirth) %>" onClick="editpopupDateTimeAJPicker('1', 'Dependent Birth Date', 'dependent[cssi_dateofbirth]', '<%= @dependent.cssi_dateofbirth %>'); document.getElementById('submit_button').focus();"></input>
-				</div>
+				<label for="dependent[cssi_dateofbirth]" class="fieldLabel">Date of Birth:</label>
+				<input id="dependent[cssi_dateofbirth]" type="text" name="dependent[cssi_dateofbirth]" data-theme="d" readonly value="<%= to_date(@dependent.cssi_dateofbirth) %>" onClick="editpopupDateTimeAJPicker('1', 'Dependent Birth Date', 'dependent[cssi_dateofbirth]', '<%= @dependent.cssi_dateofbirth %>'); document.getElementById('submit_button').focus();"></input>
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="dependent[cssi_gender]" class="select">Gender:</label>
-					<select name="dependent[cssi_gender]"  id="dependent[cssi_gender]">
-						<option value=""></option>
-						<option value="Male" <% if @dependent.cssi_gender == "Male" %> selected="selected" <% end %>>Male</option>
-						<option value="Female" <% if @dependent.cssi_gender == "Female" %> selected="selected" <% end %>>Female</option>
-					</select>
-				</div>
+				<label for="dependent[cssi_gender]" class="select">Gender:</label>
+				<select name="dependent[cssi_gender]"  id="dependent[cssi_gender]" data-theme="d">
+					<option value=""></option>
+					<option value="Male" <% if @dependent.cssi_gender == "Male" %> selected="selected" <% end %>>Male</option>
+					<option value="Female" <% if @dependent.cssi_gender == "Female" %> selected="selected" <% end %>>Female</option>
+				</select>
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="tobaccoSlider" class="fieldLabel">Tobacco:</label>
-					<select name="dependent[cssi_usetobacco]" id="tobaccoSlider" data-role="slider">
-						<option value="False" <% if @dependent.cssi_usetobacco == "False" %> selected="selected" <% end %> >No</option>
-						<option value="True" <% if @dependent.cssi_usetobacco == "True" %> selected="selected" <% end %>>Yes</option>						
-					</select>
-				</div>
+				<label for="tobaccoSlider" class="fieldLabel">Tobacco:</label>
+				<select name="dependent[cssi_usetobacco]" id="tobaccoSlider" data-role="slider" data-theme="d">
+					<option value="False" <% if @dependent.cssi_usetobacco == "False" %> selected="selected" <% end %> >No</option>
+					<option value="True" <% if @dependent.cssi_usetobacco == "True" %> selected="selected" <% end %>>Yes</option>						
+				</select>
 			</div>			
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="dependent[cssi_comments]" class="fieldLabel">Comments:</label>
-					<input type="text" maxlength="250" name="dependent[cssi_comments]" id="dependent[cssi_comments]" value="<%= @dependent.cssi_comments %>" />
-				</div>
+				<label for="dependent[cssi_comments]" class="fieldLabel">Comments:</label>
+				<input type="text" maxlength="250" name="dependent[cssi_comments]" id="dependent[cssi_comments]" data-theme="d" value="<%= @dependent.cssi_comments %>" />
 			</div>
 			<input id="submit_button" type="submit" data-theme="b" value="Done"/>
-			<a href="<%= url_for(:controller => :Dependent, :action => :confirm_dependent_delete, :query => {:id => @dependent.object, :opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-theme="f" data-direction="reverse" data-role="button">Delete</a>
+			<a href="<%= url_for(:controller => :Dependent, :action => :confirm_dependent_delete, :query => {:id => @dependent.object, :opportunity => @params['opportunity'], :origin => @params['origin']})%>" data-theme="a" data-direction="reverse" data-role="button">Delete</a>
 		</div>
 	</form>
 </div>

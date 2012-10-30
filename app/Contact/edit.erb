@@ -1,303 +1,212 @@
 <div data-role="page" data-theme="b" id="contact_edit_page">
-			<form method="post" id="contact_edit" name="contact_edit" action="<%= url_for :action => :update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" name="contact_edit">
-				<div data-inline="true">
-					<%= offline_bar %>
-					<div data-role="header" data-backbtn="false" data-theme="b">
-						<a href="<%= url_for :action => :show, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" data-transition="slideback" data-icon="back">Cancel</a>
-						<h1>Edit <%= sync_spinner %></h1>
-						<input type="submit" data-theme="b" data-transition="none" data-icon="false" class="ui-btn-right" value="Done"/>
-					</div>
-					<div class="toolbar">
-						<div class="leftItem backButton"></div>
-					</div>
-					<div data-role="content">
-						<input type="hidden" name="id" value="<%= @contact.object %>">
-						<div align="center">
-							<label class="fieldLabel"><b>Edit <%= @contact.full_name %></b></label><br>
-							<br>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-				        		<label for="contact[firstname]" class="fieldLabel">First Name:</label>
-				        		<input id="contact[firstname]" maxlength="50" type="text" name="contact[firstname]" value="<%= @contact.firstname %>" />
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-				        		<label for="contact[lastname]" class="fieldLabel">Last Name:</label>
-				        		<input id="contact[lastname]" maxlength="50" type="text" name="contact[lastname]" value="<%= @contact.lastname %>"/>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[emailaddress1]" class="fieldLabel">Email Address:</label> 
-								<input type="email" maxlength="255" class="required_group" name="contact[emailaddress1]" id="contact[emailaddress1]" value="<%= @contact.emailaddress1 %>" <%= placeholder( "Email Address" ) %>>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,"Mobile",@contact.mobilephone) %> 
-								<% if System::get_property('platform') == 'APPLE' %>
-								<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" class="required_group" id="contact[mobilephone]" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>> 
-								<% else %>
-								<input type="tel" class="required_group" id="contact[mobilephone]" name="contact[mobilephone]" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>>
-								<% end %>
-								<% if show_do_not_call_slider(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,@contact.mobilephone) %>
-								<table width="100%">
-									<tr>
-										<td width="40%">
-											<label for="mobileDncSlider" class="fieldLabel">Allow Calls:</label>
-										</td>
-										<td>
-											<select name="allowcallsmobilephone" id="mobileDncSlider" data-role="slider">
-												<option value="False" <% if @contact.cssi_allowcallsmobilephone == "False" || @contact.cssi_companydncmobilephone == 'True' %> selected="selected" <% end %> >No</option>
-												<option value="True" <% if @contact.cssi_allowcallsmobilephone == "True" || @contact.cssi_companydncmobilephone == 'False' %> selected="selected" <% end %>>Yes</option>
-											</select>
-										</td>
-									</tr>
-								</table>
-								<% end %>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[telephone1]" class="fieldLabel">Business Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,"Business",@contact.telephone1) %>
-								<% if System::get_property('platform') == 'APPLE' %>
-								<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" class="required_group" id="contact[telephone1]" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
-								<% else %>
-								<input type="tel" id="contact[telephone1]" class="required_group" name="contact[telephone1]" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
-								<% end %>
-								<% if show_do_not_call_slider(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,@contact.telephone1) %>
-								<table width="100%">
-									<tr>
-										<td width="40%">
-											<label for="businessDncSlider" class="fieldLabel">Allow Calls?</label>
-										</td>
-										<td>
-											<select name="allowcallsbusinessphone" id="businessDncSlider" data-role="slider">
-												<option value="False" <% if @contact.cssi_allowcallsbusinessphone == "False" || @contact.cssi_companydncbusinessphone == 'True' %> selected="selected" <% end %> >No</option>
-												<option value="True" <% if @contact.cssi_allowcallsbusinessphone == "True" || @contact.cssi_companydncbusinessphone == 'False' %> selected="selected" <% end %>>Yes</option>
-											</select>
-										</td>
-									</tr>
-								</table>
-								<% end %>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[cssi_businessphoneext]" class="fieldLabel">Business Extension:</label>
-								<input maxlength="10" type="number" id="contact_cssi_businessphoneext" name="contact[cssi_businessphoneext]" value="<%= @contact.cssi_businessphoneext %>" <%= placeholder( "Business Ext" ) %>>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[telephone2]" class="fieldLabel">Home Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,"Home",@contact.telephone2) %>
-								<% if System::get_property('platform') == 'APPLE' %>
-								<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" class="required_group" id="contact[telephone2]" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
-								<% else %>
-								<input type="tel" class="required_group" id="contact[telephone2]" name="contact[telephone2]" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
-								<% end %>
-								<% if show_do_not_call_slider(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,@contact.telephone2) %>
-								<table width="100%">
-									<tr>
-										<td width="40%">
-											<label for="homeDncSlider" class="fieldLabel">Allow Calls?</label>
-										</td>
-										<td>
-											<select name="allowcallshomephone" id="homeDncSlider" data-role="slider">
-												<option value="False" <% if @contact.cssi_allowcallshomephone == "False" || @contact.cssi_companydnchomephone == 'True' %> selected="selected" <% end %> >No</option>
-												<option value="True" <% if @contact.cssi_allowcallshomephone == "True" || @contact.cssi_companydnchomephone == 'False' %> selected="selected" <% end %>>Yes</option>
-											</select>
-										</td>
-									</tr>
-								</table>
-								<% end %>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[telephone3]" class="fieldLabel">Alternate Phone:<font color="blue">  +</font></label><%= show_edit_do_not_call_icon(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone, "Alternative",@contact.telephone3) %> 
-								<% if System::get_property('platform') == 'APPLE' %>
-								<input onkeyup="javascript:backspacerUP(this,event);" onkeydown="javascript:backspacerDOWN(this,event);" type="tel" class="required_group" name="contact[telephone3]" id="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>>
-								<% else %>
-								<input type="tel" class="required_group" id="contact[telephone3]" name="contact[telephone3]" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>>
-								<% end %>
-								<% if show_do_not_call_slider(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone,@contact.telephone3) %>
-								<table width="100%">
-									<tr>
-										<td width="40%">
-											<label for="alternateDncSlider" class="fieldLabel">Allow Calls?</label>
-										</td>
-										<td>
-											<select name="allowcallsalternatephone" id="alternateDncSlider" data-role="slider">
-												<option value="False" <% if @contact.cssi_allowcallsalternatephone == "False" || @contact.cssi_companydncalternatephone == 'True' %> selected="selected" <% end %> >No</option>
-												<option value="True" <% if @contact.cssi_allowcallsalternatephone == "True" || @contact.cssi_companydncalternatephone == 'False' %> selected="selected" <% end %>>Yes</option>
-											</select>
-										</td>
-									</tr>
-								</table>
-								<% end %>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact_preferredphone" class="select">Preferred Phone:</label> 
-								<select name="contact[cssi_preferredphone]" id="contact_preferredphone" data-role="none" class="ins-drop-down">
-									<option data-placeholder="true">
-									</option>
-									<option <% if @contact.cssi_preferredphone == 'Mobile' %> selected="true" <% end %> value="Mobile">
-										Mobile
-									</option>
-									<option <% if @contact.cssi_preferredphone == 'Business' %> selected="true" <% end %>value="Business">
-										Business
-									</option>
-									<option <% if @contact.cssi_preferredphone == 'Home' %> selected="true" <% end %>value="Home">
-										Home
-									</option>
-									<option <% if @contact.cssi_preferredphone == 'Alternate' %> selected="true" <% end %>value="Alternate">
-										Alternate
-									</option>
-								</select>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-				            	<label for="contact_gendercode" class="select">Gender:</label>
-								<div>
-									<select id="contact_gendercode" name="contact[gendercode]">
-										<option data-placeholder="true" value=""></option>
-										<option <% if @contact.gendercode=='Male' %> selected="true" <% end %> value="Male">Male</option>
-										<option <% if @contact.gendercode=='Female' %> selected="true" <% end %> value="Female">Female</option>
-									</select>
-								</div>
-					    	</div>
-						</div>				
-
-						<div data-role="fieldcontain">
-								<div class="ui-body ui-body-d">
-					            	<label for="birthdate" class="fieldLabel">Date of Birth:</label>
-									<input id="birthdate" type="text" name="birthdate" readonly value="<%= to_date(@contact.birthdate) %>"  onClick="popupAppDateAJPicker('1', 'Contact Birth Date', 'birthdate', '<%= @contact.birthdate %>'); document.getElementById('birthdate').focus();"></input>
-						    	</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<fieldset data-role="controlgroup" data-type="horizontal">
-								<legend>Height:</legend>
-									<label for="select-choice-heightft" >Feet:</label>
-									<select name="contact[cssi_heightft]" id="select-choice-heightft" >
-										<option value="">Feet</option>
-										<% Constants::HEIGHT_FEET.each do |height_feet| %>
-										<option <% if @contact.cssi_heightft == height_feet %> selected = "true" <% end %> value="<%=height_feet%>"><%=height_feet%></option>
-										<% end %>
-									</select>
-									<select name="contact[cssi_heightin]" id="select-choice-heightin" >
-										<option value="">Inches</option>
-										<% Constants::HEIGHT_INCHES.each do |height_inches| %>
-										<option <% if @contact.cssi_heightin == height_inches %> selected = "true" <% end %>value="<%=height_inches%>"><%=height_inches%></option>
-										<% end %>
-									</select>			
-							</div>
-						</div>	
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[cssi_weight]" class="fieldLabel">Weight:</label> 
-								<input type="number" name="contact[cssi_weight]" id="contact[cssi_weight]" value="<%= @contact.cssi_weight %>" <%= placeholder( "Weight" ) %>>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="tobaccoSlider" class="fieldLabel">Tobacco:</label>
-								<select name="contact[cssi_usetobacco]" id="tobaccoSlider" data-role="slider">
-									<option value="False" <% if @contact.cssi_usetobacco == "False" %> selected="selected" <% end %> >No</option>
-									<option value="True" <% if @contact.cssi_usetobacco == "True" %> selected="selected" <% end %>>Yes</option>						
-								</select>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="select-choice-familystatuscode" class="select">Marital Status:</label> 
-								<select name="contact[familystatuscode]" id="select-choice-familystatuscode">
-									<option data-placeholder="true"></option>
-									<option <% if @contact.familystatuscode == "Single" %> selected="true" <% end %> value="Single">Single</option>
-									<option <% if @contact.familystatuscode == "Married" %> selected="true" <% end %>value="Married">Married</option>
-									<option <% if @contact.familystatuscode == "Divorced" %> selected="true" <% end %>value="Divorced">Divorced</option>
-									<option <% if @contact.familystatuscode == "Widowed" %> selected="true" <% end %>alue="Widowed">Widowed</option>
-								</select>
-							</div>
-						</div>
-						<br>
-						<b>Home Address</b><br>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[address1_line1]" class="fieldLabel">Address Line 1:</label> <input maxlength="200" type="text" name="contact[address1_line1]" id="contact[address1_line1]" value="<%= @contact.address1_line1 %>" <%= placeholder( "Home Address Line 1" ) %>>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[address1_line2]" class="fieldLabel">Address Line 2:</label> <input maxlength="255" type="text" name="contact[address1_line2]" id="contact[address1_line2]" value="<%= @contact.address1_line2 %>" <%= placeholder( "Home Address Line 2" ) %>>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[address1_city]" class="fieldLabel">City:</label> <input maxlength="50" type="text" name="contact[address1_city]" id="contact[address1_city]" value="<%= @contact.address1_city %>" <%= placeholder( "Home City" ) %>>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[cssi_state1id]" class="select">State:</label> <select name="contact[cssi_state1id]" id="contact[cssi_state1id]" id="select-choice-2">
-									<option value="">--</option>
-									<% Constants::STATE_CODES.each do |state_code| %>
-										<option value="<%=state_code[0]%>" <% if @contact.cssi_state1id == state_code[0] %> selected="selected" <% end %>>
-											<%=state_code[1]%>
-										</option>
-									<% end %>
-								</select>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[address1_postalcode]" class="fieldLabel">ZIP:</label> <input maxlength="20" type="number" name="contact[address1_postalcode]" id="contact[address1_postalcode]" value="<%= @contact.address1_postalcode %>" <%= placeholder( "Home ZIP" ) %>>
-							</div>
-						</div><b>Business Address</b><br>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[address2_line1]" class="fieldLabel">Address Line 1:</label><br>
-								<input maxlength="200" type="text" name="contact[address2_line1]" id="contact[address2_line1]" value="<%= @contact.address2_line1 %>" <%= placeholder( "Business Address Line 1" ) %>>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[address2_line2]" class="fieldLabel">Address Line 2:</label> <input maxlength="200" type="text" id="contact[address2_line2]" name="contact[address2_line2]" value="<%= @contact.address2_line2 %>" <%= placeholder( "Business Address Line 2" ) %>>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[address2_city]" class="fieldLabel">City:</label> <input maxlength="50" type="text" id="contact[address2_city]" name="contact[address2_city]" value="<%= @contact.address2_city %>" <%= placeholder( "Business City" ) %>>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[cssi_state2id]" class="select">State:</label> <select id="contact[cssi_state2id]" name="contact[cssi_state2id]"  id="select-choice-3">
-									<option value="">--</option>
-									<% Constants::STATE_CODES.each do |state_code| %>
-										<option value="<%=state_code[0]%>" <% if @contact.cssi_state2id == state_code[0] %> selected="selected" <% end %>>
-											<%=state_code[1]%>
-										</option>
-									<% end %>
-								</select>
-							</div>
-						</div>
-						<div data-role="fieldcontain">
-							<div class="ui-body ui-body-d">
-								<label for="contact[address2_postalcode]" class="fieldLabel">ZIP:</label> <input maxlength="20" type="number" id="contact[address2_postalcode]" name="contact[address2_postalcode]" value="<%= @contact.address2_postalcode %>" <%= placeholder( "Business ZIP" ) %>>
-							</div>
-						</div>
-						<div data-theme="b">
-							<input type="submit" data-theme="a" data-direction="reverse" data-icon="false" value="Done"/>
-						</div>
-					</div>
-				</div>
-			</form>
+	<form method="post" id="contact_edit" name="contact_edit" action="<%= url_for :action => :update, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" name="contact_edit">
+		<%= offline_bar %>
+		<div data-role="header" data-backbtn="false" data-theme="b">
+			<a href="<%= url_for :action => :show, :id => @contact.object, :query => {:opportunity => @params['opportunity'], :origin => @params['origin']} %>" data-transition="slideback" data-icon="back">Cancel</a>
+			<h1>Edit <%= sync_spinner %></h1>
+			<input type="submit" data-theme="b" data-transition="none" data-icon="false" class="ui-btn-right" value="Done"/>
 		</div>
+		<div data-role="content" data-theme="b">
+			<input type="hidden" name="id" value="<%= @contact.object %>">
+			<div align="center">
+				<label class="fieldLabel"><b>Edit <%= @contact.full_name %></b></label><br>
+				<br>
+			</div>
+			<div data-role="fieldcontain">
+        		<label for="contact[firstname]" class="fieldLabel">First Name:</label>
+        		<input id="contact[firstname]" maxlength="50" type="text" name="contact[firstname]" data-theme="d" value="<%= @contact.firstname %>" />
+			</div>
+			<div data-role="fieldcontain">
+        		<label for="contact[lastname]" class="fieldLabel">Last Name:</label>
+        		<input id="contact[lastname]" maxlength="50" type="text" name="contact[lastname]" data-theme="d" value="<%= @contact.lastname %>"/>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="contact[emailaddress1]" class="fieldLabel">Email Address:</label> 
+				<input type="email" maxlength="255" class="required_group" name="contact[emailaddress1]" data-theme="d" id="contact[emailaddress1]" value="<%= @contact.emailaddress1 %>" <%= placeholder( "Email Address" ) %>>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:&nbsp;<%= show_edit_do_not_call_icon(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,"Mobile",@contact.mobilephone) %></label>
+				<input type="tel" class="required_group" id="contact[mobilephone]" name="contact[mobilephone]" data-theme="d" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>>
+				<% if show_do_not_call_slider(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,@contact.mobilephone) %>
+					<label for="mobileDncSlider" class="fieldLabel">Allow Calls:</label>
+					<select name="allowcallsmobilephone" id="mobileDncSlider" data-theme="d" data-role="slider">
+						<option value="False" <% if @contact.cssi_allowcallsmobilephone == "False" || @contact.cssi_companydncmobilephone == 'True' %> selected="selected" <% end %> >No</option>
+						<option value="True" <% if @contact.cssi_allowcallsmobilephone == "True" || @contact.cssi_companydncmobilephone == 'False' %> selected="selected" <% end %>>Yes</option>
+					</select>
+				<% end %>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="contact[telephone1]" class="fieldLabel">Business Phone:&nbsp;<%= show_edit_do_not_call_icon(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,"Business",@contact.telephone1) %></label>
+				<input type="tel" id="contact[telephone1]" class="required_group" name="contact[telephone1]" data-theme="d" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
+				<% if show_do_not_call_slider(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,@contact.telephone1) %>
+						<label for="businessDncSlider" class="fieldLabel">Allow Calls?</label>
+						<select name="allowcallsbusinessphone" id="businessDncSlider" data-theme="d" data-role="slider">
+							<option value="False" <% if @contact.cssi_allowcallsbusinessphone == "False" || @contact.cssi_companydncbusinessphone == 'True' %> selected="selected" <% end %> >No</option>
+							<option value="True" <% if @contact.cssi_allowcallsbusinessphone == "True" || @contact.cssi_companydncbusinessphone == 'False' %> selected="selected" <% end %>>Yes</option>
+						</select>
+				<% end %>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="contact[cssi_businessphoneext]" class="fieldLabel">Business Extension:</label>
+				<input maxlength="10" type="number" id="contact_cssi_businessphoneext" name="contact[cssi_businessphoneext]" data-theme="d" value="<%= @contact.cssi_businessphoneext %>" <%= placeholder( "Business Ext" ) %>>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="contact[telephone2]" class="fieldLabel">	<%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,"Home",@contact.telephone2) %>&nbsp;Home Phone:</label>
+				<input type="tel" class="required_group" id="contact[telephone2]" name="contact[telephone2]" data-theme="d" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
+				<% if show_do_not_call_slider(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,@contact.telephone2) %>
+						<label for="homeDncSlider" class="fieldLabel">Allow Calls?</label>
+						<select name="allowcallshomephone" id="homeDncSlider" data-theme="d" data-role="slider">
+							<option value="False" <% if @contact.cssi_allowcallshomephone == "False" || @contact.cssi_companydnchomephone == 'True' %> selected="selected" <% end %> >No</option>
+							<option value="True" <% if @contact.cssi_allowcallshomephone == "True" || @contact.cssi_companydnchomephone == 'False' %> selected="selected" <% end %>>Yes</option>
+						</select>
+				<% end %>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="contact[telephone3]" class="fieldLabel">Alternate Phone:&nbsp;<%= show_edit_do_not_call_icon(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone, "Alternative",@contact.telephone3) %> </label>
+				<input type="tel" class="required_group" id="contact[telephone3]" name="contact[telephone3]" data-theme="d" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>>
+				<% if show_do_not_call_slider(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone,@contact.telephone3) %>					
+						<label for="alternateDncSlider" class="fieldLabel">Allow Calls?</label>
+						<select name="allowcallsalternatephone" id="alternateDncSlider" data-theme="d" data-role="slider">
+							<option value="False" <% if @contact.cssi_allowcallsalternatephone == "False" || @contact.cssi_companydncalternatephone == 'True' %> selected="selected" <% end %> >No</option>
+							<option value="True" <% if @contact.cssi_allowcallsalternatephone == "True" || @contact.cssi_companydncalternatephone == 'False' %> selected="selected" <% end %>>Yes</option>
+						</select>
+
+				<% end %>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="contact_preferredphone" class="select">Preferred Phone:</label> 
+				<select name="contact[cssi_preferredphone]" id="contact_preferredphone" data-theme="d">
+					<option data-placeholder="true">
+					</option>
+					<option <% if @contact.cssi_preferredphone == 'Mobile' %> selected="true" <% end %> value="Mobile">
+						Mobile
+					</option>
+					<option <% if @contact.cssi_preferredphone == 'Business' %> selected="true" <% end %>value="Business">
+						Business
+					</option>
+					<option <% if @contact.cssi_preferredphone == 'Home' %> selected="true" <% end %>value="Home">
+						Home
+					</option>
+					<option <% if @contact.cssi_preferredphone == 'Alternate' %> selected="true" <% end %>value="Alternate">
+						Alternate
+					</option>
+				</select>
+			</div>
+			<div data-role="fieldcontain">
+	            	<label for="contact_gendercode" class="select">Gender:</label>
+					<select id="contact_gendercode" name="contact[gendercode]" data-theme="d">
+						<option data-placeholder="true" value=""></option>
+						<option <% if @contact.gendercode=='Male' %> selected="true" <% end %> value="Male">Male</option>
+						<option <% if @contact.gendercode=='Female' %> selected="true" <% end %> value="Female">Female</option>
+					</select>
+			</div>				
+			<div data-role="fieldcontain">
+	            	<label for="birthdate" class="fieldLabel">Date of Birth:</label>
+					<input id="birthdate" type="text" name="birthdate" data-theme="d" readonly value="<%= to_date(@contact.birthdate) %>"  onClick="popupAppDateAJPicker('1', 'Contact Birth Date', 'birthdate', '<%= @contact.birthdate %>'); document.getElementById('birthdate').focus();"></input>
+			</div>
+			<div data-role="fieldcontain">
+				<fieldset data-role="controlgroup" data-type="horizontal" data-theme="d">
+				<legend>Height:</legend>
+					<label for="select-choice-heightft" >Feet:</label>
+					<select name="contact[cssi_heightft]" id="select-choice-heightft" data-theme="d" >
+						<option value="">Feet</option>
+						<% Constants::HEIGHT_FEET.each do |height_feet| %>
+						<option <% if @contact.cssi_heightft == height_feet %> selected = "true" <% end %> value="<%=height_feet%>"><%=height_feet%></option>
+						<% end %>
+					</select>
+					<select name="contact[cssi_heightin]" id="select-choice-heightin" data-theme="d" >
+						<option value="">Inches</option>
+						<% Constants::HEIGHT_INCHES.each do |height_inches| %>
+						<option <% if @contact.cssi_heightin == height_inches %> selected = "true" <% end %>value="<%=height_inches%>"><%=height_inches%></option>
+						<% end %>
+					</select>			
+			</div>	
+			<div data-role="fieldcontain">
+				<label for="contact[cssi_weight]" class="fieldLabel">Weight:</label> 
+				<input type="number" name="contact[cssi_weight]" id="contact[cssi_weight]" data-theme="d" value="<%= @contact.cssi_weight %>" <%= placeholder( "Weight" ) %>>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="tobaccoSlider" class="fieldLabel">Tobacco:</label>
+				<select name="contact[cssi_usetobacco]" id="tobaccoSlider" data-theme="d" data-role="slider">
+					<option value="False" <% if @contact.cssi_usetobacco == "False" %> selected="selected" <% end %> >No</option>
+					<option value="True" <% if @contact.cssi_usetobacco == "True" %> selected="selected" <% end %>>Yes</option>						
+				</select>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="select-choice-familystatuscode" class="select">Marital Status:</label> 
+				<select name="contact[familystatuscode]" id="select-choice-familystatuscode" data-theme="d">
+					<option data-placeholder="true"></option>
+					<option <% if @contact.familystatuscode == "Single" %> selected="true" <% end %> value="Single">Single</option>
+					<option <% if @contact.familystatuscode == "Married" %> selected="true" <% end %>value="Married">Married</option>
+					<option <% if @contact.familystatuscode == "Divorced" %> selected="true" <% end %>value="Divorced">Divorced</option>
+					<option <% if @contact.familystatuscode == "Widowed" %> selected="true" <% end %>alue="Widowed">Widowed</option>
+				</select>
+			</div>
+			<div data-role="collapsible" data-collapsed="true" >
+				<h3>Home Address</h3>
+				<div data-role="fieldcontain">
+					<label for="contact[address1_line1]" class="fieldLabel">Address Line 1:</label> 
+					<input maxlength="200" type="text" name="contact[address1_line1]" id="contact[address1_line1]" data-theme="d" value="<%= @contact.address1_line1 %>" <%= placeholder( "Home Address Line 1" ) %>>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="contact[address1_line2]" class="fieldLabel">Address Line 2:</label>
+					<input maxlength="255" type="text" name="contact[address1_line2]" id="contact[address1_line2]"  data-theme="d" value="<%= @contact.address1_line2 %>" <%= placeholder( "Home Address Line 2" ) %>>
+
+				</div>
+				<div data-role="fieldcontain">
+					<label for="contact[address1_city]" class="fieldLabel">City:</label> 
+					<input maxlength="50" type="text" name="contact[address1_city]" id="contact[address1_city]" data-theme="d" value="<%= @contact.address1_city %>" <%= placeholder( "Home City" ) %>>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="contact[cssi_state1id]" class="select">State:</label> 
+					<select name="contact[cssi_state1id]" id="contact[cssi_state1id]" data-theme="d" id="select-choice-2">
+						<option value="">--</option>
+						<% Constants::STATE_CODES.each do |state_code| %>
+							<option value="<%=state_code[0]%>" <% if @contact.cssi_state1id == state_code[0] %> selected="selected" <% end %>>
+								<%=state_code[1]%>
+							</option>
+						<% end %>
+					</select>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="contact[address1_postalcode]" class="fieldLabel">ZIP:</label> 
+					<input maxlength="10" type="number" name="contact[address1_postalcode]" data-theme="d" id="contact[address1_postalcode]" value="<%= @contact.address1_postalcode %>" <%= placeholder( "Home ZIP" ) %>>
+				</div>
+			</div>
+			<div data-role="collapsible" data-collapsed="true" >
+				<h3>Business Address</h3>
+				<div data-role="fieldcontain">
+					<label for="contact[address2_line1]" class="fieldLabel">Address Line 1:</label>
+					<input maxlength="200" type="text" name="contact[address2_line1]" id="contact[address2_line1]" data-theme="d" value="<%= @contact.address2_line1 %>" <%= placeholder( "Business Address Line 1" ) %>>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="contact[address2_line2]" class="fieldLabel">Address Line 2:</label> 
+					<input maxlength="200" type="text" id="contact[address2_line2]" name="contact[address2_line2]" data-theme="d" value="<%= @contact.address2_line2 %>" <%= placeholder( "Business Address Line 2" ) %>>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="contact[address2_city]" class="fieldLabel">City:</label> 
+					<input maxlength="50" type="text" id="contact[address2_city]" name="contact[address2_city]" data-theme="d" value="<%= @contact.address2_city %>" <%= placeholder( "Business City" ) %>>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="contact[cssi_state2id]" class="select">State:</label> 
+					<select id="contact[cssi_state2id]" name="contact[cssi_state2id]"  data-theme="d">
+						<option value="">--</option>
+						<% Constants::STATE_CODES.each do |state_code| %>
+							<option value="<%=state_code[0]%>" <% if @contact.cssi_state2id == state_code[0] %> selected="selected" <% end %>>
+								<%=state_code[1]%>
+							</option>
+						<% end %>
+					</select>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="contact[address2_postalcode]" class="fieldLabel">ZIP:</label> 
+					<input maxlength="10" type="number" id="contact[address2_postalcode]" name="contact[address2_postalcode]"data-theme="d"  value="<%= @contact.address2_postalcode %>" <%= placeholder( "Business ZIP" ) %>>
+				</div>
+			</div>
+			<div data-theme="b">
+				<input type="submit" data-theme="b" data-direction="reverse" data-icon="false" value="Done"/>
+			</div>
+		</div>
+	</form>
+</div>
 

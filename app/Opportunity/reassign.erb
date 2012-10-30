@@ -7,18 +7,14 @@
     <div style="text-align: center;" class="ui-bar ui-bar-c">
         <%=@opportunity_title%><br/>
     </div>
-    <div data-role="content">
-        <div class="ui-body ui-body-d">
-            <div data-role="fieldcontain">
-                <div data-role="fieldcontain">
-                    <label for="reassign_to" class="fieldLabel">Reassign opportunity to agent:</label>
-                    <select name="reassign_to" id="reassign_to" data-role="none" class="ins-drop-down">
-                        <%=@reassign_agent_options%>
-                    </select>
-                </div>
-                <a id="reassign_btn" href="<%=@form_action%>" data-role="button" data-theme="b" data-rel="dialog">Reassign</a>
-            </div>
-        </div>
+    <div data-role="content" data-theme="b">
+          <div data-role="fieldcontain">
+                 <label for="reassign_to" class="select">Reassign opportunity to agent:</label>
+                 <select name="reassign_to" id="reassign_to" data-theme="d">
+                     <%=@reassign_agent_options%>
+                 </select>
+           </div>
+           <a id="reassign_btn" href="<%=@form_action%>" data-role="button" data-theme="b" data-rel="dialog">Reassign</a>
     </div>
     <script type='text/javascript'>
         $('#reassign_btn').click(function() {

@@ -1,7 +1,7 @@
 <% @login = true %>
-<div data-role="page" data-theme="c" id="jqm-home">
+<div data-role="page" data-theme="b" id="jqm-home">
 	<%= offline_bar%>
-    <div data-role="header" data-backbtn="false">
+    <div data-role="header" data-backbtn="false" data-theme="b">
         <h1><img src="/public/images/logo.png" alt="Login" /></h1>
     </div>
 
@@ -10,7 +10,7 @@
 		   <% if @msg %>
 		       <p style="color: red"><%= @msg %></p>
 		   <% end %>
-	       <ul data-role="listview" data-inset="true">
+	       <ul data-role="listview" data-inset="true" data-theme="d">
 	           <li>
 					<div data-role="fieldcontain" style="border: none">
 		       			<label for="login" style="display: inline">Login</label>

@@ -604,7 +604,7 @@ class OpportunityController < Rho::RhoController
       selected_agent = agents[0]['systemuserid'] if selected_agent.blank? && agents.length > 0
       @reassign_agent_options = agents.map {|agent|
         selected = (agent['systemuserid'] == selected_agent) ? 'selected="true"' : ''
-        "<option class=\"ui-btn-text\" #{selected} value=\"#{agent['systemuserid']}\">#{agent['fullname']}</option>"
+        "<option  #{selected} value=\"#{agent['systemuserid']}\">#{agent['fullname']}</option>"
       }.join("\n")
       render :action => :reassign, :back => 'callback:',
              :layout => 'layout_jquerymobile',

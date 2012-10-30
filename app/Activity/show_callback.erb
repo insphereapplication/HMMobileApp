@@ -5,8 +5,8 @@
 			<h3>Callback <%= sync_spinner %></h3>
 			<a data-icon="edit" href="<%=url_for(:action=>:edit, :id => @callback.object, :query => {:origin => @params['origin']})%>" data-direction="forward"> Edit </a>
 		</div>
-	<div data-role="content">
-		<ul data-role="listview" data-theme="c" data-inset="true">
+	<div data-role="content" data-theme="b">
+		<ul data-role="listview" data-theme="d" data-inset="true">
 			<li data-role="list-divider">Callback Detail</li>
 			<li>Callback Date and Time: <br/><%= "#{to_datetime(@callback.scheduledstart)}" %></li>
 			    <li>Priority: <%= @callback.prioritycode %>

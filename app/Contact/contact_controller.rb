@@ -132,9 +132,9 @@ class ContactController < Rho::RhoController
   
   def show_edit_do_not_call_icon(allow_call, company_dnc, phone_type, phone_number)
     if (allow_call == 'False' || company_dnc == 'True') && !phone_number.blank?
-      '<img src="/public/images/dncIcon.png" class="dncIcon" />'
+      '<img src="/public/images/dncIcon_black_smaller.png" style="vertical-align:bottom;" />'
     else
-      '<img src="/public/images/dncIcon.png" style="visibility:hidden;" id=' + phone_type + '_icon class="dncIcon"  />'
+      '<img id="' + phone_type + '" />'
     end
   end
   

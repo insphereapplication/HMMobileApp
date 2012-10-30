@@ -17,161 +17,180 @@
       </div>
 	</div>
 	<% end %>
-		<div data-role="content"> 
-			<% if ((@opportunity.statecode == "Won") || (@opportunity.statecode == "Lost"))%>
-			<a href="<%= url_for :action => :phone_dialog, :id => @opportunity.object, :query =>{:origin => @params['origin']}%>" rel="external" data-role="button">Call</a>
-			<% else %>
-			<div class="ui-grid-a"> 
-						<div class="ui-block-a"><a href="<%= url_for :action => :phone_dialog, :id => @opportunity.object, :query =>{:origin => @params['origin']}%>" rel="external" data-role="button">Call</a></div> 
-						<div class="ui-block-b"><a href="<%= url_for(:action => :status_update, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" rel="external" data-transition="none" data-role="button" data-icon="plus">Update</a></div> 
-			</div>
-		<a href="<%= url_for :action => :quick_quote, :id =>@opportunity.object, :query =>{:origin => @params['origin']} %>" rel="external" data-transition="none" data-role="button" >Term Life Quick Quote</a>
-			<% end %> 
-			<ul data-role="listview" data-theme="c" data-inset="true"> 
-				<li>
-					<% if @params['origin'] == "contact" %>
-						<h3><%= @contact.full_name %></h3>
-						<p><%= @contact.age_sex %></p> 
-						<p><%= @contact.city_summary %></p>
-					<% else %>
-						<a href="<%= url_for(:controller => :Contact, :action => :show, :id => @contact.object, :query =>{:opportunity => @opportunity.object, :origin => @params['origin']}) %>"><h3><%= @contact.full_name %></h3> 
-				
-						<p><%= @contact.age_sex %></p> 
-						<p><%= @contact.city_summary %></p> 
-						</a>
-					<% end %>
-				</li> 
-				
-				<%=
-			    	@opportunity.contact.map_phone_numbers{ |type,number,do_not_call,preferred|
-						href = do_not_call ? '#' : "#{url_for({:action => :call_number, :id => @opportunity.object, :query =>{:origin => @params['origin'], :phone_number => number}})}"
-						link = %Q{<a href="#{href}" rel="external">#{type}: #{number}</a>}
-						icons = generate_phone_number_icons(preferred, do_not_call)
-						%Q{
-							<li data-icon="false">
-								#{link}
-								#{icons}
-							</li>
-						}
-						}.join("\n")
-				
-				%>
-				
-				<% if @opportunity.contact.emailaddress1 %>
-				<li data-icon="false"><a href="mailto:<%= @contact.emailaddress1.to_s %>"><%= "Email: #{@contact.emailaddress1.to_s}" %></a></li>
-				<% end %>
-				
-				<li><p><strong> Status:	</strong> <%= @opportunity.statecode %> </p></li> 
-				<li><p><strong> Status Reason:	</strong> <%= @opportunity.statuscode %> </p></li> 
-				<li><p><strong> Status Detail:	</strong> <%= @opportunity.cssi_statusdetail %> </p></li> 
-				<li><p><strong> Source: 		</strong> <%= @opportunity.cssi_leadsourceid %> </li> 
-				<li><p><strong> LOB: 			</strong> <%= @opportunity.cssi_lineofbusiness %></li>
-				<li><p><strong> Lead Cost: 		</strong> <%= format_currency(@opportunity.cssi_leadcost) %></li>  
-				<li><p><strong> Created:		</strong> <%= to_datetime(@opportunity.createdon) %> </li> 
-				<li><p><strong> Last Activity:	</strong> <%= to_datetime(@opportunity.cssi_lastactivitydate) %> </li> 
-				<li><p><strong> Call Count: 	</strong> <%= @opportunity.phone_calls.size %> </li> 
-			</ul>	
-			<ul data-role="listview" data-filter="false" data-inset="true" data-theme="c">
-				<li data-role="list-divider">Notes</li>
-				<li data-icon="plus"><a class="UpdateStatus" href="<%= url_for(:action => :note_create, :id => @opportunity.object, :query =>{:test => "test", :origin => @params['origin']})%>" data-transition="slide">Add Note</a></li>
-				<% @notes.each do |note| %>
-				<li>
-					<a href="<%= url_for(:controller => :Note, :action => :show, :id => note.object, :query => {:origin => @params['origin']}) %>"> 
-					<br/><p style="white-space: nowrap;"><strong><%= "#{to_datetime(note.createdon)}" %></strong> - <%= note.notetext %></p>
-					</a>
-				</li>
-				<% end %>
-				<% if @opportunity.notes.size == 0 %>
-					<li><div style="text-align:center"><i> (No Notes) </i></div></li>
-				<% end %>
-			</ul>
-		
-			<ul data-role="none" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-inset="true" data-filter="false" data-role="none" role="listbox">
-				<li class="ui-li ui-li-divider ui-bn- ui-bar-b ui-corner-top ui-btn-up-undefined" tabindex="0"> Scheduled Appointments</li>
-				
-				<% @opportunity.incomplete_appointments.each do |appointment| %>
-				
-				<li class="ui-btn ui-btn-icon-right ui-li ui-corner-bottom ui-btn-up-c" data-icon="none" role="option" tabindex="-1" data-theme="c">
-					<div class="ui-btn-inner">
-						<div class="ui-btn-text">
-							<a class="ui-link-inherit" href="<%= url_for(:controller => :Activity, :action => :show_appt, :id => appointment.object, :query => {:origin => @params['origin']}) %>" style="background: none repeat scroll 0% 0% transparent;">
-								<br/>
-								<p class="ui-li-desc"><b><%= "#{to_datetime(appointment.scheduledstart)} - #{to_endtime(appointment.scheduledend)}" %></b></p>
-								<p class="ui-li-desc"> <%= appointment.location %> </p>
-								<p class="ui-li-desc"> <%= appointment.description %> </p>
-							</a>
-						</div>
-					</div>
-					<% if appointment.location.blank? %>
-						<% if System::get_property('platform') == 'APPLE'%>
-							<a onclick="hideSpin();" href=<%="maps:q="%>>
-								<img class="appt-icon" src="/public/images/map_icon.png">
-							</a>
-						<%else%>			
-							<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q="%>>
-								<img class="appt-icon" src="/public/images/map_icon.png">
-							</a>
-						<%end%>
-					<% else %>
-						<% if System::get_property('platform') == 'APPLE'%>
-							<a onclick="hideSpin();" href=<%="maps:q=#{Rho::RhoSupport.url_encode(appointment.location)}"%>>
-								<img class="appt-icon" src="/public/images/map_icon.png">
-							</a>
-						<%else%>			
-							<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(appointment.location)}"%>>
-								<img class="appt-icon" src="/public/images/map_icon.png">
-							</a>
-						<%end%>
-					<% end %>
-				</li>
-					<% end %>
-					<% if @opportunity.incomplete_appointments.size == 0 %>
-					<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom" role="option" tabindex="0">
-					<div style="text-align: center;">
-					<i> (No Scheduled Appointments) </i>
-					</div></li>
-					<% end %>					
-			</ul>
-			
-			<ul data-role="none" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-inset="true" data-filter="false" data-role="none" role="listbox">
-				<li class="ui-li ui-li-divider ui-bn- ui-bar-b ui-corner-top ui-btn-up-undefined" tabindex="0"> Scheduled Callbacks</li>
-				
-				<% @opportunity.open_phone_calls.each do |phonecall| %>
-				
-				<li class="ui-btn ui-btn-icon-right ui-li ui-corner-bottom ui-btn-up-c" data-icon="none" role="option" tabindex="-1" data-theme="c">
-					<div class="ui-btn-inner">
-						<div class="ui-btn-text">
-							<a class="ui-link-inherit" href="<%= url_for(:controller => :Activity, :action => :show_callback, :id => phonecall.object, :query => {:origin => @params['origin']}) %>">
-								<br/>
-								<p class="ui-li-desc"><b><%= "#{to_datetime(phonecall.scheduledstart)}" %></b></p>
-								<p class="ui-li-desc"> <%= phonecall.phonenumber %> </p>
-							</a>
-						</div>
-					</div>
-					<% if phonecall.phonenumber.blank? %>
-						<a onclick="hideSpin()" rel="external" href="<%= url_for :action => :phone_dialog, :id=> @opportunity.object, :query =>{:opportunity => @opportunity.object, :origin => @params['origin']}%>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
-							<img class="call-icon" src="/public/images/phone_black.png">
-						</a>
-					<% else %>
-						<a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub(/[^0-9]/, "") %>">
-							<img class="call-icon" src="/public/images/phone_black.png">
-						</a>
-					<% end %>
-				</li>
-				<% end %>
-				
-				<% if @opportunity.open_phone_calls.size == 0 %>
-					<li class="ui-li ui-li-static ui-btn-up-c ui-corner-bottom" role="option" tabindex="0">
-					<div style="text-align: center;">
-					<i> (No Scheduled Callbacks) </i>
-					</div></li>
-				<% end %>				
-			</ul>
-			
-			<a href="<%= url_for(:action => :activity_summary, :id => @opportunity.object, :query => {:origin => @params['origin']}) %>" data-role="button" data-icon="arrow-r" rel="external" data-iconpos="right">Activity Summary</a> 
-
-                        <% if StaticEntity.reassign_flag? && StaticEntity.get_agents.length > 0 && !@opportunity.closed? %>
-                            <a href="<%= url_for(:action => :reassign, :id => @opportunity.object, :query => {:origin => @params['origin']}) %>" data-role="button" data-icon="gear" rel="external" data-iconpos="right" data-theme="a">Reassign Opportunity</a>
-                        <% end %>
+	<div data-role="content" data-theme="b"> 
+		<% if ((@opportunity.statecode == "Won") || (@opportunity.statecode == "Lost"))%>
+		<a href="<%= url_for :action => :phone_dialog, :id => @opportunity.object, :query =>{:origin => @params['origin']}%>" rel="external" data-role="button">Call</a>
+		<% else %>
+		<div class="ui-grid-a"> 
+					<div class="ui-block-a"><a href="<%= url_for :action => :phone_dialog, :id => @opportunity.object, :query =>{:origin => @params['origin']}%>" rel="external" data-role="button">Call</a></div> 
+					<div class="ui-block-b"><a href="<%= url_for(:action => :status_update, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" rel="external" data-transition="none" data-role="button" data-icon="plus">Update</a></div> 
 		</div>
+	<a href="<%= url_for :action => :quick_quote, :id =>@opportunity.object, :query =>{:origin => @params['origin']} %>" rel="external" data-transition="none" data-role="button" >Term Life Quick Quote</a>
+		<% end %> 
+		<ul data-role="listview" data-theme="d" data-inset="true"> 
+			<li>
+				<% if @params['origin'] == "contact" %>
+					<h3><%= @contact.full_name %></h3>
+					<p><%= @contact.age_sex %></p> 
+					<p><%= @contact.city_summary %></p>
+				<% else %>
+					<a href="<%= url_for(:controller => :Contact, :action => :show, :id => @contact.object, :query =>{:opportunity => @opportunity.object, :origin => @params['origin']}) %>"><h3><%= @contact.full_name %></h3> 
+			
+					<p><%= @contact.age_sex %></p> 
+					<p><%= @contact.city_summary %></p> 
+					</a>
+				<% end %>
+			</li> 
+			
+			<%=
+		    	@opportunity.contact.map_phone_numbers{ |type,number,do_not_call,preferred|
+					href = do_not_call ? '#' : "#{url_for({:action => :call_number, :id => @opportunity.object, :query =>{:origin => @params['origin'], :phone_number => number}})}"
+					link = %Q{<a href="#{href}" rel="external">#{type}: #{number}}
+					icons = generate_phone_number_icons(preferred, do_not_call)
+					%Q{
+						<li data-icon="false">
+							#{link}
+							#{icons}
+							</a>
+						</li>
+					}
+					}.join("\n")
+			
+			%>
+			
+			<% if @opportunity.contact.emailaddress1 %>
+			<li data-icon="false"><a href="mailto:<%= @contact.emailaddress1.to_s %>"><%= "Email: #{@contact.emailaddress1.to_s}" %></a></li>
+			<% end %>
+			
+			<li><p><strong> Status:	</strong> <%= @opportunity.statecode %> </p></li> 
+			<li><p><strong> Status Reason:	</strong> <%= @opportunity.statuscode %> </p></li> 
+			<li><p><strong> Status Detail:	</strong> <%= @opportunity.cssi_statusdetail %> </p></li> 
+			<li><p><strong> Source: 		</strong> <%= @opportunity.cssi_leadsourceid %> </li> 
+			<li><p><strong> LOB: 			</strong> <%= @opportunity.cssi_lineofbusiness %></li>
+			<li><p><strong> Lead Cost: 		</strong> <%= format_currency(@opportunity.cssi_leadcost) %></li>  
+			<li><p><strong> Created:		</strong> <%= to_datetime(@opportunity.createdon) %> </li> 
+			<li><p><strong> Last Activity:	</strong> <%= to_datetime(@opportunity.cssi_lastactivitydate) %> </li> 
+			<li><p><strong> Call Count: 	</strong> <%= @opportunity.phone_calls.size %> </li> 
+		</ul>	
+		<ul data-role="listview" data-filter="false" data-inset="true" data-theme="d">
+			<li data-role="list-divider">Notes</li>
+			<li data-icon="plus"><a class="UpdateStatus" href="<%= url_for(:action => :note_create, :id => @opportunity.object, :query =>{:test => "test", :origin => @params['origin']})%>" data-transition="slide">Add Note</a></li>
+			<% @notes.each do |note| %>
+			<li>
+				<a href="<%= url_for(:controller => :Note, :action => :show, :id => note.object, :query => {:origin => @params['origin']}) %>"> 
+				<br/><p style="white-space: nowrap;"><strong><%= "#{to_datetime(note.createdon)}" %></strong> - <%= note.notetext %></p>
+				</a>
+			</li>
+			<% end %>
+			<% if @opportunity.notes.size == 0 %>
+				<li><div style="text-align:center"><i> (No Notes) </i></div></li>
+			<% end %>
+		</ul>
+	
+		<ul data-role="listview" data-filter="false" data-inset="true" data-theme="d">
+			<li data-role="list-divider"> Scheduled Appointments</li>
+			
+			<% @opportunity.incomplete_appointments.each do |appointment| %>
+			
+			<li class="ui-btn ui-btn-icon-right ui-li ui-corner-bottom ui-btn-up-c" data-icon="none" role="option" tabindex="-1" data-theme="d">
+				<div class="ui-btn-inner">
+					<div class="ui-btn-text">
+						<a class="ui-link-inherit" href="<%= url_for(:controller => :Activity, :action => :show_appt, :id => appointment.object, :query => {:origin => @params['origin']}) %>" style="background: none repeat scroll 0% 0% transparent;">
+							<br/>
+							<p class="ui-li-desc"><b><%= "#{to_datetime(appointment.scheduledstart)} - #{to_endtime(appointment.scheduledend)}" %></b></p>
+							<p class="ui-li-desc"> <%= appointment.location %> </p>
+							<p class="ui-li-desc"> <%= appointment.description %> </p>
+						</a>
+					</div>
+				</div>
+				<% if appointment.location.blank? %>
+					<% if System::get_property('platform') == 'APPLE'%>
+						<a onclick="hideSpin();" href=<%="maps:q="%>>
+							<img class="appt-icon" src="/public/images/map_icon.png">
+						</a>
+					<%else%>			
+						<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q="%>>
+							<img class="appt-icon" src="/public/images/map_icon.png">
+						</a>
+					<%end%>
+				<% else %>
+					<% if System::get_property('platform') == 'APPLE'%>
+						<a onclick="hideSpin();" href=<%="maps:q=#{Rho::RhoSupport.url_encode(appointment.location)}"%>>
+							<img class="appt-icon" src="/public/images/map_icon.png">
+						</a>
+					<%else%>			
+						<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(appointment.location)}"%>>
+							<img class="appt-icon" src="/public/images/map_icon.png">
+						</a>
+					<%end%>
+				<% end %>
+			</li>
+				<% end %>
+				<% if @opportunity.incomplete_appointments.size == 0 %>
+				<li>
+					<div style="text-align: center;">
+						<i> (No Scheduled Appointments) </i>
+					</div>
+				</li>
+				<% end %>					
+		</ul>
+		
+		<ul data-inset="true" data-filter="false" data-role="listview"  data-theme="d" data-icon"none">
+			<li data-role="list-divider"> Scheduled Callbacks</li>
+			
+			<!-- <% @opportunity.open_phone_calls.each do |phonecall| %>
+			
+			<li class="ui-btn ui-btn-icon-right ui-li ui-corner-bottom ui-btn-up-c" data-icon="none" role="option" tabindex="-1" data-theme="d">
+				<div class="ui-btn-inner">
+					<div class="ui-btn-text">
+						<a class="ui-link-inherit" href="<%= url_for(:controller => :Activity, :action => :show_callback, :id => phonecall.object, :query => {:origin => @params['origin']}) %>">
+							<br/>
+							<p class="ui-li-desc"><b><%= "#{to_datetime(phonecall.scheduledstart)}" %></b></p>
+							<p class="ui-li-desc"> <%= phonecall.phonenumber %> </p>
+						</a>
+					</div>
+				</div>
+				<% if phonecall.phonenumber.blank? %>
+					<a onclick="hideSpin()" rel="external" href="<%= url_for :action => :phone_dialog, :id=> @opportunity.object, :query =>{:opportunity => @opportunity.object, :origin => @params['origin']}%>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
+						<img class="call-icon" src="/public/images/phone_black.png">
+					</a>
+				<% else %>
+					<a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub(/[^0-9]/, "") %>">
+						<img class="call-icon" src="/public/images/phone_black.png">
+					</a>
+				<% end %>
+			</li>
+			<% end %> -->
+			
+			<% @opportunity.open_phone_calls.each do |phonecall| %>
+				<li><a href="<%= url_for(:controller => :Activity, :action => :show_callback, :id => phonecall.object, :query => {:origin => @params['origin']}) %>" >
+						<p class="ui-li-desc"><b><%= "#{to_datetime(phonecall.scheduledstart)}" %></b></p>
+						<p class="ui-li-desc"> <%= phonecall.phonenumber %> </p>
+						
+						</a>
+						<% if phonecall.phonenumber.blank? %>
+							<a onclick="hideSpin()" rel="external" href="<%= url_for :action => :phone_dialog, :id=> @opportunity.object, :query =>{:opportunity => @opportunity.object, :origin => @params['origin']}%>" data-img="/public/images/phone_black.png"></a>
+						<% else %>
+							 <!-- <a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub(/[^0-9]/, "") %>" data-icon="insphere-phone" data-theme="d"></a>  -->
+							<a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub(/[^0-9]/, "") %>" data-img="/public/images/phone_black.png"></a>
+						<% end %>
+					
+				</li>
+			<% end %> 
+			
+			<% if @opportunity.open_phone_calls.size == 0 %>
+				<li>
+					<div style="text-align: center;">
+						<i> (No Scheduled Callbacks) </i>
+					</div>
+				</li>
+			<% end %>				
+		</ul>
+		
+		<a href="<%= url_for(:action => :activity_summary, :id => @opportunity.object, :query => {:origin => @params['origin']}) %>" data-role="button" data-icon="arrow-r" rel="external" data-iconpos="right">Activity Summary</a> 
+
+                       <% if StaticEntity.reassign_flag? && StaticEntity.get_agents.length > 0 && !@opportunity.closed? %>
+                           <a href="<%= url_for(:action => :reassign, :id => @opportunity.object, :query => {:origin => @params['origin']}) %>" data-role="button" data-icon="gear" rel="external" data-iconpos="right" data-theme="a">Reassign Opportunity</a>
+                       <% end %>
+	</div>
 </div>

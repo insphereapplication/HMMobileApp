@@ -9,61 +9,56 @@ popupDateTimeAJPicker('0', 'Appointment Time', 'appointment_datetime');
 document.getElementById('appointment_datetime').focus();
 }
 </script>
-	<div data-role="page" data-theme="b" id="appointment_add_page">
-		<%= offline_bar%>
-		<div data-role="header" data-theme="b" data-position="inline">
-			<a href="<%=url_for(:action=>:show, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
-			<h1>Appointment <%= sync_spinner %></h1>
-		</div>
-		<div id="contentDiv" data-role="content">
-			<div style="text-align:center" class="ui-bar ui-bar-c"> 
-				<%= "#{@opportunity.contact.full_name} - #{to_date(@opportunity.createdon)}" %>
-			</div>
-			<div class="ui-body ui-body-d">
-				<form id="appointment_form" name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_appointment_set, :query => {:origin => @params['origin'], :appointments => @params['appointments']} %>">
-					<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
-					<input type="hidden" id="cssi_location" name="cssi_location" />
-					<input type="hidden" id="appointment_location" name="appointment_location" />
-					
-					<div data-role="fieldcontain">
-						<div data-role="fieldcontain">
-							<label for="appointment_datetime" class="fieldLabel">Appointment Start:<font color="red"> *</font></label>
-							<input id="appointment_datetime" type="text" class="required" name="appointment_datetime" readonly value="<%= $choosed['0'] %>"  onClick="PickDateAppointmentChangeFocus();"></input>
-						</div>
-						<div data-role="fieldcontain">
-							<label for="appointment_duration" class="fieldLabel">Duration:</label>
-							<select name="appointment_duration" id="appointment_duration"  class="select">
-								<option value="90.0">1.5 Hours</option>
-								<option value="30.0">30 Minutes</option>
-								<option value="60.0">1 Hour</option>
-								<option value="120.0">2 Hours</option>
-								<option value="180.0">3 Hours</option>
-								<option value="240.0">4 Hours</option>
-							</select>
-						</div>
-						<div data-role="fieldcontain">
-							<label for="select_location" class="fieldLabel">Location:</label>
-				            <select name="select_location" id="select_location" onchange='updateAddress();' class="select">
-								<% @opportunity.contact.addresses.each do |type, address| %>
-									<option value="<%= address %>"><%= type %></option>
-								<% end %>
-									<option value=" ">Ad Hoc</option>
-							</select><br />
-						</div>
-						<div data-role="fieldcontain">
-							<label for="location" class="fieldLabel">Address:</label>
-				            <input maxlength="200" type="text" id="location" name="location" value="" onkeypress="if(event.keyCode==13){return false;}" /><br />
-						</div>
-						<div data-role="fieldcontain">
-							<label for="description">Description:</label>
-							<textarea cols="40" rows="8" name="description" id="notetext"></textarea>
-						</div>
-						<div data-role="fieldcontain" data-theme="b">
-							<input type="submit" class="standardButton" onclick="getLocationType(); enableLocation();" value="Create Appointment" data-theme="b"/>
-						</div>    
-					</div>
-				</form>
-			</div>
-		</div>
-
+<div data-role="page" data-theme="b" id="appointment_add_page">
+	<%= offline_bar%>
+	<div data-role="header" data-theme="b" data-position="inline">
+		<a href="<%=url_for(:action=>:show, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Cancel</a>
+		<h1>Appointment <%= sync_spinner %></h1>
 	</div>
+	<div id="contentDiv" data-role="content">
+		<div style="text-align:center" class="ui-bar"> 
+			<h1><%= "#{@opportunity.contact.full_name} - #{to_date(@opportunity.createdon)}" %></h1>
+		</div>
+		<hr/>
+		<form id="appointment_form" name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_appointment_set, :query => {:origin => @params['origin'], :appointments => @params['appointments']} %>">
+			<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
+			<input type="hidden" id="cssi_location" name="cssi_location" />
+			<input type="hidden" id="appointment_location" name="appointment_location" />		
+			<div data-role="fieldcontain">
+				<label for="appointment_datetime" class="fieldLabel">Appointment Start:<font color="red"> *</font></label>
+				<input id="appointment_datetime" type="text" class="required" name="appointment_datetime" data-theme="d" readonly value="<%= $choosed['0'] %>"  onClick="PickDateAppointmentChangeFocus();"></input>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="appointment_duration" class="select">Duration:</label>
+				<select name="appointment_duration" id="appointment_duration"  data-theme="d">
+					<option value="90.0">1.5 Hours</option>
+					<option value="30.0">30 Minutes</option>
+					<option value="60.0">1 Hour</option>
+					<option value="120.0">2 Hours</option>
+					<option value="180.0">3 Hours</option>
+					<option value="240.0">4 Hours</option>
+				</select>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="select_location" class="select">Location:</label>
+	            <select name="select_location" id="select_location" onchange='updateAddress();' data-theme="d">
+					<% @opportunity.contact.addresses.each do |type, address| %>
+						<option value="<%= address %>"><%= type %></option>
+					<% end %>
+						<option value=" ">Ad Hoc</option>
+				</select><br />
+			</div>
+			<div data-role="fieldcontain">
+				<label for="location" class="fieldLabel">Address:</label>
+	            <input maxlength="200" type="text" id="location" name="location" data-theme="d" value="" onkeypress="if(event.keyCode==13){return false;}" />
+			</div>
+			<div data-role="fieldcontain">
+				<label for="description">Description:</label>
+				<textarea cols="40" rows="8" name="description" data-theme="d"id="notetext"></textarea>
+			</div>
+			<div data-role="fieldcontain" data-theme="b">
+				<input type="submit" class="standardButton" onclick="getLocationType(); enableLocation();" value="Create Appointment" data-theme="b"/>
+			</div>    
+		</form>
+	</div>
+</div>

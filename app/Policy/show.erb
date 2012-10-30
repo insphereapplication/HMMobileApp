@@ -1,6 +1,6 @@
 <div data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar %>
-		<div data-role="header" data-backbtn="false">
+		<div data-role="header" data-backbtn="false" data-theme="b">
 			<% if @params['origin'] == 'activity'%>
 					<a href="<%= url_for(:controller => :Activity, :action => :show, :id => @params['activity'], :query =>{:origin => @params['origin'], :opportunity => @params['opportunity']}) %>" data-direction="reverse" data-icon="back">Activity</a>
 			<% else %>
@@ -9,14 +9,14 @@
 			<h3>Policy Detail <%= sync_spinner %></h3>
 		</div>
 	<div data-role="content">
-		<ul data-role="listview" data-theme="d" data-inset="true">
+		<ul data-role="listview" data-theme="c" data-inset="true">
 			<li data-role="list-divider">General Information</li>
 			<li>Carrier: <%= @policy.carrier_name %></li>
 			<li>Product: <%= @policy.product_name %></li>
 			<li>Primary Insured: <%= @policy.cssi_primaryinsured %></li>
 		</ul>
 				
-		<ul data-role="listview" data-theme="d" data-inset="true">		
+		<ul data-role="listview" data-theme="c" data-inset="true">		
 			<li data-role="list-divider">Status Information</li>
 			<li>Policy Status: <%= @policy.statuscode %></li>
 			<li>Status Reason: <%= @policy.cssi_statusreason %></li>
@@ -24,14 +24,14 @@
 			<li>Decision Classification: <%= @policy.cssi_decisionclassification %></li>
 		</ul>
 		
-		<ul data-role="listview" data-theme="d" data-inset="true">	
+		<ul data-role="listview" data-theme="c" data-inset="true">	
 			<li data-role="list-divider">Application Information</li>
 			<li>Application Number: <%= @policy.cssi_applicationnumber %></li>
 			<li>Submitted Date: <%= to_date(@policy.cssi_submitteddate) %></li>
 			<li>Application Date: <%= to_date(@policy.cssi_applicationdate) %></li>
 		</ul>
 			
-		<ul data-role="listview" data-theme="d" data-inset="true">
+		<ul data-role="listview" data-theme="c" data-inset="true">
 			<li data-role="list-divider">Policy Information</li>
 			<li>Policy Number: <%= @policy.cssi_policynumber %></li>
 			<li>Effective Date: <%= to_date(@policy.cssi_effectivedate) %></li>
