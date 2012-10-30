@@ -30,10 +30,11 @@ class ContactController < Rho::RhoController
     @secondBtnText = 'Search AC'
     @secondBtnIcon = ''
     @secondBtnUrl = url_for :action=>:search, :controller => 'SearchContacts', :query => {:origin => 'contact'}
-    @scriptName = 'contacts';
-    @pageSize = 25;
-    @items = Contact.get_filtered_contacts(0, 'all', @persisted_search_terms, 25)
-    @itemTemplate = 'contact'
+    @scriptName = 'contacts'
+    @pageSize = 10
+    @pageNum = 0
+    @lookAheadPages = 2
+    @url = '/app/Contact/get_jqm_contacts_page'
     render :action => :filter, :back => 'callback:', :layout => 'layout_jqm_list'
   end
   def gen_jqm_options(options, selected_value)

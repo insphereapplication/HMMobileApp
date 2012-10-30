@@ -1,11 +1,15 @@
-function ScrollView(page, pageSize) {
+function ScrollView(page, url, pageNum, pageSize, lookAheadPages) {
     var $page = $(page),
         $filter = $page.find(".scrollable-list-filter"),
         $filterTxt = $filter.find(".scrollable-list-filter-txt"),
         $scroll = $page.find(".iscroll-wrapper"),
         $list = $scroll.find("ul.ui-listview"),
         scroll = $scroll.jqmData("iscrollview"),
-        currentPage = 0;
+        topPage = pageNum - lookAheadPages,
+        lastPageNum = lookAheadPages + 2,
+        pageCount = lastPageNum + lookAheadPages,
+        lastPageIndex = pageCount - 1,
+        pages = [];
 
     function adjustScrollView() {
         scroll.resizeWrapper();
@@ -27,36 +31,100 @@ function ScrollView(page, pageSize) {
         
     });
 
+    function getContent(pageNum, pageSize, fnc) {
+        $.ajax({
+            url: url,
+            data: { page: pageNum, pageSize: pageSize },
+            success: function(data) {
+                var rows = data.split("<li");
+                fnc((rows.length > 1) ? rows.slice(1, pageSize) : []);
+            }
+        });
+    }
+
     $scroll.bind({
         iscroll_onpulldown: function() {
-            currentPage--;
-            if (currentPage < 0)
-                currentPage = 0;
-            var newContent = getContent(currentPage, pageSize);
-            if (newContent) {
-                //$list.prepend(newContent).listview("refresh");
-                $list.empty().append(newContent).listview("refresh");
-                scroll.refresh();
-            }
-        },
-        iscroll_onpullup: function() {
-            currentPage++;
-            var newContent = getContent(currentPage, pageSize);
-            if (newContent) {
-                //$list.append(newContent).listview("refresh");
-                $list.empty().append(newContent).listview("refresh");
-                scroll.refresh(null, null, function() {
-                    // scroll.scrollToElement($list.find("li:last-child")[0], 400);
-                    scroll.scrollToElement($list.find("li:first-child")[0], 400);
+            if (topPage + lookAheadPages > 0) {
+                updateListPages();
+                for (var i = pageCount - 2; i >= 0; i--)
+                    pages[i + 1] = pages[i];
+                pages[0] = [];
+                topPage--;
+                getContent(topPage, pageSize, function(data) {
+                    pages[0] = data;
                 });
+                showPages(true);
             }
             else
-                // reset current page to previous value because no more data
-                currentPage--;
+                scroll.refresh();
+        },
+        iscroll_onpullup: function() {
+            if (pages[lookAheadPages + 2].length > 0) {
+                updateListPages();
+                for (var i = 1; i < pageCount; i++)
+                    pages[i - 1] = pages[i];
+                pages[lastPageIndex] = [];
+                topPage++;
+                getContent(topPage + lastPageIndex, pageSize, function(data) {
+                    pages[lastPageIndex] = data;
+                });
+                showPages(true);
+            }
+            else
+                scroll.refresh();
         }
     });
 
     $list.listview({
         autodividersSelector: autodividersSelector
+    });
+
+    function updateListPages() {
+        var content = $list.html().split("<li");
+        var length = content.length;
+        if (length > 1) {
+            content = content.splice(1, length);
+            pages[lookAheadPages] = content.splice(0, pageSize);
+            if (content.length > 0)
+                pages[lookAheadPages + 1] = content;
+        }
+    }
+
+    function showPages(isScroll) {
+        var content = "";
+        var halfPage = pages[lookAheadPages];
+        var middleIndex = halfPage.length;
+        if (middleIndex > 0) {
+            content = "<li" + halfPage.join("<li");
+            halfPage = pages[lookAheadPages + 1];
+            if (halfPage.length > 0)
+                content += "<li" + halfPage.join("<li");
+        }
+        $list.empty().append(content).listview("refresh");
+        scroll.refresh(null, null, function() {
+            if (isScroll && middleIndex >= pageSize) {
+                var item = $list.find("li").eq(middleIndex - 1);
+                if (item.length > 0)
+                    scroll.scrollToElement(item[0], true, 0);
+            }
+        });
+    }
+
+    // initial data load
+    var rowCount = pageSize * lastPageNum;
+    if (topPage >= 0)
+        rowCount += pageSize * (topPage + 1);
+    getContent((topPage >= 0) ? topPage : 0, rowCount, function(data) {
+        var currPage = topPage;
+        while (data.length > 0) {
+            var pageRows = (currPage < 0) ? [] : data.splice(0, pageSize);
+            pages.push(pageRows);
+            currPage++;
+        }
+        while (currPage < lastPageNum) {
+            pages.push([]);
+            currPage++;
+        }
+        showPages(false);
     });
 }
