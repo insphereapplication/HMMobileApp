@@ -53,7 +53,7 @@ function ScrollView(page, url, pageNum, pageSize, lookAheadPages) {
                 getContent(topPage, pageSize, function(data) {
                     pages[0] = data;
                 });
-                showPages(true);
+                showPages(false);
             }
             else
                 scroll.refresh();
@@ -90,7 +90,7 @@ function ScrollView(page, url, pageNum, pageSize, lookAheadPages) {
         }
     }
 
-    function showPages(isScroll) {
+    function showPages(isUp) {
         var content = "";
         var halfPage = pages[lookAheadPages];
         var middleIndex = halfPage.length;
@@ -102,8 +102,9 @@ function ScrollView(page, url, pageNum, pageSize, lookAheadPages) {
         }
         $list.empty().append(content).listview("refresh");
         scroll.refresh(null, null, function() {
-            if (isScroll && middleIndex >= pageSize) {
-                var item = $list.find("li").eq(middleIndex - 1);
+            if (typeof(isUp) !== "undefined" && middleIndex >= pageSize) {
+                var index = isUp ? middleIndex - 5 : middleIndex - 1;
+                var item = $list.find("li").eq(index);
                 if (item.length > 0)
                     scroll.scrollToElement(item[0], true, 0);
             }
@@ -125,6 +126,6 @@ function ScrollView(page, url, pageNum, pageSize, lookAheadPages) {
             pages.push([]);
             currPage++;
         }
-        showPages(false);
+        showPages();
     });
 }
