@@ -1,3 +1,56 @@
+/* speed-up JQueryMobile list views */
+@media all {
+    .iscroll-content li {
+        -webkit-transform: translateZ(0);
+    }
+}
+
+.iscroll-content .ui-listview li.ui-btn-up-b {
+    background-image: none;
+    text-shadow: none;
+}
+
+.iscroll-content .ui-listview li.ui-btn-hover-b {
+    background-image: none;
+    text-shadow: none;
+}
+
+.iscroll-content .ui-listview li.ui-btn-down-b {
+    background-image: none;
+    text-shadow: none;
+}
+
+.iscroll-content .ui-listview li.ui-btn-up-c {
+    background-image: none;
+    text-shadow: none;
+}
+
+.iscroll-content .ui-listview li.ui-btn-hover-c {
+    background-image: none;
+    text-shadow: none;
+}
+
+.iscroll-content .ui-listview li.ui-btn-down-c {
+    background-image: none;
+    text-shadow: none;
+}
+
+.iscroll-content .ui-listview li.ui-btn-up-d {
+    background-image: none;
+    text-shadow: none;
+}
+
+.iscroll-content .ui-listview li.ui-btn-hover-d {
+    background-image: none;
+    text-shadow: none;
+}
+
+.iscroll-content .ui-listview li.ui-btn-down-d {
+    background-image: none;
+    text-shadow: none;
+} 
+
+/* custom styles */
 .ui-offline-bar {
     background: #CC0000;
     color: #fff;
