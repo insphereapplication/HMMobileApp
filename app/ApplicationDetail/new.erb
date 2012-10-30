@@ -12,56 +12,45 @@ document.getElementById('submit_button').focus();
 			<h1>Add App Details <%= sync_spinner %></h1>
 			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done" class="ui-btn-right"/>
 		</div>
-		<div id="contentDiv" data-role="content">
+		<div id="contentDiv" data-role="content" data-theme="b">
 			<input type="hidden" name="appdetail[opportunity_id]" value="<%= @opportunity.object %>"/>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="cssi_carrierid" class="select">Carrier:<font color="red">&nbsp;&nbsp;*</font></label>
-					<div>
-						<select id="cssi_carrierid" name="appdetail[cssi_carrierid]" >
-							<option value="" selected="true"></option>
-								<% StaticEntity.get_carrier_names.each do |carrier_name| %>
-									<option value="<%=carrier_name%>">
-										<%=carrier_name%>
-									</option>
-								<% end %>
-						</select>
-					</div>
+				<label for="cssi_carrierid" class="select">Carrier:<font color="red">&nbsp;&nbsp;*</font></label>
+				<div>
+					<select id="cssi_carrierid" name="appdetail[cssi_carrierid]" data-theme="d">
+						<option value="" selected="true"></option>
+							<% StaticEntity.get_carrier_names.each do |carrier_name| %>
+								<option value="<%=carrier_name%>">
+									<%=carrier_name%>
+								</option>
+							<% end %>
+					</select>
 				</div>
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-	        		<label for="cssi_lineofbusinessid" class="select">LOB:<font color="red">&nbsp;&nbsp;*</font></label>
-					<div>
-						<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]">
-							<option value="" selected="true"></option>
-								<% StaticEntity.get_lob_names.each do |lob_name| %>
-									<option value="<%=lob_name%>">
-										<%=lob_name%>
-									</option>
-								<% end %>
-						</select>
-					</div>
+        		<label for="cssi_lineofbusinessid" class="select">LOB:<font color="red">&nbsp;&nbsp;*</font></label>
+				<div>
+					<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]" data-theme="d">
+						<option value="" selected="true"></option>
+							<% StaticEntity.get_lob_names.each do |lob_name| %>
+								<option value="<%=lob_name%>">
+									<%=lob_name%>
+								</option>
+							<% end %>
+					</select>
 				</div>
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="appdetail[cssi_applicationssubmitted]" class="fieldLabel">Apps Submitted:<font color="red">&nbsp;&nbsp;*</font></label>
-					<input id="appdetail[cssi_applicationssubmitted]" name="appdetail[cssi_applicationssubmitted]" class="required" type="number" maxlength="5" name="appsub" value="1"/>
-
-				</div>
+				<label for="appdetail[cssi_applicationssubmitted]" class="fieldLabel">Apps Submitted:<font color="red">&nbsp;&nbsp;*</font></label>
+				<input id="appdetail[cssi_applicationssubmitted]" name="appdetail[cssi_applicationssubmitted]" data-theme="d" class="required" type="number" maxlength="5" name="appsub" value="1"/>
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="appdetail[cssi_avforapplicationsubmitted]" class="fieldLabel">Total AV:<font color="red">&nbsp;&nbsp;*</font></label>
-					<input id="appdetail[cssi_avforapplicationsubmitted]" name="appdetail[cssi_avforapplicationsubmitted]" class="required" type="number" min="0" name="totalav" />					
-				</div>
+				<label for="appdetail[cssi_avforapplicationsubmitted]" class="fieldLabel">Total AV:<font color="red">&nbsp;&nbsp;*</font></label>
+				<input id="appdetail[cssi_avforapplicationsubmitted]" name="appdetail[cssi_avforapplicationsubmitted]" data-theme="d" class="required" type="number" min="0" name="totalav" />					
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="cssi_applicationdate" class="fieldLabel">Application Date:<font color="red">&nbsp;&nbsp;*</font></label>
-					<input id="cssi_applicationdate" type="text" name="cssi_applicationdate" readonly value="<%= to_date(Time.new.to_s) %>" class="required" onClick="PickDateCallbackChangeFocus();"></input>
-				</div>
+				<label for="cssi_applicationdate" class="fieldLabel">Application Date:<font color="red">&nbsp;&nbsp;*</font></label>
+				<input id="cssi_applicationdate" type="text" name="cssi_applicationdate" data-theme="d" readonly value="<%= to_date(Time.new.to_s) %>" class="required" onClick="PickDateCallbackChangeFocus();"></input>
 			</div>
 			<input id="submit_button" type="submit" id="btnDone" href="#" data-theme="b" data-direction="reverse" value="Done"/>
 		</div>

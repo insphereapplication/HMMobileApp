@@ -6,54 +6,43 @@
 			<h1>Application Details <%= sync_spinner %></h1>
 			<input type="submit" href="#" data-theme="b" data-direction="reverse" value="Done" class="ui-btn-right"/>
 		</div>
-		<div id="contentDiv" data-role="content">
+		<div id="contentDiv" data-role="content" data-theme="b">
 			<input type="hidden" name="appdetail[opportunity_id]" value="<%= @appdetail.opportunity_id %>"/>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="cssi_carrierid" class="select">Carrier:<font color="red">&nbsp;&nbsp;*</font></label>
-					<div>
-						<select id="cssi_carrierid" name="appdetail[cssi_carrierid]">
-								<% StaticEntity.get_carrier_names.each do |carrier_name| %>
-									<option <% if @appdetail.cssi_carrierid == carrier_name %> selected="true" <% end %> value="<%=carrier_name%>">
-										<%=carrier_name%>
-									</option>
-								<% end %>
-						</select>
-					</div>
+				<label for="cssi_carrierid" class="select">Carrier:<font color="red">&nbsp;&nbsp;*</font></label>
+				<div>
+					<select id="cssi_carrierid" name="appdetail[cssi_carrierid]" data-theme="d">
+							<% StaticEntity.get_carrier_names.each do |carrier_name| %>
+								<option <% if @appdetail.cssi_carrierid == carrier_name %> selected="true" <% end %> value="<%=carrier_name%>">
+									<%=carrier_name%>
+								</option>
+							<% end %>
+					</select>
 				</div>
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-	        		<label for="cssi_lineofbusinessid" class="select">LOB:<font color="red">&nbsp;&nbsp;*</font></label>
-					<div>
-						<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]">
-								<% StaticEntity.get_lob_names.each do |lob_name| %>
-									<option <% if @appdetail.cssi_lineofbusinessid == lob_name %> selected="True" <% end %>value="<%=lob_name%>">
-										<%=lob_name%>
-									</option>
-								<% end %>
-						</select>
-					</div>
+        		<label for="cssi_lineofbusinessid" class="select">LOB:<font color="red">&nbsp;&nbsp;*</font></label>
+				<div>
+					<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]" data-theme="d">
+							<% StaticEntity.get_lob_names.each do |lob_name| %>
+								<option <% if @appdetail.cssi_lineofbusinessid == lob_name %> selected="True" <% end %>value="<%=lob_name%>">
+									<%=lob_name%>
+								</option>
+							<% end %>
+					</select>
 				</div>
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="appdetail[cssi_applicationssubmitted]" class="fieldLabel">Apps Submitted:<font color="red">&nbsp;&nbsp;*</font></label>
-					<input id="cssi_applicationssubmitted" name="appdetail[cssi_applicationssubmitted]" type="number" class="required" maxlength="50" name="appsub" value="<%= @appdetail.cssi_applicationssubmitted %>" />
-
-				</div>
+				<label for="appdetail[cssi_applicationssubmitted]" class="fieldLabel">Apps Submitted:<font color="red">&nbsp;&nbsp;*</font></label>
+				<input id="cssi_applicationssubmitted" name="appdetail[cssi_applicationssubmitted]" data-theme="d" type="number" class="required" maxlength="50" name="appsub" value="<%= @appdetail.cssi_applicationssubmitted %>" />
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="appdetail[cssi_avforapplicationsubmitted]" class="fieldLabel">Total AV:<font color="red">&nbsp;&nbsp;*</font></label>
-					<input id="cssi_avforapplicationsubmitted" name="appdetail[cssi_avforapplicationsubmitted]" type="number" class="required" min="0" name="totalav" value="<%= @appdetail.cssi_avforapplicationsubmitted %>"/>					
-				</div>
+				<label for="appdetail[cssi_avforapplicationsubmitted]" class="fieldLabel">Total AV:<font color="red">&nbsp;&nbsp;*</font></label>
+				<input id="cssi_avforapplicationsubmitted" name="appdetail[cssi_avforapplicationsubmitted]" data-theme="d" type="number" class="required" min="0" name="totalav" value="<%= @appdetail.cssi_avforapplicationsubmitted %>"/>					
 			</div>
 			<div data-role="fieldcontain">
-				<div class="ui-body ui-body-d">
-					<label for="cssi_applicationdate" class="fieldLabel">Application Date:<font color="red">&nbsp;&nbsp;*</font></label>
-					<input id="cssi_applicationdate" type="text" class="required" name="cssi_applicationdate" readonly value="<%= to_date(@appdetail.cssi_applicationdate) %>"  onClick="popupAppDateAJPicker('1', 'Application Date', 'cssi_applicationdate', '<%= @appdetail.cssi_applicationdate %>');document.getElementById('submit_button').focus();"></input>
-				</div>
+				<label for="cssi_applicationdate" class="fieldLabel">Application Date:<font color="red">&nbsp;&nbsp;*</font></label>
+				<input id="cssi_applicationdate" type="text" class="required" name="cssi_applicationdate" data-theme="d" readonly value="<%= to_date(@appdetail.cssi_applicationdate) %>"  onClick="popupAppDateAJPicker('1', 'Application Date', 'cssi_applicationdate', '<%= @appdetail.cssi_applicationdate %>');document.getElementById('submit_button').focus();"></input>
 			</div>
 			<input id="submit_button" type="submit" href="#" data-theme="b" data-icon="arrow-r" data-iconpos="right"data-direction="reverse" value="Done"/>
 			<a href="<%= url_for(:action => :confirm_app_detail_delete, :query => {:id => @appdetail.object, :opportunity => @appdetail.opportunity_id, :origin => @params['origin']})%>" data-theme="a" data-icon="delete" data-iconpos="right" data-direction="reverse" data-role="button">Delete</a>

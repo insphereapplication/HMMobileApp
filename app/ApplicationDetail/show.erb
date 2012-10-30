@@ -5,8 +5,8 @@
 			<h3>Application Details <%= sync_spinner %></h3>
 			<a data-icon="edit" href="<%=url_for(:action=>:edit, :id => @appdetail.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})%>" data-direction="forward"> Edit </a>
 		</div>
-	<div data-role="content">
-		<ul data-role="listview" data-theme="c" data-inset="true">
+	<div data-role="content" data-theme="b">
+		<ul data-role="listview" data-theme="d" data-inset="true">
 			<li>Carrier: <%= @appdetail.cssi_carrierid %></li>
 			<li>LOB: <%= @appdetail.cssi_lineofbusinessid %></li>	
 			<li>Apps Submitted: <%= @appdetail.cssi_applicationssubmitted %></li>

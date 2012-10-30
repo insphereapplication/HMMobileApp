@@ -277,6 +277,9 @@ function hideACSpin(){
 //dynamically populate phone numbers from dropdowns
 function populatePhone(dropdown)
 {
+	if (dropdown == null){
+		return true;
+	}
     for (var i=0; i<dropdown.options.length; i++){
       if (dropdown.options[i].selected==true){
         selected = dropdown.options[i].value;
@@ -324,6 +327,10 @@ function updateAddress()
 	var dropdown = document.getElementById('select_location');
 	var textbox = document.getElementById('location');
 	
+	if (dropdown == null ){	
+		 return true;
+	}
+	
     for (var i=0; i<dropdown.options.length; i++){
       if (dropdown.options[i].selected==true){
         selected = dropdown.options[i].value;
@@ -331,6 +338,7 @@ function updateAddress()
         break;
       }
     }
+
 	textbox.value=selected;
 	if (text == "Ad Hoc"){
 		textbox.disabled=false;
@@ -338,6 +346,7 @@ function updateAddress()
 	else{
 		textbox.disabled=true;
 	}
+
     return true;
 }
 

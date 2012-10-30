@@ -543,8 +543,8 @@ $('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_pag
 });
 
 // Emulate iOS phone numbers formatting on Android
-if (navigator.userAgent.toLowerCase().indexOf("android") >= 0) {
-    $.fn.usphone = function() {
+//if (navigator.userAgent.toLowerCase().indexOf("android") >= 0) {
+   $.fn.usphone = function() {
         this.keyup(function(e) {
             // do not process del, backspace, escape, arrow left and arrow right characters
             var k = e.which;
@@ -560,7 +560,7 @@ if (navigator.userAgent.toLowerCase().indexOf("android") >= 0) {
 			var ua = navigator.userAgent
 			var androidversion = parseFloat(ua.slice(ua.indexOf("Android")+8)); 
 
-			if ((androidversion >= 4.0 && value.length >= 10) || androidversion < 4.0)
+			if ((androidversion >= 4.0 && value.length >= 10) || androidversion < 4.0 || ua.toLowerCase().indexOf("ios"))
 			{				
             // remove extra characters
             if (value.length > 10)
@@ -587,7 +587,7 @@ if (navigator.userAgent.toLowerCase().indexOf("android") >= 0) {
     $('#contact_edit_page, #contact_new_page, #callback_create, #callback_edit, #new_phonecall_contact_page, #new_phonecall').live('pagecreate', function() {
         $('[type^="tel"]').usphone();
     });
-}
+//}
 
 // Automatically format 10 digits to phone number
 $.fn.autoFormatPhone = function() {

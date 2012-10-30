@@ -6,42 +6,36 @@
 			<h1>Edit Task <%= sync_spinner %></h1>
 			<input type="submit" data-theme="b" class="ui-btn-right" value="Update"/>
 		</div>
-		<div style="text-align:center" class="ui-bar ui-bar-c"> 
-			<%= 
-				parent_contact = @activity.parent_contact
-				parent_contact ? parent_contact.full_name : ''
-			 %> 
-		</div>
+		<% if (@activity.parent_contact) %>
+			<div style="text-align:center" class="ui-bar"> 
+				<h1><%= 
+					parent_contact = @activity.parent_contact
+					parent_contact ? parent_contact.full_name : ''
+				 %></h1>
+			</div>
+			<hr/>
+		<% end %>
 		<div id="contentDiv" data-role="content">
-  		    <div class="ui-body ui-body-d">
-  			  	<label for="task_subject" class="fieldLabel">Subject:<font color="red">&nbsp;&nbsp;*</font></label>
-    				<input maxlength="200" type="text" id="task_subject" name="task[subject]" value="<%= @activity.subject %>" />
+   			<div data-role="fieldcontain">
+  	         	<label for="task_due_datetime" class="fieldLabel">Due Date:</label>
+				<input id="task_due_datetime" type="text" name="task[due_datetime]" data-theme="d" readonly value="<%= to_datetime(@activity.scheduledend) %>"  onClick="editpopupDateTimeAJPicker('0', 'Task Time', 'task_due_datetime', '<%= @activity.scheduledend %>'); document.getElementById('task_due_datetime').focus();"/>
    			</div>
-	        <div data-role="fieldcontain">
-	  			<div class="ui-body ui-body-d">
-  		            	<label for="task_due_datetime" class="fieldLabel">Due Date:</label>
-  						<input id="task_due_datetime" type="text" name="task[due_datetime]" readonly value="<%= to_datetime(@activity.scheduledend) %>"  onClick="editpopupDateTimeAJPicker('0', 'Task Time', 'task_due_datetime', '<%= @activity.scheduledend %>'); document.getElementById('task_due_datetime').focus();"/>
-		    	</div>
-   			</div>
- 		    <div class="ui-body ui-body-d">
+ 		    <div data-role="fieldcontain">
   			  	<label for="task_description" class="fieldLabel">Description:</label>
-					<textarea cols="40" rows="8" name="task[description]" id="task_description"><%= @activity.description %></textarea>
+				<textarea cols="40" rows="8" name="task[description]" data-theme="d" id="task_description"><%= @activity.description %></textarea>
    			</div>
 	        <div data-role="fieldcontain">
-					<div class="ui-body ui-body-d">
-  						<legend>Priority:</legend>
-  		            	<label for="task_priority_checkbox" class="fieldLabel">
-  							<img src="/public/images/red_exclamation.png"/>
-  						High
-  						</label>
-						<% puts "The priority code value is: #{@activity.prioritycode}" %>
-  						<input id="task_priority_checkbox" type="checkbox" name="task[high_priority_checkbox]" class="custom" <%= @activity.prioritycode == 'High' ? 'checked' : '' %> />
-		    	</div>
+				<legend>Priority:</legend>
+            	<label for="task_priority_checkbox" class="fieldLabel">
+					<img src="/public/images/red_exclamation.png"/>
+				High
+				</label>
+				<input id="task_priority_checkbox" type="checkbox" name="task[high_priority_checkbox]" data-theme="d" class="custom" <%= @activity.prioritycode == 'High' ? 'checked' : '' %> />
+
    			</div>
 			<div data-role="fieldcontain">
 				<input type="submit" data-theme="b" class="standardButton" value="Update" data-theme="b"/>
 			</div>
- 		</div>
 	</form>
 </div>
 

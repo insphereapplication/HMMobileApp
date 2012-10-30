@@ -252,25 +252,21 @@ module BrowserHelper
     %Q{
       <div data-role="collapsible" data-collapsed="true" data-theme="b">
   			<h3>Follow-up Task...</h3>
-  		    <div class="ui-body ui-body-d">
+  		    <div data-role="fieldcontain">
   			  	<label for="task_subject" class="fieldLabel">Subject:<font color="red">&nbsp;&nbsp;*</font></label>
     				<input maxlength="200" type="text" id="task_subject" name="task[subject]" value="" />
     			</div>
           <div data-role="fieldcontain">
-  					<div class="ui-body ui-body-d">
-  		            	<label for="task_due_datetime" class="fieldLabel">Due Date:</label>
+  		        <label for="task_due_datetime" class="fieldLabel">Due Date:</label>
   						<input id="task_due_datetime" type="text" name="task[due_datetime]" readonly value="#{$choosed['0']}"  onClick="PickDueDateChangeFocus();"/>
-			    	</div>
     			</div>
           <div data-role="fieldcontain">
-  					<div class="ui-body ui-body-d">
-  						<legend>Priority:</legend>
-  		            	<label for="task_priority_checkbox" class="fieldLabel">
-  							<img src="/public/images/red_exclamation.png"/>
-  						High
-  						</label>
-  						<input id="task_priority_checkbox" type="checkbox" name="task[high_priority_checkbox]" class="custom" />
-			    	</div>
+  					<legend>Priority:</legend>
+		            	<label for="task_priority_checkbox" class="fieldLabel">
+							<img src="/public/images/red_exclamation.png"/>
+						High
+						</label>
+						<input id="task_priority_checkbox" type="checkbox" name="task[high_priority_checkbox]" class="custom" data-theme="d"/>
     			</div>
   		</div>			
 	  }
