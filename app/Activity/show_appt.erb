@@ -6,7 +6,7 @@
 			<a data-icon="edit" href="<%=url_for(:action=>:edit, :id => @appt.object, :query => {:origin => @params['origin']})%>" data-direction="forward"> Edit </a>
 		</div>
 	<div data-role="content">
-		<ul data-role="listview" data-theme="c" data-inset="true">
+		<ul data-role="listview" data-theme="d" data-inset="true">
 			<li data-role="list-divider">Appointment Detail</li>
 			<li>Appointment Start: <br/><%= "#{to_datetime(@appt.scheduledstart)}" %></li>
 			<% if get_duration(@appt.scheduledstart, @appt.scheduledend) == 30.0 %>
