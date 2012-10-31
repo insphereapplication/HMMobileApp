@@ -106,7 +106,7 @@ function ScrollView(page, url, pageNum, pageSize, lookAheadPages) {
                 var index = isUp ? middleIndex - 5 : middleIndex - 1;
                 var item = $list.find("li").eq(index);
                 if (item.length > 0)
-                    scroll.scrollToElement(item[0], true, 0);
+                    scroll.scrollToElement(item[0], 0);
             }
         });
     }
