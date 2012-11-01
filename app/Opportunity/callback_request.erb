@@ -1,13 +1,3 @@
-<script type='text/javascript'>
-	$(document).ready(function() {
-		populatePhone(document.getElementById('phoneList'));
-	});
-	
-function PickDateCallbackChangeFocus() {
-popupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime');
-document.getElementById('callback_datetime').focus();
-}
-</script>
 <div data-role="page" data-theme="b" id="callback_create">
 	<%= offline_bar%>
 	<div data-role="header" data-theme="b" data-position="inline">
@@ -60,4 +50,14 @@ document.getElementById('callback_datetime').focus();
 			</div>
 		</form>
 	</div>
+	<script type='text/javascript'>
+		$(document).delegate("#callback_create","pageinit" ,function() {
+			populatePhone(document.getElementById('phoneList'));
+		});
+
+	function PickDateCallbackChangeFocus() {
+	popupDateTimeAJPicker('0', 'Callback Time', 'callback_datetime');
+	document.getElementById('callback_datetime').focus();
+	}
+	</script>
 </div>

@@ -60,11 +60,15 @@
             </div>
         </form>
     </div>
-    <script type='text/javascript'>
-        function PickappointmentChangeFocus() {
-            popupDateTimeAJPicker('0', 'Start Time:', 'appointment_datetime');
-            document.getElementById('appointment_datetime').focus();
-        }
-        updateAddress();
-    </script>
+	<script type='text/javascript'>
+	
+		    function PickappointmentChangeFocus() {
+	        popupDateTimeAJPicker('0', 'Start Time:', 'appointment_datetime');
+	        document.getElementById('appointment_datetime').focus();
+	    }
+		$(document).delegate("#new_contact_appointment", "pageinit", function(){
+	    updateAddress();
+	});
+
+	</script>
 </div>

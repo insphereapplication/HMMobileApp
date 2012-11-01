@@ -57,3 +57,58 @@ $(document).bind("pageinit", function() {
     if (timeoutID === null)
         pollConnectionStatus();
 });
+
+//dynamically populate phone numbers from dropdowns
+function populatePhone(dropdown)
+{
+	if (dropdown == null){
+		return true;
+	}
+    for (var i=0; i<dropdown.options.length; i++){
+      if (dropdown.options[i].selected==true){
+        selected = dropdown.options[i].value;
+		text=document.getElementById("phoneList").text;
+		selected_type=dropdown.options[i].text
+        break;
+      }
+    }
+	document.getElementById("phoneNumber").value=selected;
+	document.getElementById("phone_type_selected").value=selected_type;
+	if (selected_type == 'Ad Hoc'){
+		document.getElementById("phoneNumber").disabled = false;
+	}
+	else
+	{
+		document.getElementById("phoneNumber").disabled = true;
+	}
+    return true;
+}
+
+
+function updateAddress()
+{
+	var dropdown = document.getElementById('select_location');
+	var textbox = document.getElementById('location');
+	
+	if (dropdown == null ){	
+		 return true;
+	}
+	
+    for (var i=0; i<dropdown.options.length; i++){
+      if (dropdown.options[i].selected==true){
+        selected = dropdown.options[i].value;
+		text = dropdown.options[i].text;
+        break;
+      }
+    }
+
+	textbox.value=selected;
+	if (text == "Ad Hoc"){
+		textbox.disabled=false;
+	}
+	else{
+		textbox.disabled=true;
+	}
+
+    return true;
+}

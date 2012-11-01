@@ -1,10 +1,4 @@
 <div data-role="page" data-theme="b" id="new_contact_task">
-	<script type='text/javascript'>	
-		function PickTaskChangeFocus() {
-			popupDateTimeAJPicker('0', 'Task Due:', 'task_datetime');
-			document.getElementById('task_datetime').focus();
-		}
-	</script>
 		<%= offline_bar%>
         <div data-role="header" data-theme="b" data-position="inline">
             <a href="<%= url_for(:action => :show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})%>" rel="external" data-role="button" data-icon="back">Cancel</a>
@@ -49,5 +43,11 @@
                     </div>
 			</form>
 		</div>
+		<script type='text/javascript'>	
+			function PickTaskChangeFocus() {
+				popupDateTimeAJPicker('0', 'Task Due:', 'task_datetime');
+				document.getElementById('task_datetime').focus();
+			}
+		</script>
 </div>
 

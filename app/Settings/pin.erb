@@ -1,31 +1,33 @@
 <div data-role="page" data-theme="b" id="pin_reset_page">
 	<%= offline_bar %>
     <div data-role="header" data-backbtn="false" data-theme="b">
-        <h1><img src="/public/images/logo.png" alt="Login" /></h1>
+		<div style="text-align:center">
+        	<h1><img src="/public/images/logo.png" alt="Login" /></h1>
+		</div>
     </div>
 
     <div data-role="content" data-theme="b">
+		<div style="text-align:center" class="ui-bar"> 
+			<h1>Login: <%= Settings.login %><h1>
+		</div>
+		<hr/>
 	 <form id="reset_pin_form" method="POST" action="<%= url_for :action => :validate_pin, :query => {:origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity'], :activity => @params['activity'] } %>">
 	   <% if @msg %>
 		 <p style="color: red"><%= @msg %></p>
 	   <% end %>
-       <ul data-role="listview" data-inset="true" data-theme="d">	
-		 <li data-role="list-divider">Login: <%= Settings.login %></li> 
-           <li>
-				<div data-role="fieldcontain" style="border: none">
-	       			<label for="enter_pin" style="display: inline">Enter PIN <small>(Should consist of 4 numbers)</small></label>
-	       			<input maxlength="4" type="tel" onkeypress="this.type='password';" pattern="[0-9]*" name="enter_pin" id="enter_pin" />
-				</div>
-				<div data-role="fieldcontain" style="border: none">
-					 <label for="verify_pin" style="display: inline">Verify PIN</label>
-                     <input maxlength="4" type="tel" onkeypress="this.type='password';" pattern="[0-9]*" name="verify_pin" id="verify_pin" />
-				</div>
-	     		<div data-role="fieldcontain" style="border: none">
-					<label for="pin_password" style="display: inline">Password</label>
-                    <input type="password" name="pin_password" id="pin_password" />
-				</div>
-			</li>
-	   </ul>
+  
+		<div data-role="fieldcontain" style="border: none">
+      		<label for="enter_pin" style="display: inline">Enter PIN <small>(Should consist of 4 numbers)</small></label>
+     		<input maxlength="4" type="tel" onkeypress="this.type='password';" pattern="[0-9]*" name="enter_pin" data-theme="d" id="enter_pin" />
+		</div>
+		<div data-role="fieldcontain" style="border: none">
+			 <label for="verify_pin" style="display: inline">Verify PIN</label>
+             <input maxlength="4" type="tel" onkeypress="this.type='password';" pattern="[0-9]*" name="verify_pin" data-theme="d" id="verify_pin" />
+		</div>
+    		<div data-role="fieldcontain" style="border: none">
+			<label for="pin_password" style="display: inline">Password</label>
+             <input type="password" name="pin_password" data-theme="d" id="pin_password" />
+		</div>
 		<fieldset class="ui-grid-a">
 			<div class="ui-block-a"><input type="submit" data-theme="b" class="standardButton" value="Reset"/></div>
 			<% if !(@params['contact'].blank?) %>	

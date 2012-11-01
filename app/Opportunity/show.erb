@@ -87,41 +87,28 @@
 			<% end %>
 		</ul>
 	
-		<ul data-role="listview" data-filter="false" data-inset="true" data-theme="d">
-			<li data-role="list-divider"> Scheduled Appointments</li>
-			
+		<ul data-role="listview" data-filter="false" data-inset="true" data-theme="d" >
+			<li data-role="list-divider">Scheduled Appointments</li>		
 			<% @opportunity.incomplete_appointments.each do |appointment| %>
 			
-			<li class="ui-btn ui-btn-icon-right ui-li ui-corner-bottom ui-btn-up-c" data-icon="none" role="option" tabindex="-1" data-theme="d">
-				<div class="ui-btn-inner">
-					<div class="ui-btn-text">
-						<a class="ui-link-inherit" href="<%= url_for(:controller => :Activity, :action => :show_appt, :id => appointment.object, :query => {:origin => @params['origin']}) %>" style="background: none repeat scroll 0% 0% transparent;">
-							<br/>
-							<p class="ui-li-desc"><b><%= "#{to_datetime(appointment.scheduledstart)} - #{to_endtime(appointment.scheduledend)}" %></b></p>
-							<p class="ui-li-desc"> <%= appointment.location %> </p>
-							<p class="ui-li-desc"> <%= appointment.description %> </p>
-						</a>
-					</div>
-				</div>
+			<li>
+				<a  href="<%= url_for(:controller => :Activity, :action => :show_appt, :id => appointment.object, :query => {:origin => @params['origin']}) %>">
+					<p><b><%= "#{to_datetime(appointment.scheduledstart)} - #{to_endtime(appointment.scheduledend)}" %></b></p>
+					<p><%= appointment.location %> </p>
+					<p><%= appointment.description %> </p>
+				</a>
 				<% if appointment.location.blank? %>
 					<% if System::get_property('platform') == 'APPLE'%>
-						<a onclick="hideSpin();" href=<%="maps:q="%>>
-							<img class="appt-icon" src="/public/images/map_icon.png">
+						<a onclick="hideSpin();" href=<%="maps:q="%> data-icon="map" data-theme="d" >
 						</a>
 					<%else%>			
-						<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q="%>>
-							<img class="appt-icon" src="/public/images/map_icon.png">
-						</a>
+						<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q="%> data-icon="map" data-theme="d" ></a>
 					<%end%>
 				<% else %>
 					<% if System::get_property('platform') == 'APPLE'%>
-						<a onclick="hideSpin();" href=<%="maps:q=#{Rho::RhoSupport.url_encode(appointment.location)}"%>>
-							<img class="appt-icon" src="/public/images/map_icon.png">
-						</a>
+						<a onclick="hideSpin();" href=<%="maps:q=#{Rho::RhoSupport.url_encode(appointment.location)}"%> data-icon="map" data-theme="d" ></a>
 					<%else%>			
-						<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(appointment.location)}"%>>
-							<img class="appt-icon" src="/public/images/map_icon.png">
-						</a>
+						<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(appointment.location)}"%> data-icon="map" data-theme="d" ></a>
 					<%end%>
 				<% end %>
 			</li>
@@ -135,44 +122,18 @@
 				<% end %>					
 		</ul>
 		
-		<ul data-inset="true" data-filter="false" data-role="listview"  data-theme="d" data-icon"none">
+		
+		<ul data-inset="true" data-filter="false" data-role="listview"  data-theme="d"  >
 			<li data-role="list-divider"> Scheduled Callbacks</li>
-			
-			<!-- <% @opportunity.open_phone_calls.each do |phonecall| %>
-			
-			<li class="ui-btn ui-btn-icon-right ui-li ui-corner-bottom ui-btn-up-c" data-icon="none" role="option" tabindex="-1" data-theme="d">
-				<div class="ui-btn-inner">
-					<div class="ui-btn-text">
-						<a class="ui-link-inherit" href="<%= url_for(:controller => :Activity, :action => :show_callback, :id => phonecall.object, :query => {:origin => @params['origin']}) %>">
-							<br/>
-							<p class="ui-li-desc"><b><%= "#{to_datetime(phonecall.scheduledstart)}" %></b></p>
-							<p class="ui-li-desc"> <%= phonecall.phonenumber %> </p>
-						</a>
-					</div>
-				</div>
-				<% if phonecall.phonenumber.blank? %>
-					<a onclick="hideSpin()" rel="external" href="<%= url_for :action => :phone_dialog, :id=> @opportunity.object, :query =>{:opportunity => @opportunity.object, :origin => @params['origin']}%>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
-						<img class="call-icon" src="/public/images/phone_black.png">
-					</a>
-				<% else %>
-					<a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub(/[^0-9]/, "") %>">
-						<img class="call-icon" src="/public/images/phone_black.png">
-					</a>
-				<% end %>
-			</li>
-			<% end %> -->
-			
 			<% @opportunity.open_phone_calls.each do |phonecall| %>
-				<li><a href="<%= url_for(:controller => :Activity, :action => :show_callback, :id => phonecall.object, :query => {:origin => @params['origin']}) %>" >
-						<p class="ui-li-desc"><b><%= "#{to_datetime(phonecall.scheduledstart)}" %></b></p>
-						<p class="ui-li-desc"> <%= phonecall.phonenumber %> </p>
-						
+						<li><a href="<%= url_for(:controller => :Activity, :action => :show_callback, :id => phonecall.object, :query => {:origin => @params['origin']}) %>" >
+						<p><b><%= "#{to_datetime(phonecall.scheduledstart)}" %></b><p>
+						<p class="ui-li-desc"> <%= phonecall.phonenumber %> </p>			
 						</a>
 						<% if phonecall.phonenumber.blank? %>
-							<a onclick="hideSpin()" rel="external" href="<%= url_for :action => :phone_dialog, :id=> @opportunity.object, :query =>{:opportunity => @opportunity.object, :origin => @params['origin']}%>" data-img="/public/images/phone_black.png"></a>
+							<a onclick="hideSpin()" rel="external" href="<%= url_for :action => :phone_dialog, :id=> @opportunity.object, :query =>{:opportunity => @opportunity.object, :origin => @params['origin']}%>" data-icon="phone"></a>
 						<% else %>
-							 <!-- <a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub(/[^0-9]/, "") %>" data-icon="insphere-phone" data-theme="d"></a>  -->
-							<a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub(/[^0-9]/, "") %>" data-img="/public/images/phone_black.png"></a>
+							<a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub(/[^0-9]/, "") %>"  data-icon="phone" data-theme="d"  ></a> 							
 						<% end %>
 					
 				</li>
