@@ -5,11 +5,7 @@ function ScrollView(page, url, pageNum, pageSize, lookAheadPages) {
         $scroll = $page.find(".iscroll-wrapper"),
         $list = $scroll.find("ul.ui-listview"),
         scroll = $scroll.jqmData("iscrollview"),
-        topPage = pageNum - lookAheadPages,
-        lastPageNum = lookAheadPages + 2,
-        pageCount = lastPageNum + lookAheadPages,
-        lastPageIndex = pageCount - 1,
-        pages = [];
+        topPage, lastPageNum, pageCount, lastPageIndex, pages;
 
     function adjustScrollView() {
         scroll.resizeWrapper();
@@ -102,7 +98,7 @@ function ScrollView(page, url, pageNum, pageSize, lookAheadPages) {
         }
         $list.empty().append(content).listview("refresh");
         scroll.refresh(null, null, function() {
-            if (typeof(isUp) !== "undefined" && middleIndex >= pageSize) {
+            if (typeof(isUp) !== "undefined" && middleIndex > 5) {
                 var index = isUp ? middleIndex - 5 : middleIndex - 1;
                 var item = $list.find("li").eq(index);
                 if (item.length > 0)
@@ -111,21 +107,34 @@ function ScrollView(page, url, pageNum, pageSize, lookAheadPages) {
         });
     }
 
-    // initial data load
-    var rowCount = pageSize * lastPageNum;
-    if (topPage >= 0)
-        rowCount += pageSize * (topPage + 1);
-    getContent((topPage >= 0) ? topPage : 0, rowCount, function(data) {
-        var currPage = topPage;
-        while (data.length > 0) {
-            var pageRows = (currPage < 0) ? [] : data.splice(0, pageSize);
-            pages.push(pageRows);
-            currPage++;
-        }
-        while (currPage < lastPageNum) {
-            pages.push([]);
-            currPage++;
-        }
-        showPages();
-    });
+    function reset() {
+        // initialize global variables
+        topPage = pageNum - lookAheadPages;
+        lastPageNum = lookAheadPages + 2;
+        pageCount = lastPageNum + lookAheadPages;
+        lastPageIndex = pageCount - 1;
+        pages = [];
+        // initial data load
+        var rowCount = pageSize * lastPageNum;
+        if (topPage >= 0)
+            rowCount += pageSize * (topPage + 1);
+        getContent((topPage >= 0) ? topPage : 0, rowCount, function(data) {
+            var currPage = topPage;
+            while (currPage < 0) {
+                pages.push([]);
+                currPage++;
+            }
+            while (data.length > 0) {
+                pages.push(data.splice(0, pageSize));
+                currPage++;
+            }
+            while (currPage < lastPageNum) {
+                pages.push([]);
+                currPage++;
+            }
+            showPages();
+        });
+    }
+
+    reset();
 }
