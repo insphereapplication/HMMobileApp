@@ -27,8 +27,8 @@
 			<h1>About <%= sync_spinner %></h1>
 		</div>
 
-		<div id="contentDiv" data-role="content">
-			<ul data-role="listview" data-theme="c" data-inset="true">
+		<div id="contentDiv" data-role="content" data-theme="b" >
+			<ul data-role="listview" data-theme="d" data-inset="true">
 				<li><h3>Version:</h3><p>InSite Mobile <% if Rho::RhoConfig.app_version && Rho::RhoConfig.app_version.length > 0 %><%= Rho::RhoConfig.app_version %><% else %>N/A<% end %></p></li> 
 				<li><h3>Last Sync:</h3><p> <%= Settings.last_synced.to_s %></p></li>
 				<li><h3>Connection State:</h3><p> <%= DeviceCapabilities.connection_status %></p></li> 
@@ -45,7 +45,7 @@
 					<li><a href="<%= url_for :action => :configure_log %>"><h1>Configure Log</h1></a></li>
 				</div>
 			</ul>
-			<ul data-role="listview" data-theme="c"  data-inset="true">
+			<ul data-role="listview" data-theme="d"  data-inset="true">
 				<li><a href="<%= url_for :action => :show_log %>">Show Log</a></li>
 				<li><a href="<%= url_for :action => :send_log %>">Send Log</a></li>
 				<li><a href="<%= url_for :action => :toggle_log_level %>"><%= detailed_logging_enabled? ? 'Disable' : 'Enable' %> Detailed Logging</a></li>

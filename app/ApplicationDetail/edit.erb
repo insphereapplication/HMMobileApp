@@ -10,34 +10,30 @@
 			<input type="hidden" name="appdetail[opportunity_id]" value="<%= @appdetail.opportunity_id %>"/>
 			<div data-role="fieldcontain">
 				<label for="cssi_carrierid" class="select">Carrier:<font color="red">&nbsp;&nbsp;*</font></label>
-				<div>
-					<select id="cssi_carrierid" name="appdetail[cssi_carrierid]" data-theme="d">
-							<% StaticEntity.get_carrier_names.each do |carrier_name| %>
-								<option <% if @appdetail.cssi_carrierid == carrier_name %> selected="true" <% end %> value="<%=carrier_name%>">
-									<%=carrier_name%>
-								</option>
-							<% end %>
-					</select>
-				</div>
+				<select id="cssi_carrierid" name="appdetail[cssi_carrierid]" data-theme="d">
+						<% StaticEntity.get_carrier_names.each do |carrier_name| %>
+							<option <% if @appdetail.cssi_carrierid == carrier_name %> selected="true" <% end %> value="<%=carrier_name%>">
+								<%=carrier_name%>
+							</option>
+						<% end %>
+				</select>
 			</div>
 			<div data-role="fieldcontain">
         		<label for="cssi_lineofbusinessid" class="select">LOB:<font color="red">&nbsp;&nbsp;*</font></label>
-				<div>
-					<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]" data-theme="d">
-							<% StaticEntity.get_lob_names.each do |lob_name| %>
-								<option <% if @appdetail.cssi_lineofbusinessid == lob_name %> selected="True" <% end %>value="<%=lob_name%>">
-									<%=lob_name%>
-								</option>
-							<% end %>
-					</select>
-				</div>
+				<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]" data-theme="d">
+						<% StaticEntity.get_lob_names.each do |lob_name| %>
+							<option <% if @appdetail.cssi_lineofbusinessid == lob_name %> selected="True" <% end %>value="<%=lob_name%>">
+								<%=lob_name%>
+							</option>
+						<% end %>
+				</select>
 			</div>
 			<div data-role="fieldcontain">
-				<label for="appdetail[cssi_applicationssubmitted]" class="fieldLabel">Apps Submitted:<font color="red">&nbsp;&nbsp;*</font></label>
+				<label for="cssi_applicationssubmitted" class="fieldLabel">Apps Submitted:<font color="red">&nbsp;&nbsp;*</font></label>
 				<input id="cssi_applicationssubmitted" name="appdetail[cssi_applicationssubmitted]" data-theme="d" type="number" class="required" maxlength="50" name="appsub" value="<%= @appdetail.cssi_applicationssubmitted %>" />
 			</div>
 			<div data-role="fieldcontain">
-				<label for="appdetail[cssi_avforapplicationsubmitted]" class="fieldLabel">Total AV:<font color="red">&nbsp;&nbsp;*</font></label>
+				<label for="cssi_avforapplicationsubmitted" class="fieldLabel">Total AV:<font color="red">&nbsp;&nbsp;*</font></label>
 				<input id="cssi_avforapplicationsubmitted" name="appdetail[cssi_avforapplicationsubmitted]" data-theme="d" type="number" class="required" min="0" name="totalav" value="<%= @appdetail.cssi_avforapplicationsubmitted %>"/>					
 			</div>
 			<div data-role="fieldcontain">

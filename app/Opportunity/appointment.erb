@@ -53,12 +53,10 @@ document.getElementById('appointment_datetime').focus();
 	            <input maxlength="200" type="text" id="location" name="location" data-theme="d" value="" onkeypress="if(event.keyCode==13){return false;}" />
 			</div>
 			<div data-role="fieldcontain">
-				<label for="description">Description:</label>
+				<label for="notetext">Description:</label>
 				<textarea cols="40" rows="8" name="description" data-theme="d"id="notetext"></textarea>
 			</div>
-			<div data-role="fieldcontain" data-theme="b">
-				<input type="submit" class="standardButton" onclick="getLocationType(); enableLocation();" value="Create Appointment" data-theme="b"/>
-			</div>    
+			<input type="submit" data-theme="b" onclick="getLocationType(); enableLocation();" value="Create Appointment"    
 		</form>
 	</div>
 </div>

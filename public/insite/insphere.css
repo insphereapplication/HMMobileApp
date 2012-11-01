@@ -81,20 +81,13 @@
 	background-color: rgba(0, 0, 0, 0);
 	width:24px;
 	height: 24px;
-	border-style: hidden;
 	box-shadow: none;
 	-webkit-box-shadow: none;
-	margin-top: -11px !important;
 }
 
 .ui-icon-map {
-	background-image: url("/public/images/map_icon_24px.png") /*{global-icon-set}*/;
-	background-color: rgba(0, 0, 0, 0);
-	width:24px;
-	height: 24px;
-	border-style: hidden;
+	background-image: url("/public/images/map_small_opp.jpg") /*{global-icon-set}*/;
 	box-shadow: none;
 	-webkit-box-shadow: none;
-	margin-top: -11px !important;
 }
 

@@ -261,12 +261,13 @@ module BrowserHelper
   						<input id="task_due_datetime" type="text" name="task[due_datetime]" readonly value="#{$choosed['0']}"  onClick="PickDueDateChangeFocus();"/>
     			</div>
           <div data-role="fieldcontain">
-  					<legend>Priority:</legend>
-		            	<label for="task_priority_checkbox" class="fieldLabel">
-							<img src="/public/images/red_exclamation.png"/>
-						High
-						</label>
-						<input id="task_priority_checkbox" type="checkbox" name="task[high_priority_checkbox]" class="custom" data-theme="d"/>
+          	<fieldset data-role="controlgroup">
+  	  				<legend>Priority:</legend>
+  		        <label for="task_priority_checkbox" class="fieldLabel">
+  							  <img src="/public/images/red_exclamation.png"/>High
+  						</label>
+  						<input id="task_priority_checkbox" type="checkbox" name="task[high_priority_checkbox]" class="custom" data-theme="d"/>
+						</fieldset>
     			</div>
   		</div>			
 	  }

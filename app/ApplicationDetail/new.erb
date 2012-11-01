@@ -16,7 +16,6 @@ document.getElementById('submit_button').focus();
 			<input type="hidden" name="appdetail[opportunity_id]" value="<%= @opportunity.object %>"/>
 			<div data-role="fieldcontain">
 				<label for="cssi_carrierid" class="select">Carrier:<font color="red">&nbsp;&nbsp;*</font></label>
-				<div>
 					<select id="cssi_carrierid" name="appdetail[cssi_carrierid]" data-theme="d">
 						<option value="" selected="true"></option>
 							<% StaticEntity.get_carrier_names.each do |carrier_name| %>
@@ -25,20 +24,17 @@ document.getElementById('submit_button').focus();
 								</option>
 							<% end %>
 					</select>
-				</div>
 			</div>
 			<div data-role="fieldcontain">
         		<label for="cssi_lineofbusinessid" class="select">LOB:<font color="red">&nbsp;&nbsp;*</font></label>
-				<div>
-					<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]" data-theme="d">
-						<option value="" selected="true"></option>
-							<% StaticEntity.get_lob_names.each do |lob_name| %>
-								<option value="<%=lob_name%>">
-									<%=lob_name%>
-								</option>
-							<% end %>
-					</select>
-				</div>
+				<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]" data-theme="d">
+					<option value="" selected="true"></option>
+						<% StaticEntity.get_lob_names.each do |lob_name| %>
+							<option value="<%=lob_name%>">
+								<%=lob_name%>
+							</option>
+						<% end %>
+				</select>
 			</div>
 			<div data-role="fieldcontain">
 				<label for="appdetail[cssi_applicationssubmitted]" class="fieldLabel">Apps Submitted:<font color="red">&nbsp;&nbsp;*</font></label>

@@ -75,7 +75,6 @@
 			<h3>Opportunity Details</h3>
 			<div data-role="fieldcontain">
         		<label for="opportunity_lineofbusiness" class="select">LOB:</label>
-				<div>
 					<select id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]"  data-theme="d">
 						<option value="" selected="true"></option>
 							<% StaticEntity.get_rawlead_lob_names.each do |lob_name| %>
@@ -83,12 +82,10 @@
 									<%=lob_name%>
 								</option>
 							<% end %> 
-					</select>		
-			   </div>	
+					</select>			
 			</div>		
 			<div data-role="fieldcontain">
         		<label for="opportunity_inputsource" class="select">Source:</label>
-				  <div>
 					<select id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]"  data-theme="d">
 						<option value="" selected="true"></option>
 							<% StaticEntity.get_lead_source_names.each do |lead_source_name| %>
@@ -97,7 +94,6 @@
 								</option>
 							<% end %>					
 			  		</select>
-				</div>
 			</div>
 		</div>
 

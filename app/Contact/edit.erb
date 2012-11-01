@@ -47,11 +47,11 @@
 				<% end %>
 			</div>
 			<div data-role="fieldcontain">
-				<label for="contact[cssi_businessphoneext]" class="fieldLabel">Business Extension:</label>
+				<label for="contact_cssi_businessphoneext" class="fieldLabel">Business Extension:</label>
 				<input maxlength="10" type="number" id="contact_cssi_businessphoneext" name="contact[cssi_businessphoneext]" data-theme="d" value="<%= @contact.cssi_businessphoneext %>" <%= placeholder( "Business Ext" ) %>>
 			</div>
 			<div data-role="fieldcontain">
-				<label for="contact[telephone2]" class="fieldLabel">	<%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,"Home",@contact.telephone2) %>&nbsp;Home Phone:</label>
+				<label for="contact[telephone2]" class="fieldLabel">Home Phone:&nbsp;<%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,"Home",@contact.telephone2) %></label>
 				<input type="tel" class="required_group" id="contact[telephone2]" name="contact[telephone2]" data-theme="d" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
 				<% if show_do_not_call_slider(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,@contact.telephone2) %>
 						<label for="homeDncSlider" class="fieldLabel">Allow Calls?</label>

@@ -216,8 +216,8 @@
 			<% end %>
 			<% @contact.opportunities.each do |opportunity| %>
 			<li>
-				<a href="<%= url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => @params['origin']}) %>"> 
-					<br/><strong><%= to_date(opportunity.createdon) %></strong> <TEST> <%= opportunity.rollup_status %>
+				<a href="<%= url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :query => {:origin => @params['origin']}) %>" data-theme="d"> 
+					<h3><%= to_date(opportunity.createdon) %></h3>
 				</a>
 			</li>
 			<% end %>

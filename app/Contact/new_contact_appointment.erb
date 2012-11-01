@@ -23,7 +23,7 @@
                 <input id="appointment_subject" type="text" name="appointment_subject" data-theme="d"></input>
             </div>
             <div data-role="fieldcontain">
-                <label for="appointment_description">Description:</label>
+                <label for="appointment_description">Description:&nbsp;</label>
                 <textarea cols="40" rows="4" name="appointment_description" data-theme="d" id="appointment_description"></textarea>
             </div>
             <div data-role="fieldcontain">
@@ -55,15 +55,13 @@
                 <label for="location">Address: <font color="red"> *</font></label>
                 <input id="location" name="location" data-theme="d" type="text"></input>
             </div>
-            <div data-role="fieldcontain">
-                <input type="submit" class="standardButton" onclick="getLocationType(); enableLocation();" data-theme="b" value="Create Appointment" />
-            </div>
+            <input type="submit" class="standardButton" onclick="getLocationType(); enableLocation();" data-theme="b" value="Create Appointment" />
         </form>
     </div>
 	<script type='text/javascript'>
 	
-		    function PickappointmentChangeFocus() {
-	        popupDateTimeAJPicker('0', 'Start Time:', 'appointment_datetime');
+		function PickappointmentChangeFocus() {
+       	 	popupDateTimeAJPicker('0', 'Start Time:', 'appointment_datetime');
 	        document.getElementById('appointment_datetime').focus();
 	    }
 		$(document).delegate("#new_contact_appointment", "pageinit", function(){
