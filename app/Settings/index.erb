@@ -23,8 +23,10 @@
 						<ul data-role="listview" data-theme="d"  data-filter="false" data-inset="true">
 							<li data-role="list-divider">Quick Links</li>
 							<li>
-								<label  for="PIN" class="fieldLabel">Please Enter PIN:</label>
-								<input  maxlength="4" type="tel" onkeypress="this.type='password';" id="PIN" name="PIN" value=""/>
+								<div data-role="fieldcontain">
+									<label  for="PIN" class="fieldLabel">Please Enter PIN:</label>
+									<input  maxlength="4" type="tel" onkeypress="this.type='password';" id="PIN" name="PIN" value=""/>
+								</div>
 								<fieldset class="ui-grid-a">
 									<div class="ui-block-a"><input type="submit" class="standardButton"  value="Submit"/></div>	
 									<div class="ui-block-b"><a type="button"  value="Reset PIN" href="<%= url_for(:controller => :Settings, :action => :pin, :query => {:origin => @params['origin']}) %>">Reset PIN</a></div>
