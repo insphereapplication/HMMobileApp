@@ -1,7 +1,69 @@
+<%  search_criteria = ''
+    search_criteria = search.gsub("(","\\(") if search
+    search_criteria.gsub!(")","\\)")
+items.each do |group|
+    id_str = group[0]
+    id_str = 'comma' if id_str == ','
+    if last_group[:group] != id_str
+        last_group[:group] = id_str %>
+<li class="ui-li ui-li-divider ui-bar-b"><%= id_str.upcase %></li>
+<%  end
+    group[1].each do |contact| %>
+<li class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-btn-up-c">
+  <div class="ui-btn-inner ui-li">
+    <div class="ui-btn-text">
+      <a class="ui-link-inherit" href="<%= url_for(:action => :show, :id => contact.object, :query => {:origin => 'contact'}) %>">
+        <h3 class="ui-li-heading"><%= contact.last_first %></h3>
+<%      if !search_criteria.blank? && contact.emailaddress1 && contact.emailaddress1.downcase.match(search_criteria.downcase) %>
+          <p class="ui-li-desc"><%= contact.emailaddress1 %></p>
+<%      end
+        if !search_criteria.blank? && contact.mobilephone && contact.mobilephone.match(search_criteria) %>
+          <p class="ui-li-desc">M:&nbsp;<%= contact.mobilephone %></p>
+<%      end
+        if !search_criteria.blank? && contact.telephone2 && contact.telephone2.match(search_criteria) %>
+          <p class="ui-li-desc">H:&nbsp;<%= contact.telephone2 %></p>
+<%      end
+        if !search_criteria.blank? && contact.telephone1 && contact.telephone1.match(search_criteria) %>
+          <p class="ui-li-desc">B:&nbsp;<%= contact.telephone1 %></p>
+<%      end
+        if !search_criteria.blank? && contact.telephone3 && contact.telephone3.match(search_criteria) %>
+          <p class="ui-li-desc">A:&nbsp;<%= contact.telephone3 %></p>
+<%      end %>
+      </a>
+    </div>
+    <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span>
+  </div>
+</li>
+<%  end
+end %>
+
+
+
+
+
 <%
-search_criteria = ''
-search_criteria = search.gsub("(","\\(") if search
-search_criteria.gsub!(")","\\)")
-items.each do |contact| %>
-    <li><a href="<%= url_for :action => :show, :id => contact.object, :query => {:origin => 'contact'} %>"><%= contact.last_first %></a></li>
-<% end %>
+#<li class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-btn-up-c">
+#  <div class="ui-btn-inner ui-li">
+#    <div class="ui-btn-text">
+#      <a class="ui-link-inherit" href="#">Item 5 cupiditate autem est excepturi</a>
+#    </div>
+#    <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span>
+#  </div>
+#</li>
+#
+#<li class="ui-li ui-li-divider ui-bar-b">I</li>
+#
+#<li class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-btn-up-c">
+#  <div class="ui-btn-inner ui-li">
+#    <div class="ui-btn-text">
+#      <a class="ui-link-inherit" href="index.html">
+#        <p class="ui-li-aside ui-li-desc"><strong>6:24</strong>PM</p>
+#        <h3 class="ui-li-heading">Stephen Weber</h3>
+#        <p class="ui-li-desc"><strong>You've been invited to a meeting at Filament Group in Boston, MA</strong></p>
+#        <p class="ui-li-desc">Hey Stephen, if you're available at 10am tomorrow, we've got a meeting with the jQuery team.</p>
+#      </a>
+#    </div>
+#    <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span>
+#  </div>
+#</li>
+%>

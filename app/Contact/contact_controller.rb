@@ -9,7 +9,7 @@ class ContactController < Rho::RhoController
   include SQLHelper
 
   @@first_render = true
-
+  @@last_rendered_group = { :group => "" }
 
   #GET /Contact
   #def index
@@ -24,6 +24,8 @@ class ContactController < Rho::RhoController
     $tab = 1
     Settings.record_activity
     persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_CONTACT_FILTER_PREFIX, Constants::CONTACT_FILTERS)
+    @persisted_selection = persisted_filter_values['filter']
+    @persisted_selection = 'all' if @persisted_selection.blank?
     @persisted_search_terms = persisted_filter_values['search_terms']
     @page_name = 'Contacts'
     @firstBtnUrl = url_for :action => :new, :query => {:origin => 'contact'}
@@ -31,9 +33,7 @@ class ContactController < Rho::RhoController
     @secondBtnIcon = ''
     @secondBtnUrl = url_for :action=>:search, :controller => 'SearchContacts', :query => {:origin => 'contact'}
     @scriptName = 'contacts'
-    @pageSize = 10
-    @pageNum = 0
-    @lookAheadPages = 2
+    @pageSize = 30
     @url = '/app/Contact/get_jqm_contacts_page'
     render :action => :filter, :back => 'callback:', :layout => 'layout_jqm_list'
   end
@@ -51,15 +51,19 @@ class ContactController < Rho::RhoController
       {:value => 'open-opps', :label => 'Open Opportunities'},
       {:value => 'won-opps', :label => 'Won Opportunities'}
     ]
-    persisted_selection = Settings.filter_values["#{Constants::PERSISTED_CONTACT_FILTER_PREFIX}filter"]
-    persisted_selection = 'all' if persisted_selection.blank?
-    gen_jqm_options(options, persisted_selection)
+    gen_jqm_options(options, @persisted_selection)
   end
   def get_jqm_contacts_page
+    Settings.record_activity
+    Settings.update_persisted_filter_values(Constants::PERSISTED_CONTACT_FILTER_PREFIX, Constants::CONTACT_FILTERS.map{|filter| filter[:name]}, @params)
     persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_CONTACT_FILTER_PREFIX, Constants::CONTACT_FILTERS)
+    @persisted_selection = persisted_filter_values['filter']
+    @persisted_selection = 'all' if @persisted_selection.blank?
     @persisted_search_terms = persisted_filter_values['search_terms']
-    @items = Contact.get_filtered_contacts(@params['page'], 'all', @persisted_search_terms, @params['pageSize'])
-    render :partial => 'contact', :locals => { :items => @items, :search => @persisted_search_terms }
+    @items = Contact.get_filtered_contacts(@params['page'], @persisted_selection, @persisted_search_terms, @params['pageSize'])
+    @grouped_items = @items.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first }
+    @@last_rendered_group[:group] = "" if @params['reset'] == true
+    render :partial => 'contact', :locals => { :items => @grouped_items, :search => @persisted_search_terms, :last_group => @@last_rendered_group }
   end
 
   def show_all_contacts

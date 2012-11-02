@@ -1,54 +1,13 @@
-/* speed-up JQueryMobile list views */
-@media all {
-    .iscroll-content li {
-        -webkit-transform: translateZ(0);
-    }
+/* custom list view component */
+ul.list-view {
+    -webkit-margin-before: 0px !important;
+    -webkit-margin-after: 0px !important;
+    -webkit-padding-start: 0px !important;
 }
 
-.iscroll-content .ui-listview li.ui-btn-up-b {
-    background-image: none;
-    text-shadow: none;
+.iscroll-content {
+    padding: 0px !important;
 }
-
-.iscroll-content .ui-listview li.ui-btn-hover-b {
-    background-image: none;
-    text-shadow: none;
-}
-
-.iscroll-content .ui-listview li.ui-btn-down-b {
-    background-image: none;
-    text-shadow: none;
-}
-
-.iscroll-content .ui-listview li.ui-btn-up-c {
-    background-image: none;
-    text-shadow: none;
-}
-
-.iscroll-content .ui-listview li.ui-btn-hover-c {
-    background-image: none;
-    text-shadow: none;
-}
-
-.iscroll-content .ui-listview li.ui-btn-down-c {
-    background-image: none;
-    text-shadow: none;
-}
-
-.iscroll-content .ui-listview li.ui-btn-up-d {
-    background-image: none;
-    text-shadow: none;
-}
-
-.iscroll-content .ui-listview li.ui-btn-hover-d {
-    background-image: none;
-    text-shadow: none;
-}
-
-.iscroll-content .ui-listview li.ui-btn-down-d {
-    background-image: none;
-    text-shadow: none;
-} 
 
 /* custom styles */
 .ui-offline-bar {
@@ -69,25 +28,26 @@
     display: none;
 }
 
-
-/* This is removing the border circle border around icon in split list.  Hopefully jquery will fix or provide option to remove in later version */ 
+/* This is removing the border circle around icon in split list.
+   Hopefully jquery will fix or provide option to remove in later version */
 .ui-li-link-alt span.ui-btn-corner-all {
-  border-style: hidden;
-  -webkit-box-shadow: none;
-  }
+    border-style: hidden;
+    -webkit-box-shadow: none;
+}
 
+/* custom icons */
 .ui-icon-phone {
-	background-image: url("/public/images/simple_black_phone.png") /*{global-icon-set}*/;
-	background-color: rgba(0, 0, 0, 0);
-	width:24px;
-	height: 24px;
-	box-shadow: none;
-	-webkit-box-shadow: none;
+    background-image: url("/public/images/simple_black_phone.png"); /*{global-icon-set}*/
+    background-color: rgba(0, 0, 0, 0);
+    width: 24px;
+    height: 24px;
+    margin-top: -11px !important;
 }
 
 .ui-icon-map {
-	background-image: url("/public/images/map_small_opp.jpg") /*{global-icon-set}*/;
-	box-shadow: none;
-	-webkit-box-shadow: none;
+    background-image: url("/public/images/map_icon_24px.png"); /*{global-icon-set}*/
+    background-color: rgba(0, 0, 0, 0);
+    width: 24px;
+    height: 24px;
+    margin-top: -11px !important;
 }
-
