@@ -5,7 +5,8 @@ function ScrollView(page, url, pageSize) {
                             .find("span.ui-btn-text"),
         $scroll = $page.find(".iscroll-wrapper"),
         scroll = $scroll.jqmData("iscrollview"),
-        $list = $scroll.find("ul.scrollable-listview"),
+        $list = $scroll.find(".scrollable-listview"),
+        splitConstant = "<div class=\"ui-li ",
         filterTxt, requestData, currentpage, pages;
 
     function adjustScrollView() {
@@ -36,29 +37,20 @@ function ScrollView(page, url, pageSize) {
         $.ajax({
             url: url,
             data: requestData,
-            success: function(data) {
-                var rows = data.split("<li");
-                fnc((rows.length > 1) ? rows.slice(1, pageSize) : []);
-            }
+            success: fnc
         });
     }
 
     $scroll.bind({
         iscroll_onpullup: function() {
             if (pages[0].length > 0) {
-                var item = $list.find("li").eq($list.length - 5);
-                $list.append("<li" + pages[0].join("<li"));
-                scroll.refresh(null, null, function() {
-                    if (item.length > 0)
-                        scroll.scrollToElement(item[0], 0);
-                });
+                $list.append(pages[0]);
                 pages[0] = pages[1];
                 getContent(currentpage++, pageSize, false, function(data) {
                     pages[1] = data;
                 });
             }
-            else
-                scroll.refresh();
+            scroll.refresh();
         }
     });
 
@@ -69,17 +61,18 @@ function ScrollView(page, url, pageSize) {
             txt = " " + txt;
         $filterTxt.text(filterTxt + txt);
         currentpage = 3;
-        pages = [[], []];
+        pages = ["", ""];
         $list.empty();
         getContent(0, pageSize * 3, true, function(data) {
-            if (data.length > 0) {
-                $list.append("<li" + data.splice(0, pageSize).join("<li"));
+            var rows = data.split(splitConstant);
+            if (rows.length > 1) {
+                $list.append(splitConstant + rows.splice(1, pageSize).join(splitConstant));
                 scroll.refresh();
             }
-            if (data.length > 0)
-                pages[0] = data.splice(0, pageSize);
-            if (data.length > 0)
-                pages[1] = data;
+            if (rows.length > 1)
+                pages[0] = splitConstant + rows.splice(1, pageSize).join(splitConstant);
+            if (rows.length > 1)
+                pages[1] = splitConstant + rows.splice(1, pageSize).join(splitConstant);
         });
     }
 
@@ -88,5 +81,14 @@ function ScrollView(page, url, pageSize) {
     if (index > 0)
         filterTxt = filterTxt.substr(0, index);
     filterTxt = $.trim(filterTxt);
+
+    $list
+    .delegate("a.btn", "tap", function() {
+        $(this).addClass("btn-clicked");
+    })
+    .delegate("a.btn", "vmouseup", function() {
+        $(this).removeClass("btn-clicked");
+    });
+
     reset();
 }

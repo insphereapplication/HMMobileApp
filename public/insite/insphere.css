@@ -1,5 +1,5 @@
 /* custom list view component */
-ul.list-view {
+.list-view {
     -webkit-margin-before: 0px !important;
     -webkit-margin-after: 0px !important;
     -webkit-padding-start: 0px !important;
@@ -7,6 +7,10 @@ ul.list-view {
 
 .iscroll-content {
     padding: 0px !important;
+}
+
+.btn-clicked {
+    background: #99ccff;
 }
 
 /* custom styles */

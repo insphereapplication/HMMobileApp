@@ -6,13 +6,13 @@ items.each do |group|
     id_str = 'comma' if id_str == ','
     if last_group[:group] != id_str
         last_group[:group] = id_str %>
-<li class="ui-li ui-li-divider ui-bar-b"><%= id_str.upcase %></li>
+<div class="ui-li ui-li-divider ui-bar-b"><%= id_str.upcase %></div>
 <%  end
     group[1].each do |contact| %>
-<li class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-btn-up-c">
+<div class="ui-li ui-btn-icon-right ui-li-has-arrow ui-btn-up-c">
   <div class="ui-btn-inner ui-li">
     <div class="ui-btn-text">
-      <a class="ui-link-inherit" href="<%= url_for(:action => :show, :id => contact.object, :query => {:origin => 'contact'}) %>">
+      <a class="ui-link-inherit btn" href="<%= url_for(:action => :show, :id => contact.object, :query => {:origin => 'contact'}) %>">
         <h3 class="ui-li-heading"><%= contact.last_first %></h3>
 <%      if !search_criteria.blank? && contact.emailaddress1 && contact.emailaddress1.downcase.match(search_criteria.downcase) %>
           <p class="ui-li-desc"><%= contact.emailaddress1 %></p>
@@ -33,7 +33,7 @@ items.each do |group|
     </div>
     <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span>
   </div>
-</li>
+</div>
 <%  end
 end %>
 
