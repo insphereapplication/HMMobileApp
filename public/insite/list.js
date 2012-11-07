@@ -82,13 +82,13 @@ function ScrollView(page, url, pageSize) {
         filterTxt = filterTxt.substr(0, index);
     filterTxt = $.trim(filterTxt);
 
-    $list
-    .delegate("a.btn", "tap", function() {
-        $(this).addClass("btn-clicked");
+    $list.delegate("a.btn", "tap", function() {
+        var $this = $(this);
+        $this.addClass("btn-clicked");
+        setTimeout(function() {
+            $this.removeClass("btn-clicked");
+        }, 500);
     })
-    .delegate("a.btn", "vmouseup", function() {
-        $(this).removeClass("btn-clicked");
-    });
 
     reset();
 }

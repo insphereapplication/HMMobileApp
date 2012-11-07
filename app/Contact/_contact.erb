@@ -6,10 +6,10 @@ items.each do |group|
     id_str = 'comma' if id_str == ','
     if last_group[:group] != id_str
         last_group[:group] = id_str %>
-<div class="ui-li ui-li-divider ui-bar-b"><%= id_str.upcase %></div>
+<div class="ui-li ui-li-divider bar-b"><%= id_str.upcase %></div>
 <%  end
     group[1].each do |contact| %>
-<div class="ui-li ui-btn-icon-right ui-li-has-arrow ui-btn-up-c">
+<div class="ui-li ui-btn-icon-right ui-li-has-arrow btn-up-c">
   <div class="ui-btn-inner ui-li">
     <div class="ui-btn-text">
       <a class="ui-link-inherit btn" href="<%= url_for(:action => :show, :id => contact.object, :query => {:origin => 'contact'}) %>">

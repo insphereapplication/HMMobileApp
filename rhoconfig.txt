@@ -39,4 +39,4 @@ lead_forward_target= '/Sso/Pages/StrategyBaySso.aspx'
 lead_forward_active_orders_target= '"/Sso/Pages/StrategyBaySso.aspx?Site=mobile"'
 local_server_port = 8080
 
-#net_timeout = 120
+net_timeout = 120

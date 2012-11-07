@@ -10,7 +10,24 @@
 }
 
 .btn-clicked {
-    background: #99ccff;
+    background: #6E97C0;
+}
+
+.btn-up-c {
+    border: 1px solid #CCC;
+    background: #EEE;
+    font-weight: bold;
+    color: #222;
+    text-shadow: none !important;
+}
+
+.bar-b {
+    font-family: Helvetica,Arial,sans-serif;
+    border: 1px solid #456F9A;
+    background: #5E87B0;
+    color: white;
+    font-weight: bold;
+    text-shadow: none !important;
 }
 
 /* custom styles */
