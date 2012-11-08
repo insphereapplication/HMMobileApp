@@ -33,6 +33,9 @@ class ActivityController < Rho::RhoController
         {:value => 'High', :label => 'High'}
     ], selected)
     @page_name = 'Activities'
+    @isCollapsed = 'true'
+    @firstBtnText = 'Create'
+    @firstBtnIcon = 'plus'
     @firstBtnUrl = url_for :action => :new_task
     @secondBtnText = 'Complete'
     @secondBtnIcon = 'check'

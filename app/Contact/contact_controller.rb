@@ -20,6 +20,9 @@ class ContactController < Rho::RhoController
     @persisted_selection = 'all' if @persisted_selection.blank?
     @persisted_search_terms = persisted_filter_values['search_terms']
     @page_name = 'Contacts'
+    @isCollapsed = 'true'
+    @firstBtnText = 'Create'
+    @firstBtnIcon = 'plus'
     @firstBtnUrl = url_for :action => :new, :query => {:origin => 'contact'}
     @secondBtnText = 'Search AC'
     @secondBtnIcon = ''
