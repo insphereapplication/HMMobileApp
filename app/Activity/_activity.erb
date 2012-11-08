@@ -1,38 +1,52 @@
-<li role="option" tabindex="0" data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-btn-up-c">
-    <div class="ui-li-sidebar-<%=color%> ui-btn-up-c" style="width: <%=check_width%>px;">
-        <div class="ui-checkbox" activity-id="<%=id%>">
-            <input type="checkbox" class="task-checkbox" style="top: <%=check_top%>px; left: <%=check_left%>px;" <%='checked="checked" disabled="disabled"' if completed%>/>
-        </div>
+<% items.each do |row|
+    if row.class.to_s == "Hash" %>
+<div class="ui-li ui-li-divider bar-b"><%= row[:divider] %></div>
+<%  else
+        data = activity_row_parameters(row) %>
+<div class="ui-li ui-btn-icon-right ui-li-has-alt btn-up-c">
+  <div class="ui-li-sidebar btn-up-c" style="width: <%= data[:check_width] %>px;">
+    <div class="ui-checkbox" activity-id="<%= data[:id] %>">
+      <input type="checkbox" style="top: <%= data[:check_top] %>px; left: <%= data[:check_left] %>px;" <%= 'checked="checked" disabled="disabled"' if data[:completed] %> />
     </div>
-    <div onclick="onRowClick(event, <%=check_width%>, '<%=show_detail_url%>')" class="ui-btn-inner" style="padding-top: 6px; padding-bottom: 6px;">
-        <div class="ui-btn-text">
-            <a class="no-top-padding ui-link-inherit">
-                <h4 style="margin-top: 0px; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                    <% if show_icon %>
-                        <img src="/public/images/red_exclamation.png" class="ui-li-thumb" style="position: relative; top: 2px; width: 16px; height: 16px; margin-right: 5px; margin-left: 0px;"/>
-                    <% end %>    
-                    <%=top_text%>
-                </h4>
-                <div class="ui-grid-a ui-li-desc" style="margin-bottom: 0px;">
-                    <div class="ui-block-a">
-                        <%=bottom_left_text%>
-                    </div>
-                    <div class="ui-block-b" align="right">
-                        <%=bottom_right_text%>
-                    </div>
-                </div>
-            </a>
+  </div>
+  <div class="ui-btn-inner ui-li ui-li-has-alt" style="padding-left: <%= data[:check_width] %>px;" onclick="onRowClick(event, <%= data[:check_width] %>, '<%= data[:show_detail_url] %>')">
+    <div class="ui-btn-text">
+      <a class="ui-link-inherit btn">
+        <h4 style="margin-top: 0px; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+<%      if data[:show_icon] %>
+          <img src="/public/images/red_exclamation.png" class="ui-li-thumb" style="position: relative; top: 2px; width: 16px; height: 16px; margin-right: 5px; margin-left: -5px;"/>
+<%      end %>
+          <%= data[:top_text] %>
+        </h4>
+        <div class="ui-grid-a ui-li-desc" style="margin-bottom: 0px;">
+          <div class="ui-block-a">
+            <%= data[:bottom_left_text] %>
+          </div>
+          <div class="ui-block-b" align="right">
+            <%= data[:bottom_right_text] %>
+          </div>
         </div>
+      </a>
     </div>
-    <% if href_text %>
-        <a href="<%=href_text%>" title="Details" data-theme="c" class="ui-li-link-alt ui-btn ui-btn-up-c">
-        <% if show_phone %>
-            <img class="opp-icon" src="/public/images/phone_black.png" style="top: 12px;"/>
-        <% else %>
-            <img class="opp-icon" src="/public/images/map_icon.png" style="top: 12px;"/>
-        <% end %>
-        </a>
-    <% else %>
-        <span class="ui-icon ui-icon-arrow-r"></span>
-    <% end %>
-</li>
+<%      if !data[:href_text] %>
+    <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span>
+<%      end %>
+  </div>
+<%      if data[:href_text] %>
+  <a class="ui-li-link-alt btn split-btn-up-c ui-btn-icon-notext" title="Details" href="<%= data[:href_text] %>">
+    <span class="ui-btn-inner">
+      <span class="ui-shadow ui-btn-corner-all ui-btn-icon-notext" title="">
+        <span class="ui-btn-inner ui-btn-corner-all">
+<%          if data[:show_phone] %>
+          <span class="ui-icon ui-icon-phone ui-icon-shadow">&nbsp;</span>
+<%          else %>
+          <span class="ui-icon ui-icon-map ui-icon-shadow">&nbsp;</span>
+<%          end %>
+        </span>
+      </span>
+    </span>
+  </a>
+<%      end %>
+</div>
+<%  end
+end %>

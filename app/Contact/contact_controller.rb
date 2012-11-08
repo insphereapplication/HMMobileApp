@@ -12,14 +12,6 @@ class ContactController < Rho::RhoController
   @@last_rendered_group = { :group => "" }
 
   #GET /Contact
-  #def index
-  #  $tab = 1
-  #  Settings.record_activity
-  #  @page_limit = System.get_property('platform') == "ANDROID" ? 1 : 1
-  #  @persisted_search_terms = Settings.get_persisted_filter_values(Constants::PERSISTED_CONTACT_FILTER_PREFIX, Constants::CONTACT_FILTERS)['search_terms']
-  #  render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
-  #end
-
   def index
     $tab = 1
     Settings.record_activity
@@ -62,7 +54,7 @@ class ContactController < Rho::RhoController
     @persisted_search_terms = persisted_filter_values['search_terms']
     @items = Contact.get_filtered_contacts(@params['page'], @persisted_selection, @persisted_search_terms, @params['pageSize'])
     @grouped_items = @items.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first }
-    @@last_rendered_group[:group] = "" if @params['reset'] == true
+    @@last_rendered_group[:group] = "" if @params['reset'] == "true"
     render :partial => 'contact', :locals => { :items => @grouped_items, :search => @persisted_search_terms, :last_group => @@last_rendered_group }
   end
 

@@ -4,39 +4,179 @@ require 'date'
 
 class ActivityController < Rho::RhoController
   include BrowserHelper
-  
- 
-  @@first_render = true
 
+  @@first_render = true
+  @@last_rendered_group = { :state => 0, :page => 0 }
 
   def index
-    Activity.complete_activities(@params['selected-activity']) if @params['selected-activity']
-    Settings.update_persisted_filter_values('activity_', ['type', 'status', 'priority'], @params) if @params['status']
+    Settings.record_activity
     selected = Settings.filter_values["activity_type"]
     selected = 'All' if selected.blank?
-    @type_filter = gen_options([
+    @type_filter = gen_jqm_options([
         {:value => 'All', :label => 'All'},
         {:value => 'Task', :label => 'Task'},
         {:value => 'Appointment', :label => 'Appointment'},
         {:value => 'PhoneCall', :label => 'Phone Call'}
     ], selected)
     selected = Settings.filter_values["activity_status"]
-    selected = 'Open' if selected.blank?
-    @status_filter = gen_options([
+    selected = 'Today' if selected.blank?
+    @status_filter = gen_jqm_options([
         {:value => 'Today', :label => 'Today'},
         {:value => 'Next7Days', :label => 'Next 7 Days'},
         {:value => 'NoDate', :label => 'No Date'}
     ], selected)
     selected = Settings.filter_values["activity_priority"]
     selected = 'All' if selected.blank?
-    @priority_filter = gen_options([
+    @priority_filter = gen_jqm_options([
         {:value => 'All', :label => 'All'},
         {:value => 'Normal', :label => 'Normal'},
         {:value => 'High', :label => 'High'}
     ], selected)
-    render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
+    @page_name = 'Activities'
+    @firstBtnUrl = url_for :action => :new_task
+    @secondBtnText = 'Complete'
+    @secondBtnIcon = 'check'
+    @secondBtnUrl = 'javascript:completeSelectedActivities()'
+    @scriptName = 'activities'
+    @pageSize = 30
+    @url = '/app/Activity/get_jqm_activities_page'
+    render :action => :filter, :back => 'callback:', :layout => 'layout_jqm_list'
   end
-
+  def complete_activities_alert
+    Alert.show_popup "Please choose activities to complete."
+  end
+  def gen_jqm_options(options, selected_value)
+    options.map{|option|
+      selected_text = (option[:value] == selected_value) ? ' selected="true"' : ''
+      "<option value=\"#{option[:value]}\"#{selected_text}>#{option[:label]}</option>"
+    }.join("\n")
+  end
+  def activity_row_parameters(activity)
+    parent_contact = activity.parent_contact
+    if (parent_contact)
+      left_text = parent_contact.full_name.blank? ? "&nbsp;" : parent_contact.full_name
+    else
+      parent_policy = activity.policy
+      left_text = parent_policy.nil? || parent_policy.cssi_primaryinsured.blank? ? "&nbsp;" : parent_policy.cssi_primaryinsured
+    end
+    scheduled_time = activity.scheduled_time
+    right_text = scheduled_time.blank? ? "&nbsp;" : to_datetime_noyear(scheduled_time)
+    is_priority = !activity.prioritycode.blank? && activity.prioritycode == 'High'
+    details = url_for(:action => :show, :id => activity.object)
+    href = nil
+    is_phone = activity.type == 'PhoneCall'
+    if (activity.open? && (activity.type=='Appointment' || activity.type=='PhoneCall'))
+      opp = activity.opportunity
+      details = url_for(:action => :opportunity_details, :id => opp.object) if opp && !opp.closed?
+    end
+    isApple = System::get_property('platform') == 'APPLE'
+    if (is_phone)
+      href = activity.phonenumber.blank? ? "#" : "tel:#{activity.phonenumber}"
+    elsif (activity.type == 'Appointment')
+      href = activity.location.blank? ? "#" :
+              isApple ? "maps:q=#{Rho::RhoSupport.url_encode(activity.location)}" :
+                      "http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(activity.location)}"
+    end
+    {
+      :id => activity.object,
+      :show_detail_url => details,
+      :completed => activity.statecode == 'Completed',
+      :show_icon => is_priority,
+      :top_text => activity.subject.blank? ? "&nbsp;" : activity.subject,
+      :bottom_left_text => left_text,
+      :bottom_right_text => right_text,
+      :href_text => href,
+      :show_phone => is_phone,
+      :check_top => isApple ? "25" : "15",
+      :check_left => isApple ? "7" : "2",
+      :check_width => "25"
+    }
+  end
+  def get_jqm_activities_page
+    Settings.record_activity
+    Activity.complete_activities(@params['selected-activity']) if @params['selected-activity']
+    Settings.update_persisted_filter_values('activity_', ['type', 'status', 'priority'], @params) if @params['status']
+    @type = Settings.filter_values["activity_type"]
+    @type = 'All' if @type.blank?
+    @status = Settings.filter_values["activity_status"]
+    @status = 'Open' if @status.blank?
+    @priority = Settings.filter_values["activity_priority"]
+    @priority = 'All' if @priority.blank?
+    if @params['reset'] == "true"
+      @@last_rendered_group[:state] = 0
+      @@last_rendered_group[:page] = 0
+    end
+    @grouped_items = []
+    data = []
+    page = @params['page'].to_i
+    pageSize = @params['pageSize'].to_i
+    if @status == "Today" || @status == "Next7Days"
+      if @@last_rendered_group[:state] == 0
+        @grouped_items[0] = { :divider => "Past Due" }
+        @@last_rendered_group[:state] = 1
+      end
+      if @@last_rendered_group[:state] == 1
+        data = Activity.past_due_activities(page, @type, @priority, pageSize)
+        @grouped_items.concat(data) if data.length > 0
+        if data.length < pageSize
+          @@last_rendered_group[:state] = 2
+          @@last_rendered_group[:page] = page
+        end
+      end
+      if @@last_rendered_group[:state] == 2
+        @grouped_items.push({ :divider => "No Date" })
+        @@last_rendered_group[:state] = 3
+      end
+      if @@last_rendered_group[:state] == 3
+        data = Activity.no_date_activities(page - @@last_rendered_group[:page], @type, @priority, pageSize)
+        @grouped_items.concat(data) if data.length > 0
+        if data.length < pageSize
+          @@last_rendered_group[:state] = 4
+          @@last_rendered_group[:page] = page
+        end
+      end
+      if @@last_rendered_group[:state] == 4
+        @grouped_items.push({ :divider => "Today" })
+        @@last_rendered_group[:state] = 5
+      end
+      if @@last_rendered_group[:state] == 5
+        data = Activity.today_activities(page - @@last_rendered_group[:page], @type, @priority, pageSize)
+        @grouped_items.concat(data) if data.length > 0
+        if data.length < pageSize
+          @@last_rendered_group[:state] = 6
+          @@last_rendered_group[:page] = page
+        end
+      end
+      if @status == "Next7Days"
+        if @@last_rendered_group[:state] == 6
+          @grouped_items.push({ :divider => "Next 7 Days" })
+          @@last_rendered_group[:state] = 7
+        end
+        if @@last_rendered_group[:state] == 7
+          data = Activity.future_activities(page - @@last_rendered_group[:page], @type, @priority, pageSize)
+          @grouped_items.concat(data) if data.length > 0
+          if data.length < pageSize
+            @@last_rendered_group[:state] = 8
+            @@last_rendered_group[:page] = page
+          end
+        end
+      end
+    else
+      if @@last_rendered_group[:state] == 0
+        @grouped_items[0] = { :divider => "No Date" }
+        @@last_rendered_group[:state] = 1
+      end
+      if @@last_rendered_group[:state] == 1
+        data = Activity.no_date_activities(page, @type, @priority, pageSize)
+        @grouped_items.concat(data) if data.length > 0
+        if data.length < pageSize
+          @@last_rendered_group[:state] = 2
+          @@last_rendered_group[:page] = page
+        end
+      end
+    end
+    render :partial => 'activity', :locals => { :items => @grouped_items }
+  end
 
   def show_all_activities
     #puts "^^*^^ Activity.local_changed #{Activity.local_changed?}"
@@ -101,52 +241,6 @@ class ActivityController < Rho::RhoController
 
   def future_activities
     get_new_activities('yellow', Activity.future_activities(@params['page'].to_i, @params['type'], @params['priority']))
-  end
-
-  def complete_activities_alert
-    Alert.show_popup "Please choose activities to complete."
-  end
-
-  def activity_row_parameters(activity)
-    parent_contact = activity.parent_contact
-    if (parent_contact)
-      left_text = parent_contact.full_name.blank? ? "&nbsp;" : parent_contact.full_name
-    else
-      parent_policy = activity.policy
-      left_text = parent_policy.nil? || parent_policy.cssi_primaryinsured.blank? ? "&nbsp;" : parent_policy.cssi_primaryinsured
-    end
-    scheduled_time = activity.scheduled_time
-    right_text = scheduled_time.blank? ? "&nbsp;" : to_datetime_noyear(scheduled_time)
-    is_priority = !activity.prioritycode.blank? && activity.prioritycode == 'High'
-    details = url_for(:action => :show, :id => activity.object)
-    href = nil
-    is_phone = activity.type == 'PhoneCall'
-    if (activity.open? && (activity.type=='Appointment' || activity.type=='PhoneCall'))
-      opp = activity.opportunity
-      details = url_for(:action => :opportunity_details, :id => opp.object) if opp && !opp.closed?
-    end
-    isApple = System::get_property('platform') == 'APPLE'
-    if (is_phone)
-      href = activity.phonenumber.blank? ? "#" : "tel:#{activity.phonenumber}"
-    elsif (activity.type == 'Appointment')
-      href = activity.location.blank? ? "#" :
-              isApple ? "maps:q=#{Rho::RhoSupport.url_encode(activity.location)}" :
-                      "http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(activity.location)}"
-    end
-    {
-      :id => activity.object,
-      :show_detail_url => details,
-      :completed => activity.statecode == 'Completed',
-      :show_icon => is_priority,
-      :top_text => activity.subject.blank? ? "&nbsp;" : activity.subject,
-      :bottom_left_text => left_text,
-      :bottom_right_text => right_text,
-      :href_text => href,
-      :show_phone => is_phone,
-      :check_top => isApple ? "25" : "15",
-      :check_left => isApple ? "7" : "2",
-      :check_width => "25"
-    }
   end
 
   def opportunity_details

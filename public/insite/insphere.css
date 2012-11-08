@@ -21,6 +21,10 @@
     text-shadow: none !important;
 }
 
+.split-btn-up-c {
+    border-left: 1px solid #CCC;
+}
+
 .bar-b {
     font-family: Helvetica,Arial,sans-serif;
     border: 1px solid #456F9A;
@@ -28,6 +32,19 @@
     color: white;
     font-weight: bold;
     text-shadow: none !important;
+}
+
+.ui-li-sidebar {
+    position: absolute;
+    width: 10px;
+    height: 100%;
+    border-width: 0;
+    border-right-width: 1px;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    background: #DDD;
 }
 
 /* custom styles */

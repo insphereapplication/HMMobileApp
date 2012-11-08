@@ -1,6 +1,5 @@
 function clearFilter() {
-    $("#contact_filter").val("all");
-    $("#contact_filter").selectmenu("refresh");
+    $("#contact_filter").val("all").selectmenu("refresh");
     $("#search_input").val("");
 }
 
