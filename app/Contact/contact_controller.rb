@@ -24,6 +24,7 @@ class ContactController < Rho::RhoController
     @firstBtnText = 'Create'
     @firstBtnIcon = 'plus'
     @firstBtnUrl = url_for :action => :new, :query => {:origin => 'contact'}
+    @firstBtnBack = false
     @secondBtnText = 'Search AC'
     @secondBtnIcon = ''
     @secondBtnUrl = url_for :action=>:search, :controller => 'SearchContacts', :query => {:origin => 'contact'}

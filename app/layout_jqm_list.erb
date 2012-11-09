@@ -25,7 +25,7 @@
         <div class="scrollable-list-page" data-role="page">
             <div data-role="header" data-theme="b">
                 <div class="ui-offline-bar<% if DeviceCapabilities.is_connected? %> ui-hidden<% end %>">Connection State: Offline</div>
-                <a href="<%= @firstBtnUrl %>" data-icon="<%= @firstBtnIcon %>"><%= @firstBtnText %></a>
+                <a href="<%= @firstBtnUrl %>" data-icon="<%= @firstBtnIcon %>"<%= ' data-rel="back"' if @firstBtnBack == true %>><%= @firstBtnText %></a>
                 <h1>
                     <%= @page_name %>
                     <img class="<% if not DeviceCapabilities.is_syncing? %>ui-hidden<% end %>" id="syncSpinner" src="/public/images/syncSpinner.gif" width="12" height="12"/>

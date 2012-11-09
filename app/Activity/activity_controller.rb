@@ -38,6 +38,7 @@ class ActivityController < Rho::RhoController
     @firstBtnText = 'Create'
     @firstBtnIcon = 'plus'
     @firstBtnUrl = url_for :action => :new_task
+    @firstBtnBack = false
     @secondBtnText = 'Complete'
     @secondBtnIcon = 'check'
     @secondBtnUrl = 'javascript:completeSelectedActivities()'
