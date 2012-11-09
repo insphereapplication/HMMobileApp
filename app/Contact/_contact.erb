@@ -1,6 +1,8 @@
 <%  search_criteria = ''
-    search_criteria = search.gsub("(","\\(") if search
-    search_criteria.gsub!(")","\\)")
+    if search
+      search_criteria = search.gsub("(","\\(")
+      search_criteria.gsub!(")","\\)")
+    end
 items.each do |group|
     id_str = group[0]
     id_str = 'comma' if id_str == ','
