@@ -39,9 +39,11 @@ class ActivityController < Rho::RhoController
     @firstBtnIcon = 'plus'
     @firstBtnUrl = url_for :action => :new_task
     @firstBtnBack = false
+    @firstBtnExternal = false
     @secondBtnText = 'Complete'
     @secondBtnIcon = 'check'
     @secondBtnUrl = 'javascript:completeSelectedActivities()'
+    @secondBtnExternal = false
     @scriptName = 'activities'
     @pageSize = 30
     @url = '/app/Activity/get_jqm_activities_page'

@@ -25,9 +25,11 @@ class ContactController < Rho::RhoController
     @firstBtnIcon = 'plus'
     @firstBtnUrl = url_for :action => :new, :query => {:origin => 'contact'}
     @firstBtnBack = false
+    @firstBtnExternal = false
     @secondBtnText = 'Search AC'
     @secondBtnIcon = ''
     @secondBtnUrl = url_for :action=>:search, :controller => 'SearchContacts', :query => {:origin => 'contact'}
+    @secondBtnExternal = true
     @scriptName = 'contacts'
     @pageSize = 30
     @url = '/app/Contact/get_jqm_contacts_page'
