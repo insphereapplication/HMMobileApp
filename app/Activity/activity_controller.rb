@@ -45,6 +45,7 @@ class ActivityController < Rho::RhoController
     @scriptName = 'activities'
     @pageSize = 30
     @url = '/app/Activity/get_jqm_activities_page'
+    @filterBtnText = 'Filter'
     render :action => :filter, :back => 'callback:', :layout => 'layout_jqm_list'
   end
   def complete_activities_alert

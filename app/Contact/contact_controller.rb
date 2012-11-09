@@ -31,6 +31,7 @@ class ContactController < Rho::RhoController
     @scriptName = 'contacts'
     @pageSize = 30
     @url = '/app/Contact/get_jqm_contacts_page'
+    @filterBtnText = 'Filter'
     render :action => :filter, :back => 'callback:', :layout => 'layout_jqm_list'
   end
   def gen_jqm_options(options, selected_value)
