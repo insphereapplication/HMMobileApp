@@ -25,9 +25,10 @@ function ScrollView(page, url, pageSize) {
     });
 
     $filter.find(".scrollable-list-filter-clear").click(function() {
-        $filter.trigger("collapse");
-        clearFilter();
-        reset();
+        if (clearFilter()) {
+            $filter.trigger("collapse");
+            reset();
+        }
     });
 
     function getContent(pageNum, pageSize, reset, fnc) {

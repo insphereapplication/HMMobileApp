@@ -2,6 +2,7 @@ function clearFilter() {
     $("#search_name").val("");
     $("#search_email").val("");
     $("#search_phone").val("");
+    return false;
 }
 
 function getFilterData() {
