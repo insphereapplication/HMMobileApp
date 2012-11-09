@@ -916,7 +916,7 @@ class SettingsController < Rho::RhoController
   def quoting_tool
         Settings.record_activity
         if Settings.pin_confirmed == true
-          insphere_url = Rho::RhoConfig.insphere_url
+          quoting_tool_url = Rho::RhoConfig.quoting_tool_url
           quoting_tool_target = Rho::RhoConfig.quoting_tool_target
           ctime = Time.new.utc
           ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
@@ -933,7 +933,7 @@ class SettingsController < Rho::RhoController
        
           redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
         
-          System.open_url("#{insphere_url}#{quoting_tool_target}?#{quoting_tool_params_enc}")
+          System.open_url("#{quoting_tool_url}#{quoting_tool_target}?#{quoting_tool_params_enc}")
           
       else
           redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
