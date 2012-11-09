@@ -10,6 +10,7 @@ class ActivityController < Rho::RhoController
 
   def index
     Settings.record_activity
+    Activity.complete_activities(@params['selected-activity']) if @params['selected-activity']
     selected = Settings.filter_values["activity_type"]
     selected = 'All' if selected.blank?
     @type_filter = gen_jqm_options([
@@ -97,7 +98,6 @@ class ActivityController < Rho::RhoController
   end
   def get_jqm_activities_page
     Settings.record_activity
-    Activity.complete_activities(@params['selected-activity']) if @params['selected-activity']
     Settings.update_persisted_filter_values('activity_', ['type', 'status', 'priority'], @params) if @params['status']
     @type = Settings.filter_values["activity_type"]
     @type = 'All' if @type.blank?
