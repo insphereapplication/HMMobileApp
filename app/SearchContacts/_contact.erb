@@ -1,0 +1,49 @@
+<% if error.length > 0 %>
+<div class="ui-li "><pre><%= error %></pre></div>
+<% elsif result[:items].length == 0 %>
+<div class="ui-li ">No Contacts Found</div>
+<% else
+  result[:items].each do |contact| %>
+<div class="ui-li ui-btn-icon-right ui-li-has-arrow btn-up-c">
+  <div class="ui-btn-inner ui-li">
+    <div class="ui-btn-text">
+<%  on_device = result[:on_device].include?(contact[0])
+    if on_device %>
+      <a class="ui-link-inherit btn" href="<%= url_for :action => :show, :controller => :Contact, :id => contact[0], :query => { :origin => 'SearchContacts' } %>">
+<%  else %>
+      <a class="ui-link-inherit btn" href="<%= url_for :action => :show_AC_contact, :controller => :Contact, :query => { :origin => 'SearchContacts', :id => contact[0] } %>">
+<%  end %>
+        <h3 class="ui-li-heading"><%= "#{contact[1]['lastname']}, #{contact[1]['firstname']}" %></h3>
+<%  if !search_terms[:email].blank? %>
+        <p class="ui-li-desc"><%= "#{contact[1]['emailaddress1']}" %></p>
+<%  end
+    if !search_terms[:phone].blank?
+      search_phone = search_terms[:phone].gsub("(","\\(")
+      search_phone.gsub!(")","\\)")
+      if contact[1]['mobilephone'] && contact[1]['mobilephone'].match(search_phone) %>
+        <p class="ui-li-desc">M:&nbsp;<%= "#{contact[1]['mobilephone']}" %></p>
+<%    end
+      if contact[1]['telephone2'] && contact[1]['telephone2'].match(search_phone) %>
+        <p class="ui-li-desc">H:&nbsp;<%= "#{contact[1]['telephone2']}" %></p>
+<%    end
+      if contact[1]['telephone1'] && contact[1]['telephone1'].match(search_phone) %>
+        <p class="ui-li-desc">B:&nbsp;<%= "#{contact[1]['telephone1']}" %></p>
+<%    end
+      if contact[1]['telephone3'] && contact[1]['telephone3'].match(search_phone) %>
+        <p class="ui-li-desc">A:&nbsp;<%= "#{contact[1]['telephone3']}" %></p>
+<%    end
+    end %>
+      </a>
+    </div>
+<%  if on_device %>
+    <span class="ui-icon ui-icon-phone ui-icon-shadow">&nbsp;</span>
+<%  else %>
+    <span class="ui-icon ui-icon-computer ui-icon-shadow">&nbsp;</span>
+<%  end %>
+  </div>
+</div>
+<% end
+  if result[:items].length >= 50 %>
+<div class="ui-li ">More than 50 results were found. Please specify additional search parameters to narrow the results.</div>
+<% end
+end %>
