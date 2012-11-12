@@ -18,7 +18,7 @@
 		<div id="contentDiv" data-role="content">
    			<div data-role="fieldcontain">
   	         	<label for="task_due_datetime" class="fieldLabel">Due Date:</label>
-				<input id="task_due_datetime" type="text" name="task[due_datetime]" data-theme="d" readonly value="<%= to_datetime(@activity.scheduledend) %>"  onClick="editpopupDateTimeAJPicker('0', 'Task Time', 'task_due_datetime', '<%= @activity.scheduledend %>'); document.getElementById('task_due_datetime').focus();"/>
+				<input id="task_due_datetime" type="text" name="task[due_datetime]" data-theme="d" readonly value="<%= to_datetime(@activity.scheduledend) %>"  onClick="popupTomorrowDateTimeAJPicker('0', 'Task Time', 'task_due_datetime'); document.getElementById('task_due_datetime').focus();"/>
    			</div>
  		    <div data-role="fieldcontain">
   			  	<label for="task_description" class="fieldLabel">Description:</label>

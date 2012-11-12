@@ -40,7 +40,7 @@
 			</div>
 			<div data-role="fieldcontain">
 				<label for="dependent[cssi_dateofbirth]" class="fieldLabel">Date of Birth:</label>
-				<input id="dependent[cssi_dateofbirth]" type="text" name="dependent[cssi_dateofbirth]" data-theme="d" readonly value="<%= to_date(@dependent.cssi_dateofbirth) %>" onClick="editpopupDateTimeAJPicker('1', 'Dependent Birth Date', 'dependent[cssi_dateofbirth]', '<%= @dependent.cssi_dateofbirth %>'); document.getElementById('submit_button').focus();"></input>
+				<input id="dependent[cssi_dateofbirth]" type="text" name="dependent[cssi_dateofbirth]" data-theme="d" readonly value="<%= to_date(@dependent.cssi_dateofbirth) %>" onClick="popupBirthDateAJPicker('1', 'Dependent Birth Date', 'dependent[cssi_dateofbirth]'); document.getElementById('submit_button').focus();"></input>
 			</div>
 			<div data-role="fieldcontain">
 				<label for="dependent[cssi_gender]" class="select">Gender:</label>

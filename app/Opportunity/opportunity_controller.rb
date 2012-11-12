@@ -441,53 +441,36 @@ class OpportunityController < Rho::RhoController
     System.open_url("tel:#{telephone}") if !telephone.blank?
   end
 
-  def birthpopup
+  def birthPopup
     flag = @params['flag']
     if ['0', '1', '2'].include?(flag)
       ttt = $choosed[flag]
-        preset_time = Time.new - 1157000000
+        if  @params['preset'].blank?
+          preset_time = Time.new - 1157000000
+        else
+          preset_time= (Time.strptime(@params['preset'], '%m/%d/%Y'))
+        end
       DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
     end
     render :back => 'callback:'
   end
   
-  def popup
+  def tomorrowPopup
     flag = @params['flag']
     if ['0', '1', '2'].include?(flag)
       ttt = $choosed[flag]
+      if  @params['preset'].blank?
         preset_time = Time.new + 86400 + DateUtil.seconds_until_hour(Time.new)
+      else
+          # Reading java script format "11/13/2012 03:00 PM"
+          preset_time = (Time.strptime(@params['preset'], '%m/%d/%Y %I:%M %p'))
+      end
       DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
     end
     render :back => 'callback:'
   end
 
-  def edit_popup
-     flag = @params['flag']
-      if ['0', '1', '2'].include?(flag)
-        ttt = $choosed[flag]
-        if  @params['preset'].blank?
-          preset_time = Time.new - 1157000000
-        else
-          preset_time= Time.parse(@params['preset'])
-        end
-        DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
-      end
-      render :back => 'callback:'
-  end
-    
-  def appdatepopup
-      flag = @params['flag']
-      if ['0', '1', '2'].include?(flag)
-        ttt = $choosed[flag]
-        if @params['preset'].blank?
-          preset_time = Time.new - 1157000000
-        else 
-          preset_time = Time.parse(@params['preset'])
-        end
-        DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
-      end
-      render :back => 'callback:'
-  end
+
 
   def callback
     if @params['status'] == 'ok'
@@ -502,7 +485,7 @@ class OpportunityController < Rho::RhoController
       # formatted_result = Time.at(@params['result'].to_i).strftime('%m/%d/%Y %I:%M %p')
       formatted_result = Time.at(@params['result'].to_i).strftime(format)
       $choosed[datetime_vars[:flag]] = formatted_result
-      WebView.execute_js('setFieldValue("'+datetime_vars[:field_key]+'","'+formatted_result+'");')
+      WebView.execute_js('setFieldValue("'+datetime_vars[:field_key]+'","'+formatted_result+'"); ')
       $choosed = {} #Need to clear these out so that the fields don't populate with values previously selected.
       $saved = {}
     end

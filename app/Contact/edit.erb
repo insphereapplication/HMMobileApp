@@ -102,7 +102,7 @@
 			</div>				
 			<div data-role="fieldcontain">
 	            	<label for="birthdate" class="fieldLabel">Date of Birth:</label>
-					<input id="birthdate" type="text" name="birthdate" data-theme="d" readonly value="<%= to_date(@contact.birthdate) %>"  onClick="popupAppDateAJPicker('1', 'Contact Birth Date', 'birthdate', '<%= @contact.birthdate %>'); document.getElementById('birthdate').focus();"></input>
+					<input id="birthdate" type="text" name="birthdate" data-theme="d" readonly value="<%= to_date(@contact.birthdate) %>"  onClick="popupBirthDateAJPicker('1', 'Contact Birth Date', 'birthdate'); document.getElementById('birthdate').focus();"></input>
 			</div>
 			<div data-role="fieldcontain">
 				<fieldset data-role="controlgroup" data-type="horizontal" data-theme="d">

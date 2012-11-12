@@ -112,3 +112,20 @@ function updateAddress()
 
     return true;
 }
+
+function popupTomorrowDateTimeAJPicker(flag, title, field_key) {
+  val = $("#"+field_key).val();
+  $.get('/app/Opportunity/tomorrowPopup', { flag: flag, title: title, field_key: field_key, preset: val });
+  return false;
+}
+
+function popupBirthDateAJPicker(flag, title, field_key) {
+  val = $(document.getElementById(field_key)).val();
+  $.get('/app/Opportunity/birthPopup', { flag: flag, title: title, field_key: field_key, preset: val });
+  return false;
+}
+
+function setFieldValue(field, value) {
+  document.getElementById(field).value=value;
+  $("#"+field).refresh();
+}
