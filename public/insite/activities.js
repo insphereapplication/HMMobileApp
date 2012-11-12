@@ -20,6 +20,7 @@ function clearFilter() {
     $("#activity_type_filter").val("All").selectmenu("refresh");
     $("#activity_status_filter").val("Today").selectmenu("refresh");
     $("#activity_priority_filter").val("All").selectmenu("refresh");
+    return true;
 }
 
 function getFilterData() {

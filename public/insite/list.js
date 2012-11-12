@@ -7,6 +7,7 @@ function ScrollView(page, url, pageSize) {
         scroll = $scroll.jqmData("iscrollview"),
         $list = $scroll.find(".scrollable-listview"),
         splitConstant = "<div class=\"ui-li ",
+        $loading = $scroll.find(".iscroll-pullup"), loadingEnabled = true, loadingContent = "",
         filterTxt, requestData, currentpage, pages;
 
     function adjustScrollView() {
@@ -25,9 +26,10 @@ function ScrollView(page, url, pageSize) {
     });
 
     $filter.find(".scrollable-list-filter-clear").click(function() {
-        $filter.trigger("collapse");
-        clearFilter();
-        reset();
+        if (clearFilter()) {
+            $filter.trigger("collapse");
+            reset();
+        }
     });
 
     function getContent(pageNum, pageSize, reset, fnc) {
@@ -49,10 +51,27 @@ function ScrollView(page, url, pageSize) {
                 getContent(currentpage++, pageSize, false, function(data) {
                     pages[1] = data;
                 });
+                checkLoading(pages[0].length > 0);
             }
             scroll.refresh();
         }
     });
+
+    function checkLoading(enable) {
+        if (enable) {
+            if (!loadingEnabled) {
+                $loading.html(loadingContent);
+                loadingEnabled = true;
+            }
+        } else {
+            if (loadingEnabled) {
+                if (loadingContent === "")
+                    loadingContent = $loading.html();
+                $loading.empty();
+                loadingEnabled = false;
+            }
+        }
+    }
 
     function reset() {
         requestData = getFilterData();
@@ -65,14 +84,14 @@ function ScrollView(page, url, pageSize) {
         $list.empty();
         getContent(0, pageSize * 3, true, function(data) {
             var rows = data.split(splitConstant);
-            if (rows.length > 1) {
+            if (rows.length > 1)
                 $list.append(splitConstant + rows.splice(1, pageSize).join(splitConstant));
-                scroll.refresh();
-            }
             if (rows.length > 1)
                 pages[0] = splitConstant + rows.splice(1, pageSize).join(splitConstant);
             if (rows.length > 1)
                 pages[1] = splitConstant + rows.splice(1, pageSize).join(splitConstant);
+            checkLoading(pages[0].length > 0);
+            scroll.refresh();
         });
     }
 

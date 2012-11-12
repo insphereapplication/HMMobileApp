@@ -25,20 +25,20 @@
         <div class="scrollable-list-page" data-role="page">
             <div data-role="header" data-theme="b">
                 <div class="ui-offline-bar<% if DeviceCapabilities.is_connected? %> ui-hidden<% end %>">Connection State: Offline</div>
-                <a href="<%= @firstBtnUrl %>" data-icon="<%= @firstBtnIcon %>"><%= @firstBtnText %></a>
+                <a <%= 'rel="external" ' if @firstBtnExternal %>href="<%= @firstBtnUrl %>" data-icon="<%= @firstBtnIcon %>"<%= ' data-rel="back"' if @firstBtnBack == true %>><%= @firstBtnText %></a>
                 <h1>
                     <%= @page_name %>
                     <img class="<% if not DeviceCapabilities.is_syncing? %>ui-hidden<% end %>" id="syncSpinner" src="/public/images/syncSpinner.gif" width="12" height="12"/>
                 </h1>
 <% if @secondBtnUrl %>
-                <a href="<%= @secondBtnUrl %>" data-icon="<%= @secondBtnIcon %>"><%= @secondBtnText %></a>
+                <a <%= 'rel="external" ' if @secondBtnExternal %>href="<%= @secondBtnUrl %>" data-icon="<%= @secondBtnIcon %>"><%= @secondBtnText %></a>
 <% end %>
                 <div class="scrollable-list-filter" data-role="collapsible" data-collapsed="<%= @isCollapsed %>" data-collapsed-icon="search" data-mini="true" data-theme="c" data-content-theme="c">
                     <h3 class="scrollable-list-filter-txt">Filter...</h3>
                     <%= @content %>
                     <fieldset class="ui-grid-a">
                         <div class="ui-block-a">
-                            <button class="scrollable-list-filter-find" type="submit" data-theme="b">Filter</button>
+                            <button class="scrollable-list-filter-find" type="submit" data-theme="b"><%= @filterBtnText %></button>
                         </div>
                         <div class="ui-block-b">
                             <button class="scrollable-list-filter-clear" type="submit" data-theme="b">Clear</button>

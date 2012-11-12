@@ -24,12 +24,16 @@ class ContactController < Rho::RhoController
     @firstBtnText = 'Create'
     @firstBtnIcon = 'plus'
     @firstBtnUrl = url_for :action => :new, :query => {:origin => 'contact'}
+    @firstBtnBack = false
+    @firstBtnExternal = false
     @secondBtnText = 'Search AC'
     @secondBtnIcon = ''
     @secondBtnUrl = url_for :action=>:search, :controller => 'SearchContacts', :query => {:origin => 'contact'}
+    @secondBtnExternal = true
     @scriptName = 'contacts'
     @pageSize = 30
     @url = '/app/Contact/get_jqm_contacts_page'
+    @filterBtnText = 'Filter'
     render :action => :filter, :back => 'callback:', :layout => 'layout_jqm_list'
   end
   def gen_jqm_options(options, selected_value)
