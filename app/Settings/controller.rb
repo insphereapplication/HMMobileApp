@@ -892,6 +892,54 @@ class SettingsController < Rho::RhoController
       end
       
   end
+  
+  
+  def medicare_soa
+        Settings.record_activity
+        if Settings.pin_confirmed == true
+          insphere_url = Rho::RhoConfig.insphere_url
+          medicare_soa_target = Rho::RhoConfig.medicare_soa_target
+
+          rc_url ="#{insphere_url}?#{medicare_soa_target}"
+       
+          redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+        
+          System.open_url("#{insphere_url}#{medicare_soa_target}")
+          
+      else
+          redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+      end
+      
+  end
+  
+  def quoting_tool
+        Settings.record_activity
+        if Settings.pin_confirmed == true
+          quoting_tool_url = Rho::RhoConfig.quoting_tool_url
+          quoting_tool_target = Rho::RhoConfig.quoting_tool_target
+          ctime = Time.new.utc
+          ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
+          user_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.login}Delimit"))
+          pwd_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.password}Delimit"))
+                  
+          quoting_tool_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}"
+        
+          # puts "Resource URL parameters are: ****#{resource_params_enc}****"
+          # puts "Current UTC is:  #{ctime}"
+
+          
+          #rc_url ="#{insphere_url}?#{quoting_tool_params_enc}"
+       
+          redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+        
+          System.open_url("#{quoting_tool_url}#{quoting_tool_target}?#{quoting_tool_params_enc}")
+          
+      else
+          redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+      end
+      
+  end
+  
 
   def check_for_upgrade
     latest_version = AppInfo.instance.latest_version

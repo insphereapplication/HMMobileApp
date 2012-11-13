@@ -18,6 +18,8 @@ class AppInfo
   property :mobile_crypt_key, :string
 
   property :model_limits, :string
+  
+  property :quick_quote_users, :string
 
   def self.instance
     AppInfo.find(:all).first

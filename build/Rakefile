@@ -99,7 +99,7 @@ def model_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Dwayne Smith (Q222GR78Z7)"',
     :iphone_config => 'Release',
-    :provisionprofile => '4F8B902C-F0BE-4025-8F12-B5D8B166CFF6'
+    :provisionprofile => '1DAA8C91-CB84-4880-B149-5D5DEA505C09'
   })
 end
 
@@ -107,7 +107,7 @@ def dev_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Dwayne Smith (Q222GR78Z7)"',
     :iphone_config => 'Release',
-    :provisionprofile => '4F8B902C-F0BE-4025-8F12-B5D8B166CFF6'
+    :provisionprofile => '1DAA8C91-CB84-4880-B149-5D5DEA505C09'
   })
 end
 
@@ -121,7 +121,9 @@ def rhoconfig
     :resource_center_url => "https://mobile-rc.insphereis.net/_layouts/InsphereLogin.aspx",
     :log_server => 'https://mobileproxy.insphereis.net/clientlog',
     :crm_url => 'https://mobileproxy.insphereis.net',
-    :phonecall_duration_default_minutes => '15'
+    :phonecall_duration_default_minutes => '15',
+    :insphere_url => 'https://www.insphereis.net',
+    :quoting_tool_url => 'https://m.insphereis.net'
   }
 end
 
@@ -133,7 +135,9 @@ def model_rhoconfig
     :quick_quote_url => "https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
     :resource_center_url => "https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx",
     :log_server => 'https://mobileproxy.model.insphereis.net/clientlog',
-    :crm_url => 'https://mobileproxy.model.insphereis.net'
+    :crm_url => 'https://mobileproxy.model.insphereis.net',
+    :insphere_url => 'https://www.model.insphereis.net',
+    :quoting_tool_url => 'https://m.model.insphereis.net'
   })
 end
 
@@ -145,7 +149,9 @@ def dev_rhoconfig
     :quick_quote_url => "https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
     :resource_center_url => "https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx",
     :log_server => 'https://mobileproxy.dev.net/clientlog',
-    :crm_url => 'https://mobileproxy.dev.insphereis.net'
+    :crm_url => 'https://mobileproxy.dev.insphereis.net',
+    :insphere_url => 'https://www.dev.insphereis.net',
+    :quoting_tool_url => 'https://m.dev.insphereis.net'
   })
 end
 
