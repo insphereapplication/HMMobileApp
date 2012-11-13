@@ -10,14 +10,14 @@ function ScrollView(page, url, pageSize) {
         $loading = $scroll.find(".iscroll-pullup"), loadingEnabled = true, loadingContent = "",
         filterTxt, requestData, currentpage, pages, $this = this;
 
-    function adjustScrollView() {
+    this.adjustScrollView = function() {
         scroll.resizeWrapper();
         scroll.refresh();
     }
 
     $filter.bind({
-        collapse: adjustScrollView,
-        expand: adjustScrollView
+        collapse: $this.adjustScrollView,
+        expand: $this.adjustScrollView
     });
 
     $filter.find(".scrollable-list-filter-find").click(function() {
