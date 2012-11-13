@@ -17,7 +17,7 @@ function getFilterText() {
     var result = "";
     var txt = $("#search_name").val();
     if (txt.length > 0)
-        result = "Name";
+        result = txt;
     txt = $("#search_email").val();
     if (txt.length > 0) {
         if (result.length > 0)

@@ -8,7 +8,7 @@ function ScrollView(page, url, pageSize) {
         $list = $scroll.find(".scrollable-listview"),
         splitConstant = "<div class=\"ui-li ",
         $loading = $scroll.find(".iscroll-pullup"), loadingEnabled = true, loadingContent = "",
-        filterTxt, requestData, currentpage, pages;
+        filterTxt, requestData, currentpage, pages, $this = this;
 
     function adjustScrollView() {
         scroll.resizeWrapper();
@@ -22,20 +22,20 @@ function ScrollView(page, url, pageSize) {
 
     $filter.find(".scrollable-list-filter-find").click(function() {
         $filter.trigger("collapse");
-        reset();
+        $this.reset();
     });
 
     $filter.find(".scrollable-list-filter-clear").click(function() {
         if (clearFilter()) {
             $filter.trigger("collapse");
-            reset();
+            $this.reset();
         }
     });
 
-    function getContent(pageNum, pageSize, reset, fnc) {
+    function getContent(pageNum, pageSize, resetFlag, fnc) {
         requestData.page = pageNum;
         requestData.pageSize = pageSize;
-        requestData.reset = reset;
+        requestData.reset = resetFlag;
         $.ajax({
             url: url,
             data: requestData,
@@ -73,7 +73,7 @@ function ScrollView(page, url, pageSize) {
         }
     }
 
-    function reset() {
+    this.reset = function() {
         requestData = getFilterData();
         var txt = getFilterText();
         if (txt.length > 0)
@@ -109,5 +109,5 @@ function ScrollView(page, url, pageSize) {
         }, 500);
     })
 
-    reset();
+    this.reset();
 }
