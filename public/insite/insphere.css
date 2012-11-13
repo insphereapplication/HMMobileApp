@@ -75,11 +75,18 @@
 
 /* custom icons */
 .ui-icon-phone {
-    background-image: url("/public/images/simple_black_phone.png");
+    background-image: url("/public/images/simple_black_phone.png"); 
     background-color: rgba(0, 0, 0, 0);
     width: 24px;
     height: 24px;
-    margin-top: -11px !important;
+    margin-top: -11px !important; 
+}
+.ui-icon-mobilephone {
+    background-image: url("/public/images/mobilephone_24px.png"); 
+    background-color: rgba(0, 0, 0, 0);
+    width: 24px;
+    height: 24px;
+    margin-top: -11px !important; 
 }
 
 .ui-icon-map {
@@ -91,9 +98,9 @@
 }
 
 .ui-icon-computer {
-    background-image: url("/public/images/computer_icon.png");
+    background-image: url("/public/images/computer_24px.png");
     background-color: rgba(0, 0, 0, 0);
-    width: 24px;
+   	width: 24px;
     height: 24px;
-    margin-top: -11px !important;
+    margin-top: -11px !important; 
 }
