@@ -51,7 +51,7 @@ class Opportunity
     
   def contact
     contact = Contact.find_contact(contact_id) unless contact_id.blank?
-    if (!contact_id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}') && contact.object.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+    if (!contact_id.blank? && !contact_id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}') && contact.object.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
        #This should be handled by the rhodes framework but we have seen a couple of issues
        puts "Updating oppportunity contact id temp #{contact_id} with #{contact.object}"
        update_attributes( :contact_id => contact.object)
