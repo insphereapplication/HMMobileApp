@@ -100,7 +100,7 @@
 .ui-icon-computer {
     background-image: url("/public/images/computer_24px.png");
     background-color: rgba(0, 0, 0, 0);
-   	width: 24px;
+    width: 24px;
     height: 24px;
     margin-top: -11px !important; 
 }
