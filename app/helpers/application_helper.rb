@@ -126,12 +126,13 @@ module ApplicationHelper
   end
 
   class HierarchyDataLoader
-    def initialize(call_parameters, pageIndex, pageSizeIndex)
+    def initialize(call_parameters, pageIndex, pageSizeIndex, replacePrmIndex = nil)
       @currentState = 0
       @currentPage = 0
       @call_parameters = call_parameters
       @pageIndex = pageIndex
       @pageSizeIndex = pageSizeIndex
+      @replacePrmIndex = replacePrmIndex
     end
 
     def load_data(prms, indexes_arr = nil)
@@ -145,6 +146,7 @@ module ApplicationHelper
           @currentState = @currentState + 1
         else
           prms[@pageIndex] = page - @currentPage
+          prms[@replacePrmIndex] = call_parameter[2] unless @replacePrmIndex.nil?
           data = call_parameter[0].send(call_parameter[1], *prms)
           if data.length > 0
             result.concat(data)
