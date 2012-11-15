@@ -26,13 +26,16 @@ class SettingsController < Rho::RhoController
   end
   
   def init
+    puts "In the settings init"
     if can_skip_login?
       #login & sync in background
+      puts "using background login"
       SyncEngine.login(Settings.login, Settings.password,  '/app/Settings/background_login_callback')
       #go to opportunity index page
       goto_opportunity_init_notify
     else
       #go to login screen
+      puts "Going to login screen"
       goto_login
     end
   end
