@@ -148,7 +148,7 @@ module ApplicationHelper
           data = call_parameter[0].send(call_parameter[1], *prms)
           if data.length > 0
             result.concat(data)
-            indexes_arr += data.map{|obj| obj.object } unless indexes_arr.nil?
+            indexes_arr.concat(data.map{|obj| obj.object }) unless indexes_arr.nil?
           end
           if data.length < page_size
             @currentState = @currentState + 1
