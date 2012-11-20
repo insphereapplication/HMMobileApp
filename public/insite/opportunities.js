@@ -1,41 +1,35 @@
-var newLeadsBtn, followUpBtn, apptsBtn, scrollView, filter, followupFlt, apptsFlt, selection;
+var $page, newLeadsBtn, followUpBtn, apptsBtn, scrollView, filter, followupFlt, apptsFlt, selection;
 
-function initialize(page, url, pageSize, selected_tab) {
-    var $page = $(page);
+function initialize(page, selected_tab) {
+    $page = $(page);
     newLeadsBtn = $page.find("#new-leads-button");
     followUpBtn = $page.find("#follow-ups-button");
     apptsBtn = $page.find("#appointments-button");
-    filter = $page.find(".scrollable-list-filter");
+    filter = $page.find(".list-filter");
     followupFlt = filter.find(".opp_followup_filter");
     apptsFlt = filter.find(".appts_followup_filter");
     selection = selected_tab;
-    scrollView = new ScrollView($page, url, pageSize);
+    scrollView = $page.find("#list");
     setSelectedTab(selected_tab);
     newLeadsBtn.click(function() {
-        if (selection !== "new-leads") {
+        if (selection !== "new-leads")
             setSelectedTab("new-leads");
-            scrollView.reset();
-        }
     });
     followUpBtn.click(function() {
-        if (selection !== "follow-ups") {
+        if (selection !== "follow-ups")
             setSelectedTab("follow-ups");
-            scrollView.reset();
-        }
     });
     apptsBtn.click(function() {
-        if (selection !== "appointments") {
+        if (selection !== "appointments")
             setSelectedTab("appointments");
-            scrollView.reset();
-        }
     });
 }
 
 function setSelectedTab(selected_tab) {
     selection = selected_tab;
-    if (selection === "new-leads") {
+    if (selection === "new-leads")
         filter.hide();
-    } else {
+    else {
         filter.show();
         if (selection === "follow-ups") {
             apptsFlt.hide();
@@ -45,7 +39,8 @@ function setSelectedTab(selected_tab) {
             apptsFlt.show();
         }
     }
-    scrollView.adjustScrollView();
+    $page.trigger("updatelayout");
+    scrollView.jqlistview("reset");
 }
 
 function clearFilter() {
