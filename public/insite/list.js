@@ -34,10 +34,14 @@
                         url: loadUrl,
                         data: requestData,
                         success: function(data) {
+                            var records = 0;
                             var pos = data.indexOf("<");
-                            var records = (pos > 0) ? data.substr(0, pos) : 0;
-                            if (records > 0)
-                                ldiv.before(data.substr(pos));
+                            if (pos > 0) {
+                                records = data.substr(0, pos);
+                                data = data.substr(pos);
+                            }
+                            if (data.length > 0)
+                                ldiv.before(data);
                             if (records < pageSize) {
                                 loadNext = false;
                                 ldiv.remove();
