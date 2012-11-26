@@ -12,8 +12,6 @@ class OpportunityController < Rho::RhoController
 
   # this callback is set once in the login_callback method of the Settings controller
   def init_notify
-    
-    
     tabbar = [
       { 
         :label => "Opportunities", 
@@ -95,11 +93,148 @@ class OpportunityController < Rho::RhoController
       Opportunity.local_changed = false
       @params['selected_tab'] = @params['selected_tab'].blank? ? 'new-leads' : @params['selected_tab']
       @persisted_scheduled_search = Settings.get_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS)['search']
-      set_opportunities_nav_context(@params['selected_tab']);    
-      render :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'
+      set_opportunities_nav_context(@params['selected_tab']);
+      @page_name = 'Opportunities'
+      @firstBtnText = 'Create'
+      @firstBtnIcon = 'plus'
+      @firstBtnUrl = url_for :action => :contact_opp_new, :query => { :origin => @params['selected_tab'] }
+      @firstBtnBack = false
+      @firstBtnExternal = false
+      @secondBtnUrl = nil
+      @scriptName = 'opportunities'
+      @pageSize = 30
+      @url = '/app/Opportunity/get_jqm_leads'
+      @filterBtnText = 'Filter'
+      render :action => :filters, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'
     else
       redirect :controller => Settings, :action => :login, :back => 'callback:', :layout => 'layout_JQM_Lite'
     end
+  end
+  def gen_jqm_options(options, selected_value)
+    options.map{|option|
+      selected_text = (option[:value] == selected_value) ? ' selected="true"' : ''
+      "<option value=\"#{option[:value]}\"#{selected_text}>#{option[:label]}</option>"
+    }.join("\n")
+  end
+  def jqm_followup_status_reason_filter_options  	
+  	options = [
+      {:value => 'All', :label => 'All'},
+      {:value => 'NoContactMade', :label => 'No Contact Made'},
+      {:value => 'ContactMade', :label => 'Contact Made'},
+      {:value => 'AppointmentSet', :label => 'Appointment Set'},
+      {:value => 'DealInProgress', :label => 'Deal in Progress'}
+    ]
+    persisted_selection = Settings.filter_values["#{Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX}statusReason"]
+    persisted_selection = 'All' if persisted_selection.blank?
+    gen_jqm_options(options, persisted_selection)
+  end
+  def jqm_followup_sort_by_filter_options
+		options = [
+      {:value => 'LastActivityDateAscending', :label => 'Latest Activity Date'},
+      {:value => 'LastActivityDateDescending', :label => 'Earliest Activity Date'},
+      {:value => 'CreateDateAscending', :label => 'Created Ascending'},
+      {:value => 'CreateDateDescending', :label => 'Created Descending'}
+    ]
+    persisted_selection = Settings.filter_values["#{Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX}sortBy"]
+    persisted_selection = 'LastActivityDateAscending' if persisted_selection.blank?
+    gen_jqm_options(options, persisted_selection)
+  end
+  def jqm_followup_created_filter_options
+    options = [
+      {:value => 'All', :label => 'All'},
+      {:value => '1', :label => '1 Day Ago'},
+      {:value => '2', :label => '2 Days Ago'},
+      {:value => '3', :label => '3 Days Ago'},
+      {:value => '4', :label => '4 Days Ago'},
+      {:value => '5', :label => '5 Days Ago'}
+    ]
+    persisted_selection = Settings.filter_values["#{Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX}created"]
+    persisted_selection = 'All' if persisted_selection.blank?
+    gen_jqm_options(options, persisted_selection)
+  end
+  def jqm_followup_daily_filter_options
+    persisted_selection = Settings.filter_values["#{Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX}isDaily"]
+    " checked='checked' " if persisted_selection == 'true'
+  end
+  def jqm_scheduled_filter_options
+    options = [
+      {:value => 'All', :label => 'All'},
+      {:value => 'ScheduledAppointments', :label => 'Appointments'},
+      {:value => 'ScheduledCallbacks', :label => 'Callbacks'}
+    ]
+    persisted_selection = Settings.filter_values['scheduled_filter']
+    persisted_selection = 'All' if persisted_selection.blank?
+    gen_jqm_options(options, persisted_selection)
+  end
+  def get_jqm_leads
+    @self_id = StaticEntity.system_user_id
+    rows = []
+    origin = 'new_leads'
+    f_status = @params['statusReason']
+    if f_status
+      # follow-ups
+      origin = 'follow_ups'
+      rows = jqm_get_follow_ups
+    else
+      f_select = @params['filter']
+      if f_select
+        # scheduled
+        origin = 'appointments'
+        rows = jqm_get_appointments
+      else
+        # new leads
+        rows = jqm_get_new_leads
+      end
+    end
+    render :partial => 'opportunity', :locals => { :items => rows, :origin => origin }
+  end
+  def jqm_get_new_leads
+    Settings.record_activity
+    if @params['reset'] == 'true'
+      @@data_loader = ApplicationHelper::HierarchyDataLoader.new([
+          { :divider => 'Today' },
+          [Opportunity, :todays_new_leads],
+          { :divider => 'Previous Days' },
+          [Opportunity, :previous_days_leads]
+      ], 0, 1)
+      $new_leads_nav_context = []
+    end
+    page = @params['page'].to_i
+    page_size = @params['pageSize'].to_i
+    @@data_loader.load_data([page, page_size], $new_leads_nav_context)
+  end
+  def jqm_get_follow_ups
+    Settings.record_activity
+    Settings.update_persisted_filter_values(Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX, Constants::FOLLOWUP_FILTERS.map{|filter| filter[:name]}, @params)
+    persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX, Constants::FOLLOWUP_FILTERS)
+    if @params['reset'] == 'true'
+      @@data_loader = ApplicationHelper::HierarchyDataLoader.new([
+          [Opportunity, :by_last_activities]
+      ], 0, 5)
+      $follow_ups_nav_context = []
+    end
+    page = @params['page'].to_i
+    page_size = @params['pageSize'].to_i
+    @@data_loader.load_data([page, persisted_filter_values['statusReason'], persisted_filter_values['sortBy'], persisted_filter_values['created'], persisted_filter_values['isDaily'], page_size], $follow_ups_nav_context)
+  end
+  def jqm_get_appointments
+    Settings.record_activity
+    Settings.update_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS.map{|filter| filter[:name]}, @params)
+    persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS)
+    if @params['reset'] == 'true'
+      @@data_loader = ApplicationHelper::HierarchyDataLoader.new([
+          { :divider => 'Past Due' },
+          [Activity, :appointment_list, 'past_due'],
+          { :divider => 'Today' },
+          [Activity, :appointment_list, 'today'],
+          { :divider => 'Future' },
+          [Activity, :appointment_list, 'future']
+      ], 0, 4, 3)
+      $appointments_nav_context = []
+    end
+    page = @params['page'].to_i
+    page_size = @params['pageSize'].to_i
+    @@data_loader.load_data([page, persisted_filter_values['filter'], persisted_filter_values['search'], '', page_size], $appointments_nav_context)
   end
   
   def set_opportunities_nav_context(context=nil)

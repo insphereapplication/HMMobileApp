@@ -6,7 +6,6 @@ class ActivityController < Rho::RhoController
   include BrowserHelper
 
   @@first_render = true
-  @@last_rendered_group = { :state => 0, :page => 0 }
 
   def index
     Settings.record_activity
@@ -109,79 +108,31 @@ class ActivityController < Rho::RhoController
     @status = 'Open' if @status.blank?
     @priority = Settings.filter_values["activity_priority"]
     @priority = 'All' if @priority.blank?
-    if @params['reset'] == "true"
-      @@last_rendered_group[:state] = 0
-      @@last_rendered_group[:page] = 0
-    end
-    @grouped_items = []
-    data = []
     page = @params['page'].to_i
-    pageSize = @params['pageSize'].to_i
-    if @status == "Today" || @status == "Next7Days"
-      if @@last_rendered_group[:state] == 0
-        @grouped_items[0] = { :divider => "Past Due" }
-        @@last_rendered_group[:state] = 1
+    page_size = @params['pageSize'].to_i
+    if @params['reset'] == 'true'
+      if @status == "Today" || @status == "Next7Days"
+        prms = [
+          { :divider => "Past Due" },
+          [Activity, :past_due_activities],
+          { :divider => "No Date" },
+          [Activity, :no_date_activities],
+          { :divider => "Today" },
+          [Activity, :today_activities]
+        ]
+        prms.concat([
+          { :divider => "Next 7 Days" },
+          [Activity, :future_activities]
+        ]) if @status == "Next7Days"
+      else
+        prms = [
+          { :divider => "No Date" },
+          [Activity, :no_date_activities]
+        ]
       end
-      if @@last_rendered_group[:state] == 1
-        data = Activity.past_due_activities(page, @type, @priority, pageSize)
-        @grouped_items.concat(data) if data.length > 0
-        if data.length < pageSize
-          @@last_rendered_group[:state] = 2
-          @@last_rendered_group[:page] = page
-        end
-      end
-      if @@last_rendered_group[:state] == 2
-        @grouped_items.push({ :divider => "No Date" })
-        @@last_rendered_group[:state] = 3
-      end
-      if @@last_rendered_group[:state] == 3
-        data = Activity.no_date_activities(page - @@last_rendered_group[:page], @type, @priority, pageSize)
-        @grouped_items.concat(data) if data.length > 0
-        if data.length < pageSize
-          @@last_rendered_group[:state] = 4
-          @@last_rendered_group[:page] = page
-        end
-      end
-      if @@last_rendered_group[:state] == 4
-        @grouped_items.push({ :divider => "Today" })
-        @@last_rendered_group[:state] = 5
-      end
-      if @@last_rendered_group[:state] == 5
-        data = Activity.today_activities(page - @@last_rendered_group[:page], @type, @priority, pageSize)
-        @grouped_items.concat(data) if data.length > 0
-        if data.length < pageSize
-          @@last_rendered_group[:state] = 6
-          @@last_rendered_group[:page] = page
-        end
-      end
-      if @status == "Next7Days"
-        if @@last_rendered_group[:state] == 6
-          @grouped_items.push({ :divider => "Next 7 Days" })
-          @@last_rendered_group[:state] = 7
-        end
-        if @@last_rendered_group[:state] == 7
-          data = Activity.future_activities(page - @@last_rendered_group[:page], @type, @priority, pageSize)
-          @grouped_items.concat(data) if data.length > 0
-          if data.length < pageSize
-            @@last_rendered_group[:state] = 8
-            @@last_rendered_group[:page] = page
-          end
-        end
-      end
-    else
-      if @@last_rendered_group[:state] == 0
-        @grouped_items[0] = { :divider => "No Date" }
-        @@last_rendered_group[:state] = 1
-      end
-      if @@last_rendered_group[:state] == 1
-        data = Activity.no_date_activities(page, @type, @priority, pageSize)
-        @grouped_items.concat(data) if data.length > 0
-        if data.length < pageSize
-          @@last_rendered_group[:state] = 2
-          @@last_rendered_group[:page] = page
-        end
-      end
+      @@data_loader = ApplicationHelper::HierarchyDataLoader.new(prms, 0, 3)
     end
+    @grouped_items = @@data_loader.load_data([page, @type, @priority, page_size])
     render :partial => 'activity', :locals => { :items => @grouped_items }
   end
 

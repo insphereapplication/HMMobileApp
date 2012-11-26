@@ -10,6 +10,11 @@
         <script src="/public/lib/jquery.mobile.min.js" type="text/javascript"></script>
         <script src="/public/insite/application.js" type="text/javascript"></script>
         <script src="/public/insite/list.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            $(document).delegate("div.scrollable-list-page", "pageinit", function() {
+                initialize(this, "<%= @params['selected_tab'] %>");
+            });
+        </script>
         <script src="/public/insite/<%= @scriptName %>.js" type="text/javascript"></script>
     </head>
     <body>
@@ -24,7 +29,14 @@
 <% if @secondBtnUrl %>
                 <a <%= 'rel="external" ' if @secondBtnExternal %>href="<%= @secondBtnUrl %>" data-icon="<%= @secondBtnIcon %>"><%= @secondBtnText %></a>
 <% end %>
-                <div class="list-filter" data-role="collapsible" data-collapsed="<%= @isCollapsed %>" data-collapsed-icon="search" data-mini="true" data-theme="c" data-content-theme="c">
+                <div data-role="navbar">
+                    <ul>
+                        <li><a id="new-leads-button"<%= ' class="ui-btn-active"' if @params['selected_tab'] == 'new-leads' %>>New Leads</a></li>
+                        <li><a id="follow-ups-button"<%= ' class="ui-btn-active"' if @params['selected_tab'] == 'follow-ups' %>>Follow-Up</a></li>
+                        <li><a id="appointments-button"<%= ' class="ui-btn-active"' if @params['selected_tab'] == 'appointments' %>>Scheduled</a></li>
+                    </ul>
+                </div>
+                <div class="list-filter" data-role="collapsible" data-collapsed-icon="search" data-mini="true" data-theme="c" data-content-theme="c">
                     <h3 class="list-filter-txt">Filter...</h3>
                     <%= @content %>
                     <fieldset class="ui-grid-a">
@@ -38,7 +50,7 @@
                 </div>
             </div>
             <div data-role="content">
-                <div data-role="jqlistview" data-loadurl="<%= @url %>" data-pagesize="<%= @pageSize %>" data-filterselector=".list-filter"></div>
+                <div id="list" data-role="jqlistview" data-loadurl="<%= @url %>" data-pagesize="<%= @pageSize %>" data-filterselector=".list-filter" data-autoinitialize="false"></div>
             </div>
         </div>
     </body>

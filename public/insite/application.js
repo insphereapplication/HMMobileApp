@@ -1,15 +1,3 @@
-function showSpin(message) {
-    $.mobile.savingMessage = message;
-    $.mobile.pageSaving();
-    $(":input").attr("disabled", true);
-    setTimeout("hideSpin()", 5000);
-}
-
-function hideSpin() {
-    $.mobile.pageSaving(true);
-    return true;
-}
-
 var offline_bar_selector = ".ui-offline-bar",
     sync_spinner_selector = "#syncSpinner";
 

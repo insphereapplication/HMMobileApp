@@ -1,113 +1,130 @@
-function ScrollView(page, url, pageSize) {
-    var $page = $(page),
-        $filter = $page.find(".scrollable-list-filter"),
-        $filterTxt = $filter.find(".scrollable-list-filter-txt")
-                            .find("span.ui-btn-text"),
-        $scroll = $page.find(".iscroll-wrapper"),
-        scroll = $scroll.jqmData("iscrollview"),
-        $list = $scroll.find(".scrollable-listview"),
-        splitConstant = "<div class=\"ui-li ",
-        $loading = $scroll.find(".iscroll-pullup"), loadingEnabled = true, loadingContent = "",
-        filterTxt, requestData, currentpage, pages, $this = this;
-
-    this.adjustScrollView = function() {
-        scroll.resizeWrapper();
-        scroll.refresh();
-    }
-
-    $filter.bind({
-        collapse: $this.adjustScrollView,
-        expand: $this.adjustScrollView
-    });
-
-    $filter.find(".scrollable-list-filter-find").click(function() {
-        $filter.trigger("collapse");
-        $this.reset();
-    });
-
-    $filter.find(".scrollable-list-filter-clear").click(function() {
-        if (clearFilter()) {
-            $filter.trigger("collapse");
-            $this.reset();
-        }
-    });
-
-    function getContent(pageNum, pageSize, resetFlag, fnc) {
-        requestData.page = pageNum;
-        requestData.pageSize = pageSize;
-        requestData.reset = resetFlag;
-        $.ajax({
-            url: url,
-            data: requestData,
-            success: fnc
-        });
-    }
-
-    $scroll.bind({
-        iscroll_onpullup: function() {
-            if (pages[0].length > 0) {
-                $list.append(pages[0]);
-                pages[0] = pages[1];
-                getContent(currentpage++, pageSize, false, function(data) {
-                    pages[1] = data;
+(function($) {
+    $.widget("mobile.jqlistview", $.mobile.widget, {
+        options: {
+            filterselector: null,
+            pagesize: 30,
+            autoinitialize: true
+        },
+        _create: function() {
+            var $this = this,
+                $list = this.element.addClass("list-view"),
+                $document = $(document),
+                $window = $(window),
+                loadUrl = $list.jqmData("loadurl"),
+                o = this.options,
+                pageSize = $list.jqmData("pagesize") || o.pagesize,
+                autoInitialize = $list.jqmData("autoinitialize") || o.autoinitialize,
+                requestData, currentPage, loadNext, loading, lastPos, proc_id, ldiv,
+                $filter = $list.jqmData("filterselector") || o.filterselector,
+                $filterTxt, filterTxt;
+            $list.delegate("a.btn", "tap", function() {
+                var $t = $(this);
+                $t.addClass("btn-clicked");
+                setTimeout(function() {
+                    $t.removeClass("btn-clicked");
+                }, 500);
+            });
+            function getContent(pageSize, resetFlag) {
+                if (!loading) {
+                    loading = true;
+                    requestData.page = currentPage++;
+                    requestData.pageSize = pageSize;
+                    requestData.reset = resetFlag;
+                    $.ajax({
+                        url: loadUrl,
+                        data: requestData,
+                        success: function(data) {
+                            var records = 0;
+                            var pos = data.indexOf("<");
+                            if (pos > 0) {
+                                records = data.substr(0, pos);
+                                data = data.substr(pos);
+                            }
+                            if (data.length > 0)
+                                ldiv.before(data);
+                            if (records < pageSize) {
+                                loadNext = false;
+                                ldiv.remove();
+                            }
+                            loading = false;
+                        },
+                        error: function() {
+                            currentPage--;
+                            loading = false;
+                        }
+                    });
+                }
+            }
+            function clearProcId() {
+                if (proc_id !== null) {
+                    clearTimeout(proc_id);
+                    proc_id = null;
+                }
+            }
+            function checkScrolling() {
+                proc_id = null;
+                var top = $window.scrollTop();
+                if (top > lastPos)
+                    proc_id = setTimeout(checkScrolling, 100);
+                else if (top >= ldiv.offset().top - $window.height())
+                    getContent(pageSize, false);
+                lastPos = top;
+            }
+            $list.parent().bind({
+                scrollstop: function() {
+                    if ($list.is(":visible") && loadNext) {
+                        clearProcId();
+                        checkScrolling();
+                    }
+                }
+            });
+            this._reset = function() {
+                clearProcId();
+                currentPage = 0;
+                loadNext = true;
+                loading = false;
+                lastPos = 0;
+                $.mobile.silentScroll(0);
+                $list.empty().append("<div class='list-view-loading'>Loading...</div>"),
+                ldiv = $list.find("div");
+                if ($filter) {
+                    requestData = getFilterData();
+                    var txt = getFilterText();
+                    if (txt.length > 0)
+                        txt = " " + txt;
+                    $filterTxt.text(filterTxt + txt);
+                }
+                else
+                    requestData = {};
+                getContent(pageSize, true);
+            }
+            if ($filter) {
+                $filter = $($filter);
+                $filterTxt = $filter.find(".list-filter-txt").find("span.ui-btn-text");
+                filterTxt = $filterTxt.html();
+                var index = filterTxt.indexOf("<");
+                if (index > 0)
+                    filterTxt = filterTxt.substr(0, index);
+                filterTxt = $.trim(filterTxt);
+                $filter.find(".list-filter-find").click(function() {
+                    $filter.trigger("collapse");
+                    $this._reset();
                 });
-                checkLoading(pages[0].length > 0);
+                $filter.find(".list-filter-clear").click(function() {
+                    if (clearFilter()) {
+                        $filter.trigger("collapse");
+                        $this._reset();
+                    }
+                });
             }
-            scroll.refresh();
+            if (autoInitialize)
+                this._reset();
+        },
+        reset: function() {
+            this._reset();
         }
     });
-
-    function checkLoading(enable) {
-        if (enable) {
-            if (!loadingEnabled) {
-                $loading.html(loadingContent);
-                loadingEnabled = true;
-            }
-        } else {
-            if (loadingEnabled) {
-                if (loadingContent === "")
-                    loadingContent = $loading.html();
-                $loading.empty();
-                loadingEnabled = false;
-            }
-        }
-    }
-
-    this.reset = function() {
-        requestData = getFilterData();
-        var txt = getFilterText();
-        if (txt.length > 0)
-            txt = " " + txt;
-        $filterTxt.text(filterTxt + txt);
-        currentpage = 3;
-        pages = ["", ""];
-        $list.empty();
-        getContent(0, pageSize * 3, true, function(data) {
-            var rows = data.split(splitConstant);
-            if (rows.length > 1)
-                $list.append(splitConstant + rows.splice(1, pageSize).join(splitConstant));
-            if (rows.length > 1)
-                pages[0] = splitConstant + rows.splice(1, pageSize).join(splitConstant);
-            if (rows.length > 1)
-                pages[1] = splitConstant + rows.splice(1, pageSize).join(splitConstant);
-            checkLoading(pages[0].length > 0);
-            scroll.refresh();
-        });
-    }
-
-    filterTxt = $filterTxt.html();
-    var index = filterTxt.indexOf("<");
-    if (index > 0)
-        filterTxt = filterTxt.substr(0, index);
-    filterTxt = $.trim(filterTxt);
-
-    $list.delegate("a.btn", "tap", function() {
-        var $this = $(this);
-        $this.addClass("btn-clicked");
-        setTimeout(function() {
-            $this.removeClass("btn-clicked");
-        }, 500);
-    })
-
-    this.reset();
-}
+    $(document).bind("pagecreate", function(e) {
+        $(":jqmData(role='jqlistview')", e.target).jqlistview();
+    });
+})(jQuery);

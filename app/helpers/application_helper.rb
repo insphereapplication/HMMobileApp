@@ -124,5 +124,41 @@ module ApplicationHelper
   def caller_request_query_to_hash
     @caller_request = Rho::JSON.parse(@params['caller_request']) if @params['caller_request']
   end
-  
+
+  class HierarchyDataLoader
+    def initialize(call_parameters, pageIndex, pageSizeIndex, replacePrmIndex = nil)
+      @currentState = 0
+      @currentPage = 0
+      @call_parameters = call_parameters
+      @pageIndex = pageIndex
+      @pageSizeIndex = pageSizeIndex
+      @replacePrmIndex = replacePrmIndex
+    end
+
+    def load_data(prms, indexes_arr = nil)
+      result = []
+      page = prms[@pageIndex]
+      page_size = prms[@pageSizeIndex]
+      while @currentState < @call_parameters.length && result.length < page_size
+        call_parameter = @call_parameters[@currentState]
+        if call_parameter.class.to_s == "Hash"
+          result.push(call_parameter)
+          @currentState = @currentState + 1
+        else
+          prms[@pageIndex] = page - @currentPage
+          prms[@replacePrmIndex] = call_parameter[2] unless @replacePrmIndex.nil?
+          data = call_parameter[0].send(call_parameter[1], *prms)
+          if data.length > 0
+            result.concat(data)
+            indexes_arr.concat(data.map{|obj| obj.object }) unless indexes_arr.nil?
+          end
+          if data.length < page_size
+            @currentState = @currentState + 1
+            @currentPage = page
+          end
+        end
+      end
+      result
+    end
+  end
 end

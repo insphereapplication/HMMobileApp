@@ -1,55 +1,110 @@
-<li role="option" tabindex="0" data-theme="c" class="opportunity-item ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-btn-up-c">
-	<a class="ui-li-sidebar-<%=color%> ui-btn-up-c"> </a> 
-	<div class="ui-btn-inner" onclick="window.open('<%= url_for(:action => :show, :id => opportunity.object, :query => {:origin => origin}) %>')" style="padding-left: 15px;">
-		<div class="ui-btn-text" >
-			<h3 class="ui-li-heading" style="margin-top: 0px !important;">
-				<p class="ui-li-aside ui-li-desc"><strong><%= top_right_text %></strong></p>
-				<a href="<%= url_for(:action => :show, :id => opportunity.object, :query => {:origin => origin}) %>" class="ui-link-inherit ui-block-a">
-                                    <% if show_person_icon %>
-                                        <img src="/public/images/self_lead_icon.png" style="position: relative; top: 2px; width: 14px; height: 16px; margin-right: 3px; margin-left: 9px;"/>
-									<% elsif show_lead_exclamation_icon%>
-									    <img src="/public/images/skinny_red_exclamation.png" style="position: relative; top: 2px; width: 6px; height: 16px; margin-right: 0px; padding-right: 0px; margin-left: 0px; padding-left: 0px"/>
-										<img src="/public/images/self_lead_icon.png" style="position: relative; top: 2px; width: 14px; height: 16px; margin-right: 3px; margin-left: 0px; padding-left: 0px"/>
-									<% elsif show_exclamation_icon%>
-										<img src="/public/images/skinny_red_exclamation.png" style="position: relative; top: 2px; width: 6px; height: 16px; margin-right: 17px; margin-left: 0px;"/>
-									<% else %>
-                                    <% end %>
-                                    <%= contact.full_name %>
-                                </a>
-			</h3>
-			<p class="ui-li-desc"></p>
-			<div class="ui-grid-a ui-li-desc">
-				<div class="ui-block-a">&nbsp;
-					<% if opportunity.phone_calls.size > 0 %>
-						<div class="ui-li-count ui-btn-up-e ui-btn-corner-all" style="top:60%;right:35%; margin-left: 6px; " ><%= opportunity.phone_calls.size %></div>
-					<% end %>
-					<%= contact.age_sex_loc %> 
-				</div>
-				<div align="right" class="ui-block-b">
-					<%= bottom_right_text %>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<% if launcher == :phone_dialog%>
-		<% if reference == "Scheduled" && location %>
-			<a onclick="hideSpin()" href="<%= url_for :action => :call_number, :id=> opportunity.object, :query =>{:opportunity => opportunity.object, :phone_number => location, :origin => origin}, :redirect_action => :show%>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
-		<% else %>
-	   		<a onclick="hideSpin()" href="<%= url_for :action => launcher, :id=> opportunity.object, :query =>{:opportunity => opportunity.object, :location => location, :origin => origin}%>" title="Details" class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
-	    <% end %>       
-			<img class="opp-icon" src="/public/images/phone_black.png">
-	       	</a>            
-	<% else %>
-	   <% if System::get_property('platform') == 'APPLE'%>
-	       <a onclick="hideSpin()" href=<%="maps:q=#{Rho::RhoSupport.url_encode(location)}"%> class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
-	           <img class="opp-icon" src="/public/images/map_icon.png">
-	       </a>
-	   <%else%>            
-	       <a onclick="hideSpin()" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(location)}"%> class="ui-li-link-alt ui-btn ui-btn-up-c" data-theme="c">
-	           <img class="opp-icon" src="/public/images/map_icon.png">
-	       </a>
-	   <%end%>
-	<%end%>		
-</li>
-
+<%= items.length %>
+<% items.each do |row|
+    if row.class.to_s == 'Hash' %>
+<div class="ui-li ui-li-divider bar-b"><%= row[:divider] %></div>
+<%  else
+        if origin == 'new_leads' || origin == 'follow_ups'
+            opportunity = row
+        else
+            opportunity = row.opportunity
+            next unless opportunity
+        end
+        contact = opportunity.contact
+        next unless contact
+        url = url_for :action => :show, :id => opportunity.object, :query => { :origin => origin }
+        urlIsExternal = false
+        text = contact.full_name
+        if origin == 'new_leads'
+            top_right_text = to_datetime_noyear(opportunity.createdon)
+            bottom_right_text = "Created #{DateUtil.days_ago_formatted(opportunity.createdon)}"
+        elsif origin == 'follow_ups'
+            top_right_text = opportunity.cssi_statusdetail
+            bottom_right_text = opportunity.cssi_lastactivitydate.blank? ? nil : "#{DateUtil.days_ago_relative(opportunity.cssi_lastactivitydate)}"
+        else
+            scheduledtime = row.scheduledstart
+            top_right_text = to_datetime_noyear(scheduledtime)
+            bottom_right_text = "Due #{DateUtil.days_calc_formatted(scheduledtime)}"
+        end
+        bottom_right_count = nil
+        bottom_left_text = contact.age_sex_loc if contact.age_sex_loc.length > 0
+        bottom_left_count = opportunity.phone_calls.size if opportunity.phone_calls.size > 0
+        left_icon = '/public/images/self_lead_icon.png' if @self_id == opportunity.cssi_assetownerid && opportunity.opportunityratingcode == 'Warm'
+        left_icon = '' if @self_id == opportunity.cssi_assetownerid && opportunity.opportunityratingcode == 'Hot'
+        left_icon = '/public/images/skinny_red_exclamation.png' if !(@self_id == opportunity.cssi_assetownerid) && opportunity.opportunityratingcode == 'Hot'
+        icon = nil
+        url2_title = 'Details'
+        if origin == 'new_leads' || origin == 'follow_ups'
+            url2IsExternal = true
+            url2 = url_for :action => :phone_dialog, :id=> opportunity.object, :query => { :opportunity => opportunity.object, :location => 'blank', :origin => origin }
+            url2_icon = 'phone'
+        else
+            url2IsExternal = false
+            if row.type == 'PhoneCall'
+                url2 = url_for :action => :call_number, :id=> opportunity.object, :query =>{ :opportunity => opportunity.object, :phone_number => row.phonenumber, :origin => origin}, :redirect_action => :show
+                url2_icon = 'phone'
+            else
+                if System::get_property('platform') == 'APPLE'
+                    url2 = "maps:q=#{Rho::RhoSupport.url_encode(row.location)}"
+                else
+                    url2 = "http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(row.location)}"
+                end
+                url2_icon = 'map'
+            end
+        end %>
+<div class="ui-li ui-btn-icon-right ui-li-has-alt btn-up-c">
+  <div class="ui-btn-inner ui-li ui-li-has-alt">
+    <div class="ui-btn-text">
+      <a class="ui-link-inherit btn" href="<%= url %>"<%= ' rel="external"' if urlIsExternal %>>
+<%      if top_right_text %>
+        <p class="ui-li-aside ui-li-desc" style="width: 40%;"><strong><%= top_right_text %></strong></p>
+<%      end %>
+        <h4 style="margin-top: 0px; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+<%      if left_icon %>
+          <img src="<%= left_icon %>" class="ui-li-thumb" style="position: relative; top: 2px; width: 16px; height: 16px; margin-right: 5px; margin-left: -5px;"/>
+<%      end %>
+          <%= text %>
+        </h4>
+        <div class="ui-grid-a ui-li-desc" style="margin-bottom: 0px; padding-top: 1px; padding-bottom: 1px;">
+          <div class="ui-block-a">
+<%      if bottom_left_count %>
+            <span class="ui-li-count btn-up-c ui-btn-corner-all" style="background: #fadb4e;">&nbsp;<%= bottom_left_count %>&nbsp;</span>
+<%      end
+        if bottom_left_text
+            if bottom_left_count %>
+            &nbsp;
+<%          end %>
+            <%= bottom_left_text %>
+<%      end %>
+          </div>
+          <div class="ui-block-b" align="right">
+<%      if bottom_right_text %>
+            <%= bottom_right_text %>
+<%      end
+        if bottom_right_count
+            if bottom_right_text %>
+            &nbsp;
+<%          end %>
+            <span class="ui-li-count btn-up-c ui-btn-corner-all" style="background: #fadb4e;">&nbsp;<%= bottom_right_count %>&nbsp;</span>
+<%      end %>
+          </div>
+        </div>
+      </a>
+    </div>
+<%      if icon %>
+    <span class="ui-icon ui-icon-<%= icon %> ui-icon-shadow">&nbsp;</span>
+<%      end %>
+  </div>
+<%      if url2 %>
+  <a class="ui-li-link-alt btn split-btn-up-c ui-btn-icon-notext" title="<%= url2_title %>" href="<%= url2 %>"<%= ' rel="external"' if url2IsExternal %>>
+    <span class="ui-btn-inner">
+      <span class="ui-shadow ui-btn-corner-all ui-btn-icon-notext" title="">
+        <span class="ui-btn-inner ui-btn-corner-all">
+          <span class="ui-icon ui-icon-<%= url2_icon %> ui-icon-shadow">&nbsp;</span>
+        </span>
+      </span>
+    </span>
+  </a>
+<%      end %>
+</div>
+<%  end
+end %>

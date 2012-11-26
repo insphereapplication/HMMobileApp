@@ -1,12 +1,19 @@
 /* custom list view component */
 .list-view {
-    -webkit-margin-before: 0px !important;
-    -webkit-margin-after: 0px !important;
-    -webkit-padding-start: 0px !important;
+    margin: 0px;
 }
 
-.iscroll-content {
-    padding: 0px !important;
+.ui-content .list-view {
+    margin: -15px;
+}
+
+.ui-collapsible-content > .list-view {
+    margin: -10px -15px;
+}
+
+.list-view-loading {
+    height: 50px;
+    text-align: center;
 }
 
 .btn-clicked {
