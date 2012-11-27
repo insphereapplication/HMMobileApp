@@ -1,3 +1,7 @@
+$(document).bind("pagecreate", function(e) {
+    $("#search_phone", e.target).autoFormatPhone();
+});
+
 function clearFilter() {
     $("#search_name").val("");
     $("#search_email").val("");
