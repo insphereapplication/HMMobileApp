@@ -192,7 +192,7 @@ class Opportunity
           select a0.object
           from Activity a0
           where a0.parent_type='Opportunity' and a0.parent_id=o.object
-            and a0.type='PhoneCall' and a0.statuscode = 'Made' and date(a0.scheduledstart)=#{NOW_SQL}
+            and a0.type='PhoneCall' and a0.statuscode = 'Made' and date(a0.actualstart)=#{NOW_SQL}
         )
       }
     end
@@ -328,7 +328,7 @@ class Opportunity
   
   def record_phone_call_made_now(disposition="")
     phone_call_attrs = {
-      :scheduledstart => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),  
+      :actualstart => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),  
       :cssi_disposition => disposition,
       :statecode => 'Completed',
       :statuscode => 'Made'

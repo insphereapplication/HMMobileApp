@@ -43,6 +43,7 @@ insphere_url=https://www.dev.insphereis.net
 medicare_soa_target='/SOA'
 quoting_tool_url=https://m.dev.insphereis.net
 quoting_tool_target=/Quote/Account/SSO
+phonecall_duration_default_minutes ='15'
 
 local_server_port = 8080
 
