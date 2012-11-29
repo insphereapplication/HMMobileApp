@@ -38,6 +38,7 @@ class Activity
   property :email_from, :string
   ################################
   
+  property :cssi_agentname, :string
   
   belongs_to :parent_id, 'Opportunity'
   belongs_to :parent_contact_id, 'Contact'

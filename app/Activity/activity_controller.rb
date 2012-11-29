@@ -111,6 +111,8 @@ class ActivityController < Rho::RhoController
     parent_contact = activity.parent_contact
     if (parent_contact)
       left_text = parent_contact.full_name.blank? ? "&nbsp;" : parent_contact.full_name
+    elsif (!activity.cssi_agentname.blank?)
+      left_text = activity.cssi_agentname
     else
       parent_policy = activity.policy
       left_text = parent_policy.nil? || parent_policy.cssi_primaryinsured.blank? ? "&nbsp;" : parent_policy.cssi_primaryinsured
