@@ -31,13 +31,24 @@
 			]) %>
 			<% when "Task" %>
 			<li data-role="list-divider">Task Info</li>
-			<%= generate_listview_items([
-				{:label => "Subject", :value => @activity.subject},
-				{:label => "Priority", :value => @activity.prioritycode},
-				{:label => "Description", :value => @activity.description},
-				{:label => "Due Date", :value => to_datetime(@activity.scheduledend)},
-				{:label => "Created On", :value => @activity.createdon}
-			]) %>
+				<% if @activity.cssi_cssi_agentname.blank? %>
+					<%= generate_listview_items([
+						{:label => "Subject", :value => @activity.subject},
+						{:label => "Priority", :value => @activity.prioritycode},
+						{:label => "Description", :value => @activity.description},
+						{:label => "Due Date", :value => to_datetime(@activity.scheduledend)},
+						{:label => "Created On", :value => @activity.createdon}
+					]) %>
+				<% else %>
+					<%= generate_listview_items([
+						{:label => "Subject", :value => @activity.subject},		
+						{:label => "Priority", :value => @activity.prioritycode},
+						{:label => "Description", :value => @activity.description},
+						{:label => "Due Date", :value => to_datetime(@activity.scheduledend)},
+						{:label => "Created On", :value => @activity.createdon},
+						{:label => "Agent Name", :value => @activity.cssi_agentname}
+					]) %>
+				<% end %>
 			<% else %>
 			<li data-role="list-divider">Unknown activity detail</li>
 			<% end %>
