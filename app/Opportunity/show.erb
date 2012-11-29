@@ -12,8 +12,8 @@
 		<%= opp_detail_backbutton(@params['origin']) %>
 		<h3>Opportunity <%= sync_spinner %></h3>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right" style="margin-top:-1px;">
-	       	<a href="<%= url_for(:action=>:show_previous, :id => @opportunity.object, :query =>{:origin => @params['origin']}) %>"  data-icon="arrow-l" data-iconpos="left" data-transition="slideback" data-role="button">&nbsp;</a>
-	       	<a href="<%= url_for(:action=>:show_next, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>"  data-icon="arrow-r" data-iconpos="right" data-role="button">&nbsp;</a>
+	       	<a href="<%= url_for(:action=>:show_previous, :id => @opportunity.object, :query =>{:origin => @params['origin']}) %>"  data-icon="arrow-l" data-iconpos="left"  data-role="button">&nbsp;</a>
+	       	<a href="<%= url_for(:action=>:show_next, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>"  data-icon="arrow-r" data-iconpos="right"  data-role="button">&nbsp;</a>
       </div>
 	</div>
 	<% end %>
