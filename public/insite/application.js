@@ -117,3 +117,28 @@ function setFieldValue(field, value) {
   document.getElementById(field).value=value;
   $("#"+field).refresh();
 }
+
+// Enable the phoneNumber text box so that it submits with the form
+function enablePhoneNumber(){
+	document.getElementById('phoneNumber').disabled=false; 
+	document.getElementById('phone_type_selected').disabled=false; 
+	return true;
+}
+
+//Enable appointment location text box so that it submits with the form
+function enableLocation(){
+	document.getElementById('location').disabled=false; return true;	
+}
+
+function getLocationType()
+{
+	for (var i=0; i<document.getElementById("select_location").options.length; i++){
+      if (document.getElementById("select_location").options[i].selected==true){
+        selected = document.getElementById("select_location").options[i].text;
+        break;
+      }
+    }
+	document.getElementById('cssi_location').value=selected;
+	type = document.getElementById('cssi_location').value;
+	return true;
+}
