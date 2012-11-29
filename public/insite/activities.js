@@ -1,5 +1,5 @@
 function completeSelectedActivities() {
-    var ids = $("input:checked", $(".scrollable-listview")).parent().map(function() {
+    var ids = $("input:checked", $(".list-view")).parent().map(function() {
         return $(this).attr("activity-id");
     }).get();
     if (ids.length > 0)
