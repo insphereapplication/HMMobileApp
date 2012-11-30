@@ -169,11 +169,11 @@ class OpportunityController < Rho::RhoController
   def get_jqm_leads
     @self_id = StaticEntity.system_user_id
     rows = []
-    origin = 'new_leads'
+    origin = 'new-leads'
     f_status = @params['statusReason']
     if f_status
       # follow-ups
-      origin = 'follow_ups'
+      origin = 'follow-ups'
       rows = jqm_get_follow_ups
     else
       f_select = @params['filter']

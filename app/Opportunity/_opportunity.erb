@@ -3,7 +3,7 @@
     if row.class.to_s == 'Hash' %>
 <div class="ui-li ui-li-divider bar-b"><%= row[:divider] %></div>
 <%  else
-        if origin == 'new_leads' || origin == 'follow_ups'
+        if origin == 'new-leads' || origin == 'follow-ups'
             opportunity = row
         else
             opportunity = row.opportunity
@@ -14,10 +14,10 @@
         url = url_for :action => :show, :id => opportunity.object, :query => { :origin => origin }
         urlIsExternal = false
         text = contact.full_name
-        if origin == 'new_leads'
+        if origin == 'new-leads'
             top_right_text = to_datetime_noyear(opportunity.createdon)
             bottom_right_text = "Created #{DateUtil.days_ago_formatted(opportunity.createdon)}"
-        elsif origin == 'follow_ups'
+        elsif origin == 'follow-ups'
             top_right_text = opportunity.cssi_statusdetail
             bottom_right_text = opportunity.cssi_lastactivitydate.blank? ? nil : "#{DateUtil.days_ago_relative(opportunity.cssi_lastactivitydate)}"
         else
@@ -33,7 +33,7 @@
         left_icon = '/public/images/skinny_red_exclamation.png' if !(@self_id == opportunity.cssi_assetownerid) && opportunity.opportunityratingcode == 'Hot'
         icon = nil
         url2_title = 'Details'
-        if origin == 'new_leads' || origin == 'follow_ups'
+        if origin == 'new-leads' || origin == 'follow-ups'
             url2IsExternal = true
             url2 = url_for :action => :phone_dialog, :id=> opportunity.object, :query => { :opportunity => opportunity.object, :location => 'blank', :origin => origin }
             url2_icon = 'phone'
