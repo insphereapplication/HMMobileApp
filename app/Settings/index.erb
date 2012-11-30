@@ -30,12 +30,6 @@
 								<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
 								<h3><a href="<%= url_for :action => :medicare_soa %>">Medicare SOA</a></h3>
 							</li>
-							<% if (!AppInfo.instance.quick_quote_users.blank? && (AppInfo.instance.quick_quote_users.downcase == "all" || AppInfo.instance.quick_quote_users.downcase.index(SyncEngine.get_user_name.downcase) !=  nil ))%>
-								<li>
-									<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
-									<h3><a href="<%= url_for :action => :quoting_tool %>">Quick Quote</a></h3>
-								</li>
-							<% end %>
 					 	</ul>				
 			<% else %>
 					<form name="pin_form" method="POST" action="<%= url_for(:action => :verify_pin, :query => {:origin => @params['origin']}) %>">
@@ -59,6 +53,12 @@
 				<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
 				<h3><a href="<%= url_for :action => :quick_quote %>">Term Life Quick Quote</a></h3>
 			</li>
+			<% if (!AppInfo.instance.quick_quote_users.blank? && (AppInfo.instance.quick_quote_users.downcase == "all" || AppInfo.instance.quick_quote_users.downcase.index(SyncEngine.get_user_name.downcase) !=  nil ))%>
+				<li>
+					<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
+					<h3><a href="<%= url_for :action => :quoting_tool %>">Quick Quote</a></h3>
+				</li>
+			<% end %>
 			<li>
 				<img src="/public/images/phone_small.png" class="ui-li-icon" style="margin-top:8px">
 				<h3><a href="tel:8887314447">Call Support</a></h3>
