@@ -8,6 +8,8 @@ capabilities:
   - non_motorola_device
 android: 
   package_name: <%= @build_yml[:package_name] %>
+  URIScheme: <%= @build_yml[:uri_scheme] %>
+  URIHost: <%= @build_yml[:uri_host] %>
   production:
     certificate: <%= @build_yml[:android_cert_path] %>
     password: "<%= @build_yml[:android_cert_password] %>"

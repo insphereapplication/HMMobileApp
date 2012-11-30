@@ -271,11 +271,7 @@ class Opportunity
   end
   
   def app_details
-    ApplicationDetail.find_by_sql(%Q{
-        select a.* 
-        from ApplicationDetail a 
-        where opportunity_id = '#{object}' 
-    })
+    ApplicationDetail.find_application_by_opportunity(object,temp_id)
   end
     
   def create_application_details

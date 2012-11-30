@@ -91,7 +91,9 @@ def build_yml
     :encrypt_database => '1',
     :bundle_identifier => "com.insphere.insite",
     :bundle_url_scheme => 'insite',
-    :extensions => '["json", "another-extension", "fileutils", "mspec", "crypt"]'
+    :extensions => '["json", "another-extension", "fileutils", "mspec", "crypt"]',
+    :uri_scheme => 'insite',
+    :uri_host => 'insphereis.net'
   }
 end
 
