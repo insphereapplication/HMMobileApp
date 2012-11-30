@@ -64,10 +64,10 @@
             function checkScrolling() {
                 proc_id = null;
                 var top = $window.scrollTop();
-                if (top > lastPos)
-                    proc_id = setTimeout(checkScrolling, 100);
-                else if (top >= ldiv.offset().top - $window.height())
+                if (top >= ldiv.offset().top - $window.height())
                     getContent(pageSize, false);
+                else if (top > lastPos)
+                    proc_id = setTimeout(checkScrolling, 100);
                 lastPos = top;
             }
             $list.parent().bind({
