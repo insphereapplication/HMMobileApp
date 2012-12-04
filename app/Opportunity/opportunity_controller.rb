@@ -93,7 +93,7 @@ class OpportunityController < Rho::RhoController
       Opportunity.local_changed = false
       @params['selected_tab'] = @params['selected_tab'].blank? ? 'new-leads' : @params['selected_tab']
       @persisted_scheduled_search = Settings.get_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS)['search']
-      set_opportunities_nav_context(@params['selected_tab']);
+      $current_nav_context = @params['selected_tab']
       @page_name = 'Opportunities'
       @firstBtnText = 'Create'
       @firstBtnIcon = 'plus'
@@ -186,6 +186,7 @@ class OpportunityController < Rho::RhoController
         rows = jqm_get_new_leads
       end
     end
+    $current_nav_context = origin
     render :partial => 'opportunity', :locals => { :items => rows, :origin => origin }
   end
   def jqm_get_new_leads
@@ -196,7 +197,7 @@ class OpportunityController < Rho::RhoController
           [Opportunity, :todays_new_leads],
           { :divider => 'Previous Days' },
           [Opportunity, :previous_days_leads]
-      ], 0, 1)
+      ], 0, 1, true)
       $new_leads_nav_context = []
     end
     page = @params['page'].to_i
@@ -210,7 +211,7 @@ class OpportunityController < Rho::RhoController
     if @params['reset'] == 'true'
       @@data_loader = ApplicationHelper::HierarchyDataLoader.new([
           [Opportunity, :by_last_activities]
-      ], 0, 5)
+      ], 0, 5, true)
       $follow_ups_nav_context = []
     end
     page = @params['page'].to_i
@@ -229,7 +230,7 @@ class OpportunityController < Rho::RhoController
           [Activity, :appointment_list, 'today'],
           { :divider => 'Future' },
           [Activity, :appointment_list, 'future']
-      ], 0, 4, 3)
+      ], 0, 4, false, 3)
       $appointments_nav_context = []
     end
     page = @params['page'].to_i
@@ -370,7 +371,7 @@ class OpportunityController < Rho::RhoController
       if current_nav_context.count >= 1
         show_opportunity_from_nav(direction)
       else
-        WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))
+        WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list', :query => {:selected_tab => @params['origin']}))
       end  
     end
   end

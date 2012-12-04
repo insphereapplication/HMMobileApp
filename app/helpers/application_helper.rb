@@ -126,12 +126,13 @@ module ApplicationHelper
   end
 
   class HierarchyDataLoader
-    def initialize(call_parameters, pageIndex, pageSizeIndex, replacePrmIndex = nil)
+    def initialize(call_parameters, pageIndex, pageSizeIndex, isOpportunity, replacePrmIndex = nil)
       @currentState = 0
       @currentPage = 0
       @call_parameters = call_parameters
       @pageIndex = pageIndex
       @pageSizeIndex = pageSizeIndex
+      @isOpportunity = isOpportunity
       @replacePrmIndex = replacePrmIndex
     end
 
@@ -150,7 +151,7 @@ module ApplicationHelper
           data = call_parameter[0].send(call_parameter[1], *prms)
           if data.length > 0
             result.concat(data)
-            indexes_arr.concat(data.map{|obj| obj.object }) unless indexes_arr.nil?
+            indexes_arr.concat(data.map {|obj| @isOpportunity ? obj.object : obj.opportunity.object}) unless indexes_arr.nil?
           end
           if data.length < page_size
             @currentState = @currentState + 1
