@@ -45,8 +45,8 @@
 			</li>
 			<% if (!AppInfo.instance.quick_quote_users.blank? && (AppInfo.instance.quick_quote_users.downcase == "all" || AppInfo.instance.quick_quote_users.downcase.index(SyncEngine.get_user_name.downcase) !=  nil ))%>
 				<li>
-					<a href="<%= url_for :action => :quoting_tool %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon" >Quick Quote</a>
-				</li>
+					<a href="<%= url_for :action => :quoting_tool %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon" >Quick Health Quote</a>
+
 			<% end %>
 			<li>	
 				<a href="tel:8887314447"><img src="/public/images/simple_black_phone.png" class="ui-li-icon">Call Support</a>

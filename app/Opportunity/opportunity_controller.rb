@@ -665,6 +665,47 @@ class OpportunityController < Rho::RhoController
     System.open_url("#{quote_url}")
   end
   
+  def health_quoting_tool
+
+        opportunity = Opportunity.find_opportunity(@params['id'])
+        contact = opportunity.contact unless opportunity.blank?
+        quoting_tool_url = Rho::RhoConfig.quoting_tool_url
+        quoting_tool_target = Rho::RhoConfig.quoting_tool_target
+        ctime = Time.new.utc
+        ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
+        user_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.login}Delimit"))
+        pwd_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.password}Delimit"))           
+        quoting_tool_params = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}"
+      
+        if contact 
+          formatted_dob = ''
+
+          unless contact.birthdate.blank?
+           parsed_dob = (Date.strptime(contact.birthdate, DateUtil::DEFAULT_TIME_FORMAT))
+           formatted_dob = parsed_dob.strftime('%m/%d/%Y')
+            quoting_tool_params += "&dob=#{formatted_dob}"
+          end
+
+          quoting_tool_params += "&gender=#{contact.gendercode}" unless contact.gendercode.blank?
+
+          unless contact.address1_postalcode.blank?
+            quoting_tool_params += "&statecode=#{contact.address1_postalcode}"
+          else
+            quoting_tool_params += "&statecode=#{contact.address2_postalcode}" unless contact.address2_postalcode.blank?
+          end
+          quoting_tool_params += "&tabacco=#{contact.cssi_usetobacco}" unless contact.cssi_usetobacco.blank?
+        end
+
+        
+        #rc_url ="#{insphere_url}?#{quoting_tool_params_enc}"
+     
+        redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+      
+        System.open_url("#{quoting_tool_url}#{quoting_tool_target}?#{quoting_tool_params}")
+          
+      
+  end
+  
   def map
         # WebView.refresh
         WebView.navigate(WebView.current_location)
