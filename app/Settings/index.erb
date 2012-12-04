@@ -56,7 +56,7 @@
 			<% if (!AppInfo.instance.quick_quote_users.blank? && (AppInfo.instance.quick_quote_users.downcase == "all" || AppInfo.instance.quick_quote_users.downcase.index(SyncEngine.get_user_name.downcase) !=  nil ))%>
 				<li>
 					<img src="/public/images/logo_icon_small.png" class="ui-li-icon" style="margin-top:8px">
-					<h3><a href="<%= url_for :action => :quoting_tool %>">Quick Quote</a></h3>
+					<h3><a href="<%= url_for :action => :quoting_tool %>">Quick Health Quote</a></h3>
 				</li>
 			<% end %>
 			<li>

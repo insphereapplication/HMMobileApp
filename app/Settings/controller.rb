@@ -27,12 +27,14 @@ class SettingsController < Rho::RhoController
   
   def init
     if can_skip_login?
+      puts "In can_skip_login true"
       #login & sync in background
       SyncEngine.login(Settings.login, Settings.password,  '/app/Settings/background_login_callback')
       #go to opportunity index page
       goto_opportunity_init_notify
     else
       #go to login screen
+        puts "In can_skip_login false"
       goto_login
     end
   end
@@ -673,6 +675,7 @@ class SettingsController < Rho::RhoController
   end
 
   def goto_opportunity_init_notify
+    puts "%%%% In goto_opportunity_init_notify"
     WebView.navigate ( url_for :controller => :Opportunity, :action => :init_notify)
   end
   
