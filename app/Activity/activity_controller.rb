@@ -132,7 +132,7 @@ class ActivityController < Rho::RhoController
           [Activity, :no_date_activities]
         ]
       end
-      @@data_loader = ApplicationHelper::HierarchyDataLoader.new(prms, 0, 3)
+      @@data_loader = ApplicationHelper::HierarchyDataLoader.new(prms, 0, 3, false)
     end
     @grouped_items = @@data_loader.load_data([page, @type, @priority, page_size])
     render :partial => 'activity', :locals => { :items => @grouped_items }
