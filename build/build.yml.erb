@@ -6,6 +6,8 @@ build: <%= @build_yml[:build_type] %>
 app_type: rhoelements
 capabilities:
   - non_motorola_device
+motorola_license_company: <%= @build_yml[:motorola_license_company] %>
+motorola_license: <%= @build_yml[:motorola_license] %>
 android: 
   package_name: <%= @build_yml[:package_name] %>
   URIScheme: <%= @build_yml[:uri_scheme] %>
