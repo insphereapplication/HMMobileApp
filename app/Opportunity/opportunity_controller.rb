@@ -575,7 +575,7 @@ class OpportunityController < Rho::RhoController
           else
             quoting_tool_params += "&statecode=#{contact.address2_postalcode}" unless contact.address2_postalcode.blank?
           end
-          quoting_tool_params += "&tabacco=#{contact.cssi_usetobacco}" unless contact.cssi_usetobacco.blank?
+          quoting_tool_params += "&tobacco=#{contact.cssi_usetobacco}" unless contact.cssi_usetobacco.blank?
         end
 
         
