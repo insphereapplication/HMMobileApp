@@ -490,7 +490,6 @@ class SettingsController < Rho::RhoController
       
       @on_sync_complete.call
       
-       WebView.execute_js("stopSyncSpin();") 
 
       #if latest integrated lead createdon is greater than before sync, display popup alert
       # handle_new_integrated_leads
