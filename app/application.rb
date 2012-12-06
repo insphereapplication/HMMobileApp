@@ -29,7 +29,7 @@ class AppApplication < Rho::RhoApplication
   end
   
   def on_activate_app
-      puts "calling on_activate_app"
+      puts "calling on_activate_app status: #{$app_activated}"
       begin
       if (!$app_activated.blank? && !SyncEngine.is_syncing && Settings.last_synced && !Settings.last_synced.blank? && Time.new - Settings.last_synced > 60)
         puts "App start sync needed"
@@ -41,7 +41,12 @@ class AppApplication < Rho::RhoApplication
          puts "Error attempting to see if we should sync on start / forground of app.  Skipping sync check on activate.  Error message:  #{e.message}"  
       end   
       SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
-      WebView.execute_js("setAppActive();") if (!$app_activated = false)
+      if ($app_activated == "false")
+        puts "app activate calling setAppActive"
+        WebView.execute_js("setAppActive();") 
+      else
+        puts "app activate initial start not calling setAppActive"
+      end
       $app_activated = "true"
       puts "In app active: #{$app_activated}"
   end
