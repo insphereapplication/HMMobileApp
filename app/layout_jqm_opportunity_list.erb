@@ -26,7 +26,7 @@
                 <a <%= 'rel="external" ' if @firstBtnExternal %>href="<%= @firstBtnUrl %>" data-icon="<%= @firstBtnIcon %>"<%= ' data-rel="back"' if @firstBtnBack == true %>><%= @firstBtnText %></a>
                 <h1>
                     <%= @page_name %>
-                    <img class="<% if not DeviceCapabilities.is_syncing? %>ui-hidden<% end %>" id="syncSpinner" src="/public/images/syncSpinner.gif" width="12" height="12"/>
+                    <%= sync_spinner %>
                 </h1>
 <% if @secondBtnUrl %>
                 <a <%= 'rel="external" ' if @secondBtnExternal %>href="<%= @secondBtnUrl %>" data-icon="<%= @secondBtnIcon %>"><%= @secondBtnText %></a>

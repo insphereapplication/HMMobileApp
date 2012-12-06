@@ -281,7 +281,7 @@ module BrowserHelper
   
   def sync_spinner
       %Q{
-        	<img class="#{ DeviceCapabilities.is_syncing? ? 'ui-hidden' : '' }" id="syncSpinner" src="/public/images/syncSpinner.gif" height="12" width="12" />
+        	<img class="ui-spinner#{ DeviceCapabilities.is_syncing? ? '' : ' ui-hidden' }" src="/public/images/syncSpinner.gif" height="12" width="12" />
       }
   end
   

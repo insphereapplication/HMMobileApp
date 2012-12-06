@@ -1,23 +1,21 @@
 var offline_bar_selector = ".ui-offline-bar",
-    sync_spinner_selector = "#syncSpinner";
+    sync_spinner_selector = ".ui-spinner";
 
 function updateConnectionStatusIndicator() {
-    var $offline_bar_selector = $(offline_bar_selector);
-    if ($offline_bar_selector.length > 0)
+    if ($(offline_bar_selector).length > 0)
         $.post('/app/Settings/get_connection_status', function(ajax_result) {
             var result = ajax_result.split(",");
             var connection_status = result[0];
             var sync_status = result[1];
             if (connection_status === "Offline")
-                $offline_bar_selector.show();
+                $(offline_bar_selector).show();
             else
-                $offline_bar_selector.hide();
-            var $sync_spinner_selector = $(sync_spinner_selector);
-            if ($sync_spinner_selector.length > 0)
+                $(offline_bar_selector).hide();
+            if ($(sync_spinner_selector).length > 0)
                 if (sync_status === "Syncing")
-                    $sync_spinner_selector.show();
+                    $(sync_spinner_selector).show();
                 else
-                    $sync_spinner_selector.hide();
+                    $(sync_spinner_selector).hide();
         });
 }
 

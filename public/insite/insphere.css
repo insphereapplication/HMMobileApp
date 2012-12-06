@@ -69,6 +69,10 @@
     font-size: 10px;
 }
 
+.ui-spinner {
+	padding-right: 20px;
+}
+
 .ui-hidden {
     display: none;
 }
