@@ -235,7 +235,9 @@ class OpportunityController < Rho::RhoController
     end
     page = @params['page'].to_i
     page_size = @params['pageSize'].to_i
-    @@data_loader.load_data([page, persisted_filter_values['filter'], persisted_filter_values['search'], '', page_size], $appointments_nav_context)
+    result = @@data_loader.load_data([page, persisted_filter_values['filter'], persisted_filter_values['search'], '', page_size], $appointments_nav_context)
+    $appointments_nav_context.uniq!
+    result
   end
   
   def set_opportunities_nav_context(context=nil)
