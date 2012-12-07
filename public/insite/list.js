@@ -8,13 +8,13 @@
         _create: function() {
             var $this = this,
                 $list = this.element.addClass("list-view"),
-                $document = $(document),
                 $window = $(window),
                 loadUrl = $list.jqmData("loadurl"),
                 o = this.options,
                 pageSize = $list.jqmData("pagesize") || o.pagesize,
                 autoInitialize = $list.jqmData("autoinitialize") || o.autoinitialize,
-                requestData, currentPage, loadNext, loading, lastPos, proc_id, ldiv,
+                requestData, currentPage, loadNext, loading, times, proc_id, ldiv,
+                timesValue = navigator.userAgent.match(/Android/) ? 50 : 0,
                 $filter = $list.jqmData("filterselector") || o.filterselector,
                 $filterTxt, filterTxt;
             $list.delegate("a.btn", "tap", function() {
@@ -40,6 +40,8 @@
                                 records = data.substr(0, pos);
                                 data = data.substr(pos);
                             }
+                            else
+                                data = "";
                             if (data.length > 0)
                                 ldiv.before(data);
                             if (records < pageSize) {
@@ -62,18 +64,18 @@
                 }
             }
             function checkScrolling() {
-                proc_id = null;
-                var top = $window.scrollTop();
-                if (top >= ldiv.offset().top - $window.height())
+                if ($window.scrollTop() >= ldiv.offset().top - $window.height())
                     getContent(pageSize, false);
-                else if (top > lastPos)
+                else if (times > 0) {
+                    times--;
                     proc_id = setTimeout(checkScrolling, 100);
-                lastPos = top;
+                }
             }
             $list.parent().bind({
                 scrollstop: function() {
                     if ($list.is(":visible") && loadNext) {
                         clearProcId();
+                        times = timesValue;
                         checkScrolling();
                     }
                 }
@@ -83,7 +85,6 @@
                 currentPage = 0;
                 loadNext = true;
                 loading = false;
-                lastPos = 0;
                 $.mobile.silentScroll(0);
                 $list.empty().append("<div class='list-view-loading'>Loading...</div>"),
                 ldiv = $list.find("div");
