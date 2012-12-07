@@ -16,7 +16,7 @@
     </head>
     <body>
         <div class="scrollable-list-page" data-role="page">
-            <div data-role="header" data-theme="b" data-position="fixed" data-tap-toggle="false">
+            <div data-role="header" data-theme="b"<%= ' data-position="fixed" data-tap-toggle="false"' if !(System.get_property('platform') == 'ANDROID' && System::get_property('os_version').split('.')[0].to_i < 3) %>>
                 <div class="ui-offline-bar<% if DeviceCapabilities.is_connected? %> ui-hidden<% end %>">Connection State: Offline</div>
                 <a <%= 'rel="external" ' if @firstBtnExternal %>href="<%= @firstBtnUrl %>" data-icon="<%= @firstBtnIcon %>"<%= ' data-rel="back"' if @firstBtnBack == true %>><%= @firstBtnText %></a>
                 <h1>
