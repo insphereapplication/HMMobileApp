@@ -1,7 +1,7 @@
 <div data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar%>
 	<form method="post" id="opp_add" action="<%= url_for(:action => :create, :query => {:id => @contact.object, :origin => @params['origin']})%>" name="opp_add">
-		<div data-role="header" data-backbtn="false" data-theme="b">
+		<div data-role="header" data-backbtn="false" data-theme="b" <%= ' data-position="fixed"' if !(System.get_property('platform') == 'ANDROID' && System::get_property('os_version').split('.')[0].to_i < 3) %>>
 			<a href="<%=url_for(:controller => :Contact, :action => :show, :id => @contact.object, :query=> {:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
 			<h1>Create Opportunity <%= sync_spinner %></h1>
 			<span class="ui-btn-right">

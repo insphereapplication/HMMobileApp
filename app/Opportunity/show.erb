@@ -2,7 +2,7 @@
 	<%= offline_bar%>
 	<% if @params['origin'] == "contact" || @params['origin'] == "SearchContacts" %>
 	<div data-role="header" data-backbtn="false" data-theme="b">
-		<a data-transition="slide"  data-rel="back" href="<%= url_for(:controller => :Contact, :action => :show, :id => @opportunity.contact.object, :query =>{:origin => @params['origin']}) %>" data-direction="reverse" data-icon="back">Contact</a>
+		<a data-transition="slide"  href="<%= url_for(:controller => :Contact, :action => :show, :id => @opportunity.contact.object, :query =>{:origin => @params['origin']}) %>"  data-icon="back">Contact</a>
 		<h3>
 			Opportunity<%= sync_spinner %>
 		</h3>

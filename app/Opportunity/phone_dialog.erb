@@ -1,7 +1,7 @@
 <div id="phone_dialog" data-role="none" class="ui-dialog ui-page ui-body-a ui-page-active">
 	
 		<div data-role="header" data-theme="d" data-position="inline" class="ui-corner-top ui-overlay-shadow ui-bar-d ui-header" role="banner">
-			<a href="<%= url_for :action => :show, :id => @opportunity.object, :query => {:origin => @params['origin']} %>" data-icon="delete" data-rel="back" data-iconpos="notext" class="ui-btn-left ui-btn ui-btn-icon-notext ui-btn-corner-all ui-shadow ui-btn-up-d" title="Close" data-theme="d">
+			<a href="<%= url_for :action => :show, :id => @opportunity.object, :query => {:origin => @params['origin']} %>" data-icon="delete"  data-iconpos="notext" class="ui-btn-left ui-btn ui-btn-icon-notext ui-btn-corner-all ui-shadow ui-btn-up-d" title="Close" data-theme="d">
 				<span class="ui-btn-inner ui-btn-corner-all">
 					<span class="ui-btn-text">Close</span>
 					<span class="ui-icon ui-icon-delete ui-icon-shadow"></span>
@@ -17,7 +17,7 @@
 				link_href = url_for(:action => :call_number, :id=>@opportunity.object, :query => {:phone_number => number, :opportunity => @opportunity.object, :origin => @params['origin'], :redirect_action => :show})
 				icons = generate_phone_number_icons(preferred, do_not_call)
 				%Q{
-					<a href="#{link_href}" data-role="button" data-rel="back" data-theme="c" style="white-space:normal" class="ui-btn ui-btn-icon-right ui-btn-corner-all ui-shadow ui-btn-up-c">
+					<a href="#{link_href}" data-role="button" data-theme="c" style="white-space:normal" class="ui-btn ui-btn-icon-right ui-btn-corner-all ui-shadow ui-btn-up-c">
 						<span class="ui-btn-inner ui-btn-corner-all" style="white-space:normal">
 							<span class="ui-btn-text" style="white-space:normal"><Cancel>#{type}: #{number}</span>
 							#{icons}
@@ -32,7 +32,7 @@
 				<% if (activity.phonenumber.gsub(/ /,'').length > 2) && !(adhoc_nums.include?(activity.phonenumber)) %>
 					<% if (activity.phonenumber != @opportunity.contact.telephone1) && (activity.phonenumber != @opportunity.contact.telephone2) && (activity.phonenumber != @opportunity.contact.telephone3) && (activity.phonenumber != @opportunity.contact.mobilephone) %>
 						<% adhoc_nums << activity.phonenumber %>
-						<a href="<%= url_for(:action => :call_number, :id=>@opportunity.object, :query => {:phone_number => activity.phonenumber, :opportunity => @opportunity.object, :origin => @params['origin']}, :redirect_action => :show) %>" data-role="button"  data-rel="back" data-theme="c" style="white-space:normal" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-c">
+						<a href="<%= url_for(:action => :call_number, :id=>@opportunity.object, :query => {:phone_number => activity.phonenumber, :opportunity => @opportunity.object, :origin => @params['origin']}, :redirect_action => :show) %>" data-role="button"   data-theme="c" style="white-space:normal" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-c">
 						<span class="ui-btn-inner ui-btn-corner-all" style="white-space:normal">
 						<span class="ui-btn-text" style="white-space:normal"><Cancel>Ad Hoc: <%= activity.phonenumber %></span>
 						</span></a>
