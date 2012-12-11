@@ -632,14 +632,14 @@ class SettingsController < Rho::RhoController
   
   def show_log
     Rho::RhoConfig.show_log
-    WebView.refresh # this line gets rid of the spinner
+     redirect :action => :about, :back => 'callback:'
   end
   
   def send_log
     Rho::RhoConfig.send_log
     show_popup( "Log File Sent", "Time: #{Time.now.to_s}\nClient id #{Rhom::Rhom::client_id}" )
     
-    WebView.refresh # this line gets rid of the spinner
+    redirect :action => :about, :back => 'callback:'
   end
   
   def clear_log
