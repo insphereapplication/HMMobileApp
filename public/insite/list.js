@@ -56,27 +56,17 @@
                     });
                 }
             }
-            function clearProcId() {
-                if (proc_id !== null) {
-                    clearTimeout(proc_id);
-                    proc_id = null;
-                }
-            }
             function checkScrolling() {
+                proc_id = null;
                 if ($list.is(":visible") && loadNext) {
                     if ($window.scrollTop() >= ldiv.offset().top - $window.height())
                         getContent(pageSize, false);
                     proc_id = setTimeout(checkScrolling, 500);
                 }
             }
-            $list.parent().bind({
-                scrollstop: function() {
-                    clearProcId();
-                    checkScrolling();
-                }
-            });
             this._reset = function() {
-                clearProcId();
+                if (proc_id !== null)
+                    clearTimeout(proc_id);
                 currentPage = 0;
                 loadNext = true;
                 loading = false;
@@ -93,6 +83,7 @@
                 else
                     requestData = {};
                 getContent(pageSize, true);
+                checkScrolling();
             }
             if ($filter) {
                 $filter = $($filter);
