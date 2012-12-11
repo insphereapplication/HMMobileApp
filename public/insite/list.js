@@ -13,8 +13,7 @@
                 o = this.options,
                 pageSize = $list.jqmData("pagesize") || o.pagesize,
                 autoInitialize = $list.jqmData("autoinitialize") || o.autoinitialize,
-                requestData, currentPage, loadNext, loading, times, proc_id, ldiv,
-                timesValue = navigator.userAgent.match(/Android/) ? 50 : 0,
+                requestData, currentPage, loadNext, loading, proc_id = null, ldiv,
                 $filter = $list.jqmData("filterselector") || o.filterselector,
                 $filterTxt, filterTxt;
             $list.delegate("a.btn", "tap", function() {
@@ -64,20 +63,16 @@
                 }
             }
             function checkScrolling() {
-                if ($window.scrollTop() >= ldiv.offset().top - $window.height())
-                    getContent(pageSize, false);
-                else if (times > 0) {
-                    times--;
-                    proc_id = setTimeout(checkScrolling, 100);
+                if ($list.is(":visible") && loadNext) {
+                    if ($window.scrollTop() >= ldiv.offset().top - $window.height())
+                        getContent(pageSize, false);
+                    proc_id = setTimeout(checkScrolling, 500);
                 }
             }
             $list.parent().bind({
                 scrollstop: function() {
-                    if ($list.is(":visible") && loadNext) {
-                        clearProcId();
-                        times = timesValue;
-                        checkScrolling();
-                    }
+                    clearProcId();
+                    checkScrolling();
                 }
             });
             this._reset = function() {
