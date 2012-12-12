@@ -48,10 +48,12 @@
                                 ldiv.remove();
                             }
                             loading = false;
+                            $list.find("div.list-view-loading").html("Success: " + currentPage);
                         },
                         error: function() {
                             currentPage--;
                             loading = false;
+                            $list.find("div.list-view-loading").html("Error: " + currentPage);
                         }
                     });
                 }
