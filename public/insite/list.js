@@ -83,7 +83,7 @@
                 else
                     requestData = {};
                 getContent(pageSize, true);
-                checkScrolling();
+                proc_id = setTimeout(checkScrolling, 1000);
             }
             if ($filter) {
                 $filter = $($filter);
