@@ -107,7 +107,7 @@ class OpportunityController < Rho::RhoController
       @filterBtnText = 'Filter'
       render :action => :filters, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'
     else
-      redirect :controller => Settings, :action => :login, :back => 'callback:', :layout => 'layout_JQM_Lite'
+      redirect :controller => Settings, :action => :login, :back => 'callback:', :layout => 'layout_jquerymobile'
     end
   end
   def gen_jqm_options(options, selected_value)
@@ -267,66 +267,6 @@ class OpportunityController < Rho::RhoController
     end
   end
   
-  def get_new_leads(color, text, opportunities, page_number)
-    check_for_context_reset('new-leads')
-    $new_leads_nav_context += opportunities.map{|opp| opp.object }
-    @color = color
-    @label = text
-    @page = opportunities
-    @self_id = StaticEntity.system_user_id
-    render :action => :opportunity_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
-  end
-  
-  def todays_new_leads
-    get_new_leads('red', 'Today', Opportunity.todays_new_leads(@params['page'].to_i), @params['page'])
-  end
-  
-  def previous_days_new_leads
-    get_new_leads('orange', 'Previous Days', Opportunity.previous_days_leads(@params['page'].to_i), @params['page'])
-  end
-
-  def by_last_activities
-    Settings.update_persisted_filter_values(Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX, Constants::FOLLOWUP_FILTERS.map{|filter| filter[:name]}, @params)
-    persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX, Constants::FOLLOWUP_FILTERS)
-    
-    opportunities = Opportunity.by_last_activities(@params['page'].to_i, persisted_filter_values['statusReason'], persisted_filter_values['sortBy'], persisted_filter_values['created'], persisted_filter_values['isDaily'])
-    
-    check_for_context_reset('follow-ups')
-    $follow_ups_nav_context += opportunities.map{|opp| opp.object }
-    
-    @page = opportunities
-    @self_id = StaticEntity.system_user_id
-    render :action => :last_activities_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
-  end
-  
-  def get_filtered_appointments(color, label, bucket)
-    Settings.update_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS.map{|filter| filter[:name]}, @params)
-    persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS)
-    
-    appointments = Activity.appointment_list(@params['page'].to_i, persisted_filter_values['filter'], persisted_filter_values['search'], bucket)
-    
-    check_for_context_reset('appointments')
-    $appointments_nav_context += appointments.map{|appointment| appointment.opportunity.object }
-    
-    @color = color
-    @label = label
-    @page = appointments
-    @self_id = StaticEntity.system_user_id
-    
-    render :action => :appointments_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
-  end
-  
-  def future_scheduled
-    get_filtered_appointments('green', 'Future', 'future')
-  end
-
-  def todays_scheduled
-    get_filtered_appointments('orange', 'Today', 'today')
-  end
-
-  def past_due_scheduled    
-    get_filtered_appointments('red', 'Past Due', 'past_due')
-  end
   
   # GET /Opportunity/{1}
   def show
@@ -386,7 +326,7 @@ class OpportunityController < Rho::RhoController
     if @opportunity && @contact
       render :action => :status_update, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
-      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))
     end
   end 
   
@@ -397,9 +337,9 @@ class OpportunityController < Rho::RhoController
       render :action => :note_create, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
        if @params['origin'] == 'contact'
-          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'),Constants::TAB_INDEX['Contacts'])
+          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'),Constants::TAB_INDEX['Contacts'])
        else   
-          WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'),Constants::TAB_INDEX['Opportunities'])
+          WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
        end
     end
   end  
@@ -526,7 +466,7 @@ class OpportunityController < Rho::RhoController
       if @params['origin'] == 'contact'
          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'),Constants::TAB_INDEX['Contacts'])
       else   
-         WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'),Constants::TAB_INDEX['Opportunities'])
+         WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
       end
     end
   end
@@ -536,7 +476,7 @@ class OpportunityController < Rho::RhoController
     @contact = @opportunity.contact unless @opportunity.blank?
     phone_number=''
     if @contact.blank?
-      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'),Constants::TAB_INDEX['Opportunities'])  
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])  
     elsif @contact.phone_numbers.size < 2
       @contact.phone_numbers.each do |type, number|
         phone_number = number
@@ -548,7 +488,7 @@ class OpportunityController < Rho::RhoController
                         :phone_number => phone_number,
                         :redirect_action => :show} 
     else
-      render :action => :phone_dialog, :back => 'callback:', :layout => 'layout_JQM_Lite'
+      render :action => :phone_dialog, :back => 'callback:', :layout => 'layout_jquerymobile'
     end
   end
   
@@ -775,7 +715,7 @@ class OpportunityController < Rho::RhoController
       if @params['origin'] == 'contact'
          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'))
        else   
-         WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))
+         WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))
        end
       
     end
@@ -804,7 +744,7 @@ class OpportunityController < Rho::RhoController
       if @params['origin'] == 'contact'
          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'))
       else   
-         WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))
+         WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))
       end  
     end
   end
@@ -821,7 +761,7 @@ class OpportunityController < Rho::RhoController
     if @params['origin'] == 'contact'
        WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'))
      else   
-       WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))
+       WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))
      end
   end
 end

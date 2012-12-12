@@ -387,7 +387,7 @@ class ContactController < Rho::RhoController
   
   def finished_contact_activity(contact, origin, opportunity)
     SyncUtil.start_sync
-    WebView.navigate(url_for(:action => :show, :id => contact.object, :back => 'callback:', :query => {:origin => origin, :opportunity => opportunity}, :layout => 'layout_JQM_lite'))
+    WebView.navigate(url_for(:action => :show, :id => contact.object, :back => 'callback:', :query => {:origin => origin, :opportunity => opportunity}, :layout => 'layout_jquerymobile'))
   end
   
   def create_new_contact_task

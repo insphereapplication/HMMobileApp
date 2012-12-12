@@ -22,9 +22,9 @@ class NoteController < Rho::RhoController
       render :action => :show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
     else
        if @params['origin'] == 'contact'
-          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'),Constants::TAB_INDEX['Contacts'])
+          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'),Constants::TAB_INDEX['Contacts'])
        else   
-          WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'),Constants::TAB_INDEX['Opportunities'])
+          WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
        end
     end
   end
@@ -86,9 +86,9 @@ class NoteController < Rho::RhoController
     else
       puts "The opportunity for {@params['opportunity_id'} was deleted before the note could be added"
       if @params['origin'] == 'contact'
-         WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'),Constants::TAB_INDEX['Contacts'])
+         WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'),Constants::TAB_INDEX['Contacts'])
       else   
-         WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'),Constants::TAB_INDEX['Opportunities'])
+         WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
       end
     end
   end

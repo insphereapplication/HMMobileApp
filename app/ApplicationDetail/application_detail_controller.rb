@@ -19,7 +19,7 @@ class ApplicationDetailController < Rho::RhoController
     if @appdetail && @opportunity
       render :action => :show, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
     else
-      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))  
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))  
     end
   end
 

@@ -181,28 +181,6 @@ class ActivityController < Rho::RhoController
     end
   end
 
-  def get_new_activities(color, activities)
-    @color = color
-    @page = activities
-    render :action => :activity_page, :back => 'callback:', :layout => 'layout_JQM_Lite'
-  end
-
-  def past_due_activities
-    get_new_activities('red', Activity.past_due_activities(@params['page'].to_i, @params['type'], @params['priority']))
-  end
-
-  def no_date_activities
-    get_new_activities('green', Activity.no_date_activities(@params['page'].to_i, @params['type'], @params['priority']))
-  end
-
-  def today_activities
-    get_new_activities('orange', Activity.today_activities(@params['page'].to_i, @params['type'], @params['priority']))
-  end
-
-  def future_activities
-    get_new_activities('yellow', Activity.future_activities(@params['page'].to_i, @params['type'], @params['priority']))
-  end
-
   def opportunity_details
     Rho::NativeTabbar.switch_tab(0)
     redirect :action => :index
@@ -242,7 +220,7 @@ class ActivityController < Rho::RhoController
       Settings.record_activity
       render :action => :show_appt, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
     else
-      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))    
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))    
     end
   end
 
@@ -269,11 +247,11 @@ class ActivityController < Rho::RhoController
      render :action => edit_action.to_sym, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
     else
       if @params['origin'] == 'appointments'
-        WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))
+        WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))
       else
-        WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))
+        WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))
         Rho::NativeTabbar.switch_tab(Constants::TAB_INDEX['Activities'])
-        WebView.navigate(url_for(:controller => :Activity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'), Constants::TAB_INDEX['Activities'])
+        WebView.navigate(url_for(:controller => :Activity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'), Constants::TAB_INDEX['Activities'])
       end  
     end
   end  
@@ -288,7 +266,7 @@ class ActivityController < Rho::RhoController
        Settings.record_activity
        render :action => :show_callback, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
      else
-       WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_JQM_Lite'))   
+       WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))   
      end
   end
    
@@ -834,7 +812,7 @@ class ActivityController < Rho::RhoController
   
   def finished_create_activity
     SyncUtil.start_sync
-    WebView.navigate(url_for( :action => :index, :back => 'callback:', :layout => 'layout_JQM_lite'))
+    WebView.navigate(url_for( :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'))
   end
   
   def finished_win_status(opportunity, origin, appointmentids=nil)
@@ -862,7 +840,7 @@ class ActivityController < Rho::RhoController
 
   def finished_contact_activity(contact)
     SyncUtil.start_sync
-    WebView.navigate(url_for( :controller => :contact, :action => :show, :id => contact.object, :back => 'callback:', :layout => 'layout_JQM_lite'))
+    WebView.navigate(url_for( :controller => :contact, :action => :show, :id => contact.object, :back => 'callback:', :layout => 'layout_jquerymobile'))
   end
 
 end
