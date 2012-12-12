@@ -13,7 +13,8 @@
                 o = this.options,
                 pageSize = $list.jqmData("pagesize") || o.pagesize,
                 autoInitialize = $list.jqmData("autoinitialize") || o.autoinitialize,
-                requestData, currentPage, loadNext, loading, proc_id = null, ldiv,
+                requestData, currentPage, loadNext, loading, times, proc_id = null, ldiv,
+                timesValue = navigator.userAgent.match(/Android/) ? 30 : 0,
                 $filter = $list.jqmData("filterselector") || o.filterselector,
                 $filterTxt, filterTxt;
             $list.delegate("a.btn", "tap", function() {
@@ -48,32 +49,44 @@
                                 ldiv.remove();
                             }
                             loading = false;
-                            $list.find("div.list-view-loading").html("Success: " + currentPage);
                         },
                         error: function() {
                             currentPage--;
                             loading = false;
-                            $list.find("div.list-view-loading").html("Error: " + currentPage);
                         }
                     });
                 }
             }
-            function checkScrolling() {
-                proc_id = null;
-                if ($list.is(":visible") && loadNext) {
-                    if ($window.scrollTop() >= ldiv.offset().top - $window.height())
-                        getContent(pageSize, false);
-                    proc_id = setTimeout(checkScrolling, 500);
+            function clearProcId() {
+                if (proc_id !== null) {
+                    clearTimeout(proc_id);
+                    proc_id = null;
                 }
             }
+            function checkScrolling() {
+                if ($window.scrollTop() >= ldiv.offset().top - $window.height())
+                    getContent(pageSize, false);
+                else if (times > 0) {
+                    times--;
+                    proc_id = setTimeout(checkScrolling, 200);
+                }
+            }
+            $list.parent().bind({
+                scrollstop: function() {
+                    if ($list.is(":visible") && loadNext) {
+                        clearProcId();
+                        times = timesValue;
+                        checkScrolling();
+                    }
+                }
+            });
             this._reset = function() {
-                if (proc_id !== null)
-                    clearTimeout(proc_id);
+                clearProcId();
                 currentPage = 0;
                 loadNext = true;
                 loading = false;
                 $.mobile.silentScroll(0);
-                $list.empty().append("<div class='list-view-loading'>Loading...</div>"),
+                $list.empty().append("<div class='list-view-loading'>Loading...</div>");
                 ldiv = $list.find("div");
                 if ($filter) {
                     requestData = getFilterData();
@@ -85,7 +98,6 @@
                 else
                     requestData = {};
                 getContent(pageSize, true);
-                proc_id = setTimeout(checkScrolling, 1000);
             }
             if ($filter) {
                 $filter = $($filter);
