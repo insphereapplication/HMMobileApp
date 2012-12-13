@@ -644,7 +644,7 @@ class SettingsController < Rho::RhoController
   
   def clear_log
     Rho::RhoConfig.clean_log
-    WebView.refresh # this line gets rid of the spinner
+    redirect :action => :about
   end
   
   def toggle_log_level
