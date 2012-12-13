@@ -1,10 +1,10 @@
-<script>
-function PickDateCallbackChangeFocus() {
-popupAppDateAJPicker('1', 'Application Date', 'cssi_applicationdate');
-document.getElementById('submit_button').focus();
-}
-</script>
 <div data-role="page" data-theme="b" id="appdetail_add_page">
+	<script>
+	function PickDateCallbackChangeFocus() {
+	popupTomorrowDateTimeAJPicker('1', 'Application Date', 'cssi_applicationdate');
+	document.getElementById('submit_button').focus();
+	}
+	</script>
 	<%= offline_bar%>
 	<form method="post" id="appdetail" action="<%= url_for(:action => :create, :query => {:opportunity => @opportunity.object, :origin => @params['origin']})%>" name="app_details_create">
 		<div data-role="header" data-backbtn="false" data-theme="b">

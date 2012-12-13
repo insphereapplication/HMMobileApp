@@ -541,7 +541,8 @@ class OpportunityController < Rho::RhoController
         preset_time = Time.new + 86400 + DateUtil.seconds_until_hour(Time.new)
       else
           # Reading java script format "11/13/2012 03:00 PM"
-          preset_time = (Time.strptime(@params['preset'], '%m/%d/%Y %I:%M %p'))
+          preset_time = (Time.strptime(@params['preset'], '%m/%d/%Y %I:%M %p')) if flag == '0'
+          preset_time = (Time.strptime(@params['preset'], '%m/%d/%Y')) if flag == '1'
       end
       DateTimePicker.choose url_for(:action => :callback, :back => 'callback:'), @params['title'], preset_time, flag.to_i, Marshal.dump({:flag => flag, :field_key => @params['field_key']})
     end
