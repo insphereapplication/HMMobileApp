@@ -110,3 +110,8 @@
     height: 24px;
     margin-top: -11px !important; 
 }
+
+.ui-header .ui-title, .ui-footer .ui-title {
+    margin-right: 10%;
+    margin-left: 10%;
+}
