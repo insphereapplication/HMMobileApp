@@ -1,6 +1,6 @@
 <div data-role="page" data-theme="b" id="callback_edit">
 	<script type='text/javascript'>
-		$(document).ready(function() {
+		$(document).delegate("#callback_edit","pageinit" ,function() {
 			populatePhone(document.getElementById('phoneList'));
 		});
 	</script>
@@ -33,6 +33,7 @@
 		</div>
        	<% if (@activity_contact) %>
 			<div data-role="fieldcontain">
+				<input type="hidden" id="phone_type_selected" name="phone_type_selected" />
 			    <label for="phonelist" class="select">Phone Type:</label>
 				<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);" data-theme="d">				 
 					<% puts "Selected phone type is:  #{@activity.phone_type}" %>			
@@ -49,8 +50,9 @@
        	<% end %>
 		<div data-role="fieldcontain">
 			<label for="phoneNumber" class="fieldLabel">Phone Number: <font color="red"> *</font> </label>
-			<input  type="tel" id="phoneNumber" name="phone_number" data-theme="d" onkeypress="if(event.keyCode==13){return false;}" value="<%= @activity.phonenumber %>" />
+			<input  type="tel" id="phoneNumber" name="phone_number" data-theme="d"  />
 		</div>
+		
 		<div data-role="fieldcontain">
 				<fieldset data-role="controlgroup">
 		             <legend>Priority:</legend>
