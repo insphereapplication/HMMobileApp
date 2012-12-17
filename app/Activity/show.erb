@@ -31,7 +31,7 @@
 			]) %>
 			<% when "Task" %>
 			<li data-role="list-divider">Task Info</li>
-				<% if @activity.cssi_cssi_agentname.blank? %>
+				<% if @activity.cssi_agentname.blank? %>
 					<%= generate_listview_items([
 						{:label => "Subject", :value => @activity.subject},
 						{:label => "Priority", :value => @activity.prioritycode},
