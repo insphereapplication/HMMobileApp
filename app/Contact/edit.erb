@@ -170,7 +170,7 @@
 				</div>
 				<div data-role="fieldcontain">
 					<label for="contact[address1_postalcode]" class="fieldLabel">ZIP:</label> 
-					<input maxlength="10" type="number" name="contact[address1_postalcode]" data-theme="d" id="contact[address1_postalcode]" value="<%= @contact.address1_postalcode %>" <%= placeholder( "Home ZIP" ) %>>
+					<input maxlength="10" type="text" pattern="\d*" name="contact[address1_postalcode]" data-theme="d" id="contact[address1_postalcode]" value="<%= @contact.address1_postalcode %>" <%= placeholder( "Home ZIP" ) %>>
 				</div>
 			</div>
 			<div data-role="collapsible" data-collapsed="true" >
@@ -200,7 +200,7 @@
 				</div>
 				<div data-role="fieldcontain">
 					<label for="contact[address2_postalcode]" class="fieldLabel">ZIP:</label> 
-					<input maxlength="10" type="number" id="contact[address2_postalcode]" name="contact[address2_postalcode]"data-theme="d"  value="<%= @contact.address2_postalcode %>" <%= placeholder( "Business ZIP" ) %>>
+					<input maxlength="10" type="text" pattern="\d*" id="contact[address2_postalcode]" name="contact[address2_postalcode]"data-theme="d"  value="<%= @contact.address2_postalcode %>" <%= placeholder( "Business ZIP" ) %>>
 				</div>
 			</div>
 			<div data-theme="b">

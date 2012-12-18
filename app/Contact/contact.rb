@@ -237,17 +237,24 @@ class Contact
   end
   
   def home_city
+    address = ""
     if address1_city
       state = cssi_state1id.blank? ? "" : ", " + cssi_state1id
-      "#{address1_city}#{state} #{address1_postalcode}"
+      address = "#{address1_city}#{state} #{address1_postalcode}"
+    else
+      address = "#{state} #{address1_postalcode}"
     end
   end
 
   def business_city
+    address = ""
     if address2_city
       state = cssi_state2id.blank? ? "" : ", " + cssi_state2id
-      "#{address2_city}#{state} #{address2_postalcode}"
+      address = "#{address2_city}#{state} #{address2_postalcode}"
+    else
+      address = "#{state} #{address2_postalcode}"
     end
+    address
   end
   
   def show_home_address
