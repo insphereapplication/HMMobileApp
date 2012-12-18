@@ -111,6 +111,14 @@
     margin-top: -11px !important; 
 }
 
+.ui-icon-donotcall {
+    background-image: url("/public/images/dncIcon_black_smaller.png");
+    background-color: rgba(0, 0, 0, 0);
+    width: 20px;
+    height: 20px;
+    margin-top: -11px !important;
+}
+
 .ui-header .ui-title, .ui-footer .ui-title {
     margin-right: 20%;
     margin-left: 20%;

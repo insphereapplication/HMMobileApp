@@ -23,15 +23,7 @@
 			
 			<%=
 			@contact.map_phone_numbers{ |type,number,do_not_call,preferred|
-				link = %Q{<a href="tel: #{number}">#{type}: #{number}}
-				icons = generate_phone_number_icons(preferred,do_not_call)
-				%Q{
-					<li data-icon="false">
-						#{link}
-						#{icons}
-						</a>
-					</li>
-				}
+                                generate_phone_number(preferred, do_not_call, "tel: #{number}", type, number)
 			}.join("\n")
 			%>
 		

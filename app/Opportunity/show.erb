@@ -52,15 +52,7 @@
 			<%=
 		    	@opportunity.contact.map_phone_numbers{ |type,number,do_not_call,preferred|
 					href = do_not_call ? '#' : "#{url_for({:action => :call_number, :id => @opportunity.object, :query =>{:origin => @params['origin'], :phone_number => number}})}"
-					link = %Q{<a href="#{href}" rel="external">#{type}: #{number}}
-					icons = generate_phone_number_icons(preferred, do_not_call)
-					%Q{
-						<li data-icon="false">
-							#{link}
-							#{icons}
-							</a>
-						</li>
-					}
+                                        generate_phone_number(preferred, do_not_call, href, type, number)
 					}.join("\n")
 			
 			%>

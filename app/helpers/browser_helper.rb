@@ -594,4 +594,23 @@ module BrowserHelper
   def space_if_blank(object)
     object.blank? ? '&nbsp;' : object
   end
+
+  def generate_phone_number(preferred, do_not_call, href, type, number)
+    icon = 'false'
+    side_icon = ''
+    if do_not_call
+      icon = 'donotcall'
+      side_icon = '<span class="ui-icon ui-icon-check" style="float:right; right:33px;"></span>' if preferred
+    elsif preferred
+      icon = 'check'
+    end
+    %Q{
+        <li data-icon="#{icon}">
+            <a href="#{href}" rel="external">
+                #{type}: #{number}
+                #{side_icon}
+            </a>
+        </li>
+    }
+  end
 end
