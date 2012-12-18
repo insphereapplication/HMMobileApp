@@ -626,6 +626,7 @@ class ActivityController < Rho::RhoController
         unless @params['task']['subject'].blank?
           task = create_new_task(@params['task'],opportunity)
         end
+        redirect :controller => :Opportunity, :action => :index, :back => 'callback:', :query => {:origin => @params['origin']}
   end
 
   def confirm_lost_status
