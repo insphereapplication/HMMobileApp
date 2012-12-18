@@ -123,3 +123,9 @@
     margin-right: 20%;
     margin-left: 20%;
 }
+
+.error {
+    color: #FF0000;
+    text-decoration: italic;
+    font-size: 80%;
+}
