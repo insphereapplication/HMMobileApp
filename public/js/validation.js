@@ -559,8 +559,7 @@ $('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_pag
             }
 			var ua = navigator.userAgent
 			var androidversion = parseFloat(ua.slice(ua.indexOf("Android")+8)); 
-
-			if ((androidversion >= 4.0 && value.length >= 10) || androidversion < 4.0 || ua.toLowerCase().indexOf("ios"))
+			if ((androidversion >= 4.0 && value.length >= 10) || androidversion < 4.0 || ua.toLowerCase().indexOf("ios") >= 0)
 			{				
             // remove extra characters
             if (value.length > 10)
@@ -594,6 +593,8 @@ $.fn.autoFormatPhone = function() {
     this.keyup(function(e) {
         // do not process del, backspace, escape, arrow left and arrow right characters
         var k = e.which;
+
+		alert("here");
         if (k == 8 || k == 46 || k == 27 || k == 37 || k == 39)
             return;
         var value = this.value;
