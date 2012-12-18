@@ -487,12 +487,14 @@ class ActivityController < Rho::RhoController
     Settings.record_activity
     @task = Activity.find_activity(@params['id'])
     if @task
-      @task.update_attributes({ 
-        :subject => @params['task']['subject'],
+      @task.update_attributes({   
         :description => @params['task']['description'],
         :prioritycode => @params['task']['high_priority_checkbox'] ? 'High' : 'Normal',
         :scheduledend => DateUtil.date_build(@params['task']['due_datetime']),
       })
+      @task.update_attributes({ 
+        :subject => @params['task']['subject']
+      }) unless @params['task']['subject'].blank?
     end  
     SyncUtil.start_sync
     redirect :action => :show, :back => 'callback:',
