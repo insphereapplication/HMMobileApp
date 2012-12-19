@@ -559,7 +559,7 @@ $('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_pag
             }
 			var ua = navigator.userAgent
 			var androidversion = parseFloat(ua.slice(ua.indexOf("Android")+8)); 
-			if ((androidversion >= 4.0 && value.length >= 10) || androidversion < 4.0 || ua.toLowerCase().indexOf("ios") >= 0)
+			if ((androidversion >= 4.0 && value.length >= 10) || androidversion < 4.0 || ua.toLowerCase().indexOf("ios") >= 0 || ua.toLowerCase().indexOf("iphone") >= 0 || ua.toLowerCase().indexOf("ipad") >= 0)
 			{				
             // remove extra characters
             if (value.length > 10)
