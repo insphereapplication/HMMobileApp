@@ -593,8 +593,6 @@ $.fn.autoFormatPhone = function() {
     this.keyup(function(e) {
         // do not process del, backspace, escape, arrow left and arrow right characters
         var k = e.which;
-
-		alert("here");
         if (k == 8 || k == 46 || k == 27 || k == 37 || k == 39)
             return;
         var value = this.value;
