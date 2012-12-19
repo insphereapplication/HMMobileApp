@@ -24,7 +24,7 @@
 			<h1><%= "#{@opportunity.contact.full_name} - #{to_date(@opportunity.createdon)}" %></h1>
 		</div>
 		<hr/>
-		<form id='lost_opportunity_other_form' method="POST" action="<%= url_for :controller => :Activity, :action => :update_lost_other_status, :query => {:origin => @params['origin'], :appointments => @params['appointments'] } %>">
+		<form id='lost_opportunity_other_form' method="POST" action="<%= url_for :controller => :Activity, :action => :update_lost_other_status, :query => {:origin => @params['origin'], :appointments => @params['appointments'] } %>" data-ajax="false">
 			<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
 			<div data-role="fieldcontain">
 				<label for="status_codeid" class="select">Lost Reason:<font color="red">&nbsp;&nbsp;*</font></label>
