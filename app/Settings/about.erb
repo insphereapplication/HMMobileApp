@@ -1,15 +1,13 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<!DOCTYPE html>
+<html>
 <head>
 	<title>InsiteMobile</title>
 	<meta name="viewport" content="width=device-width; height=device-height; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
-	<link type="text/css" rel="stylesheet" href="/public/jquerymobile/default.css" />
+	<link href="/public/lib/jquery.mobile.min.css" media="screen" rel="stylesheet" type="text/css"/>
 	<link type="text/css" rel="stylesheet" href="/public/jquerymobile/insphere.css" />
 	<link rel="stylesheet" href="/public/jquerymobile/jquery.ui.datepicker.mobile.css" /> 
-	<script src="/public/jquerymobile/jquery-1.4.4.min.js" type="text/javascript"></script>
-	<script src="/public/jquerymobile/jquery-mobile.js" type="text/javascript"></script>
+	<script src="/public/lib/jquery.min.js" type="text/javascript"></script>
+	<script src="/public/lib/jquery.mobile.min.js" type="text/javascript"></script>
 	<script src="/public/jquerymobile/jQuery.ui.datepicker.js"></script>
 	<script src="/public/jquerymobile/jquery.ui.datepicker.mobile.js"></script>
 	<script src="/public/js/application.js" type="text/javascript"></script>
@@ -41,14 +39,14 @@
 					<li><a href="<%= url_for :action => :do_reset %>"><h1>Reset Database</h1></a></li>
 			    	<li><a href="<%= url_for :action => :do_sync %>"><h1>Perform Sync</h1></a></li>
 		        	<li><a href="<%= url_for :action => :show_log %>"><h1>Show Log</h1></a></li>
-					<li><a href="<%= url_for :action => :clear_log %>"><h1>Clear Log</h1></a></li>
+					<li><a rel="external"  href="<%= url_for :action => :clear_log %>"><h1>Clear Log</h1></a></li>
 					<li><a href="<%= url_for :action => :configure_log %>"><h1>Configure Log</h1></a></li>
 				</div>
 			</ul>
 			<ul data-role="listview" data-theme="d"  data-inset="true">
-				<li><a href="<%= url_for :action => :show_log %>">Show Log</a></li>
-				<li><a href="<%= url_for :action => :send_log %>">Send Log</a></li>
-				<li><a href="<%= url_for :action => :toggle_log_level %>"><%= detailed_logging_enabled? ? 'Disable' : 'Enable' %> Detailed Logging</a></li>
+				<li><a rel="external" href="<%= url_for :action => :show_log %>">Show Log</a></li>
+				<li><a rel="external" href="<%= url_for :action => :send_log %>">Send Log</a></li>
+				<li><a rel="external" href="<%= url_for :action => :toggle_log_level %>"><%= detailed_logging_enabled? ? 'Disable' : 'Enable' %> Detailed Logging</a></li>
 			</ul>
 		</div>
     </div>

@@ -14,10 +14,10 @@
 			<% elsif Settings.pin_confirmed == true && Settings.pin_is_current? %>	
 						<ul data-role="listview" data-theme="d" data-inset="true" >
 							<li data-role="list-divider">Quick Links</li>
-							 <li><a href="<%= url_for :action => :resource_center %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon">Resource Center</a></li>
-							<li><a href="<%= url_for :action => :lead_forward %>"> <img src="/public/images/logo_icon_small.png" class="ui-li-icon">LeadForward</a></li>
-							<li><a href="<%= url_for :action => :lead_forward_active_orders %>"> <img src="/public/images/logo_icon_small.png" class="ui-li-icon" >LeadForwardActiveOrders</a></li>
-							<li><a href="<%= url_for :action => :medicare_soa %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon">Medicare SOA</a>
+							 <li><a rel="external" href="<%= url_for :action => :resource_center %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon">Resource Center</a></li>
+							<li><a rel="external" href="<%= url_for :action => :lead_forward %>"> <img src="/public/images/logo_icon_small.png" class="ui-li-icon">LeadForward</a></li>
+							<li><a rel="external" href="<%= url_for :action => :lead_forward_active_orders %>"> <img src="/public/images/logo_icon_small.png" class="ui-li-icon" >LeadForwardActiveOrders</a></li>
+							<li><a rel="external" href="<%= url_for :action => :medicare_soa %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon">Medicare SOA</a>
 							</li>
 					 	</ul>				
 			<% else %>
@@ -41,11 +41,11 @@
  		<ul data-role="listview" data-theme="d" data-inset="true">
 			<li data-role="list-divider" >Tools</li>
 			<li>
-				<a href="<%= url_for :action => :quick_quote %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon">Term Life Quick Quote</a>
+				<a rel="external" href="<%= url_for :action => :quick_quote %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon">Term Life Quick Quote</a>
 			</li>
 			<% if (!AppInfo.instance.quick_quote_users.blank? && (AppInfo.instance.quick_quote_users.downcase == "all" || AppInfo.instance.quick_quote_users.downcase.index(SyncEngine.get_user_name.downcase) !=  nil ))%>
 				<li>
-					<a href="<%= url_for :action => :quoting_tool %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon" >Quick Health Quote</a>
+					<a rel="external" href="<%= url_for :action => :quoting_tool %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon" >Quick Health Quote</a>
 
 			<% end %>
 			<li>	
@@ -73,7 +73,7 @@
 			</li>
 			<% end %>
 		</ul>
-		<ul data-role="listview" data-theme="c" data-inset="true">
+		<ul data-role="listview" data-theme="d" data-inset="true">
 			<% if @msg %>
         		<li style="color: red; text-align: center"><%= @msg %></li>
     		<% end %>
