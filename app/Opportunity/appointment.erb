@@ -1,13 +1,11 @@
-<script type='text/javascript'>
-	$(document).ready(function() {
-		updateAddress();
-	});
-</script>
 <script type="text/javascript">
-function PickDateAppointmentChangeFocus() {
-popupTomorrowDateTimeAJPicker('0', 'Appointment Time', 'appointment_datetime');
-document.getElementById('appointment_datetime').focus();
-}
+    $(document).delegate("#appointment_add_page", "pageinit", function() {
+        updateAddress();
+    });
+    function PickDateAppointmentChangeFocus() {
+        popupTomorrowDateTimeAJPicker('0', 'Appointment Time', 'appointment_datetime');
+        document.getElementById('appointment_datetime').focus();
+    }
 </script>
 <div data-role="page" data-theme="b" id="appointment_add_page">
 	<%= offline_bar%>
@@ -56,7 +54,7 @@ document.getElementById('appointment_datetime').focus();
 				<label for="notetext">Description:</label>
 				<textarea cols="40" rows="8" name="description" data-theme="d"id="notetext"></textarea>
 			</div>
-			<input type="submit" data-theme="b" onclick="getLocationType(); enableLocation();" value="Create Appointment"    
+			<input type="submit" data-theme="b" onclick="getLocationType(); enableLocation();" value="Create Appointment" />
 		</form>
 	</div>
 </div>
