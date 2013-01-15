@@ -44,6 +44,11 @@ class StaticEntity
 
   def self.system_user_id
     sys_user = StaticEntity.find_by_sql("select * from StaticEntity where type='systemuserid'").first
+    if sys_user.blank?
+      ExceptionUtil.log_exception_to_server(Exception.new("Static entity  -- The system userid is nil.  Resetting the StaticEntity model since it should not be nil"))
+      Rhom::Rhom.database_full_reset_ex(:models => ['StaticEntity'])
+      SyncEngine.dosync_source(StaticEntity.get_source_name, false)
+    end
     sys_user.names
   end
 end
