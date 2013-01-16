@@ -14,7 +14,7 @@
                 pageSize = $list.jqmData("pagesize") || o.pagesize,
                 autoInitialize = $list.jqmData("autoinitialize") || o.autoinitialize,
                 requestData, currentPage, loadNext, loading, times, proc_id = null, ldiv,
-                timesValue = navigator.userAgent.match(/Android/) ? 30 : 0,
+                timesValue = navigator.userAgent.match(/Android/) ? 30 : 30,
                 $filter = $list.jqmData("filterselector") || o.filterselector,
                 $filterTxt, filterTxt;
             $list.delegate("a.btn", "tap", function() {
