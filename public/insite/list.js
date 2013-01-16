@@ -14,7 +14,7 @@
                 pageSize = $list.jqmData("pagesize") || o.pagesize,
                 autoInitialize = $list.jqmData("autoinitialize") || o.autoinitialize,
                 requestData, currentPage, loadNext, loading, times, proc_id = null, ldiv,
-                timesValue = navigator.userAgent.match(/Android/) ? 30 : 30,
+                timesValue = navigator.userAgent.match(/Android/) ? 30 : 0,
                 $filter = $list.jqmData("filterselector") || o.filterselector,
                 $filterTxt, filterTxt;
             $list.delegate("a.btn", "tap", function() {
@@ -26,6 +26,7 @@
             });
             function getContent(pageSize, resetFlag) {
                 if (!loading) {
+$filterTxt.css({"background-color" : "aqua"});
                     loading = true;
                     requestData.page = currentPage++;
                     requestData.pageSize = pageSize;
@@ -34,6 +35,7 @@
                         url: loadUrl,
                         data: requestData,
                         success: function(data) {
+$filterTxt.css({"background-color" : "green"});
                             var records = 0;
                             var pos = data.indexOf("<");
                             if (pos > 0) {
@@ -51,6 +53,7 @@
                             loading = false;
                         },
                         error: function() {
+$filterTxt.css({"background-color" : "red"});
                             currentPage--;
                             loading = false;
                         }
@@ -64,6 +67,7 @@
                 }
             }
             function checkScrolling() {
+$filterTxt.css({"background-color" : "yellow"});
                 if ($window.scrollTop() >= ldiv.offset().top - $window.height())
                     getContent(pageSize, false);
                 else if (times > 0) {
