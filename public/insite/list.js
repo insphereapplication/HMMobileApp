@@ -17,7 +17,7 @@
                 timesValue = navigator.userAgent.match(/Android/) ? 30 : 0,
                 $filter = $list.jqmData("filterselector") || o.filterselector,
                 $filterTxt, filterTxt;
-            $list.delegate("a.btn", "tap", function() {
+            $list.delegate("a.btn, div.list-view-loading", "tap", function() {
                 var $t = $(this);
                 $t.addClass("btn-clicked");
                 setTimeout(function() {
@@ -26,7 +26,6 @@
             });
             function getContent(pageSize, resetFlag) {
                 if (!loading) {
-ldiv.css({"background-color" : "aqua"});
                     loading = true;
                     requestData.page = currentPage++;
                     requestData.pageSize = pageSize;
@@ -35,7 +34,6 @@ ldiv.css({"background-color" : "aqua"});
                         url: loadUrl,
                         data: requestData,
                         success: function(data) {
-ldiv.css({"background-color" : "green"});
                             var records = 0;
                             var pos = data.indexOf("<");
                             if (pos > 0) {
@@ -48,12 +46,11 @@ ldiv.css({"background-color" : "green"});
                                 ldiv.before(data);
                             if (records < pageSize) {
                                 loadNext = false;
-                                ldiv.remove();
+                                ldiv.unbind('click').remove();
                             }
                             loading = false;
                         },
                         error: function() {
-ldiv.css({"background-color" : "red"});
                             currentPage--;
                             loading = false;
                         }
@@ -67,7 +64,6 @@ ldiv.css({"background-color" : "red"});
                 }
             }
             function checkScrolling() {
-ldiv.css({"background-color" : "yellow"});
                 if ($window.scrollTop() >= ldiv.offset().top - $window.height())
                     getContent(pageSize, false);
                 else if (times > 0) {
@@ -75,19 +71,13 @@ ldiv.css({"background-color" : "yellow"});
                     proc_id = setTimeout(checkScrolling, 200);
                 }
             }
-            function eventHandler() {
-                if ($list.is(":visible") && loadNext) {
-                    clearProcId();
-                    times = timesValue;
-                    checkScrolling();
-                }
-            }
             $list.parent().bind({
-                scrollstart: function() {
-                    eventHandler();
-                },
                 scrollstop: function() {
-                    eventHandler();
+                    if ($list.is(":visible") && loadNext) {
+                        clearProcId();
+                        times = timesValue;
+                        checkScrolling();
+                    }
                 }
             });
             this._reset = function() {
@@ -96,8 +86,10 @@ ldiv.css({"background-color" : "yellow"});
                 loadNext = true;
                 loading = false;
                 $.mobile.silentScroll(0);
-                $list.empty().append("<div class='list-view-loading'>Loading...</div>");
-                ldiv = $list.find("div");
+                $list.empty().append("<div class='list-view-loading'>Load more...</div>");
+                ldiv = $list.find("div").click(function() {
+                    getContent(pageSize, false);
+                });
                 if ($filter) {
                     requestData = getFilterData();
                     var txt = getFilterText();
