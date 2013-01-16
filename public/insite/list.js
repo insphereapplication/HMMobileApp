@@ -26,7 +26,7 @@
             });
             function getContent(pageSize, resetFlag) {
                 if (!loading) {
-$filterTxt.css({"background-color" : "aqua"});
+$list.find("div.list-view-loading").css({"background-color" : "aqua"});
                     loading = true;
                     requestData.page = currentPage++;
                     requestData.pageSize = pageSize;
@@ -35,7 +35,7 @@ $filterTxt.css({"background-color" : "aqua"});
                         url: loadUrl,
                         data: requestData,
                         success: function(data) {
-$filterTxt.css({"background-color" : "green"});
+$list.find("div.list-view-loading").css({"background-color" : "green"});
                             var records = 0;
                             var pos = data.indexOf("<");
                             if (pos > 0) {
@@ -53,7 +53,7 @@ $filterTxt.css({"background-color" : "green"});
                             loading = false;
                         },
                         error: function() {
-$filterTxt.css({"background-color" : "red"});
+$list.find("div.list-view-loading").css({"background-color" : "red"});
                             currentPage--;
                             loading = false;
                         }
@@ -67,7 +67,7 @@ $filterTxt.css({"background-color" : "red"});
                 }
             }
             function checkScrolling() {
-$filterTxt.css({"background-color" : "yellow"});
+$list.find("div.list-view-loading").css({"background-color" : "yellow"});
                 if ($window.scrollTop() >= ldiv.offset().top - $window.height())
                     getContent(pageSize, false);
                 else if (times > 0) {
