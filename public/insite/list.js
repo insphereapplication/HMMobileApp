@@ -13,7 +13,7 @@
                 o = this.options,
                 pageSize = $list.jqmData("pagesize") || o.pagesize,
                 autoInitialize = $list.jqmData("autoinitialize") || o.autoinitialize,
-                requestData, currentPage, loadNext, loading, times, proc_id = null,
+                requestData, currentPage, loadNext, loading, times, proc_id = null, ldiv,
                 timesValue = navigator.userAgent.match(/Android/) ? 30 : 0,
                 $filter = $list.jqmData("filterselector") || o.filterselector,
                 $filterTxt, filterTxt;
@@ -26,7 +26,7 @@
             });
             function getContent(pageSize, resetFlag) {
                 if (!loading) {
-$list.find("div.list-view-loading").css({"background-color" : "aqua"});
+ldiv.css({"background-color" : "aqua"});
                     loading = true;
                     requestData.page = currentPage++;
                     requestData.pageSize = pageSize;
@@ -35,7 +35,7 @@ $list.find("div.list-view-loading").css({"background-color" : "aqua"});
                         url: loadUrl,
                         data: requestData,
                         success: function(data) {
-$list.find("div.list-view-loading").css({"background-color" : "green"});
+ldiv.css({"background-color" : "green"});
                             var records = 0;
                             var pos = data.indexOf("<");
                             if (pos > 0) {
@@ -44,7 +44,6 @@ $list.find("div.list-view-loading").css({"background-color" : "green"});
                             }
                             else
                                 data = "";
-                            var ldiv = $list.find("div.list-view-loading");
                             if (data.length > 0)
                                 ldiv.before(data);
                             if (records < pageSize) {
@@ -54,7 +53,7 @@ $list.find("div.list-view-loading").css({"background-color" : "green"});
                             loading = false;
                         },
                         error: function() {
-$list.find("div.list-view-loading").css({"background-color" : "red"});
+ldiv.css({"background-color" : "red"});
                             currentPage--;
                             loading = false;
                         }
@@ -68,8 +67,7 @@ $list.find("div.list-view-loading").css({"background-color" : "red"});
                 }
             }
             function checkScrolling() {
-$list.find("div.list-view-loading").css({"background-color" : "yellow"});
-                var ldiv = $list.find("div.list-view-loading");
+ldiv.css({"background-color" : "yellow"});
                 if ($window.scrollTop() >= ldiv.offset().top - $window.height())
                     getContent(pageSize, false);
                 else if (times > 0) {
@@ -77,13 +75,19 @@ $list.find("div.list-view-loading").css({"background-color" : "yellow"});
                     proc_id = setTimeout(checkScrolling, 200);
                 }
             }
+            function eventHandler() {
+                if ($list.is(":visible") && loadNext) {
+                    clearProcId();
+                    times = timesValue;
+                    checkScrolling();
+                }
+            }
             $list.parent().bind({
+                scrollstart: function() {
+                    eventHandler();
+                },
                 scrollstop: function() {
-                    if ($list.is(":visible") && loadNext) {
-                        clearProcId();
-                        times = timesValue;
-                        checkScrolling();
-                    }
+                    eventHandler();
                 }
             });
             this._reset = function() {
@@ -93,6 +97,7 @@ $list.find("div.list-view-loading").css({"background-color" : "yellow"});
                 loading = false;
                 $.mobile.silentScroll(0);
                 $list.empty().append("<div class='list-view-loading'>Loading...</div>");
+                ldiv = $list.find("div");
                 if ($filter) {
                     requestData = getFilterData();
                     var txt = getFilterText();
