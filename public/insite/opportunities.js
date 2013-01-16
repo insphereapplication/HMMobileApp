@@ -53,7 +53,7 @@ function clearFilter() {
         $("#appointments_select_filter").val("All").selectmenu("refresh");
         $("#appointments_search_input").val("");
     }
-    return true;
+    return false;
 }
 
 function getFilterData() {
