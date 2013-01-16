@@ -13,7 +13,7 @@
                 o = this.options,
                 pageSize = $list.jqmData("pagesize") || o.pagesize,
                 autoInitialize = $list.jqmData("autoinitialize") || o.autoinitialize,
-                requestData, currentPage, loadNext, loading, times, proc_id = null, ldiv,
+                requestData, currentPage, loadNext, loading, times, proc_id = null,
                 timesValue = navigator.userAgent.match(/Android/) ? 30 : 0,
                 $filter = $list.jqmData("filterselector") || o.filterselector,
                 $filterTxt, filterTxt;
@@ -44,6 +44,7 @@ $list.find("div.list-view-loading").css({"background-color" : "green"});
                             }
                             else
                                 data = "";
+                            var ldiv = $list.find("div.list-view-loading");
                             if (data.length > 0)
                                 ldiv.before(data);
                             if (records < pageSize) {
@@ -68,6 +69,7 @@ $list.find("div.list-view-loading").css({"background-color" : "red"});
             }
             function checkScrolling() {
 $list.find("div.list-view-loading").css({"background-color" : "yellow"});
+                var ldiv = $list.find("div.list-view-loading");
                 if ($window.scrollTop() >= ldiv.offset().top - $window.height())
                     getContent(pageSize, false);
                 else if (times > 0) {
@@ -91,7 +93,6 @@ $list.find("div.list-view-loading").css({"background-color" : "yellow"});
                 loading = false;
                 $.mobile.silentScroll(0);
                 $list.empty().append("<div class='list-view-loading'>Loading...</div>");
-                ldiv = $list.find("div");
                 if ($filter) {
                     requestData = getFilterData();
                     var txt = getFilterText();
