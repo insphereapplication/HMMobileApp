@@ -171,6 +171,7 @@ class OpportunityController < Rho::RhoController
     rows = []
     origin = 'new-leads'
     f_status = @params['statusReason']
+    puts "In get_jqm_leads #{f_status}"
     if f_status
       # follow-ups
       origin = 'follow-ups'
@@ -190,6 +191,7 @@ class OpportunityController < Rho::RhoController
     render :partial => 'opportunity', :locals => { :items => rows, :origin => origin }
   end
   def jqm_get_new_leads
+    puts "In jqm_get_new_leads"
     Settings.record_activity
     if @params['reset'] == 'true'
       @@data_loader = ApplicationHelper::HierarchyDataLoader.new([
@@ -205,6 +207,7 @@ class OpportunityController < Rho::RhoController
     @@data_loader.load_data([page, page_size], $new_leads_nav_context)
   end
   def jqm_get_follow_ups
+    puts "In jqm_get_follow_ups"
     Settings.record_activity
     Settings.update_persisted_filter_values(Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX, Constants::FOLLOWUP_FILTERS.map{|filter| filter[:name]}, @params)
     persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX, Constants::FOLLOWUP_FILTERS)
@@ -219,6 +222,7 @@ class OpportunityController < Rho::RhoController
     @@data_loader.load_data([page, persisted_filter_values['statusReason'], persisted_filter_values['sortBy'], persisted_filter_values['created'], persisted_filter_values['isDaily'], page_size], $follow_ups_nav_context)
   end
   def jqm_get_appointments
+    puts "In jqm_get_appointments"
     Settings.record_activity
     Settings.update_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS.map{|filter| filter[:name]}, @params)
     persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS)
@@ -246,6 +250,7 @@ class OpportunityController < Rho::RhoController
   end
   
   def current_nav_context
+    puts"Current nav context is: #{$current_nav_context}"
     case $current_nav_context
       when 'new-leads' then $new_leads_nav_context
       when 'follow-ups' then $follow_ups_nav_context
@@ -295,9 +300,12 @@ class OpportunityController < Rho::RhoController
   end
   
   def show_opportunity_from_nav(direction)
+    puts "current context list: #{current_nav_context}"
     if current_nav_context.blank?
+       puts "show_opportunity_from_nav current_nav_context is blank"
        opp_id = @params['id']
     else
+      puts "show_opportunity_from_nav current_nav_context is getting new opp."
       opp_id = current_nav_context.send(direction)
     end
     
