@@ -80,6 +80,7 @@ class OpportunityController < Rho::RhoController
   end
   
   def intialize_nav_contexts
+    puts "In intialize_nav_contexts"
     $new_leads_nav_context = []
     $follow_ups_nav_context = []
     $appointments_nav_context = []
@@ -87,6 +88,7 @@ class OpportunityController < Rho::RhoController
   
   # since this is the default entry point on startup, check here for login
   def index
+    puts "In Opportunity Controller Index"
     $tab = 0
     if SyncEngine::logged_in == 1
       intialize_nav_contexts
