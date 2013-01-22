@@ -91,7 +91,7 @@ class OpportunityController < Rho::RhoController
     puts "In Opportunity Controller Index"
     $tab = 0
     if SyncEngine::logged_in == 1
-      #intialize_nav_contexts
+      intialize_nav_contexts
       Opportunity.local_changed = false
       puts "In index selected_tab: #{@params['selected_tab']}"
       @params['selected_tab'] = @params['selected_tab'].blank? ? 'new-leads' : @params['selected_tab']

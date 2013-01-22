@@ -1,5 +1,4 @@
 <%= items.length %>
-<% puts "In opportunity partial"%>
 <% items.each do |row|
     if row.class.to_s == 'Hash' %>
 <div class="ui-li ui-li-divider bar-b"><%= row[:divider] %></div>
@@ -30,8 +29,8 @@
         bottom_left_text = contact.age_sex_loc if contact.age_sex_loc.length > 0
         bottom_left_count = opportunity.phone_calls.size if opportunity.phone_calls.size > 0
         left_icon = '/public/images/self_lead_icon.png' if @self_id == opportunity.cssi_assetownerid && opportunity.opportunityratingcode == 'Warm'
-        left_icon = '' if @self_id == opportunity.cssi_assetownerid && opportunity.opportunityratingcode == 'Hot'
-        left_icon = '/public/images/skinny_red_exclamation.png' if !(@self_id == opportunity.cssi_assetownerid) && opportunity.opportunityratingcode == 'Hot'
+        left_icon = '/public/images/self_lead_exclamation_icon_v3.png' if @self_id == opportunity.cssi_assetownerid && opportunity.opportunityratingcode == 'Hot'
+        left_icon = '/public/images/skinny_red_exclamation_v3.png' if !(@self_id == opportunity.cssi_assetownerid) && opportunity.opportunityratingcode == 'Hot'
         icon = nil
         url2_title = 'Details'
         if origin == 'new-leads' || origin == 'follow-ups'
@@ -61,7 +60,7 @@
 <%      end %>
         <h4 style="margin-top: 0px; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
 <%      if !left_icon.blank? %>
-          <img src="<%= left_icon %>" class="ui-li-thumb" style="position: relative; top: 2px; width: 16px; height: 16px; margin-right: 5px; margin-left: -5px;"/>
+          <img src="<%= left_icon %>" class="ui-li-thumb" style="position: relative; top: 2px; width: 16px; height: 16px;"/>
 <%      end %>
           <%= text %>
         </h4>
@@ -109,4 +108,4 @@
 </div>
 <%  end
 end %>
-<% puts "Leaving opportunity partial"%>
+
