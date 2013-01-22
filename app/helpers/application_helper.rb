@@ -137,21 +137,27 @@ module ApplicationHelper
     end
 
     def load_data(prms, indexes_arr = nil)
+      puts "In DataLoader -- load data."
       result = []
       page = prms[@pageIndex]
       page_size = prms[@pageSizeIndex]
       while @currentState < @call_parameters.length && result.length < page_size
         call_parameter = @call_parameters[@currentState]
+        puts "call_parameter: #{call_parameter}"
         if call_parameter.class.to_s == "Hash"
+          puts "In call_parameter == Hash"
           result.push(call_parameter)
           @currentState = @currentState + 1
         else
+          puts "In load data else"
           prms[@pageIndex] = page - @currentPage
           prms[@replacePrmIndex] = call_parameter[2] unless @replacePrmIndex.nil?
           data = call_parameter[0].send(call_parameter[1], *prms)
           if data.length > 0
             result.concat(data)
+            puts "Data Loader indexes_arr before concat: #{indexes_arr.nil?}: #{indexes_arr} "
             indexes_arr.concat(data.map {|obj| @isOpportunity ? obj.object : obj.opportunity.object}) unless indexes_arr.nil?
+            puts "Data Loader indexes_arr after concat: #{indexes_arr} "
           end
           if data.length < page_size
             @currentState = @currentState + 1
