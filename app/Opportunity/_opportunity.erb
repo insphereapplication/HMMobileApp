@@ -60,7 +60,7 @@
         <p class="ui-li-aside ui-li-desc" style="width: 40%;"><strong><%= top_right_text %></strong></p>
 <%      end %>
         <h4 style="margin-top: 0px; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-<%      if left_icon %>
+<%      if !left_icon.blank? %>
           <img src="<%= left_icon %>" class="ui-li-thumb" style="position: relative; top: 2px; width: 16px; height: 16px; margin-right: 5px; margin-left: -5px;"/>
 <%      end %>
           <%= text %>
