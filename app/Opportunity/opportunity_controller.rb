@@ -219,7 +219,9 @@ class OpportunityController < Rho::RhoController
     end
     page = @params['page'].to_i
     page_size = @params['pageSize'].to_i
-    @@data_loader.load_data([page, persisted_filter_values['statusReason'], persisted_filter_values['sortBy'], persisted_filter_values['created'], persisted_filter_values['isDaily'], page_size], $follow_ups_nav_context)
+    result = @@data_loader.load_data([page, persisted_filter_values['statusReason'], persisted_filter_values['sortBy'], persisted_filter_values['created'], persisted_filter_values['isDaily'], page_size], $follow_ups_nav_context)
+    puts "end jqm_get_follow_ups #{$follow_ups_nav_context}"
+    result
   end
   def jqm_get_appointments
     puts "In jqm_get_appointments"
@@ -241,6 +243,7 @@ class OpportunityController < Rho::RhoController
     page_size = @params['pageSize'].to_i
     result = @@data_loader.load_data([page, persisted_filter_values['filter'], persisted_filter_values['search'], '', page_size], $appointments_nav_context)
     $appointments_nav_context.uniq!
+    puts "End jqm_get_appointments: #{$appointments_nav_context}"
     result
   end
   
