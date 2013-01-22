@@ -93,6 +93,7 @@ class OpportunityController < Rho::RhoController
     if SyncEngine::logged_in == 1
       #intialize_nav_contexts
       Opportunity.local_changed = false
+      puts "In index selected_tab: #{@params['selected_tab']}"
       @params['selected_tab'] = @params['selected_tab'].blank? ? 'new-leads' : @params['selected_tab']
       @persisted_scheduled_search = Settings.get_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS)['search']
       $current_nav_context = @params['selected_tab']
@@ -191,7 +192,7 @@ class OpportunityController < Rho::RhoController
     end
     $current_nav_context = origin
     puts
-    render :partial => 'opportunity', :locals => { :items => rows, :origin => origin }
+    render :partial => 'opportunity', :locals => { :items => rows, :origin => origin, :selected_tab => origin }
   end
   def jqm_get_new_leads
     puts "In jqm_get_new_leads"
