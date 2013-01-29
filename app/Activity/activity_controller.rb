@@ -672,6 +672,11 @@ class ActivityController < Rho::RhoController
     rescue Exception => e
       puts "Exception in update status no contact, rolling back: #{e.inspect} -- #{@params.inspect}"
       db.rollback
+      if @params['origin'] == 'contact'
+          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'),Constants::TAB_INDEX['Contacts'])
+      else   
+          WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
+      end
     end
   end
   

@@ -290,10 +290,10 @@ class OpportunityController < Rho::RhoController
     if @opportunity && @contact
       render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
-       if @params['origin'] == 'contact'
-         WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'))
+      if @params['origin'] == 'contact'
+          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'),Constants::TAB_INDEX['Contacts'])
        else   
-         redirect  :action => :index, :back => 'callback:'
+          WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
        end
     end
   end
@@ -341,7 +341,11 @@ class OpportunityController < Rho::RhoController
     if @opportunity && @contact
       render :action => :status_update, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
-      WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))
+      if @params['origin'] == 'contact'
+          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'),Constants::TAB_INDEX['Contacts'])
+      else   
+          WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
+      end
     end
   end 
   
@@ -373,7 +377,11 @@ class OpportunityController < Rho::RhoController
       @opportunity.create_note(@params['notes'])
       render :action => :callback_request, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
-      redirect :action => :index, :back => 'callback:'
+      if @params['origin'] == 'contact'
+          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'),Constants::TAB_INDEX['Contacts'])
+      else   
+          WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
+      end
     end
   end
   
@@ -441,7 +449,11 @@ class OpportunityController < Rho::RhoController
       @opportunity.create_note(@params['notes'])
       render :action => :appointment, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
-      redirect :action => :index, :back => 'callback:'
+      if @params['origin'] == 'contact'
+          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'),Constants::TAB_INDEX['Contacts'])
+       else   
+          WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
+       end
     end
   end
   
@@ -453,7 +465,11 @@ class OpportunityController < Rho::RhoController
       @opportunity.create_note(@params['notes'])
       render :action => :lost_other, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
-      redirect :action => :index, :back => 'callback:'
+      if @params['origin'] == 'contact'
+          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'),Constants::TAB_INDEX['Contacts'])
+       else   
+          WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
+       end
     end
   end
   
@@ -463,7 +479,11 @@ class OpportunityController < Rho::RhoController
         @opportunity.create_note(@params['notes'])
         render :action => :mark_as_won, :back => 'callback:', :layout => 'layout_jquerymobile'
       else
-        redirect :action => :index, :back => 'callback:'
+        if @params['origin'] == 'contact'
+            WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'),Constants::TAB_INDEX['Contacts'])
+         else   
+            WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
+         end
       end
   end
   
@@ -728,11 +748,11 @@ class OpportunityController < Rho::RhoController
              :layout => 'layout_jquerymobile',
              :origin => @params['origin']
     else
-      if @params['origin'] == 'contact'
-         WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'))
-       else   
-         WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))
-       end
+       if @params['origin'] == 'contact'
+           WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'),Constants::TAB_INDEX['Contacts'])
+        else   
+           WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
+        end
       
     end
   
@@ -758,10 +778,10 @@ class OpportunityController < Rho::RhoController
              :origin => @params['origin']
     else
       if @params['origin'] == 'contact'
-         WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'))
-      else   
-         WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))
-      end  
+          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'),Constants::TAB_INDEX['Contacts'])
+       else   
+          WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
+       end
     end
   end
 
@@ -775,9 +795,9 @@ class OpportunityController < Rho::RhoController
       SyncUtil.start_sync
     end
     if @params['origin'] == 'contact'
-       WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'))
+        WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'),Constants::TAB_INDEX['Contacts'])
      else   
-       WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))
+        WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
      end
   end
 end
