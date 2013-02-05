@@ -143,11 +143,12 @@ module ApplicationHelper
       page_size = prms[@pageSizeIndex]
       while @currentState < @call_parameters.length && result.length < page_size
         call_parameter = @call_parameters[@currentState]
-        puts "call_parameter: #{call_parameter}"
+        puts "call_parameter: #{call_parameter}; currentState: #{@currentState}; page: #{page}; currentPage: #{@currentPage}"
         if call_parameter.class.to_s == "Hash"
           puts "In call_parameter == Hash"
           result.push(call_parameter)
           @currentState = @currentState + 1
+          @currentPage = page
         else
           puts "In load data else"
           prms[@pageIndex] = page - @currentPage
