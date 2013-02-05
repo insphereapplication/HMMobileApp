@@ -38,7 +38,7 @@
 			</div>
 			<div data-role="fieldcontain">
 				<label for="cssi_applicationdate" class="fieldLabel">Application Date:<font color="red">&nbsp;&nbsp;*</font></label>
-				<input id="cssi_applicationdate" type="text" class="required" name="cssi_applicationdate" data-theme="d" readonly value="<%= to_date(@appdetail.cssi_applicationdate) %>"  onClick="popupTomorrowDateTimeAJPicker('1', 'Application Date', 'cssi_applicationdate', '<%= @appdetail.cssi_applicationdate %>');document.getElementById('submit_button').focus();"></input>
+				<input id="cssi_applicationdate" type="text" class="required" name="cssi_applicationdate" data-theme="d" readonly value="<%= to_date(@appdetail.cssi_applicationdate) %>"  onClick="popupTomorrowDateTimeAJPicker('1', 'Application Date', 'cssi_applicationdate');document.getElementById('submit_button').focus();"></input>
 			</div>
 			<input id="submit_button" type="submit" href="#" data-theme="b" data-icon="arrow-r" data-iconpos="right"data-direction="reverse" value="Done"/>
 			<a href="<%= url_for(:action => :confirm_app_detail_delete, :query => {:id => @appdetail.object, :opportunity => @appdetail.opportunity_id, :origin => @params['origin']})%>" data-theme="a" data-icon="delete" data-iconpos="right" data-direction="reverse" data-role="button">Delete</a>
