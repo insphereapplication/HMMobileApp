@@ -530,7 +530,7 @@ class ActivityController < Rho::RhoController
     end
   end
 
-  def udpate_lost_status
+  def update_lost_status
     if @params['button_id'] == "Ok"
       Settings.record_activity
       opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
@@ -594,40 +594,48 @@ class ActivityController < Rho::RhoController
   def update_lost_other_status
         Settings.record_activity
         opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
-        db_activity = ::Rho::RHO.get_src_db('Activity')
-        db_activity.start_transaction
-        begin
-          opportunity.complete_most_recent_open_call
-          db_activity.commit
-        rescue Exception => ea
-          puts "Exception in close open phone call for lost status, rolling back: #{ea.inspect} -- #{@params.inspect}"
-          db_activity.rollback
-        end
-        SyncEngine.dosync_source("Activity", false)
-        db = ::Rho::RHO.get_src_db('Opportunity')
-        db.start_transaction
-        begin
-          opportunity.update_attributes({
-            :statecode => 'Lost',
-            :statuscode => @params['status_code'],
-            :cssi_statusdetail => "",
-            :competitorid => @params['competitorid'] || "",
-            :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
-            :status_update_timestamp => Time.now.utc.to_s
-          })
+        if opportunity
+          db_activity = ::Rho::RHO.get_src_db('Activity')
+          db_activity.start_transaction
+          begin
+            opportunity.complete_most_recent_open_call
+            db_activity.commit
+          rescue Exception => ea
+            puts "Exception in close open phone call for lost status, rolling back: #{ea.inspect} -- #{@params.inspect}"
+            db_activity.rollback
+          end
+          SyncEngine.dosync_source("Activity", false)
+          db = ::Rho::RHO.get_src_db('Opportunity')
+          db.start_transaction
+          begin
+            opportunity.update_attributes({
+              :statecode => 'Lost',
+              :statuscode => @params['status_code'],
+              :cssi_statusdetail => "",
+              :competitorid => @params['competitorid'] || "",
+              :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
+              :status_update_timestamp => Time.now.utc.to_s
+            })
       
-          opportunity.record_phone_call_made_now("Lost")
+            opportunity.record_phone_call_made_now("Lost")
       
-          appointmentids = get_appointment_ids(@params['appointments'])
-          finished_loss_status(opportunity, @params['origin'], appointmentids)
-          db.commit
-        rescue Exception => e
-          puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
-          db.rollback
-        end
-        unless @params['task']['subject'].blank?
-          task = create_new_task(@params['task'],opportunity)
-        end
+            appointmentids = get_appointment_ids(@params['appointments'])
+            finished_loss_status(opportunity, @params['origin'], appointmentids)
+            db.commit
+          rescue Exception => e
+            puts "Exception in update lost status, rolling back: #{e.inspect} -- #{@params.inspect}"
+            db.rollback
+          end
+          unless @params['task']['subject'].blank?
+            task = create_new_task(@params['task'],opportunity)
+          end
+      else  
+        if @params['origin'] == 'contact'
+            WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:'),Constants::TAB_INDEX['Contacts'])
+         else   
+            WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
+         end
+      end  
   end
 
   def confirm_lost_status
@@ -635,7 +643,7 @@ class ActivityController < Rho::RhoController
         :message => "Click OK to Confirm this Opportunity as Lost", 
         :title => "Confirm Loss", 
         :buttons => ["Cancel", "Ok",],
-        :callback => url_for(:action => :udpate_lost_status, 
+        :callback => url_for(:action => :update_lost_status, 
                                         :query => {
 				                                :opportunity_id => @params['opportunity_id'],
 				                                :origin => @params['origin'],
@@ -687,46 +695,55 @@ class ActivityController < Rho::RhoController
   end
     
   def update_status_call_back_requested
-      opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
-      Settings.record_activity
-      opp_attrs = {
-        :cssi_statusdetail => 'Call Back Requested',
-        :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
-        :statuscode => 'Contact Made',
-        :status_update_timestamp => Time.now.utc.to_s
-      }
+      opportunity = Opportunity.find_opportunity(@params['opportunity_id']) if @params['opportunity_id']
+      if opportunity
+        
+        Settings.record_activity
+        opp_attrs = {
+          :cssi_statusdetail => 'Call Back Requested',
+          :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
+          :statuscode => 'Contact Made',
+          :status_update_timestamp => Time.now.utc.to_s
+        }
     
-      db = ::Rho::RHO.get_src_db('Opportunity')
-      db.start_transaction
-      begin
-      opportunity.update_attributes(opp_attrs)
-      opportunity.record_phone_call_made_now('Call Back Requested')
+        db = ::Rho::RHO.get_src_db('Opportunity')
+        db.start_transaction
+        begin
+        opportunity.update_attributes(opp_attrs)
+        opportunity.record_phone_call_made_now('Call Back Requested')
      
-      # create the requested callback
-      phone_call = Activity.create_new({
-        :scheduledstart => DateUtil.date_build(@params['callback_datetime']), 
-        :scheduleddurationminutes => Rho::RhoConfig.phonecall_duration_default_minutes.to_i,
-        :scheduledend => DateUtil.end_date_time(@params['callback_datetime'], Rho::RhoConfig.phonecall_duration_default_minutes.to_i),
-        :subject => "Phone Call - #{opportunity.contact.full_name}",
-        :cssi_phonetype => @params['phone_type_selected'],
-        :phonenumber => @params['phone_number'],
-        :parent_type => 'Opportunity', 
-        :parent_id => opportunity.object,
-        :parent_contact_id => opportunity.contact_id,
-        :statuscode => 'Open',
-        :statecode => 'Open',
-        :type => 'PhoneCall',
-        :prioritycode => @params['callback_priority_checkbox'] ? 'High' : 'Normal',
-        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-      })
+        # create the requested callback
+        phone_call = Activity.create_new({
+          :scheduledstart => DateUtil.date_build(@params['callback_datetime']), 
+          :scheduleddurationminutes => Rho::RhoConfig.phonecall_duration_default_minutes.to_i,
+          :scheduledend => DateUtil.end_date_time(@params['callback_datetime'], Rho::RhoConfig.phonecall_duration_default_minutes.to_i),
+          :subject => "Phone Call - #{opportunity.contact.full_name}",
+          :cssi_phonetype => @params['phone_type_selected'],
+          :phonenumber => @params['phone_number'],
+          :parent_type => 'Opportunity', 
+          :parent_id => opportunity.object,
+          :parent_contact_id => opportunity.contact_id,
+          :statuscode => 'Open',
+          :statecode => 'Open',
+          :type => 'PhoneCall',
+          :prioritycode => @params['callback_priority_checkbox'] ? 'High' : 'Normal',
+          :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+        })
       
-      appointmentids = get_appointment_ids(@params['appointments'])
-      finished_update_status(opportunity, @params['origin'], appointmentids)
-      db.commit
-    rescue Exception => e
-      puts "Exception in update status call back requested, rolling back: #{e.inspect} -- #{@params.inspect}"
-      db.rollback
-    end
+        appointmentids = get_appointment_ids(@params['appointments'])
+        finished_update_status(opportunity, @params['origin'], appointmentids)
+        db.commit
+      rescue Exception => e
+        puts "Exception in update status call back requested, rolling back: #{e.inspect} -- #{@params.inspect}"
+        db.rollback
+      end
+    else
+      if @params['origin'] == 'contact'
+          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'),Constants::TAB_INDEX['Contacts'])
+      else   
+          WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'),Constants::TAB_INDEX['Opportunities'])
+      end
+    end  
   end
   
   def update_status_appointment_set
