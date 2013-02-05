@@ -192,7 +192,7 @@ class Settings
     
     def record_activity
      
-      if Settings.pin_last_activity_time.class==String
+      if !Settings.pin_last_activity_time.blank? && Settings.pin_last_activity_time.class==String
         Settings.pin_last_activity_time = Time.parse(Settings.pin_last_activity_time)
       end
       
