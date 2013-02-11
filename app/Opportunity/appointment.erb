@@ -15,7 +15,7 @@
 	</div>
 	<div id="contentDiv" data-role="content">
 		<div style="text-align:center" class="ui-bar"> 
-			<h1><%= "#{@opportunity.contact.full_name} - #{to_date(@opportunity.createdon)}" %></h1>
+			<h1><%= "#{@contact.full_name} - #{to_date(@opportunity.createdon)}" %></h1>
 		</div>
 		<hr/>
 		<form id="appointment_form" name="appointment_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_appointment_set, :query => {:origin => @params['origin'], :appointments => @params['appointments']} %>">
@@ -40,7 +40,7 @@
 			<div data-role="fieldcontain">
 				<label for="select_location" class="select">Location:</label>
 	            <select name="select_location" id="select_location" onchange='updateAddress();' data-theme="d">
-					<% @opportunity.contact.addresses.each do |type, address| %>
+					<% @contact.addresses.each do |type, address| %>
 						<option value="<%= address %>"><%= type %></option>
 					<% end %>
 						<option value=" ">Ad Hoc</option>

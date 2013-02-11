@@ -13,7 +13,7 @@
 		<div data-role="content" data-theme="c" class="ui-content ui-body-c ui-corner-bottom ui-overlay-shadow" role="main">
 			<p>Choose a number to dial:</p>
 			<%=
-			@opportunity.contact.map_phone_numbers{ |type,number,do_not_call,preferred|
+			@contact.map_phone_numbers{ |type,number,do_not_call,preferred|
 				link_href = url_for(:action => :call_number, :id=>@opportunity.object, :query => {:phone_number => number, :opportunity => @opportunity.object, :origin => @params['origin'], :redirect_action => :show})
 				icons = generate_phone_number_icons(preferred, do_not_call)
 				%Q{
@@ -30,7 +30,7 @@
 			<% @opportunity.activities.each do |activity| %>
 		     <% if activity.phonenumber %>
 				<% if (activity.phonenumber.gsub(/ /,'').length > 2) && !(adhoc_nums.include?(activity.phonenumber)) %>
-					<% if (activity.phonenumber != @opportunity.contact.telephone1) && (activity.phonenumber != @opportunity.contact.telephone2) && (activity.phonenumber != @opportunity.contact.telephone3) && (activity.phonenumber != @opportunity.contact.mobilephone) %>
+					<% if (activity.phonenumber != @contact.telephone1) && (activity.phonenumber != @contact.telephone2) && (activity.phonenumber != @contact.telephone3) && (activity.phonenumber != @contact.mobilephone) %>
 						<% adhoc_nums << activity.phonenumber %>
 						<a href="<%= url_for(:action => :call_number, :id=>@opportunity.object, :query => {:phone_number => activity.phonenumber, :opportunity => @opportunity.object, :origin => @params['origin']}, :redirect_action => :show) %>" data-role="button"   data-theme="c" style="white-space:normal" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-c">
 						<span class="ui-btn-inner ui-btn-corner-all" style="white-space:normal">

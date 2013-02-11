@@ -352,7 +352,8 @@ class OpportunityController < Rho::RhoController
   def note_create
     Settings.record_activity
     @opportunity = Opportunity.find_opportunity(@params['id'])
-    if @opportunity
+    @contact = @opportunity.contact if @opportunity
+    if @opportunity && @contact
       render :action => :note_create, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
        if @params['origin'] == 'contact'
@@ -373,7 +374,8 @@ class OpportunityController < Rho::RhoController
     Settings.record_activity
     $choosed['0'] = ""
     @opportunity = Opportunity.find_opportunity(@params['id'])
-    if @opportunity
+    @contact = @opportunity.contact if @opportunity
+    if @opportunity && @contact
       @opportunity.create_note(@params['notes'])
       render :action => :callback_request, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -445,7 +447,8 @@ class OpportunityController < Rho::RhoController
   def appointment
     $choosed['0'] = ""
     @opportunity = Opportunity.find_opportunity(@params['id'])
-    if @opportunity
+    @contact = @opportunity.contact  unless @opportunity.blank?
+    if @opportunity && @contact
       @opportunity.create_note(@params['notes'])
       render :action => :appointment, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -461,7 +464,8 @@ class OpportunityController < Rho::RhoController
     @lost_reasons = Constants::OTHER_LOST_REASONS
     @competitors = Constants::COMPETITORS
     @opportunity = Opportunity.find_opportunity(@params['id'])
-    if @opportunity
+    @contact = @opportunity.contact  unless @opportunity.blank?
+    if @opportunity && @contact
       @opportunity.create_note(@params['notes'])
       render :action => :lost_other, :back => 'callback:', :layout => 'layout_jquerymobile'
     else
@@ -475,7 +479,8 @@ class OpportunityController < Rho::RhoController
   
   def won
       @opportunity = Opportunity.find_opportunity(@params['id'])
-      if @opportunity
+      @contact = @opportunity.contact  unless @opportunity.blank?
+      if @opportunity && @contact
         @opportunity.create_note(@params['notes'])
         render :action => :mark_as_won, :back => 'callback:', :layout => 'layout_jquerymobile'
       else

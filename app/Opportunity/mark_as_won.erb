@@ -12,7 +12,7 @@
     </div>
     <div id="contentDiv" data-role="content" data-theme="b">
 		<div style="text-align:center" class="ui-bar">
-            <h1><%= "#{@opportunity.contact.full_name} - #{to_date(@opportunity.createdon)}" %><h1>
+            <h1><%= "#{@contact.full_name} - #{to_date(@opportunity.createdon)}" %><h1>
         </div>
 		<hr/>
         <form id="won_form" name="won_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_won_status, :query => {:origin => @params['origin'], :opportunity_id => @opportunity.object, :appointments => @params['appointments']} %>">

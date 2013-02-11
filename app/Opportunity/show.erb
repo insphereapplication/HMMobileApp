@@ -2,7 +2,7 @@
 	<%= offline_bar%>
 	<% if @params['origin'] == "contact" || @params['origin'] == "SearchContacts" %>
 	<div data-role="header" data-backbtn="false" data-theme="b">
-		<a data-transition="slide"  href="<%= url_for(:controller => :Contact, :action => :show, :id => @opportunity.contact.object, :query =>{:origin => @params['origin']}) %>"  data-icon="back">Contact</a>
+		<a data-transition="slide"  href="<%= url_for(:controller => :Contact, :action => :show, :id => @contact.object, :query =>{:origin => @params['origin']}) %>"  data-icon="back">Contact</a>
 		<h3>
 			Opportunity<%= sync_spinner %>
 		</h3>
@@ -50,14 +50,14 @@
 			</li> 
 			
 			<%=
-		    	@opportunity.contact.map_phone_numbers{ |type,number,do_not_call,preferred|
+		    	@contact.map_phone_numbers{ |type,number,do_not_call,preferred|
 					href = do_not_call ? '#' : "#{url_for({:action => :call_number, :id => @opportunity.object, :query =>{:origin => @params['origin'], :phone_number => number}})}"
                                         generate_phone_number(preferred, do_not_call, href, type, number)
 					}.join("\n")
 			
 			%>
 			
-			<% if @opportunity.contact.emailaddress1 %>
+			<% if @contact.emailaddress1 %>
 			<li data-icon="false"><a href="mailto:<%= @contact.emailaddress1.to_s %>"><%= "Email: #{@contact.emailaddress1.to_s}" %></a></li>
 			<% end %>
 			

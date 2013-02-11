@@ -6,7 +6,7 @@
 	</div>
 	<div id="contentDiv" data-role="content" data-theme="b">
 		<div style="text-align:center" class="ui-bar"> 
-			<h1><%= "#{@opportunity.contact.full_name} - #{to_date(@opportunity.createdon)}" %></h1>
+			<h1><%= "#{@contact.full_name} - #{to_date(@opportunity.createdon)}" %></h1>
 		</div>
 		<hr/>
 		<form name="call_back_form" id="call_back_form" method="POST" action="<%= url_for :controller => :Activity, :action => :update_status_call_back_requested, :query => {:origin => @params['origin'], :appointments => @params['appointments']} %>">
@@ -19,8 +19,8 @@
 				<input type="hidden" id="phone_type_selected" name="phone_type_selected" />
 			    <label for="phoneList" class="select">Phone Type:</label>            
 				<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);" data-theme="d">
-					<% @opportunity.contact.phone_numbers.each do |type, number| %>
-						<% if @opportunity.contact.cssi_preferredphone == type %>
+					<% @contact.phone_numbers.each do |type, number| %>
+						<% if @contact.cssi_preferredphone == type %>
 							<option selected value="<%= number %>"><%= type %></option>
 						<% else %>
 							<option value="<%= number %>"><%= type %></option>
