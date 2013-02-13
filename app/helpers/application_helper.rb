@@ -149,6 +149,7 @@ module ApplicationHelper
           result.push(call_parameter)
           @currentState = @currentState + 1
           @currentPage = page
+          @currentPage = @currentPage + 1 if result.length == page_size
         else
           puts "In load data else"
           prms[@pageIndex] = page - @currentPage
