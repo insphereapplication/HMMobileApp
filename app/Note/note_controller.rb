@@ -69,7 +69,7 @@ class NoteController < Rho::RhoController
   
   def note_submit
     Settings.record_activity
-    opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
+    opportunity = Opportunity.find_opportunity(@params['opportunity_id']) if @params['opportunity_id']
     
     if opportunity
     db = ::Rho::RHO.get_src_db('Opportunity')
@@ -84,7 +84,7 @@ class NoteController < Rho::RhoController
         db.rollback
       end
     else
-      puts "The opportunity for {@params['opportunity_id'} was deleted before the note could be added"
+      puts "The opportunity for #{@params['opportunity_id']} was deleted before the note could be added"
       if @params['origin'] == 'contact'
          WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'),Constants::TAB_INDEX['Contacts'])
       else   
