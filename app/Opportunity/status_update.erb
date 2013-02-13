@@ -39,7 +39,7 @@
 			<li><a class="UpdateStatus" href="<%= url_for(:action => :appointment, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-transition="slide">Set Appointment...</a></li>
 			<li data-role="list-divider">Lost</li> 
 			<%['Not Interested','Wrong Number/Disconnected','Other'].each do |lost_detail| %>
-			<li><a class="UpdateStatus" href="<%= url_for(:action => :lost_other, :id => @opportunity.object, :query =>{:origin => @params['origin'], :selected_option => lost_detail})%>" data-transition="slide"><%=lost_detail%></a></li>
+			<li><a class="UpdateStatus" href="<%= url_for(:action => :lost, :id => @opportunity.object, :query =>{:origin => @params['origin'], :selected_option => lost_detail})%>" data-transition="slide"><%=lost_detail%></a></li>
 			<% end %>
 			<li data-role="list-divider">Won</li> 
 			<li><a class="UpdateStatus" href="<%= url_for(:action => :won, :id => @opportunity.object, :query =>{:origin => @params['origin']})%>" data-transition="slide">Won</a></li>

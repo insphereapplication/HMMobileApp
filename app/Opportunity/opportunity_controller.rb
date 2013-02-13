@@ -440,7 +440,7 @@ class OpportunityController < Rho::RhoController
     end
   end
   
-  def lost_other
+  def lost
     @lost_reasons = Constants::OTHER_LOST_REASONS
     @competitors = Constants::COMPETITORS
     @opportunity = Opportunity.find_opportunity(@params['id'])
