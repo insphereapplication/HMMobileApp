@@ -50,6 +50,7 @@ function populatePhone(dropdown)
 	if (dropdown == null){
 		return true;
 	}
+
     for (var i=0; i<dropdown.options.length; i++){
       if (dropdown.options[i].selected==true){
         selected = dropdown.options[i].value;
@@ -60,13 +61,8 @@ function populatePhone(dropdown)
     }
 	document.getElementById("phoneNumber").value=selected;
 	document.getElementById("phone_type_selected").value=selected_type;
-	if (selected_type == 'Ad Hoc'){
-		document.getElementById("phoneNumber").disabled = false;
-	}
-	else
-	{
-		document.getElementById("phoneNumber").disabled = true;
-	}
+	document.getElementById("phoneNumber").disabled = selected_type != 'Ad Hoc';
+	$(dropdown).selectmenu(dropdown.options.length == 1 ? 'disable' : 'enable');	
     return true;
 }
 

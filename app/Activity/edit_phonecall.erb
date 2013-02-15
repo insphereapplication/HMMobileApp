@@ -30,24 +30,24 @@
 		<div data-role="fieldcontain">
            	<label for="callback_datetime">Call Back Date and Time:</label>
 			<input id="callback_datetime" type="text" class="required" name="callback_datetime" data-theme="d" readonly value="<%= to_datetime(@activity.scheduledstart) %>"  onClick="popupTomorrowDateTimeAJPicker('0', 'Callback Time', 'callback_datetime'); document.getElementById('callback_datetime').focus();"></input>
+		</div>      	
+		<div data-role="fieldcontain" id="div_phone_select">
+			<input type="hidden" id="phone_type_selected" name="phone_type_selected" />
+		    <label for="phonelist" class="select"  type="hidden" >Phone Type:</label>
+			<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);" data-theme="d" type="hidden">				 
+				<% puts "Selected phone type is:  #{@activity.phone_type}" %>	
+				<% if (@activity_contact) %>		
+				<% @activity_contact.phone_numbers.each do |type, number| %>
+					<option <% if @activity.phone_type == type %> selected="True" <% end %> value="<%= number %>"><%= type %></option>
+				<% end %>		
+				<% end %>			
+				<% if @activity.phone_type == "Ad Hoc" %>
+					<option  selected="True" value="<%= @activity.phonenumber %>" >Ad Hoc</option>
+				<%else %>	
+				 	<option value="" >Ad Hoc</option>
+				<% end %> 
+			</select>
 		</div>
-       	<% if (@activity_contact) %>
-			<div data-role="fieldcontain">
-				<input type="hidden" id="phone_type_selected" name="phone_type_selected" />
-			    <label for="phonelist" class="select">Phone Type:</label>
-				<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);" data-theme="d">				 
-					<% puts "Selected phone type is:  #{@activity.phone_type}" %>			
-					<% @activity_contact.phone_numbers.each do |type, number| %>
-						<option <% if @activity.phone_type == type %> selected="True" <% end %> value="<%= number %>"><%= type %></option>
-					<% end %>					
-					<% if @activity.phone_type == "Ad Hoc" %>
-						<option  selected="True" value="<%= @activity.phonenumber %>" >Ad Hoc</option>
-					<%else %>	
-					 	<option value="" >Ad Hoc</option>
-					<% end %> 
-				</select>
-			</div>
-       	<% end %>
 		<div data-role="fieldcontain">
 			<label for="phoneNumber" class="fieldLabel">Phone Number: <font color="red"> *</font> </label>
 			<input  type="tel" id="phoneNumber" name="phone_number" data-theme="d"  />
