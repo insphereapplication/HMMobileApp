@@ -1,7 +1,7 @@
 module ExceptionUtil
   def self.log_exception_to_server(exception, type=nil)
     #Changing the error type if criterea below is met since these are actually handled gracefully
-    type="E501" if !exception.backtrace.blank? && exception.backtrace.index("lib/rho/render.rb:169:in `eval_compiled_file'") == 1 and exception.backtrace.index("lib/rho/render.rb:169:in `render'") == 2
+    type="E501" if !exception.backtrace.blank? && exception.backtrace.index("lib/rho/render.rb:169:in `eval_compiled_file'") == 1 and exception.backtrace.index("lib/rho/render.rb:169:in `render'") == 2  && exception.backtrace.index("lib/rho/rhocontroller.rb:118:in `serve'") == 3
     
     unless exception.kind_of?(Exception)
       exception = new Exception(exception)
