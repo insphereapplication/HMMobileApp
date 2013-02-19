@@ -182,10 +182,11 @@ class ActivityController < Rho::RhoController
   end
 
   def opportunity_details
+    OpportunityController.delay_opportunity_index_refresh
     Rho::NativeTabbar.switch_tab(0)
     WebView.execute_js("setSelectedTab('appointments');", 0)
     redirect :action => :index
-    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :id => @params['id']), 0)
+    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :id => @params['id'], :selected_tab => 'appointments'), 0)
   end
 
   # GET /Contact/activity_summary

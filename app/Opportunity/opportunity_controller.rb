@@ -50,7 +50,7 @@ class OpportunityController < Rho::RhoController
     #Reset the first render flags to true for activity and contact pages
     ContactController.reset_first_render
     ActivityController.reset_first_render
-    
+    @@delay_refresh = false
   end
   
   def tab_switch_callback
@@ -61,11 +61,16 @@ class OpportunityController < Rho::RhoController
     WebView.execute_js("setAppDeactive();", 3) 
     WebView.execute_js("setAppActive();",current_index) 
     
-    # refresh opportunities page if changed locally
-    if Opportunity.local_changed? && (current_index == 0)
+    # refresh opportunities page if changed locally @@delay_refresh should only be set true when redirecting from callback or phonecall select in activity list
+    if Opportunity.local_changed? && (current_index == 0)  && @@delay_refresh == false
       WebView.navigate(url_for(:action => :index, :back => 'callback:', :query => {:selected_tab => $current_nav_context}))
     end
+    @@delay_refresh = false
   end
+  
+  def self.delay_opportunity_index_refresh
+    @@delay_refresh = true
+  end  
   
   def refresh_if_changed
     if Opportunity.local_changed?
@@ -191,7 +196,6 @@ class OpportunityController < Rho::RhoController
       end
     end
     $current_nav_context = origin
-    puts
     render :partial => 'opportunity', :locals => { :items => rows, :origin => origin, :selected_tab => origin }
   end
   def jqm_get_new_leads
