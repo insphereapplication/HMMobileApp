@@ -3,7 +3,7 @@
 		<div data-role="header" data-backbtn="false" data-theme="b">
 			<a href="<%=url_for(:controller => :Opportunity, :action=>:show, :id => @appt.opportunity.object, :query =>{:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>			
 			<h3>Appointment <%= sync_spinner %></h3>
-			<a data-icon="edit" href="<%=url_for(:action=>:edit, :id => @appt.object, :query => {:origin => @params['origin']})%>" data-direction="forward"> Edit </a>
+			<a data-icon="edit" href="<%=url_for(:action=>:edit, :id => @appt.object, :query => {:origin => @params['origin']})%>" rel="external" data-direction="forward"> Edit </a>
 		</div>
 	<div data-role="content">
 		<ul data-role="listview" data-theme="d" data-inset="true">
