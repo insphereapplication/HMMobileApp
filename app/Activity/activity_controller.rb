@@ -365,7 +365,7 @@ class ActivityController < Rho::RhoController
           redirect_to_index_page
         end
       
-        unless @params['task']['subject'].blank?
+        unless @params.blank? || @params['task'].blank? || @params['task']['subject'].blank?
           task = create_new_task(@params['task'],opportunity)
         end
         
