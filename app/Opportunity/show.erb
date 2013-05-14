@@ -28,7 +28,7 @@
 			<% if (!AppInfo.instance.quick_quote_users.blank? && (AppInfo.instance.quick_quote_users.downcase == "all" || AppInfo.instance.quick_quote_users.downcase.index(SyncEngine.get_user_name.downcase) !=  nil ))%>
 				<div class="ui-grid-a"> 
 					<div class="ui-block-a"><a href="<%= url_for :action => :quick_quote, :id =>@opportunity.object, :query =>{:origin => @params['origin']} %>" rel="external" data-transition="none" data-role="button"><span class="ui-btn-text"style="margin-left:-15px;margin-right:-15px">Term Quote</span></a></div>
-					<div class="ui-block-b"><a href="<%= url_for :action => :health_quoting_tool, :id =>@opportunity.object, :query =>{:origin => @params['origin']} %>" rel="external" data-transition="none" data-role="button"> <span class="ui-btn-text"style="margin-left:-15px;margin-right:-15px">Health Quote</span></a></div>
+					<div class="ui-block-b"><a href="<%= url_for :action => :quoting_tool, :id =>@opportunity.object, :query =>{:origin => @params['origin']} %>" rel="external" data-transition="none" data-role="button"> <span class="ui-btn-text"style="margin-left:-15px;margin-right:-15px">Health Quote</span></a></div>
 					</div>
 			<% else %>	
 				<a href="<%= url_for :action => :quick_quote, :id =>@opportunity.object, :query =>{:origin => @params['origin']} %>" rel="external" data-transition="none" data-role="button">Term Life Quick Quote</a>	
