@@ -628,16 +628,13 @@ class OpportunityController < Rho::RhoController
     #This will take the user to InSite quoting
     opportunity = Opportunity.find_opportunity(@params['id'])
     #contact = opportunity.contact unless opportunity.blank?
-    quoting_tool_url = Rho::RhoConfig.quoting_tool_url
+    quoting_tool_url = Rho::RhoConfig.resource_center_url
     quoting_tool_target = Rho::RhoConfig.quoting_tool_target
     identity_provider = Rho::RhoConfig.quoting_tool_sts
-    puts "!!!!!!!!!!!!!!!! #{identity_provider}  !!!!!!!"
+
     opportunity_params = "?identityprovider=#{identity_provider}"
-    puts "!!!!!!!!!!!!!!!! #{opportunity_params}  !!!!!!!"
     opportunity_params += "&opportunityid=#{opportunity.object}" if @params['id']
 
-    resource_url=Rho::RhoConfig.quoting_tool_url
-    lead_forward_target=Rho::RhoConfig.quoting_tool_target
     ctime = Time.new.utc
     ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
     user_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.login}Delimit"))
@@ -645,9 +642,7 @@ class OpportunityController < Rho::RhoController
     return_url_enc = Rho::RhoSupport.url_encode("#{quoting_tool_target}#{opportunity_params}")
     quote_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}&ReturnURL=#{return_url_enc}"
     puts "Resource URL parameters are: ****#{quote_params_enc}****"
-    quote_url="#{resource_url}?#{quote_params_enc}"
-    
-    #rc_url ="#{insphere_url}?#{quoting_tool_params_enc}"
+    quote_url="#{quoting_tool_url}?#{quote_params_enc}"
  
     redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
   

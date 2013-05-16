@@ -127,7 +127,6 @@ def rhoconfig
     :crm_url => 'https://mobileproxy.insphereis.net',
     :phonecall_duration_default_minutes => '15',
     :insphere_url => 'https://www.insphereis.net',
-    :quoting_tool_url => 'https://mobile-rc.insphereis.net',
     :quoting_tool_target => '/sso/Pages/InSiteSSO.aspx',
     :quoting_tool_sts => 'ResourceCenterMobileSSO'
   }
@@ -143,7 +142,6 @@ def model_rhoconfig
     :log_server => 'https://mobileproxy.model.insphereis.net/clientlog',
     :crm_url => 'https://mobileproxy.model.insphereis.net',
     :insphere_url => 'https://www.model.insphereis.net',
-    :quoting_tool_url => 'https://mobile-rc.model.insphereis.net',
     :quoting_tool_target => '/sso/Pages/InSiteSSO.aspx',
     :quoting_tool_sts => 'ResourceCenterMobileSSO'
   })
@@ -159,7 +157,6 @@ def dev_rhoconfig
     :log_server => 'https://mobileproxy.dev.net/clientlog',
     :crm_url => 'https://mobileproxy.dev.insphereis.net',
     :insphere_url => 'https://www.dev.insphereis.net',
-    :quoting_tool_url => 'https://mobile-rc.dev.insphereis.net',
     :quoting_tool_target => '/sso/Pages/InSiteSSO.aspx',
     :quoting_tool_sts => 'ResourceCenterMobileSSO'
   })
