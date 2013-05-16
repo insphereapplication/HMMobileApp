@@ -636,7 +636,7 @@ class OpportunityController < Rho::RhoController
     puts "!!!!!!!!!!!!!!!! #{opportunity_params}  !!!!!!!"
     opportunity_params += "&opportunityid=#{opportunity.object}" if @params['id']
 
-    resource_url=Rho::RhoConfig.resource_center_url
+    resource_url=Rho::RhoConfig.quoting_tool_url
     lead_forward_target=Rho::RhoConfig.quoting_tool_target
     ctime = Time.new.utc
     ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
