@@ -272,6 +272,7 @@ class ContactController < Rho::RhoController
     end
     @contact.update_attributes(cp) if @contact
     @contact.update_attributes(:cssi_spousebirthdate => DateUtil.birthdate_build(@contact.cssi_spousebirthdate))
+    @contact.update_attributes(:cssi_spousedelete => "")
     SyncEngine.dosync
     redirect :action => :show, :back => 'callback:',
               :id => @contact.object,
@@ -343,6 +344,7 @@ class ContactController < Rho::RhoController
       @contact.update_attributes(:cssi_spouseweight => "")
       @contact.update_attributes(:cssi_spouseusetobacco => "")
       @contact.update_attributes(:cssi_spousegender => "")
+      @contact.update_attributes(:cssi_spousedelete => "true")
       SyncEngine.dosync
       WebView.navigate(url_for :controller => :Contact, :action => :show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})
     else
