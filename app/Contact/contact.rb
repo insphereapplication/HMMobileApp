@@ -52,7 +52,8 @@ class Contact
   property :cssi_spouseheightin, :string
   property :cssi_spouseweight, :string
   property :cssi_spouseusetobacco, :string
-  property :cssi_spousegender, :string #end contact spouse information
+  property :cssi_spousegender, :string
+  property :cssi_spousedelete, :string #end contact spouse information
   property :temp_id, :string
   
   index :contact_pk_index, [:contactid]
