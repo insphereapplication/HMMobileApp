@@ -78,7 +78,7 @@ def build_yml
     :iphone_config => 'Distribution',
     :iphone_sdk => 'iphoneos5.0',
     :codesignidentity => '"iPhone Distribution: Insphere Insurance Solutions, Inc"',
-    :provisionprofile => 'CF19D7A1-3F41-40AC-8481-93B89A33B0B1',
+    :provisionprofile => 'B40464A8-109B-4696-8727-09373CEA6FF1',
     :motorola_license_company => 'Insphere Insurance Solutions',
     :motorola_license => '0209646A081D151A000307711A7E1C75',
     :package_name => 'com.insphere.insite',
@@ -103,7 +103,7 @@ def model_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Dwayne Smith (Q222GR78Z7)"',
     :iphone_config => 'Release',
-    :provisionprofile => '14576255-6140-4C91-92E5-FA3F5D4C0D46'
+    :provisionprofile => '80ECA1F4-F844-465B-90F0-2D5E985A3EFA'
   })
 end
 
@@ -111,7 +111,7 @@ def dev_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Dwayne Smith (Q222GR78Z7)"',
     :iphone_config => 'Release',
-    :provisionprofile => '14576255-6140-4C91-92E5-FA3F5D4C0D46'
+    :provisionprofile => '80ECA1F4-F844-465B-90F0-2D5E985A3EFA'
   })
 end
 
