@@ -25,7 +25,7 @@ end
 
 load rakefilepath
 
-ios_version = "4.3"
+ios_version = "6.0"
 
 namespace :deploy do 
   task :persist_build_yml do 

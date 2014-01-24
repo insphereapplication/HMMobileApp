@@ -73,7 +73,7 @@ end
 
 def build_yml
   {
-    :name => 'Insite',
+    :name => 'HM Mobile',
     :version => ENV['BUILD_NUMBER'] || '2.1.10',
     :iphone_config => 'Distribution',
     :iphone_sdk => 'iphoneos5.0',
