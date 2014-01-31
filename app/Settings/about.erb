@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>InsiteMobile</title>
+	<title>HM Mobile</title>
 	<meta name="viewport" content="width=device-width; height=device-height; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 	<link href="/public/lib/jquery.mobile.min.css" media="screen" rel="stylesheet" type="text/css"/>
 	<link type="text/css" rel="stylesheet" href="/public/jquerymobile/insphere.css" />
@@ -27,7 +27,7 @@
 
 		<div id="contentDiv" data-role="content" data-theme="b" >
 			<ul data-role="listview" data-theme="d" data-inset="true">
-				<li><h3>Version:</h3><p>InSite Mobile <% if Rho::RhoConfig.app_version && Rho::RhoConfig.app_version.length > 0 %><%= Rho::RhoConfig.app_version %><% else %>N/A<% end %></p></li> 
+				<li><h3>Version:</h3><p>HM Mobile <% if Rho::RhoConfig.app_version && Rho::RhoConfig.app_version.length > 0 %><%= Rho::RhoConfig.app_version %><% else %>N/A<% end %></p></li> 
 				<li><h3>Last Sync:</h3><p> <%= Settings.last_synced.to_s %></p></li>
 				<li><h3>Connection State:</h3><p> <%= DeviceCapabilities.connection_status %></p></li> 
 				<li><h3>Local Changes?:</h3><p> <%= sync_state %></p></li>
