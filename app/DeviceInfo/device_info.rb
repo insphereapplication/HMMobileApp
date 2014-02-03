@@ -15,6 +15,7 @@ class DeviceInfo
   property :emulator, :string
   
   enable :sync
+  enable :full_update
   set :sync_priority, 2 # this needs done after the App Info so that we get the device info incase their is a failure with the other models
   
   def self.find_device(id)
