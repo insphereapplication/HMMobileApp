@@ -88,7 +88,7 @@ def build_yml
     :android_cert_path => "#{APP_PATH}/insphere_insite.keystore",
     :android_cert_password => "5zW8e3ZuS7DWY0TsnCTyyWnpGSDUqUgj",
     :android_cert_alias => "Insite",
-    :android_push_sender => "insphereapplication@insphereis.com",
+    :android_push_sender => "90041468856",
     :android_sdk_version => "2.3.3",
     :encrypt_database => '1',
     :bundle_identifier => "com.insphere.insite",
@@ -103,7 +103,8 @@ def model_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Dwayne Smith (Q222GR78Z7)"',
     :iphone_config => 'Release',
-    :provisionprofile => 'c365dcb4-1414-4581-9ba8-7d1fddd5e091'
+    :provisionprofile => 'c365dcb4-1414-4581-9ba8-7d1fddd5e091',
+    :android_push_sender => "452853011350"
   })
 end
 
@@ -111,7 +112,8 @@ def dev_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Dwayne Smith (Q222GR78Z7)"',
     :iphone_config => 'Release',
-    :provisionprofile => 'c365dcb4-1414-4581-9ba8-7d1fddd5e091'
+    :provisionprofile => 'c365dcb4-1414-4581-9ba8-7d1fddd5e091',
+    :android_push_sender => "452853011350"
   })
 end
 

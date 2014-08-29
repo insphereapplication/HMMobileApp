@@ -22,6 +22,8 @@ android:
   push:
     sender: <%= @build_yml[:android_push_sender] %>
     notifications: always
+  extensions:
+  - gcm-push
   capabilities: 
   - network_state
   - push
