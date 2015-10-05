@@ -20,13 +20,13 @@
 				<fieldset data-role="controlgroup" data-type="horizontal">
 				<legend>Height:</legend>
 				<label for="contact[cssi_spouseheightft]">Feet:</label>
-				<select name="contact[cssi_spouseheightft]" id="contact[cssi_spouseheightft]" data-theme="d">
+				<select name="contact[cssi_spouseheightft]" id="contact[cssi_spouseheightft]" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 					<option value="">Feet</option>
 					<% Constants::HEIGHT_FEET.each do |i| %>
 						<option value="<%= i %>"><%= i %></option>
 					<% end %>				
 				</select>
-				<select name="contact[cssi_spouseheightin]" id="contact[cssi_spouseheightin]" data-theme="d">
+				<select name="contact[cssi_spouseheightin]" id="contact[cssi_spouseheightin]" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 					<option value="">Inches</option>
 					<% Constants::HEIGHT_INCHES.each do |i| %>
 						<option value="<%= i %>"><%= i %></option>
@@ -43,7 +43,7 @@
 			</div>
 			<div data-role="fieldcontain">
 				<label for="contact[cssi_spousegender]" class="select">Gender:</label>
-				<select name="contact[cssi_spousegender]"  id="contact[cssi_spousegender]" data-theme="d">
+				<select name="contact[cssi_spousegender]"  id="contact[cssi_spousegender]" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 					<option value=""></option>
 					<option value="Male">Male</option>
 					<option value="Female">Female</option>

@@ -1,7 +1,7 @@
 <div data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar%>
 	<form method="post" id="opp_add" action="<%= url_for(:action => :create, :query => {:id => @contact.object, :origin => @params['origin']})%>" name="opp_add">
-		<div data-role="header" data-backbtn="false" data-theme="b" <%= ' data-position="fixed"' if !(System.get_property('platform') == 'ANDROID' && System::get_property('os_version').split('.')[0].to_i < 3) %>>
+		<div data-role="header" data-backbtn="false" data-theme="b" <%= ' data-position="fixed"' if !((System.get_property('platform') == 'ANDROID' && System::get_property('os_version').split('.')[0].to_i < 3) || (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)) %>>
 			<a href="<%=url_for(:controller => :Contact, :action => :show, :id => @contact.object, :query=> {:origin => @params['origin']})%>" data-direction="reverse" rel="external" data-icon="back">Back</a>
 			<h1>Create Opportunity <%= sync_spinner %></h1>
 			<span class="ui-btn-right">
@@ -9,7 +9,7 @@
 			</span>
 		</div>	
 		<div data-role="content" data-theme="b">
-			<ul data-role="listview" data-filter="false" data-inset="true" data-theme="d"> 
+			<ul data-role="listview" data-filter="false" data-inset="true" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>> 
 				<li data-role="list-divider">Opportunity Information</li>
 				<li>
 					<h3><%= @contact.full_name %></h3>
@@ -19,7 +19,7 @@
 			</ul>
 			<div data-role="fieldcontain">
 				<label for="opportunity_lineofbusiness" class="select">LOB:</label>
-				<select data-theme="d" id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]" data-theme="d" >
+				<select data-theme="d" id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 					<option value="" selected="true"></option>
 						<% StaticEntity.get_rawlead_lob_names.each do |lob_name| %>
 							<option value="<%=lob_name%>">
@@ -30,7 +30,7 @@
 			</div>
 			<div data-role="fieldcontain">
 				<label for="opportunity_inputsource" class="select">Source:</label>
-				<select data-theme="d" id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]" data-theme="d" >
+				<select data-theme="d" id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 					<option value="" selected="true"></option>
 						<% StaticEntity.get_lead_source_names.each do |lead_source_name| %>
 							<option value="<%=lead_source_name%>">

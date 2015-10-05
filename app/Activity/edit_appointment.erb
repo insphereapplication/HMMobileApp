@@ -31,7 +31,7 @@
 	</div>
     <div data-role="fieldcontain">
         <label for="appointment_duration" class="select">Duration:</label>
-        <select name="appointment_duration" id="appointment_duration" data-theme="d">								
+        <select name="appointment_duration" id="appointment_duration" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>								
                 <option <% if get_duration(@activity.scheduledstart, @activity.scheduledend) == 90.0 %> selected == "true" <% end %> value="90.0">1.5 Hours</option>
                 <option <% if get_duration(@activity.scheduledstart, @activity.scheduledend) == 30.0 %> selected == "true" <% end %> value="30.0">30 Minutes</option>
                 <option <% if get_duration(@activity.scheduledstart, @activity.scheduledend) == 60.0 %> selected == "true" <% end %> value="60.0">1 Hour</option>
@@ -43,7 +43,7 @@
 	<% if (@activity_contact) %>
 	     <div data-role="fieldcontain">
              <label for="select_location" class="select">Location:</label>
-			 <select name="select_location" id="select_location" onchange='updateAddress();' data-theme="d">
+			 <select name="select_location" id="select_location" onchange='updateAddress();' data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
                 <% @activity_contact.addresses.each do |type, address| %>
                    <option <% if @activity.cssi_location == type %> selected = "True" <% end %> value="<%= address %>"><%= type %></option>
                 <% end %>

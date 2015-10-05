@@ -28,7 +28,7 @@
 				</div>
 				<div data-role="fieldcontain">
 				    <label for="phoneList" class="select">Phone Type:</label>            
-					<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);" data-theme="d">
+					<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 						<% @contact.phone_numbers.each do |type, number| %>
 							<% if @contact.cssi_preferredphone == type %>
 								<option selected value="<%= number %>"><%= type %></option>

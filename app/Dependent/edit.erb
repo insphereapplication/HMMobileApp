@@ -21,13 +21,13 @@
 				<fieldset data-role="controlgroup" data-type="horizontal">
 				<legend>Height:</legend>
 				<label for="dependent[cssi_heightft]">Feet:</label>
-				<select name="dependent[cssi_heightft]"  id="dependent[cssi_heightft]" data-theme="d">
+				<select name="dependent[cssi_heightft]"  id="dependent[cssi_heightft]" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 					<option value="">Feet</option>
 					<% Constants::HEIGHT_FEET.each do |height_feet| %>
 						<option <% if @dependent.cssi_heightft == height_feet %> selected = "true" <% end %> value="<%=height_feet%>"><%=height_feet%></option>
 					<% end %>				
 				</select>
-				<select name="dependent[cssi_heightin]" id="dependent[cssi_heightin]" data-theme="d">
+				<select name="dependent[cssi_heightin]" id="dependent[cssi_heightin]" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 					<option value="">Inches</option>
 					<% Constants::HEIGHT_INCHES.each do |height_inches| %>
 						<option <% if @dependent.cssi_heightin == height_inches %> selected = "true" <% end %>value="<%=height_inches%>"><%=height_inches%></option>
@@ -44,7 +44,7 @@
 			</div>
 			<div data-role="fieldcontain">
 				<label for="dependent[cssi_gender]" class="select">Gender:</label>
-				<select name="dependent[cssi_gender]"  id="dependent[cssi_gender]" data-theme="d">
+				<select name="dependent[cssi_gender]"  id="dependent[cssi_gender]" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 					<option value=""></option>
 					<option value="Male" <% if @dependent.cssi_gender == "Male" %> selected="selected" <% end %>>Male</option>
 					<option value="Female" <% if @dependent.cssi_gender == "Female" %> selected="selected" <% end %>>Female</option>

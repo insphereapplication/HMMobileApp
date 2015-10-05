@@ -1,6 +1,6 @@
 <div data-role="fieldcontain">
     <label for="contact_filter" class="select">View Contacts With:</label>
-    <select name="contact_filter" id="contact_filter">
+    <select name="contact_filter" id="contact_filter" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
         <%= contact_filter_jqm_options %>
     </select>
 </div>

@@ -2,8 +2,9 @@
   <form method="POST" id="contact_new" action="<%= url_for :action => :create %>">
 	<input type="hidden" name="origin" value="<%=@params['origin']%>">
 	<%= offline_bar%>
-	<div data-role="header" data-backbtn="false" data-theme="b"<%= ' data-position="fixed"' if !(System.get_property('platform') == 'ANDROID' && System::get_property('os_version').split('.')[0].to_i < 3) %>>
+	<div data-role="header" data-backbtn="false" data-theme="b"<%= ' data-position="fixed"' if !((System.get_property('platform') == 'ANDROID' && System::get_property('os_version').split('.')[0].to_i < 3) || (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)) %>>
 		<%= cancelbutton_by_origin(@params['origin']) %>
+		<% puts "OS Version is:  #{System::get_property('os_version').split('.')[0].to_i >= 9}" %>
 		<h1>Add Contact/Opp <%= sync_spinner %></h1>		
 		<input type="submit" class="ui-btn-right" value="Done" /> 
 	</div>
@@ -47,7 +48,7 @@
 
 			<div data-role="fieldcontain">
             	<label for="contact_preferredphone" class="select">Preferred Phone:</label>		
-				<select id="contact_preferredphone" name="contact[cssi_preferredphone]"  data-theme="d" >
+				<select id="contact_preferredphone" name="contact[cssi_preferredphone]"  data-theme="d"  <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 					<option value="" selected="true"></option>
 					<option value="Business">Business</option>
 					<option value="Mobile">Mobile</option>
@@ -58,7 +59,7 @@
 
 			<div data-role="fieldcontain">
             	<label for="contact_gendercode" class="select">Gender:</label>
-				<select id="contact_gendercode" name="contact[gendercode]"  data-theme="d">
+				<select id="contact_gendercode" name="contact[gendercode]"  data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 					<option value="" selected="true"></option>
 					<option value="Male">Male</option>
 					<option value="Female">Female</option>
@@ -75,7 +76,7 @@
 			<h3>Opportunity Details</h3>
 			<div data-role="fieldcontain">
         		<label for="opportunity_lineofbusiness" class="select">LOB:</label>
-					<select id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]"  data-theme="d">
+					<select id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]"  data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 						<option value="" selected="true"></option>
 							<% StaticEntity.get_rawlead_lob_names.each do |lob_name| %>
 								<option value="<%=lob_name%>">
@@ -86,7 +87,7 @@
 			</div>		
 			<div data-role="fieldcontain">
         		<label for="opportunity_inputsource" class="select">Source:</label>
-					<select id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]"  data-theme="d">
+					<select id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]"  data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 						<option value="" selected="true"></option>
 							<% StaticEntity.get_lead_source_names.each do |lead_source_name| %>
 								<option value="<%=lead_source_name%>">
@@ -114,7 +115,7 @@
 			</div>
 			<div data-role="fieldcontain">
 				<label for="contact[cssi_state1id]" class="select">State:</label>
-				<select name="contact[cssi_state1id]"  id="contact[cssi_state1id]"  data-theme="d">
+				<select name="contact[cssi_state1id]"  id="contact[cssi_state1id]"  data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 					<option data-placeholder="true">
 						<%= @contact.cssi_state1id %>
 					</option>
@@ -148,7 +149,7 @@
 			</div>
 			<div data-role="fieldcontain">
 				<label for="contact[cssi_state2id]" class="select">State:</label>
-				<select name="contact[cssi_state2id]" id="contact[cssi_state2id]"  data-theme="d">
+				<select name="contact[cssi_state2id]" id="contact[cssi_state2id]"  data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 					<option data-placeholder="true">
 						<%= @contact.cssi_state2id %>
 					</option>

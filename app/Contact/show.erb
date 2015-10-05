@@ -1,7 +1,7 @@
 
 <div id="contact_show" data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar%>
-	<div data-role="header" data-backbtn="false" data-theme="b" <%= ' data-position="fixed"' if !(System.get_property('platform') == 'ANDROID' && System::get_property('os_version').split('.')[0].to_i < 3) %>>
+	<div data-role="header" data-backbtn="false" data-theme="b" <%= ' data-position="fixed"' if !((System.get_property('platform') == 'ANDROID' && System::get_property('os_version').split('.')[0].to_i < 3) || (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)) %>>
 		<% puts @params.inspect%>
 				<% if @params['origin'] == "contact"%>
 					<a href="<%=url_for(:action => :index)%>" data-direction="reverse" rel="external" data-icon="back">Contacts</a>
