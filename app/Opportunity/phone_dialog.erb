@@ -1,4 +1,4 @@
-<div id="phone_dialog" data-role="none" class="ui-dialog ui-page ui-body-a ui-page-active">
+<div id="phone_dialog" data-role="page" class="ui-dialog ui-page ui-body-a ui-page-active">
 	
 		<div data-role="header" data-theme="d" data-position="inline" class="ui-corner-top ui-overlay-shadow ui-bar-d ui-header" role="banner">
 			<a href="<%= url_for :action => :show, :id => @opportunity.object, :query => {:origin => @params['origin']} %>" data-icon="delete"  data-iconpos="notext" class="ui-btn-left ui-btn ui-btn-icon-notext ui-btn-corner-all ui-shadow ui-btn-up-d" title="Close" data-theme="d">
