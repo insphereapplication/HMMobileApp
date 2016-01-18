@@ -22,7 +22,7 @@ logname='InsiteMobile-rhodes'
 KeepTrackOfLastVisitedPage = 0 
 LastVisitedPage = ''
 #syncserver = https://rhosync.model.insphereis.net/application
-syncserver = https://rhoconnect.dev.insphereis.net/application
+syncserver = https://rhoconnect.model.insphereis.net/application
 
 
 
@@ -37,14 +37,13 @@ log_server = 'https://mobileproxy.dev.net/clientlog',
 crm_url = 'https://mobileproxy.dev.insphereis.net'
 resource_center_url = 'https://mobile-rc.dev.insphereis.net/_layouts/InsphereLogin.aspx'
 resource_center_target= '/Pages/Home.aspx'
-lead_forward_target= '/Sso/Pages/StrategyBaySso.aspx'
-lead_forward_active_orders_target= '"/Sso/Pages/StrategyBaySso.aspx?Site=mobile"'
+lead_amp_target= '/Sso/Pages/LeadAmpSso.aspx'
 insphere_url=https://www.dev.insphereis.net
 medicare_soa_target='/SOA'
 quoting_tool_target='/sso/Pages/InSiteSSO.aspx'
 quoting_tool_sts=ResourceCenterMobileSSO
 phonecall_duration_default_minutes ='15'
 
-local_server_port = 8080
+local_server_port = 8081
 
 net_timeout = 120
