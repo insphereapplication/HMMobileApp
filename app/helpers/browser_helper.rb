@@ -407,7 +407,8 @@ module BrowserHelper
       {:value => 'active-policies', :label => 'Active Policies'},
       {:value => 'pending-policies', :label => 'Pending Policies'},
       {:value => 'open-opps', :label => 'Open Opportunities'},
-      {:value => 'won-opps', :label => 'Won Opportunities'}
+      {:value => 'won-opps', :label => 'Won Opportunities'},
+      {:value => 'related-employer', :label => 'Employee Contacts'}
     ]
     
     persisted_selection = Settings.filter_values["#{Constants::PERSISTED_CONTACT_FILTER_PREFIX}filter"]

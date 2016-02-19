@@ -48,6 +48,8 @@
 					</a>
 				<% end %>
 			</li> 
+				
+		
 			
 			<%=
 		    	@contact.map_phone_numbers{ |type,number,do_not_call,preferred|
@@ -60,7 +62,14 @@
 			<% if @contact.emailaddress1 %>
 			<li data-icon="false"><a href="mailto:<%= @contact.emailaddress1.to_s %>"><%= "Email: #{@contact.emailaddress1.to_s}" %></a></li>
 			<% end %>
-			
+			<% if !@contact.cssi_employer.blank? %>
+				<li data-icon="<%= @contact.cssi_accountprimarycontact == "True" ? 'primarycontact' : 'false' %>"><a href="#">Employer: <%= @contact.cssi_employer %></a></li>
+					<% if @contact.cssi_accountprimarycontact == "True" %>
+				 		<span class="ui-icon-primarycontact" style="float:right;"></span>	
+					<% end%>
+			<% else %>
+				<li data-icon="false"><a href="#">Employer: </a></li>
+			<% end %>
 			<li><p><strong> Status:	</strong> <%= @opportunity.statecode %> </p></li> 
 			<li><p><strong> Status Reason:	</strong> <%= @opportunity.statuscode %> </p></li> 
 			<li><p><strong> Status Detail:	</strong> <%= @opportunity.cssi_statusdetail %> </p></li> 

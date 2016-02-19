@@ -119,7 +119,7 @@ end
 
 def rhoconfig
   {
-    :app_db_version => '12.0', #This was last upticked for the drop on 06/11/2013 (spouse delete flag in contact)
+    :app_db_version => '16.3', #This was last upticked for the drop on 02/19/2016 (Adding Account fields to contact)
     :min_severity => '5',
     :max_log_file_size => '1000000',
     :sync_server => 'https://rhoconnect.insphereis.net/application',    

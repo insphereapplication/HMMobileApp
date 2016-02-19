@@ -26,12 +26,19 @@
             bottom_right_text = "Due #{DateUtil.days_calc_formatted(scheduledtime)}"
         end
         bottom_right_count = nil
-        bottom_left_text = contact.age_sex_loc if contact.age_sex_loc.length > 0
+		if opportunity.cssi_lineofbusiness == 'Small Biz'
+			bottom_left_text = contact.employer_loc if contact.employer_loc.length > 0
+		else	
+        	bottom_left_text = contact.age_sex_loc if contact.age_sex_loc.length > 0
+		end
         bottom_left_count = opportunity.phone_calls.size if opportunity.phone_calls.size > 0
+	
 		left_icon = '/public/images/empty.png'
-        left_icon = '/public/images/self_lead_icon.png' if @self_id == opportunity.cssi_assetownerid && opportunity.opportunityratingcode == 'Warm'
-        left_icon = '/public/images/self_lead_exclamation_icon_v3.png' if @self_id == opportunity.cssi_assetownerid && opportunity.opportunityratingcode == 'Hot'
-        left_icon = '/public/images/skinny_red_exclamation_v3.png' if !(@self_id == opportunity.cssi_assetownerid) && opportunity.opportunityratingcode == 'Hot'
+		left_icon = '/public/images/Employer.png' if @self_id == opportunity.cssi_assetownerid && opportunity.cssi_lineofbusiness == 'Small Biz'		
+		left_icon = '/public/images/Medicare.png' if @self_id == opportunity.cssi_assetownerid && opportunity.cssi_lineofbusiness == 'Medicare'
+		left_icon = '/public/images/Supplemental.png' if @self_id == opportunity.cssi_assetownerid && opportunity.cssi_lineofbusiness == 'Supplemental'
+		left_icon = '/public/images/Health.png' if @self_id == opportunity.cssi_assetownerid && opportunity.cssi_lineofbusiness == 'Health'
+		left_icon = '/public/images/Life.png' if @self_id == opportunity.cssi_assetownerid && opportunity.cssi_lineofbusiness == 'Life'
         icon = nil
         url2_title = 'Details'
         if origin == 'new-leads' || origin == 'follow-ups'
@@ -60,13 +67,17 @@
         <p class="ui-li-aside ui-li-desc" style="width: 40%;"><strong><%= top_right_text %></strong></p>
 <%      end %>
         <h4 style="margin-top: 0px; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-<%      if !left_icon.blank? %>
-          <img src="<%= left_icon %>" class="ui-li-thumb" style="position: relative; top: 2px; width: 16px; height: 16px;"/>
+<%      if opportunity.opportunityratingcode != 'Hot'%>
+          <img src="<%= left_icon %>" class="ui-li-thumb" style="position: relative; top: 2px; width: 16px; height: 16px;"/>	
 <%      end %>
+<%      if opportunity.opportunityratingcode == 'Hot'%>
+		  <img src="/public/images/red_exclamation.png" class="ui-li-thumb" style="top: 12px; width: 16px; height: 16px;"/>
+          <img src="<%= left_icon %>" class="ui-li-thumb" style="position: relative; top: 2px; width: 16px; height: 16px;"/>	
+<%      end %>	
           <%= text %>
         </h4>
         <div class="ui-grid-a ui-li-desc" style="margin-bottom: 0px; padding-top: 1px; padding-bottom: 1px;">
-          <div class="ui-block-a">
+          <div class="ui-block-a" style="white-space:nowrap; overflow:hidden; text-overflow: ellipsis;width: 65%;">
 <%      if bottom_left_count %>
             <span class="ui-li-count btn-up-c ui-btn-corner-all" style="background: #fadb4e;">&nbsp;<%= bottom_left_count %>&nbsp;</span>
 <%      end
@@ -77,7 +88,7 @@
             <%= bottom_left_text %>
 <%      end %>
           </div>
-          <div class="ui-block-b" align="right">
+          <div class="ui-block-b" align="right" style="width: 35%;">
 <%      if bottom_right_text %>
             <%= bottom_right_text %>
 <%      end

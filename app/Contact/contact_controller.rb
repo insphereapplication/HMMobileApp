@@ -48,7 +48,8 @@ class ContactController < Rho::RhoController
       {:value => 'active-policies', :label => 'Active Policies'},
       {:value => 'pending-policies', :label => 'Pending Policies'},
       {:value => 'open-opps', :label => 'Open Opportunities'},
-      {:value => 'won-opps', :label => 'Won Opportunities'}
+      {:value => 'won-opps', :label => 'Won Opportunities'},
+      {:value => 'related-employer', :label => 'Employee Contacts'}
     ]
     gen_jqm_options(options, @persisted_selection)
   end
@@ -62,7 +63,7 @@ class ContactController < Rho::RhoController
     @items = Contact.get_filtered_contacts(@params['page'], @persisted_selection, @persisted_search_terms, @params['pageSize'])
     @grouped_items = @items.sort { |a,b| a.last_first.downcase <=> b.last_first.downcase }.group_by{|c| c.last_first.downcase.chars.first }
     @@last_rendered_group[:group] = "" if @params['reset'] == "true"
-    render :partial => 'contact', :locals => { :items => @grouped_items, :records => @items.length, :search => @persisted_search_terms, :last_group => @@last_rendered_group }
+    render :partial => 'contact', :locals => { :items => @grouped_items, :records => @items.length, :search => @persisted_search_terms, :last_group => @@last_rendered_group, :search_selection => @persisted_selection}
   end
 
   def show_all_contacts

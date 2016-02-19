@@ -54,6 +54,8 @@ class Contact
   property :cssi_spouseusetobacco, :string
   property :cssi_spousegender, :string
   property :cssi_spousedelete, :string #end contact spouse information
+  property :cssi_employer, :string
+  property :cssi_accountprimarycontact, :string  #Is this the primary contact for the Employer
   property :temp_id, :string
   
   index :contact_pk_index, [:contactid]
@@ -115,6 +117,8 @@ class Contact
       with_open_opps(page, search_terms, page_size)
     when 'won-opps'
       with_won_opps(page, search_terms, page_size)
+    when 'related-employer'
+      related_to_employer(page, search_terms, page_size)
     else
       all_open(page, search_terms, page_size)
     end
@@ -168,11 +172,20 @@ class Contact
     })
   end
   
+  def self.related_to_employer(page=nil, terms=nil, page_size=CONTACT_DEFAULT_PAGE_SIZE)  
+    Contact.find_by_sql(%Q{
+      select distinct c.contactid, c.* from Contact c where c.cssi_employer IS NOT NULL
+      #{get_search_sql(terms)}
+      order by lastname collate nocase
+      #{get_pagination_sql(page, page_size)}
+    })
+  end
+  
   def self.get_search_sql(search_term)
     #terms_ary = terms.split(/[\s,]/).reject{|term| term.blank? }
     #terms_ary = terms
     term = search_term.gsub(/'/,"''")
-    query_terms = term.blank? ? '' : "and (c.firstname like '" + term + "%' OR c.lastname like '" + term +"%' OR c.emailaddress1 like '" + term + "%' OR c.telephone1 like '%" + term + "%' OR c.telephone2 like '%" + term + "%' OR c.telephone3 like '%" + term +"%' OR c.mobilephone like '%" + term + "%')"
+    query_terms = term.blank? ? '' : "and (c.firstname like '" + term + "%' OR c.lastname like '" + term +"%' OR c.emailaddress1 like '" + term + "%' OR c.telephone1 like '%" + term + "%' OR c.telephone2 like '%" + term + "%' OR c.telephone3 like '%" + term +"%' OR c.mobilephone like '%" + term + "%' OR c.cssi_employer like '%" + term + "%')"
     #puts "query #{query_terms}"
     query_terms
   end
@@ -211,6 +224,26 @@ class Contact
       end
     end
     asl
+  end
+  
+  def employer_loc
+    cl = ""
+    if !cssi_employer.blank?
+      if cssi_accountprimarycontact=="True"
+        cl +='<font color="blue">+</font>'
+      end
+      cl += cssi_employer + ": "
+    end
+    if(address2_city && cssi_state2id)
+        state = cssi_state2id.blank? ? "" : ", " + cssi_state2id
+        cl += " " + address2_city + state
+    else
+      if(address1_city && cssi_state1id)
+        state = cssi_state1id.blank? ? "" : ", " + cssi_state1id
+        cl += " " + address1_city + state
+      end
+    end
+    cl
   end
   
   def age_sex(label = false)

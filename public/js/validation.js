@@ -144,6 +144,14 @@ $('#spouse_new_page, #spouse_edit_page').live('pagecreate',function(event){
 $('#contact_edit_page').live('pagecreate',function(event){
 	$("#contact_edit").validate({
 	  rules: {
+		'contact[firstname]' : {
+		  required: true,
+		  maxlength: 50
+		},
+		'contact[lastname]' : {
+		  required: true,
+		  maxlength: 50
+		},
 	    'contact[mobilephone]' : {
 		  phoneUS: true,
 		  preferredMobile: true

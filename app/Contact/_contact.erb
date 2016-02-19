@@ -31,6 +31,14 @@ items.each do |group|
 <%      end
         if !search_criteria.blank? && contact.telephone3 && contact.telephone3.match(search_criteria) %>
           <p class="ui-li-desc">A:&nbsp;<%= contact.telephone3 %></p>
+<%      end 
+        if (!search_criteria.blank? && contact.cssi_employer && contact.cssi_employer.downcase.match(search_criteria.downcase)) || (search_criteria.blank? && search_selection=='related-employer'  && contact.cssi_employer) %>
+          <p class="ui-li-desc">
+			<% if contact.cssi_accountprimarycontact == "True" %>
+				<font color="blue">+</font>
+			<% end %>
+			<%= contact.cssi_employer %>
+		  </p>
 <%      end %>
       </a>
     </div>

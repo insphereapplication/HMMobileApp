@@ -119,6 +119,13 @@
     margin-top: -11px !important;
 }
 
+.ui-icon-primarycontact{
+    background-image: url("/public/images/self_lead_icon.png");
+    background-color: rgba(0, 0, 0, 0);
+    width: 16px;
+    height: 16px;
+}
+
 .ui-header .ui-title, .ui-footer .ui-title {
     margin-right: 20%;
     margin-left: 20%;

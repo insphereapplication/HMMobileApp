@@ -13,19 +13,19 @@
 				<br>
 			</div>
 			<div data-role="fieldcontain">
-        		<label for="contact[firstname]" class="fieldLabel">First Name:</label>
+        		<label for="contact[firstname]" class="fieldLabel">First Name:<font color="red">&nbsp;&nbsp;*</font></label>
         		<input id="contact[firstname]" maxlength="50" type="text" name="contact[firstname]" data-theme="d" value="<%= @contact.firstname %>" />
 			</div>
 			<div data-role="fieldcontain">
-        		<label for="contact[lastname]" class="fieldLabel">Last Name:</label>
+        		<label for="contact[lastname]" class="fieldLabel">Last Name:<font color="red">&nbsp;&nbsp;*</font></label>
         		<input id="contact[lastname]" maxlength="50" type="text" name="contact[lastname]" data-theme="d" value="<%= @contact.lastname %>"/>
 			</div>
 			<div data-role="fieldcontain">
-				<label for="contact[emailaddress1]" class="fieldLabel">Email Address:</label> 
+				<label for="contact[emailaddress1]" class="fieldLabel">Email Address:<font color="blue">&nbsp;&nbsp;+</font></label> 
 				<input type="email" maxlength="255" class="required_group" name="contact[emailaddress1]" data-theme="d" id="contact[emailaddress1]" value="<%= @contact.emailaddress1 %>" <%= placeholder( "Email Address" ) %>>
 			</div>
 			<div data-role="fieldcontain">
-				<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:&nbsp;<%= show_edit_do_not_call_icon(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,"Mobile",@contact.mobilephone) %></label>
+				<label for="contact[mobilephone]" class="fieldLabel">Mobile Phone:<font color="blue">&nbsp;&nbsp;+</font>&nbsp;<%= show_edit_do_not_call_icon(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,"Mobile",@contact.mobilephone) %></label>
 				<input type="tel" class="required_group" id="contact[mobilephone]" name="contact[mobilephone]" data-theme="d" value="<%= @contact.mobilephone %>" <%= placeholder( "Mobile Phone" ) %>>
 				<% if show_do_not_call_slider(@contact.cssi_allowcallsmobilephone,@contact.cssi_companydncmobilephone,@contact.mobilephone) %>
 					<label for="mobileDncSlider" class="fieldLabel">Allow Calls:</label>
@@ -36,7 +36,7 @@
 				<% end %>
 			</div>
 			<div data-role="fieldcontain">
-				<label for="contact[telephone1]" class="fieldLabel">Business Phone:&nbsp;<%= show_edit_do_not_call_icon(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,"Business",@contact.telephone1) %></label>
+				<label for="contact[telephone1]" class="fieldLabel">Business Phone:<font color="blue">&nbsp;&nbsp;+</font>&nbsp;<%= show_edit_do_not_call_icon(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,"Business",@contact.telephone1) %></label>
 				<input type="tel" id="contact[telephone1]" class="required_group" name="contact[telephone1]" data-theme="d" value="<%= @contact.telephone1 %>" <%= placeholder( "Business Phone" ) %>>
 				<% if show_do_not_call_slider(@contact.cssi_allowcallsbusinessphone,@contact.cssi_companydncbusinessphone,@contact.telephone1) %>
 						<label for="businessDncSlider" class="fieldLabel">Allow Calls?</label>
@@ -51,7 +51,7 @@
 				<input maxlength="10" type="number" id="contact_cssi_businessphoneext" name="contact[cssi_businessphoneext]" data-theme="d" value="<%= @contact.cssi_businessphoneext %>" <%= placeholder( "Business Ext" ) %>>
 			</div>
 			<div data-role="fieldcontain">
-				<label for="contact[telephone2]" class="fieldLabel">Home Phone:&nbsp;<%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,"Home",@contact.telephone2) %></label>
+				<label for="contact[telephone2]" class="fieldLabel">Home Phone:<font color="blue">&nbsp;&nbsp;+</font>&nbsp;<%= show_edit_do_not_call_icon(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,"Home",@contact.telephone2) %></label>
 				<input type="tel" class="required_group" id="contact[telephone2]" name="contact[telephone2]" data-theme="d" value="<%= @contact.telephone2 %>" <%= placeholder( "Home Phone" ) %>>
 				<% if show_do_not_call_slider(@contact.cssi_allowcallshomephone,@contact.cssi_companydnchomephone,@contact.telephone2) %>
 						<label for="homeDncSlider" class="fieldLabel">Allow Calls?</label>
@@ -62,7 +62,7 @@
 				<% end %>
 			</div>
 			<div data-role="fieldcontain">
-				<label for="contact[telephone3]" class="fieldLabel">Alternate Phone:&nbsp;<%= show_edit_do_not_call_icon(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone, "Alternative",@contact.telephone3) %> </label>
+				<label for="contact[telephone3]" class="fieldLabel">Alternate Phone:<font color="blue">&nbsp;&nbsp;+</font>&nbsp;<%= show_edit_do_not_call_icon(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone, "Alternative",@contact.telephone3) %> </label>
 				<input type="tel" class="required_group" id="contact[telephone3]" name="contact[telephone3]" data-theme="d" value="<%= @contact.telephone3 %>" <%= placeholder( "Alternate Phone" ) %>>
 				<% if show_do_not_call_slider(@contact.cssi_allowcallsalternatephone,@contact.cssi_companydncalternatephone,@contact.telephone3) %>					
 						<label for="alternateDncSlider" class="fieldLabel">Allow Calls?</label>
