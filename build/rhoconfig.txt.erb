@@ -38,7 +38,10 @@ quoting_tool_target='/sso/Pages/InSiteSSO.aspx'
 quoting_tool_sts=ResourceCenterMobileSSO
 crm_url='<%= @rhoconfig[:crm_url] %>'
 
-net_timeout = 60
+# 02-29-2016 - Dwayne Smith - Increasing timeout from 60 seconds to 120
+net_timeout = 120
+# 02-29-2016 - Dwayne Smith - Adding finish background sync for iphone
+finish_sync_in_background = 1
 
 
 
