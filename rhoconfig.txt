@@ -2,7 +2,7 @@ start_path = '/app/Settings/init'
 options_path = '/app/Settings'
 app_db_version = 7.0
 
-MinSeverity  = 1
+MinSeverity  = 0
 LogToOutput = 1
 LogCategories = *
 
@@ -22,7 +22,7 @@ logname='InsiteMobile-rhodes'
 KeepTrackOfLastVisitedPage = 0 
 LastVisitedPage = ''
 #syncserver = https://rhosync.model.insphereis.net/application
-syncserver = https://rhoconnect.model.insphereis.net/application
+syncserver = http://localhost:9292
 
 
 

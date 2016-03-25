@@ -16,7 +16,7 @@ class DependentController < Rho::RhoController
     @dependent = Dependent.find_dependent(@params['id'])
     if @dependent
       @contact = @dependent.contact
-      render :action => :show, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
+      render :action => :show, :back => 'callback:', :origin => @params['origin'], :layout => 'layout'
     else
       redirect :action => :index
     end
@@ -27,7 +27,7 @@ class DependentController < Rho::RhoController
     Settings.record_activity
     @contact = Contact.find_contact(@params['id'])
     @dependent = Dependent.new
-    render :action => :new, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
+    render :action => :new, :back => 'callback:', :origin => @params['origin'], :layout => 'layout'
   end
 
   # GET /Dependent/{1}/edit
@@ -35,7 +35,7 @@ class DependentController < Rho::RhoController
     Settings.record_activity
     @dependent = Dependent.find_dependent(@params['id'])
     if @dependent
-      render :action => :edit, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
+      render :action => :edit, :back => 'callback:', :origin => @params['origin'], :layout => 'layout'
     else
       redirect :action => :index
     end
@@ -49,7 +49,7 @@ class DependentController < Rho::RhoController
     @dependent = Dependent.create_new(@params['dependent'])
     @dependent.update_attributes(:cssi_dateofbirth => DateUtil.birthdate_build(@dependent.cssi_dateofbirth))
     @dependent.update_attributes(:cssi_age => age(@dependent.cssi_dateofbirth))
-    SyncEngine.dosync
+    Rho::RhoConnectClient.doSync
     render :controller => :Contact, :action => :show, :origin => @params['origin'], :id => @dependent.contact_id
   end
 
@@ -68,7 +68,7 @@ class DependentController < Rho::RhoController
     @dependent.update_attributes(:cssi_dateofbirth => DateUtil.birthdate_build(@dependent.cssi_dateofbirth))
     @dependent.update_attributes(:cssi_age => age(@dependent.cssi_dateofbirth))
     
-    SyncEngine.dosync
+    Rho::RhoConnectClient.doSync
     render :controller => :Contact, :action => :show, :origin => @params['origin'], :id => @dependent.contact_id, :opportunity => @params['opportunity']
   end
 
@@ -100,10 +100,10 @@ class DependentController < Rho::RhoController
       @dependent = Dependent.find_dependent(@params['id'])
       contactid = @dependent.contact_id
       @dependent.destroy if @dependent
-      SyncEngine.dosync
+	  Rho::RhoConnectClient.doSync
       WebView.navigate(url_for :controller => :Contact, :action => :show, :id => contactid, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})
     else
-      WebView.execute_js("hideSpin();")
+      WebView.executeJavascript("hideSpin();")
     end 
   end
   

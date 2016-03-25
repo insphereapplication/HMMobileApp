@@ -19,7 +19,7 @@ class NoteController < Rho::RhoController
     @note = Note.find_note(@params['id'])
     @parent_opportunity = @note.parent_opportunity if @note
     if @note && @parent_opportunity
-      render :action => :show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+      render :action => :show, :back => 'callback:', :id=>@params['id'], :layout => 'layout', :origin => @params['origin']
     else
        if @params['origin'] == 'contact'
           WebView.navigate(url_for(:controller => :Contact, :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'),Constants::TAB_INDEX['Contacts'])
@@ -94,7 +94,7 @@ class NoteController < Rho::RhoController
   end
   
   def finished_note_create(opportunity, origin)
-    SyncEngine.dosync
+    Rho::RhoConnectClient.doSync
     redirect :controller => :Opportunity, :action => :show, :back => 'callback:', :id => opportunity.object, :query => {:origin => origin}
   end
   

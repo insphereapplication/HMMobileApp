@@ -110,7 +110,7 @@ class ContactController < Rho::RhoController
     if @contact
       @next_id = (@contact.object.to_i + 1).to_s
       @prev_id = (@contact.object.to_i - 1).to_s
-      render :action => :show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']     
+      render :action => :show, :back => 'callback:', :id=>@params['id'], :layout => 'layout', :origin => @params['origin']     
     else
       redirect :action => :index, :back => 'callback:'
     end
@@ -186,7 +186,7 @@ class ContactController < Rho::RhoController
   def new
     Settings.record_activity
     @contact = Contact.new
-    render :action => :new, :back => 'callback:', :layout => 'layout_jquerymobile'
+    render :action => :new, :back => 'callback:', :layout => 'layout'
   end
 
   # GET /Contact/{1}/edit
@@ -215,7 +215,7 @@ class ContactController < Rho::RhoController
     
     @opp = Opportunity.create_for_new_contact(@params['opportunity'], @contact.object)
     
-    SyncEngine.dosync
+    Rho::RhoConnectClient.doSync
     redirect :action => :show, 
              :back => 'callback:',
              :id => @contact.object,
@@ -274,7 +274,7 @@ class ContactController < Rho::RhoController
     @contact.update_attributes(cp) if @contact
     @contact.update_attributes(:cssi_spousebirthdate => DateUtil.birthdate_build(@contact.cssi_spousebirthdate))
     @contact.update_attributes(:cssi_spousedelete => "")
-    SyncEngine.dosync
+    Rho::RhoConnectClient.doSync
     redirect :action => :show, :back => 'callback:',
               :id => @contact.object,
               :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
@@ -303,19 +303,19 @@ class ContactController < Rho::RhoController
   def spouse_show
     Settings.record_activity
       @contact = Contact.find_contact(@params['id'])
-      render :action => :spouse_show, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
+      render :action => :spouse_show, :back => 'callback:', :id=>@params['id'], :layout => 'layout', :origin => @params['origin'] 
   end
   
   def spouse_add
     Settings.record_activity
       @contact = Contact.find_contact(@params['id'])
-      render :action => :spouse_add, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
+      render :action => :spouse_add, :back => 'callback:', :id=>@params['id'], :layout => 'layout', :origin => @params['origin'] 
   end
   
   def spouse_edit
     Settings.record_activity
       @contact = Contact.find_contact(@params['id'])
-      render :action => :spouse_edit, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin'] 
+      render :action => :spouse_edit, :back => 'callback:', :id=>@params['id'], :layout => 'layout', :origin => @params['origin'] 
   end
   
   def confirm_spouse_delete
@@ -346,16 +346,16 @@ class ContactController < Rho::RhoController
       @contact.update_attributes(:cssi_spouseusetobacco => "")
       @contact.update_attributes(:cssi_spousegender => "")
       @contact.update_attributes(:cssi_spousedelete => "true")
-      SyncEngine.dosync
+      Rho::RhoConnectClient.doSync
       WebView.navigate(url_for :controller => :Contact, :action => :show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})
     else
-      WebView.execute_js("hideSpin();")
+      WebView.executeJavascript("hideSpin();")
     end
   end
   
   def show_AC_contact    
     @contact_details = SearchContacts.find_by_id(@params['id'])
-    render :action => :show_AC, :back => 'callback:', :id => @params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+    render :action => :show_AC, :back => 'callback:', :id => @params['id'], :layout => 'layout', :origin => @params['origin']
   end
   
   #creates a contact on the device that already exists in CRM
@@ -368,7 +368,7 @@ class ContactController < Rho::RhoController
     end
     puts "CREATING THE NEW OPPORTUNITY FROM AC SEARCH"  
     opp = Opportunity.create_for_new_contact(@params['opportunity'], contact.object)
-    SyncEngine.dosync
+    Rho::RhoConnectClient.doSync
     redirect :controller => :Contact,
              :action => :show, 
              :id => contact.object,
@@ -379,18 +379,18 @@ class ContactController < Rho::RhoController
   def new_contact_task
       Settings.record_activity
       @contact = Contact.find_contact(@params['id'])
-      render :action => :new_contact_task, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
+      render :action => :new_contact_task, :back => 'callback:', :layout => 'layout', :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
   end
   
   def new_contact_phonecall
       Settings.record_activity
       @contact = Contact.find_contact(@params['id'])
-      render :action => :new_contact_phonecall, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
+      render :action => :new_contact_phonecall, :back => 'callback:', :layout => 'layout', :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
   end
   
   def finished_contact_activity(contact, origin, opportunity)
     SyncUtil.start_sync
-    WebView.navigate(url_for(:action => :show, :id => contact.object, :back => 'callback:', :query => {:origin => origin, :opportunity => opportunity}, :layout => 'layout_jquerymobile'))
+    WebView.navigate(url_for(:action => :show, :id => contact.object, :back => 'callback:', :query => {:origin => origin, :opportunity => opportunity}, :layout => 'layout'))
   end
   
   def create_new_contact_task
@@ -483,6 +483,6 @@ class ContactController < Rho::RhoController
   def new_contact_appointment
     Settings.record_activity
     @contact = Contact.find_contact(@params['id'])
-    render :action => :new_contact_appointment, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
+    render :action => :new_contact_appointment, :back => 'callback:', :layout => 'layout', :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
   end
 end

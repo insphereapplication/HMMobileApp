@@ -1,11 +1,11 @@
 describe "Application" do 
   describe "Contact" do
     it "should sync data" do
-      SyncEngine.logout
-      SyncEngine.login(Rho::RhoConfig.test_user, Rho::RhoConfig.test_password,"")
+      Rho::RhoConnectClient.logout()
+      Rho::RhoConnectClient.login(Rho::RhoConfig.test_user, Rho::RhoConfig.test_password,"")
       i = 0
       while i < 10
-        if SyncEngine.logged_in == 1
+        if Rho::RhoConnectClient.isLoggedIn() == 1
           puts "logged in"
           break
         end
@@ -13,8 +13,8 @@ describe "Application" do
         sleep 5
       end
 
-      SyncEngine.logged_in.should == 1
-      SyncEngine.dosync
+      Rho::RhoConnectClient.isLoggedIn().should == 1
+      Rho::RhoConnectClient.doSync
       i = 0
       
       while i < 10

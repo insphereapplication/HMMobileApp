@@ -9,6 +9,7 @@ require 'Activity/activity_controller'
 class AppApplication < Rho::RhoApplication
   def initialize
     puts "calling App Initialize"
+	@tabs = nil
     @@toolbar = nil
     super
     @default_menu = { 
@@ -16,9 +17,11 @@ class AppApplication < Rho::RhoApplication
       "View Log" => :log 
     }
 
-    SyncEngine.set_notification(-1, "/app/Settings/sync_notify", '') 
-    System.set_push_notification("/app/Settings/push_notify", '')
-    SyncEngine.set_pollinterval(0) if System::get_property('platform') == 'ANDROID'
+    Rho::RhoConnectClient.setNotification('*',"/app/Settings/sync_notify", '')
+	if !Rho::System.isRhoSimulator
+		Rho::Push.startNotifications '/app/Settings/push_notify'
+	end
+    Rho::RhoConnectClient.pollInterval = 0 if System::get_property('platform') == 'ANDROID'
     $app_activated = ""
   end
   
@@ -31,19 +34,19 @@ class AppApplication < Rho::RhoApplication
   def on_activate_app
       puts "calling on_activate_app status: #{$app_activated}"
       begin
-      if (!$app_activated.blank? && !SyncEngine.is_syncing && Settings.last_synced && !Settings.last_synced.blank? && Time.new - Settings.last_synced > 60)
+      if (!$app_activated.blank? && ! Rho::RhoConnectClient.isSyncing && Settings.last_synced && !Settings.last_synced.blank? && Time.new - Settings.last_synced > 60)
         puts "App start sync needed"
-        SyncEngine.dosync 
+        Rho::RhoConnectClient.doSync
       else
          puts "App startup sync not needed"
       end  
       rescue Exception => e 
          puts "Error attempting to see if we should sync on start / forground of app.  Skipping sync check on activate.  Error message:  #{e.message}"  
       end   
-      SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
+      Rho::RhoConnectClient.pollInterval = Constants::DEFAULT_POLL_INTERVAL
       if ($app_activated == "false")
         puts "app activate calling setAppActive"
-        WebView.execute_js("setAppActive();") 
+        WebView.executeJavascript("setAppActive();") 
       else
         puts "app activate initial start not calling setAppActive"
       end
@@ -57,10 +60,10 @@ class AppApplication < Rho::RhoApplication
   
       # poll once an hour on android devices when the app is backgrounded
       puts "calling on_deactivate_app"
-      SyncEngine.set_pollinterval(0) if System::get_property('platform') == 'ANDROID'
+      Rho::RhoConnectClient.pollInterval = 0 if System::get_property('platform') == 'ANDROID'
       $app_activated = "false"
       puts "In app decactive: #{$app_activated}"
-      WebView.execute_js("setAppDeactive();") 
+      WebView.executeJavascript("setAppDeactive();") 
 
       # To stop local web server when application switched to 
       # background return "stop_local_server"

@@ -18,7 +18,7 @@ class SettingsController < Rho::RhoController
   def index
     $tab = 2
     @msg = @params['msg']
-    render :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+    render :action => :index, :back => 'callback:', :layout => 'layout'
   end
   
   def can_skip_login?
@@ -31,8 +31,9 @@ class SettingsController < Rho::RhoController
       puts "In can_skip_login true"
       #login & sync in background
       puts "using background login"
-      SyncEngine.login(Settings.login, Settings.password,  '/app/Settings/background_login_callback')
+      Rho::RhoConnectClient.login(Settings.login, Settings.password,  '/app/Settings/background_login_callback')
       #go to opportunity index page
+	  puts "^^^^^goto_opportunity_init_notify from init "
       goto_opportunity_init_notify
     else
       #go to login screen
@@ -77,17 +78,19 @@ class SettingsController < Rho::RhoController
   
   def login
     @msg = @params['msg']
+	puts "In Login with message #{@msg}"
     override_auto_login = @params['override_auto_login']
     # if the user has stored successful login credentials, attempt to auto-login with them
     if Settings.has_verified_credentials? and override_auto_login.to_s != 'true'
       update_login_wait_progress("Logging in with cached credentials")
-      SyncEngine.login(Settings.login, Settings.password, "/app/Settings/login_callback")
+      Rho::RhoConnectClient.login(Settings.login, Settings.password, "/app/Settings/login_callback")
       @working = true # if @working is true, page will show spinner
     end
     
+	puts "Need to re log in"
     Rho::NativeTabbar.remove
     @menu = { "Log" => :log }
-    render :action => :login, :back => '/app/Settings/login', :layout => 'layout_jquerymobile'
+    render :action => :login, :back => '/app/Settings/login', :layout => 'layout'
   end
   
   def goto_login(msg=nil)
@@ -95,25 +98,27 @@ class SettingsController < Rho::RhoController
   end
   
   def goto_login_override_auto(msg=nil)
-    WebView.navigate ( url_for :action => :login, :query => {:msg => msg, :override_auto_login => true} )
+   WebView.navigate ( url_for :action => :login, :query => {:msg => msg, :override_auto_login => true} )
   end
   
   def background_login
     # if the user has stored successful login credentials, attempt to auto-login with them
     if Settings.has_verified_credentials?
-      SyncEngine.login(Settings.login, Settings.password,  '/app/Settings/background_login_callback')
+	  puts "Logging in with saved credentials"
+      Rho::RhoConnectClient.login(Settings.login, Settings.password,  '/app/Settings/background_login_callback')
     else
       goto_login
     end
   end
 
   def login_callback
+    puts "In login_callback"
     errCode = @params['error_code'].to_i
     httpErrCode = @params['error_message'].split[0]
-
+	puts " ************ In the login callback  ***********"
     if errCode == 0
       Settings.credentials_verified = true
-      SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
+      Rho::RhoConnectClient.pollInterval = Constants::DEFAULT_POLL_INTERVAL
       #setup the sync event handlers for the application init sequence, start sync
       SyncUtil.start_sync('init')
       update_login_wait_progress("Login successful, starting sync...")
@@ -121,11 +126,12 @@ class SettingsController < Rho::RhoController
       #DO NOT send connectivity errors to exceptional, causes infinite loop at the moment (leave ':send_to_exceptional => false' alone)
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
       #we've got cached, verified credentials, so proceed with the usual initialization process
-      SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
+	  puts "^^^^^goto_opportunity_init_notify from login_callback with rho ERR_NEtwork / skip login "
+      Rho::RhoConnectClient.pollInterval = Constants::DEFAULT_POLL_INTERVAL
       goto_opportunity_init_notify
     else
       Settings.clear_credentials
-      SyncEngine.set_pollinterval(0)
+      Rho::RhoConnectClient.pollInterval = 0
       if errCode == Rho::RhoError::ERR_CUSTOMSYNCSERVER
         @msg = @params['error_message']
       end
@@ -144,11 +150,12 @@ class SettingsController < Rho::RhoController
   end
   
   def background_login_callback
+    puts "In background_login_callback"
     errCode = @params['error_code'].to_i
     httpErrCode = @params['error_message'].split[0]
     
     if errCode == 0
-      SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)
+      Rho::RhoConnectClient.pollInterval = Constants::DEFAULT_POLL_INTERVAL
       #perform a sync in the background
       SyncUtil.start_sync
     elsif errCode == Rho::RhoError::ERR_NETWORK && can_skip_login?
@@ -156,10 +163,10 @@ class SettingsController < Rho::RhoController
       log_error("Verified credentials, but no network.","",{:send_to_exceptional => false})
       #at this point, we've got cached, verified credentials but we can't connect to RhoSync. 
       #don't throw an error, but reinstate poll interval so that we continue to check for connectivity
-      SyncEngine.set_pollinterval(Constants::DEFAULT_POLL_INTERVAL)   
+       Rho::RhoConnectClient.pollInterval = Constants::DEFAULT_POLL_INTERVAL  
     else
       Settings.clear_credentials
-      SyncEngine.set_pollinterval(0)
+      Rho::RhoConnectClient.pollInterval = 0
       if errCode == Rho::RhoError::ERR_CUSTOMSYNCSERVER
         @msg = @params['error_message']
       end
@@ -181,7 +188,7 @@ class SettingsController < Rho::RhoController
     
     if Settings.login and Settings.password
       begin
-        SyncEngine.login(Settings.login, Settings.password, (url_for :action => :login_callback) )
+        Rho::RhoConnectClient.login(Settings.login, Settings.password, (url_for :action => :login_callback) )
         update_login_wait_progress("Logging in...")
         Settings.pin_last_activity_time = Time.new
         Settings.pin_confirmed=false
@@ -193,12 +200,12 @@ class SettingsController < Rho::RhoController
       Settings.clear_credentials
       @msg = Rho::RhoError.err_message(Rho::RhoError::ERR_UNATHORIZED) unless @msg && @msg.length > 0   
     end
-    render :action => :login, :back => 'callback:', :layout => 'layout_jquerymobile'
+    render :action => :login, :back => 'callback:', :layout => 'layout'
   end
   
   def do_logout
     Settings.clear_credentials
-    SyncEngine.set_pollinterval(0)
+     Rho::RhoConnectClient.pollInterval = 0
     Settings.last_integrated_lead = ''
     Settings.last_assigned_lead = ''
     Settings.flush_instance
@@ -214,7 +221,7 @@ class SettingsController < Rho::RhoController
   
   def pin
     @msg = @params['msg']
-    render :action => :pin, :back => 'callback:', :layout => 'layout_jquerymobile'
+    render :action => :pin, :back => 'callback:', :layout => 'layout'
   end
   
   def validate_pin
@@ -250,7 +257,7 @@ class SettingsController < Rho::RhoController
           @msg = 'Please enter matching PINs'
         end
       end
-    WebView.navigate(url_for :action => :pin, :back => 'callback:', :layout => 'layout_jquerymobile', :query => {:msg => @msg, :origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity'], :activity => @params['activity']} )  if @msg and @msg.length > 0
+    WebView.navigate(url_for :action => :pin, :back => 'callback:', :layout => 'layout', :query => {:msg => @msg, :origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity'], :activity => @params['activity']} )  if @msg and @msg.length > 0
   end # validate_pin
   
   def validate_pin_callback
@@ -293,7 +300,7 @@ class SettingsController < Rho::RhoController
   def do_reset
     Rhom::Rhom.database_fullclient_reset_and_logout
     Settings.flush_instance
-    SyncEngine.set_pollinterval(0)
+    Rho::RhoConnectClient.pollInterval = 0
     redirect :action => :login, :back => 'callback:', :query => {:msg => "Database has been reset."}
   end
   
@@ -332,11 +339,11 @@ class SettingsController < Rho::RhoController
   def push_notify
     puts "*"*80
     #setup callbacks to use new opportunity workflow, start sync
-    puts "Starting push_notify, new_opportunity_sync_pending = #{Settings.new_opportunity_sync_pending}, is_syncing = #{SyncEngine.is_syncing}"
+    puts "Starting push_notify, new_opportunity_sync_pending = #{Settings.new_opportunity_sync_pending}, is_syncing = #{Rho::RhoConnectClient.isSyncing()}"
     unless Settings.new_opportunity_sync_pending
       puts "No pending syncs of type new_opportunity"
       Settings.new_opportunity_sync_pending = true
-      unless SyncEngine.is_syncing
+      unless Rho::RhoConnectClient.isSyncing()
         puts "Sync engine isn't currently syncing, starting new_opportunity sync"
         Settings.new_opportunity_sync_pending = false
         SyncUtil.start_sync('new_opportunity')
@@ -487,7 +494,8 @@ class SettingsController < Rho::RhoController
       
       # store device info
       DeviceInfo.check_device_information
-      
+      puts "****************** Call : #{@on_sync_complete} *****************"
+	  
       @on_sync_complete.call
       
 
@@ -522,21 +530,21 @@ class SettingsController < Rho::RhoController
       if @params['server_errors'] && @params['server_errors']['create-error']
         log_error("Create error", @params.inspect)
         unless is_bad_request_data  
-          SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'], :recreate)
+          Rho::RhoConnectClient.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'], :recreate)
         else
           #notify the user here?
           #the create data given to the proxy was bad and will not succeed if tried again; delete the create
-          SyncEngine.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'], :delete)
+          Rho::RhoConnectClient.on_sync_create_error( @params['source_name'], @params['server_errors']['create-error'], :delete)
         end
       end
       
       if @params['server_errors'] && @params['server_errors']['update-error']
         log_error("Update error", @params.inspect)
         unless is_bad_request_data
-          SyncEngine.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :retry)
+          Rho::RhoConnectClient.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :retry)
         else
           #notify the user here?
-          SyncEngine.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :rollback, @params['server_errors']['update-rollback'])
+          Rho::RhoConnectClient.on_sync_update_error( @params['source_name'], @params['server_errors']['update-error'], :rollback, @params['server_errors']['update-rollback'])
         end
       end
 
@@ -552,8 +560,8 @@ class SettingsController < Rho::RhoController
       if is_unknown_client_error
         log_error("Error: Unknown client", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
         
-        SyncEngine.set_pollinterval(0)
-        SyncEngine.stop_sync
+        Rho::RhoConnectClient.pollInterval = 0
+        Rho::RhoConnectClient.stopSync()
 
         full_reset_logout
         
@@ -563,20 +571,21 @@ class SettingsController < Rho::RhoController
         log_error("Network connectivity lost", Rho::RhoError.err_message(err_code) + " #{@params.inspect}", {:send_to_exceptional => false})
         
         #stop current sync, otherwise do nothing for connectivity lapse
-        SyncEngine.stop_sync
+        Rho::RhoConnectClient.stopSync()
         
         #send them back to login because initial sync did not complete
+		puts "!!!!!! Rho::RhoError::ERR_NETWORK???  !!!!!!!"
         @on_sync_error.call({:error_source => 'connection'})
       elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)      
         log_error("RhoSync error: client is not logged in / unauthorized", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        SyncEngine.set_pollinterval(0)
-        SyncEngine.stop_sync
+        Rho::RhoConnectClient.pollInterval = 0
+        Rho::RhoConnectClient.stopSync()
         background_login
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/401 Unauthorized/].nil?
         #proxy returned a 401, need to re-login
         log_error("Error: 401 Unauthorized from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        SyncEngine.set_pollinterval(0)
-        SyncEngine.stop_sync
+        Rho::RhoConnectClient.pollInterval = 0
+        Rho::RhoConnectClient.stopSync()
         
         Settings.initial_sync_complete = false
         Settings.password = ''
@@ -584,8 +593,8 @@ class SettingsController < Rho::RhoController
       elsif err_code == Rho::RhoError::ERR_CUSTOMSYNCSERVER && !@params['server_errors'].to_s[/403 Forbidden/].nil?
         #proxy returned a 403, need to purge the database and log the user out
         log_error("Error: 403 Forbidden from proxy", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
-        SyncEngine.set_pollinterval(0)
-        SyncEngine.stop_sync
+        Rho::RhoConnectClient.pollInterval = 0
+        Rho::RhoConnectClient.stopSync()
         
         full_reset_logout
         
@@ -601,7 +610,7 @@ class SettingsController < Rho::RhoController
   end
   
   def update_login_wait_progress(text)
-    WebView.execute_js('update_wait_progress("'+text+'");')
+    WebView.executeJavascript('update_wait_progress("'+text+'");')
   end
   
   def update_login_sync_progress(model, percent)
@@ -680,6 +689,7 @@ class SettingsController < Rho::RhoController
   end
   
   def setup_sync_handlers
+    puts "Setting sync handlers : #{Settings.is_init_sync?} +++ #{Settings.sync_type}"
     if Settings.is_init_sync?
       set_init_sync_handlers
     elsif Settings.is_new_opportunity_sync?
@@ -719,13 +729,14 @@ class SettingsController < Rho::RhoController
       #if it's a connection based error, 
       if error_source == 'connection'
         #swallow this error, let the user through
-        #navigate to opportunity init_notify controller action
+        #navigate to opportunity init_notify controller 
+		puts "^^^^^goto_opportunity_init_notify from init init_on_sync_error initial sync completed?"
         goto_opportunity_init_notify
       end
     else
       #TODO: determine if database reset is needed here
       #we haven't successfully synced before, so navigate back to the login screen (but keep the credentials)
-      SyncEngine.stop_sync
+      Rho::RhoConnectClient.stopSync()
       goto_login_override_auto("Sync error. Please try logging in again.")
     end
   end
@@ -737,6 +748,7 @@ class SettingsController < Rho::RhoController
     Settings.initial_sync_complete = true
     
     #navigate to opportunity init_notify controller action
+	puts "^^^^^goto_opportunity_init_notify from  init_on_sync_complete"
     goto_opportunity_init_notify
   end
   
@@ -810,7 +822,7 @@ class SettingsController < Rho::RhoController
 
   def quick_quote
     Settings.record_activity
-    redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+    redirect :action => :index, :back => 'callback:', :layout => 'layout'
     quote_url=Rho::RhoConfig.quick_quote_url
     System.open_url("#{quote_url}")
   end
@@ -832,12 +844,12 @@ class SettingsController < Rho::RhoController
 
           rc_url ="#{resource_url}?#{resource_params_enc}"
        
-          redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+          redirect :action => :index, :back => 'callback:', :layout => 'layout'
         
           System.open_url("#{resource_url}?#{resource_params_enc}")
           
       else
-          redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+          redirect :action => :index, :back => 'callback:', :layout => 'layout'
       end
       
   end
@@ -859,12 +871,12 @@ class SettingsController < Rho::RhoController
 
           rc_url ="#{resource_url}?#{resource_params_enc}"
        
-          redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+          redirect :action => :index, :back => 'callback:', :layout => 'layout'
         
           System.open_url("#{resource_url}?#{resource_params_enc}")
           
       else
-          redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+          redirect :action => :index, :back => 'callback:', :layout => 'layout'
       end
       
   end
@@ -878,12 +890,12 @@ class SettingsController < Rho::RhoController
 
           rc_url ="#{insphere_url}?#{medicare_soa_target}"
        
-          redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+          redirect :action => :index, :back => 'callback:', :layout => 'layout'
         
           System.open_url("#{insphere_url}#{medicare_soa_target}")
           
       else
-          redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+          redirect :action => :index, :back => 'callback:', :layout => 'layout'
       end
       
   end
@@ -905,7 +917,7 @@ class SettingsController < Rho::RhoController
         
         #rc_url ="#{insphere_url}?#{quoting_tool_params_enc}"
      
-        redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+        redirect :action => :index, :back => 'callback:', :layout => 'layout'
       
         System.open_url("#{quoting_tool_url}#{quoting_tool_target}?#{quoting_tool_params_enc}")
           
@@ -927,8 +939,8 @@ class SettingsController < Rho::RhoController
     # First, check if we need to force the client to upgrade
     if needs_upgrade?(min_required_version, app_version) 
       puts "*** Client needs to upgrade ***"
-      SyncEngine.stop_sync
-      SyncEngine.set_pollinterval(0)
+      RhoConnectClient.stopSync()
+      RhoConnectClient.pollInterval = 0
       Alert.show_popup(
       {
         :message => "Please upgrade to version #{min_required_version}",
@@ -981,17 +993,17 @@ class SettingsController < Rho::RhoController
 
   def launch_upgrade_site 
     System.open_url(@params['upgrade_url'])
-    render :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+    render :action => :index, :back => 'callback:', :layout => 'layout'
   end
 
   def model_limits_exceeded?(model_name, total_count)
     puts "*** Checking limits for #{model_name} with #{total_count} total rows ***"
     result = false
-    max_count = AppInfo.instance.get_model_limits[model_name]
+    max_count = AppInfo.instance.get_model_limits[model_name] if AppInfo.instance
     if max_count && (total_count.to_i > max_count.to_i)
       puts "*** Limit #{max_count} exceeded for #{model_name} ***"
-      SyncEngine.set_pollinterval(0)
-      SyncEngine.stop_sync
+      RhoConnectClient.pollInterval = 0
+      RhoConnectClient.stopSync()
       Settings.initial_sync_complete = false
       goto_login_override_auto("The maximum number of #{model_name} records that can be synced to HM Mobile is #{max_count}. Currently you have #{total_count} record(s). Please reduce this number using the Activity Center and try again. If you have questions, please contact us at hmmobile@healthmarkets.com")
       result = true

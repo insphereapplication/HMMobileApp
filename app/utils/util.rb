@@ -362,9 +362,7 @@ module Constants
     "5",
     "6",
     "7",
-    "8",
-    "9",
-    "10"
+    "8"
   ]
   
   HEIGHT_INCHES = [

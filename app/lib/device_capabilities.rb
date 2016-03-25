@@ -9,7 +9,7 @@ class DeviceCapabilities
     end
     
     def is_syncing?
-      SyncEngine.is_syncing
+      Rho::RhoConnectClient.isSyncing()
     end
     
     def sync_status

@@ -27,7 +27,7 @@ class AppInfo
   
   def set_pin(value)
     self.update_attributes({"policy_pin" => value})
-    SyncEngine.dosync
+     Rho::RhoConnectClient.doSync
   end
 
   def get_model_limits

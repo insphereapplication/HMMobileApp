@@ -175,7 +175,7 @@ class ActivityController < Rho::RhoController
           @contact_info = @contact_info + "#{@parent_contact.cssi_state1id}"
         end
       end
-      render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
+      render :action => :show, :back => 'callback:', :layout => 'layout'
     else
       show_all_activities
     end
@@ -184,7 +184,7 @@ class ActivityController < Rho::RhoController
   def opportunity_details
     OpportunityController.delay_opportunity_index_refresh
     Rho::NativeTabbar.switch_tab(0)
-    WebView.execute_js("setSelectedTab('appointments');", 0)
+    WebView.executeJavascript("setSelectedTab('appointments');", 0)
     redirect :action => :index
     WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :id => @params['id'], :selected_tab => 'appointments'), 0)
   end
@@ -196,22 +196,24 @@ class ActivityController < Rho::RhoController
     if @contact
       @activity_list = @contact.activity_list
       render :action => :activity_summary, :id => @contact.object, :back => 'callback:',
-             :layout => 'layout_jquerymobile',
+             :layout => 'layout',
              :origin => @params['origin'],
              :opportunity => @params['opportunity']
     end
   end
 
   def new_phonecall
-    render :action => :new_phonecall, :layout => 'layout_jquerymobile'
+    render :action => :new_phonecall, :layout => 'layout'
   end
   
   def new_task
-    render :action => :new_task, :layout => 'layout_jquerymobile'
+    puts "We are about to call render new_task"
+    render :action => :new_task, :layout => 'layout', :origin => @params['origin']
+    #WebView.navigate(url_for(:controller => :Activity, :action => :new_task, :back => 'callback:', :layout => 'layout'))    
   end
 
   def new_appointment
-    render :action => :new_appointment, :layout => 'layout_jquerymobile'
+    render :action => :new_appointment, :layout => 'layout'
   end
 
   # GET /Appt/{1}
@@ -219,7 +221,7 @@ class ActivityController < Rho::RhoController
     @appt = Activity.find_activity(@params['id'])
     if @appt
       Settings.record_activity
-      render :action => :show_appt, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+      render :action => :show_appt, :back => 'callback:', :id=>@params['id'], :layout => 'layout', :origin => @params['origin']
     else
       WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))    
     end
@@ -245,7 +247,7 @@ class ActivityController < Rho::RhoController
       @cancelAction = :show if Rho::NativeTabbar.get_current_tab == 2
       Settings.record_activity
       puts "The edit action is #{edit_action.to_sym}"
-     render :action => edit_action.to_sym, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+     render :action => edit_action.to_sym, :back => 'callback:', :id=>@params['id'], :layout => 'layout', :origin => @params['origin']
     else
       if @params['origin'] == 'appointments'
         WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))
@@ -265,7 +267,7 @@ class ActivityController < Rho::RhoController
      if @callback
        @notes = @callback.notes
        Settings.record_activity
-       render :action => :show_callback, :back => 'callback:', :id=>@params['id'], :layout => 'layout_jquerymobile', :origin => @params['origin']
+       render :action => :show_callback, :back => 'callback:', :id=>@params['id'], :layout => 'layout', :origin => @params['origin']
      else
        WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))   
      end
@@ -551,7 +553,7 @@ class ActivityController < Rho::RhoController
           puts "Exception in close open phone call for lost status, rolling back: #{ea.inspect} -- #{@params.inspect}"
           db_activity.rollback
         end
-        SyncEngine.dosync_source("Activity", false)
+        Rho::RhoConnectClient.doSyncSource("Activity", false,@params)
         db = ::Rho::RHO.get_src_db('Opportunity')
         db.start_transaction
         begin
@@ -617,7 +619,7 @@ class ActivityController < Rho::RhoController
             db_activity.rollback
             redirect_to_index_page
           end
-          SyncEngine.dosync_source("Activity", false)
+          Rho::RhoConnectClient.doSyncSource("Activity", false,@params)
           db = ::Rho::RHO.get_src_db('Opportunity')
           db.start_transaction
           begin
@@ -884,7 +886,7 @@ class ActivityController < Rho::RhoController
 
   def finished_contact_activity(contact)
     SyncUtil.start_sync
-    WebView.navigate(url_for( :controller => :contact, :action => :show, :id => contact.object, :back => 'callback:', :layout => 'layout_jquerymobile'))
+    WebView.navigate(url_for( :controller => :contact, :action => :show, :id => contact.object, :back => 'callback:', :layout => 'layout'))
   end
 
 end

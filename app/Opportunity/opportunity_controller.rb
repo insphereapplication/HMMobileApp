@@ -12,12 +12,14 @@ class OpportunityController < Rho::RhoController
 
   # this callback is set once in the login_callback method of the Settings controller
   def init_notify
+    puts "In Opportunity init_notify"
+	@@delay_refresh = false
     tabbar = [
       { 
         :label => "Opportunities", 
         :action => '/app/Opportunity', 
         :icon => "/public/images/dollar.png", 
-        :web_bkg_color => 0x7F7F7F
+        :backgroundColor => 0x7F7F7F
       }, 
       { 
         :label => "Contacts", 
@@ -39,8 +41,10 @@ class OpportunityController < Rho::RhoController
     ]
     
     # Rho::NativeTabbar.create(tabbar)
-    Rho::NativeTabbar.create(:tabs => tabbar, :place_tabs_bottom => true,
-            :on_change_tab_callback => url_for(:action => :tab_switch_callback))    
+	
+	params = {"placeTabsBottom" => true}
+    Rho::NativeTabbar.create(tabbar, params, 'app/Opportunity/tab_switch_callback')    
+	
     Rho::NativeTabbar.switch_tab(0)
     
     $new_leads_nav_context = []
@@ -50,17 +54,19 @@ class OpportunityController < Rho::RhoController
     #Reset the first render flags to true for activity and contact pages
     ContactController.reset_first_render
     ActivityController.reset_first_render
-    @@delay_refresh = false
+   
   end
   
   def tab_switch_callback
+    puts "in tab_switch_callback"
     current_index = @params['tab_index'].to_i
-    WebView.execute_js("setAppDeactive();", 0) 
-    WebView.execute_js("setAppDeactive();", 1) 
-    WebView.execute_js("setAppDeactive();", 2) 
-    WebView.execute_js("setAppDeactive();", 3) 
-    WebView.execute_js("setAppActive();",current_index) 
+    WebView.executeJavascript("setAppDeactive();", 0) 
+    WebView.executeJavascript("setAppDeactive();", 1) 
+    WebView.executeJavascript("setAppDeactive();", 2) 
+    WebView.executeJavascript("setAppDeactive();", 3) 
+    WebView.executeJavascript("setAppActive();",current_index) 
     
+	puts "finish java script execute.  current index: #{current_index}"
     # refresh opportunities page if changed locally @@delay_refresh should only be set true when redirecting from callback or phonecall select in activity list
     if Opportunity.local_changed? && (current_index == 0)  && @@delay_refresh == false
       WebView.navigate(url_for(:action => :index, :back => 'callback:', :query => {:selected_tab => $current_nav_context}))
@@ -95,7 +101,8 @@ class OpportunityController < Rho::RhoController
   def index
     puts "In Opportunity Controller Index"
     $tab = 0
-    if SyncEngine::logged_in == 1
+	puts "HERE HERE LOGIN value is: #{Rho::RhoConnectClient.isLoggedIn()}"
+    if Rho::RhoConnectClient.isLoggedIn()
       intialize_nav_contexts
       Opportunity.local_changed = false
       puts "In index selected_tab: #{@params['selected_tab']}"
@@ -115,7 +122,7 @@ class OpportunityController < Rho::RhoController
       @filterBtnText = 'Filter'
       render :action => :filters, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'
     else
-      redirect :controller => Settings, :action => :login, :back => 'callback:', :layout => 'layout_jquerymobile'
+      redirect :controller => Settings, :action => :login, :back => 'callback:', :layout => 'layout'
     end
   end
   def gen_jqm_options(options, selected_value)
@@ -292,7 +299,7 @@ class OpportunityController < Rho::RhoController
     current_nav_context.orient!(@opportunity.object) if @opportunity
     @contact = @opportunity.contact if @opportunity
     if @opportunity && @contact
-      render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
+      render :action => :show, :back => 'callback:', :layout => 'layout'
     else
       redirect_to_index_page
     end
@@ -322,7 +329,7 @@ class OpportunityController < Rho::RhoController
     if @opportunity && @contact
       @notes = @opportunity.notes
       current_nav_context.orient!(@opportunity.object)
-      render :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile', :origin => @params['origin']
+      render :action => :show, :back => 'callback:', :layout => 'layout', :origin => @params['origin']
     else
       current_nav_context.delete(opp_id)
       if current_nav_context.count >= 1
@@ -339,7 +346,7 @@ class OpportunityController < Rho::RhoController
     @contact = @opportunity.contact if @opportunity
     @incomplete_appointments = @opportunity.incomplete_appointments if @opportunity
     if @opportunity && @contact
-      render :action => :status_update, :back => 'callback:', :layout => 'layout_jquerymobile'
+      render :action => :status_update, :back => 'callback:', :layout => 'layout'
     else
       redirect_to_index_page
     end
@@ -350,7 +357,7 @@ class OpportunityController < Rho::RhoController
     @opportunity = Opportunity.find_opportunity(@params['id'])
     @contact = @opportunity.contact if @opportunity
     if @opportunity && @contact
-      render :action => :note_create, :back => 'callback:', :layout => 'layout_jquerymobile'
+      render :action => :note_create, :back => 'callback:', :layout => 'layout'
     else
       redirect_to_index_page
     end
@@ -369,7 +376,7 @@ class OpportunityController < Rho::RhoController
     @contact = @opportunity.contact if @opportunity
     if @opportunity && @contact
       @opportunity.create_note(@params['notes'])
-      render :action => :callback_request, :back => 'callback:', :layout => 'layout_jquerymobile'
+      render :action => :callback_request, :back => 'callback:', :layout => 'layout'
     else
       redirect_to_index_page
     end
@@ -379,7 +386,7 @@ class OpportunityController < Rho::RhoController
     Settings.record_activity
       @opportunity = Opportunity.find_opportunity(@params['id'])
       if @opportunity
-        render :Controller => :ApplicationDetail, :action => :new, :back => 'callback:', :layout => 'layout_jquerymobile'
+        render :Controller => :ApplicationDetail, :action => :new, :back => 'callback:', :layout => 'layout'
       else
         redirect :action => :index, :back => 'callback:'
       end
@@ -388,7 +395,7 @@ class OpportunityController < Rho::RhoController
   def app_detail_show
       # @appdetail = Opportunity.find(@params['id'])
       # if @appdetail
-        render :Controller => :ApplicationDetail, :action => :show, :back => 'callback:', :layout => 'layout_jquerymobile'
+        render :Controller => :ApplicationDetail, :action => :show, :back => 'callback:', :layout => 'layout'
       # else
       #   redirect :action => :index, :back => 'callback:'
       # end
@@ -398,7 +405,7 @@ class OpportunityController < Rho::RhoController
     Settings.record_activity
     @appdetail = Opportunity.find_opportunity(@params['id'])
     if @appdetail
-      render :Controller => :ApplicationDetail, :action => :edit, :back => 'callback:', :layout => 'layout_jquerymobile'
+      render :Controller => :ApplicationDetail, :action => :edit, :back => 'callback:', :layout => 'layout'
     else
       redirect :action => :index, :back => 'callback:'
     end
@@ -438,7 +445,7 @@ class OpportunityController < Rho::RhoController
     @contact = @opportunity.contact  unless @opportunity.blank?
     if @opportunity && @contact
       @opportunity.create_note(@params['notes'])
-      render :action => :appointment, :back => 'callback:', :layout => 'layout_jquerymobile'
+      render :action => :appointment, :back => 'callback:', :layout => 'layout'
     else
       redirect_to_index_page
     end
@@ -451,7 +458,7 @@ class OpportunityController < Rho::RhoController
     @contact = @opportunity.contact  unless @opportunity.blank?
     if @opportunity && @contact
       @opportunity.create_note(@params['notes'])
-      render :action => :lost_other, :back => 'callback:', :layout => 'layout_jquerymobile'
+      render :action => :lost_other, :back => 'callback:', :layout => 'layout'
     else
       redirect_to_index_page
     end
@@ -464,7 +471,7 @@ class OpportunityController < Rho::RhoController
       @contact = @opportunity.contact  unless @opportunity.blank?
       if @opportunity && @contact
         @opportunity.create_note(@params['notes'])
-        render :action => :mark_as_won, :back => 'callback:', :layout => 'layout_jquerymobile'
+        render :action => :mark_as_won, :back => 'callback:', :layout => 'layout'
       else
         redirect_to_index_page
       end
@@ -478,7 +485,7 @@ class OpportunityController < Rho::RhoController
     @contact = @opportunity.contact  unless @opportunity.blank?
     if @opportunity && @contact
       render :action => :activity_summary, :back => 'callback:',
-              :layout => 'layout_jquerymobile',
+              :layout => 'layout',
               :origin => @params['origin']
     else
       redirect_to_index_page
@@ -502,7 +509,7 @@ class OpportunityController < Rho::RhoController
                         :phone_number => phone_number,
                         :redirect_action => :show} 
     else
-      render :action => :phone_dialog, :back => 'callback:', :layout => 'layout_jquerymobile'
+      render :action => :phone_dialog, :back => 'callback:', :layout => 'layout'
     end
   end
   
@@ -578,7 +585,7 @@ class OpportunityController < Rho::RhoController
       # formatted_result = Time.at(@params['result'].to_i).strftime('%m/%d/%Y %I:%M %p')
       formatted_result = Time.at(@params['result'].to_i).strftime(format)
       $choosed[datetime_vars[:flag]] = formatted_result
-      WebView.execute_js('setFieldValue("'+datetime_vars[:field_key]+'","'+formatted_result+'"); ')
+      WebView.executeJavascript('setFieldValue("'+datetime_vars[:field_key]+'","'+formatted_result+'"); ')
       $choosed = {} #Need to clear these out so that the fields don't populate with values previously selected.
       $saved = {}
     end
@@ -620,7 +627,7 @@ class OpportunityController < Rho::RhoController
     end
     
     quote_url="#{Rho::RhoConfig.quick_quote_url}#{quote_param}"
-    redirect :action => :show, :id => @params['id'], :layout => 'layout_jquerymobile', :query=>{:origin => @params['origin']}
+    redirect :action => :show, :id => @params['id'], :layout => 'layout', :query=>{:origin => @params['origin']}
     System.open_url("#{quote_url}")
   end
   
@@ -644,7 +651,7 @@ class OpportunityController < Rho::RhoController
     puts "Resource URL parameters are: ****#{quote_params_enc}****"
     quote_url="#{quoting_tool_url}?#{quote_params_enc}"
  
-    redirect :action => :index, :back => 'callback:', :layout => 'layout_jquerymobile'
+    redirect :action => :index, :back => 'callback:', :layout => 'layout'
   
     System.open_url("#{quote_url}")
            
@@ -664,7 +671,7 @@ class OpportunityController < Rho::RhoController
   def new
     Settings.record_activity
     @contact = Contact.find_contact(@params['id'])
-    render :action => :new, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
+    render :action => :new, :back => 'callback:', :origin => @params['origin'], :layout => 'layout'
   end
   
   def create
@@ -683,7 +690,7 @@ class OpportunityController < Rho::RhoController
 
     Opportunity.local_changed=true
     
-    SyncEngine.dosync
+    Rho::RhoConnectClient.doSync
     redirect  :controller => :Contact,
             :action => :show, 
              :back => 'callback:',
@@ -710,7 +717,7 @@ class OpportunityController < Rho::RhoController
         "<option  #{selected} value=\"#{agent['systemuserid']}\">#{agent['fullname']}</option>"
       }.join("\n")
       render :action => :reassign, :back => 'callback:',
-             :layout => 'layout_jquerymobile',
+             :layout => 'layout',
              :origin => @params['origin']
     else
       redirect_to_index_page  
@@ -734,7 +741,7 @@ class OpportunityController < Rho::RhoController
                             :query => {:reassign_to => @params['reassign_to'],
                                        :origin => @params['origin']}
       render :action => :reassign_confirm, :back => 'callback:',
-             :layout => 'layout_jquerymobile',
+             :layout => 'layout',
              :origin => @params['origin']
     else
       redirect_to_index_page

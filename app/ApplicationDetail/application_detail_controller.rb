@@ -17,7 +17,7 @@ class ApplicationDetailController < Rho::RhoController
     @appdetail = ApplicationDetail.find_application(@params['id'])
     @opportunity = Opportunity.find_opportunity(@params['opportunity'])
     if @appdetail && @opportunity
-      render :action => :show, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
+      render :action => :show, :back => 'callback:', :origin => @params['origin'], :layout => 'layout'
     else
       WebView.navigate(url_for(:controller => :Opportunity, :action => :index, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'))  
     end
@@ -28,7 +28,7 @@ class ApplicationDetailController < Rho::RhoController
     Settings.record_activity
     @opportunity = Opportunity.find_opportunity(@params['id'])
     @appdetail = ApplicationDetail.new
-    render :action => :new, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
+    render :action => :new, :back => 'callback:', :origin => @params['origin'], :layout => 'layout'
   end
 
   # GET /ApplicationDetail/{1}/edit
@@ -36,7 +36,7 @@ class ApplicationDetailController < Rho::RhoController
     Settings.record_activity
     @appdetail = ApplicationDetail.find_application(@params['id'])
     if @appdetail
-      render :action => :edit, :back => 'callback:', :origin => @params['origin'], :layout => 'layout_jquerymobile'
+      render :action => :edit, :back => 'callback:', :origin => @params['origin'], :layout => 'layout'
     else
       redirect :action => :index
     end
@@ -49,7 +49,7 @@ class ApplicationDetailController < Rho::RhoController
     puts "********** origin = #{@params['origin']}"
     appdatetime = DateTime.strptime(@params['cssi_applicationdate'].to_s, DateUtil::BIRTHDATE_PICKER_TIME_FORMAT)
     @appdetail = ApplicationDetail.create_new(@params['appdetail'].merge({:cssi_applicationdate => appdatetime.strftime(DateUtil::DEFAULT_TIME_FORMAT)}))
-    SyncEngine.dosync
+    Rho::RhoConnectClient.doSync
     redirect :controller => :Opportunity, :action => :won, :query => {:origin => @params['origin'], :id => @appdetail.opportunity_id}
   end
 
@@ -62,7 +62,7 @@ class ApplicationDetailController < Rho::RhoController
     appdatetime = DateTime.strptime(@params['cssi_applicationdate'].to_s, DateUtil::BIRTHDATE_PICKER_TIME_FORMAT)
     @appdetail = ApplicationDetail.find_application(@params['id'])
     @appdetail.update_attributes(@params['appdetail'].merge({:cssi_applicationdate => appdatetime.strftime(DateUtil::DEFAULT_TIME_FORMAT)})) if @appdetail    
-    SyncEngine.dosync
+	Rho::RhoConnectClient.doSync(false,'',false)
     redirect :controller => :Opportunity, :action => :won, :query => {:origin => @params['origin'], :id => @appdetail.opportunity_id, :opportunity => @params['opportunity']}
   end
 
@@ -94,10 +94,10 @@ class ApplicationDetailController < Rho::RhoController
       @appdetail = ApplicationDetail.find_application(@params['id'])
       opportunityid = @appdetail ? @appdetail.opportunity_id : @params['opportunity'] 
       @appdetail.destroy if @appdetail
-      SyncEngine.dosync
+      Rho::RhoConnectClient.doSync
       WebView.navigate(url_for :controller => :Opportunity, :action => :won, :id => opportunityid, :origin => @params['origin'], :opportunity => opportunityid)
     else
-      WebView.execute_js("hideSpin();")
+      WebView.executeJavascript("hideSpin();")
     end 
   end
 end

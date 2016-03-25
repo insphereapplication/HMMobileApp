@@ -76,8 +76,8 @@
 			<li data-role="list-divider">Settings</li>
 			<li>
 				
-				<% if SyncEngine::logged_in > 0 %>
-				<a href="<%= url_for :action => :do_logout %>"> <img src="/public/images/login-key.png" class="ui-li-icon">Logout <%= SyncEngine.get_user_name %></a>
+				<% if Rho::RhoConnectClientisLoggedIn() > 0 %>
+				<a href="<%= url_for :action => :do_logout %>"> <img src="/public/images/login-key.png" class="ui-li-icon">Logout <%= Rho::RhoConnectClient.userName %></a>
    				<% else %>
 				<a href="<%= url_for :action => :login %>"><img src="/public/images/login-key.png" class="ui-li-icon">Login</a>
 				<% end %>

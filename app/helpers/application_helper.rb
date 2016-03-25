@@ -113,7 +113,7 @@ module ApplicationHelper
     params[:layout] = false
     # TODO: escape carriage returns instead of removing them altoegether
     content = render(params).split('\'').join('\\\'').split(/[\r\n]/).join('')
-    WebView.execute_js("Rho.insertAsyncPage('<div>#{content}</div>')")
+    WebView.executeJavascript("Rho.insertAsyncPage('<div>#{content}</div>')")
   end
 
   def caller_request_hash_to_query
