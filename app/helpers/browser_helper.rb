@@ -338,14 +338,28 @@ module BrowserHelper
     }.join("\n")
   end
   
-  def scheduled_filter_options
+  def scheduled_filter_type_options
     options = [
       {:value => 'All', :label => 'All'},
       {:value => 'ScheduledAppointments', :label => 'Appointments'},
       {:value => 'ScheduledCallbacks', :label => 'Callbacks'}
     ]
     
-    persisted_selection = Settings.filter_values['scheduled_filter']
+    persisted_selection = Settings.filter_values['scheduled_filter_type']
+    persisted_selection = 'All' if persisted_selection.blank?
+    
+    gen_options(options, persisted_selection)
+  end
+  
+ def scheduled_filter_date_options
+    options = [
+      {:value => 'All', :label => 'All'},
+      {:value => 'PastDue', :label => 'Past Due'},
+      {:value => 'Today', :label => 'Today'},
+	  {:value => 'FutureDate', :label => 'Future Date'},
+    ]
+    
+    persisted_selection = Settings.filter_values['scheduled_filter_date']
     persisted_selection = 'All' if persisted_selection.blank?
     
     gen_options(options, persisted_selection)

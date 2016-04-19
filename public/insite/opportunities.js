@@ -50,8 +50,8 @@ function clearFilter() {
         $("#followup_created_filter").val("All").selectmenu("refresh");
         $("#followup_daily_filter").attr("checked", false).checkboxradio("refresh");
     } else {
-        $("#appointments_select_filter").val("All").selectmenu("refresh");
-        $("#appointments_search_input").val("");
+        $("#appointments_select_type_filter").val("All").selectmenu("refresh");
+        $("#appointments_select_date_filter").val("All").selectmenu("refresh");
     }
     return false;
 }
@@ -67,8 +67,8 @@ function getFilterData() {
             "isDaily": $("#followup_daily_filter").attr("checked") ? "true" : "false"
         };
     return {
-        "filter": $("#appointments_select_filter").val(),
-        "search": $("#appointments_search_input").val()
+        "filter_type": $("#appointments_select_type_filter").val(),
+        "filter_date": $("#appointments_select_date_filter").val()
     };
 }
 
@@ -82,10 +82,8 @@ function getFilterText() {
             text += ", Daily";
     }
     else if (selection === "appointments") {
-        text = getSelectValue("#appointments_select_filter");
-        var txt = $("#appointments_search_input").val();
-        if (txt.length > 0)
-            text += ", " + txt;
+        text = getSelectValue("#appointments_select_type_filter") + ", " +
+			   getSelectValue("#appointments_select_date_filter");
     }
     return text;
 }

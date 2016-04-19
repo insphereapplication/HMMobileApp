@@ -19,8 +19,10 @@ class ActivityController < Rho::RhoController
         {:value => 'PhoneCall', :label => 'Phone Call'}
     ], selected)
     selected = Settings.filter_values["activity_status"]
-    selected = 'Today' if selected.blank?
+    selected = 'All' if selected.blank?
     @status_filter = gen_jqm_options([
+        {:value => 'All', :label => 'All'},
+        {:value => 'Past_due', :label => 'Past Due'},
         {:value => 'Today', :label => 'Today'},
         {:value => 'Next7Days', :label => 'Next 7 Days'},
         {:value => 'NoDate', :label => 'No Date'}
@@ -107,30 +109,43 @@ class ActivityController < Rho::RhoController
     @type = Settings.filter_values["activity_type"]
     @type = 'All' if @type.blank?
     @status = Settings.filter_values["activity_status"]
-    @status = 'Open' if @status.blank?
+    @status = 'All' if @status.blank?
     @priority = Settings.filter_values["activity_priority"]
     @priority = 'All' if @priority.blank?
     page = @params['page'].to_i
     page_size = @params['pageSize'].to_i
     if @params['reset'] == 'true'
-      if @status == "Today" || @status == "Next7Days"
+      if @status == "All" 
         prms = [
           { :divider => "Past Due" },
-          [Activity, :past_due_activities],
-          { :divider => "No Date" },
-          [Activity, :no_date_activities],
+            [Activity, :past_due_activities],
           { :divider => "Today" },
-          [Activity, :today_activities]
-        ]
-        prms.concat([
+            [Activity, :today_activities],
           { :divider => "Next 7 Days" },
-          [Activity, :future_activities]
-        ]) if @status == "Next7Days"
-      else
-        prms = [
+            [Activity, :future_activities],
           { :divider => "No Date" },
-          [Activity, :no_date_activities]
+            [Activity, :no_date_activities]
         ]
+        elsif @status == "Past_due" 
+            prms = [
+               { :divider => "Past Due" },
+                 [Activity, :past_due_activities]
+                 ]
+        elsif @status == "Today"
+              prms = [
+                     { :divider => "Today" },
+                       [Activity, :today_activities]
+                      ]
+        elsif @status == "Next7Days"
+            prms = [
+                   { :divider => "Next 7 Days" },
+                        [Activity, :future_activities]
+                    ]
+        else
+          prms = [
+            { :divider => "No Date" },
+            [Activity, :no_date_activities]
+         ]
       end
       @@data_loader = ApplicationHelper::HierarchyDataLoader.new(prms, 0, 3, false)
     end
@@ -207,9 +222,7 @@ class ActivityController < Rho::RhoController
   end
   
   def new_task
-    puts "We are about to call render new_task"
-    render :action => :new_task, :layout => 'layout', :origin => @params['origin']
-    #WebView.navigate(url_for(:controller => :Activity, :action => :new_task, :back => 'callback:', :layout => 'layout'))    
+    render :action => :new_task, :layout => 'layout', :origin => @params['origin']   
   end
 
   def new_appointment
@@ -246,7 +259,6 @@ class ActivityController < Rho::RhoController
       end
       @cancelAction = :show if Rho::NativeTabbar.get_current_tab == 2
       Settings.record_activity
-      puts "The edit action is #{edit_action.to_sym}"
      render :action => edit_action.to_sym, :back => 'callback:', :id=>@params['id'], :layout => 'layout', :origin => @params['origin']
     else
       if @params['origin'] == 'appointments'
@@ -513,7 +525,7 @@ class ActivityController < Rho::RhoController
   end
 
   def confirm_win_status
-    Alert.show_popup ({
+    Alert.show_popup({
         :message => "Click OK to Confirm this Opportunity as Won", 
         :title => "Confirm Win", 
         :buttons => ["Cancel", "Ok",],
@@ -585,20 +597,20 @@ class ActivityController < Rho::RhoController
       redirect_to_index_page
     end
     else
-      WebView.navigate(url_for :controller => :Opportunity, :action => :status_update, :id => @params['opportunity_id'], :query => {:origin => @params['origin']})
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :status_update, :id => @params['opportunity_id'], :query => {:origin => @params['origin']}))
     end
   end
   
   def confirm_lost_other_status
     unless @params['status_code'].blank?
 
-      WebView.navigate(url_for :action => :update_lost_other_status, 
+      WebView.navigate(url_for(:action => :update_lost_other_status, 
               :query => {:opportunity_id => @params['opportunity_id'], 
                           :status_code => @params['status_code'],
                           :competitorid => @params['competitorid'] || "",
                           :origin => @params['origin'],
                           :appointments => @params['appointments']
-                        })
+                        }))
     else
       puts "VALIDATION FAILED -- PLEASE CHOOSE A LOST REASON"
       Alert.show_popup "Please choose a lost reason."
@@ -651,7 +663,7 @@ class ActivityController < Rho::RhoController
   end
 
   def confirm_lost_status
-    Alert.show_popup ({
+    Alert.show_popup({
         :message => "Click OK to Confirm this Opportunity as Lost", 
         :title => "Confirm Loss", 
         :buttons => ["Cancel", "Ok",],

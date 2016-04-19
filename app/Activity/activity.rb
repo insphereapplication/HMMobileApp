@@ -110,6 +110,10 @@ class Activity
       new_activity
   end
   
+  def self.count
+      find(:all).count
+  end
+  
   def self.find_activity(id)
     #CR: Pull pattern strings into a constant
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
@@ -217,23 +221,21 @@ class Activity
     end
   end
   
-  def self.appointment_list(page, filter, search, scheduled_time, page_size=DEFAULT_PAGE_SIZE)
-    type_where_clause = appointment_type_where_clause(filter)  
-    like_clause       = appointment_like_clause(search)
-    time_compare      = appointment_time_compare(scheduled_time)
+  def self.appointment_list(page, filter_type, filter_date, scheduled_time, page_size=DEFAULT_PAGE_SIZE)
+      type_where_clause = appointment_type_where_clause(filter_type)  
+      time_compare      = appointment_time_compare(scheduled_time)
     
-    sql = %Q{
-        #{SELECT_SCHEDULED_NO_WHERE_SQL} #{type_where_clause} and
-        (c.object=o.contact_id) and
-        #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
-        #{SCHEDULED_TIME_SQL} #{time_compare} #{NOW_SQL} and
-        #{SCHEDULED_OPEN_SQL}
-        #{like_clause}
-        #{SCHEDULED_ORDERBY_SQL}
-        #{get_pagination_sql(page, page_size)}
-      }
-      
-    find_by_sql(sql)
+      sql = %Q{
+          #{SELECT_SCHEDULED_NO_WHERE_SQL} #{type_where_clause} and
+          (c.object=o.contact_id) and
+          #{OWNED_BY_OPEN_OPPORTUNITY_SQL} and
+          #{SCHEDULED_TIME_SQL} #{time_compare} #{NOW_SQL} and
+          #{SCHEDULED_OPEN_SQL}
+          #{SCHEDULED_ORDERBY_SQL}
+          #{get_pagination_sql(page, page_size)}
+        } 
+         
+       find_by_sql(sql)
   end
 
   def complete

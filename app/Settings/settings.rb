@@ -36,6 +36,8 @@ class Settings
     
     def filter_values
       @filter_values ||= Rho::JSON.parse(instance.filter_values || '{}')
+	  puts "***Filter values ***: #{@filter_values}"
+	  @filter_values
     end
     
     def clear_credentials
@@ -157,6 +159,8 @@ class Settings
     end
 
     def update_persisted_filter_values(prefix, filter_names, params)
+	  puts "In filter perstst update."
+	  puts "prefix: #{prefix}, filter_names: #{filter_names}, params: #{params}"
       persisted_filter_update = filter_names.inject({}){|sum,filter_name| 
         sum["#{prefix}#{filter_name}"] = params[filter_name] unless params[filter_name].nil?
         sum

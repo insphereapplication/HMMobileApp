@@ -76,7 +76,7 @@
 				
 		loadNewLeads(); 
 		loadFollowUps( $('#followup_status_reason_filter').val(), $('#followup_sort_by_filter').val(), $('#followup_created_filter').val(), getDailyFilterValue() );
-		loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
+		loadScheduled( $('#appointments_select_type_filter').val(), $('#appointments_select_date_filter').val() );
 	
 		$('#followup_filter_button').click( function()
 		{
@@ -90,7 +90,7 @@
 			return false;
 		});
 		
-		$('#followup_clear').live('click', function()
+		$(document).on('click', '#followup_clear' ,function()
 		{
 			if(filteringEnabled('follow-ups'))
 			{
@@ -105,27 +105,27 @@
 			return false;
 		});
 
-		$('#appointments_clear').live('click', function()
+		$(document).on('click', '#appointments_clear', function()
 		{
 			if(filteringEnabled('scheduled'))
 			{
 				disableFilters('scheduled');
-				$('#appointments_search_input').val('');
-				$('#appointments_select_filter').val('All');
+				$('#appointments_select_type_filter').val('All');
+				$('#appointments_select_date_filter').val('All');
 				refreshAppointmentFilterSummary();
-				loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
+				loadScheduled( $('#appointments_select_type_filter').val(), $('#appointments_select_date_filter').val() );
 			}
 			return false;
 		});
 
-		$('#appointments_filter_button').live('click', function()
+		$(document).on('click', '#appointments_filter_button',function()
 		{
 			if(filteringEnabled('scheduled'))
 			{
 				disableFilters('scheduled');
 				toggleFilterArea('appointments');
 				refreshAppointmentFilterSummary();
-				loadScheduled( $('#appointments_select_filter').val(), $('#appointments_search_input').val() );
+				loadScheduled( $('#appointments_select_type_filter').val(), $('#appointments_select_date_filter').val() );
 			}
 			return false;
 		});
@@ -312,11 +312,12 @@
 					</h3>
 				</div>
 				<div id="appointments_filter" style="display:none;" data-role="none">
-					<select class="ui-custom-dropdown" name="appointments_select_filter" id="appointments_select_filter" tabindex="-1" onchange="addtext();">
-						<%= scheduled_filter_options %>
+					<select class="ui-custom-dropdown" name="appointments_select_type_filter" id="appointments_select_type_filter" tabindex="-1" onchange="addtext();">
+						<%= scheduled_filter_type_options %>
 					</select>
-					<label for="appointments_search_input" class="fieldLabel ui-input-text"> &nbsp;&nbsp;&nbsp;&nbsp;Search: </label>
-					<input type="text" id="appointments_search_input" maxlength="30" class="ui-search-text ui-body-null ui-corner-all" value="<%=  @persisted_scheduled_search %>"/>
+					<select class="ui-custom-dropdown" name="appointments_select_date_filter" id="appointments_select_date_filter" tabindex="-1" onchange="addtext();">
+						<%= scheduled_filter_date_options %>
+					</select>
 					<fieldset class="ui-grid-custom ui-grid-a">
 						<div class="ui-block-a">
 							<div data-theme="b" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-b">

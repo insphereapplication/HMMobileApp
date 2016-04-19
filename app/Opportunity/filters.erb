@@ -23,12 +23,15 @@
     </div>
 </div>
 <div class="appts_followup_filter" data-role="fieldcontain">
-    <label for="appointments_select_filter" class="select">Type:</label>
-    <select name="appointments_select_filter" id="appointments_select_filter" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
-        <%= jqm_scheduled_filter_options %>
+    <label for="appointments_select_type_filter" class="select">Type:</label>
+    <select name="appointments_select_type_filter" id="appointments_select_type_filter" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+        <%= jqm_scheduled_filter_type_options %>
     </select>
 </div>
 <div class="appts_followup_filter" data-role="fieldcontain">
-    <label for="appointments_search_input">Search:</label>
-    <input type="text" name="appointments_search_input" id="appointments_search_input" maxlength="30" value="<%= @persisted_scheduled_search %>"/>
+    <label for="appointments_select_date_filter" class="select">Date:</label>
+    <select name="appointments_select_date_filter" id="appointments_select_date_filter" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+        <%= jqm_scheduled_filter_date_options %>
+    </select>
 </div>
+

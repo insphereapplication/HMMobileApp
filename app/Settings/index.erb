@@ -76,7 +76,7 @@
 			<li data-role="list-divider">Settings</li>
 			<li>
 				
-				<% if Rho::RhoConnectClientisLoggedIn() > 0 %>
+				<% if Rho::RhoConnectClient.isLoggedIn() == 1 %>
 				<a href="<%= url_for :action => :do_logout %>"> <img src="/public/images/login-key.png" class="ui-li-icon">Logout <%= Rho::RhoConnectClient.userName %></a>
    				<% else %>
 				<a href="<%= url_for :action => :login %>"><img src="/public/images/login-key.png" class="ui-li-icon">Login</a>
@@ -85,6 +85,18 @@
 			<li>			
 			   <a href="<%= url_for :action => :pin %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon">Reset PIN</a>
 			</li>
+			<li>
+				 <a style="padding-top: 0px; padding-bottom: 0px;" href="<%= url_for :action => :backgroundsync %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon"></img><h3>Background Sync</h3>
+				 <% if AppInfo.instance.get_background_sync_time == 'off' %>
+					<p class="ui-li-desc" > Currently is off </p>
+				 <% else %>
+					<p class="ui-li-desc">Every <%= AppInfo.instance.get_background_sync_time %> minutes </p>
+				 <% end %>
+				 </a>
+			</li>
+      <li>        
+          <a href="<%= url_for :action => :model_limit_counts %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon">View Limits</a>
+      </li>
 			<li>				
 				<a href="<%= url_for :action => :about %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon"> About</a>
 			</li>

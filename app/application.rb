@@ -34,7 +34,7 @@ class AppApplication < Rho::RhoApplication
   def on_activate_app
       puts "calling on_activate_app status: #{$app_activated}"
       begin
-      if (!$app_activated.blank? && ! Rho::RhoConnectClient.isSyncing && Settings.last_synced && !Settings.last_synced.blank? && Time.new - Settings.last_synced > 60)
+      if (!$app_activated.blank? && Rho::RhoConnectClient.isLoggedIn() && ! Rho::RhoConnectClient.isSyncing && Settings.last_synced && !Settings.last_synced.blank? && Time.new - Settings.last_synced > Constants::DEFAULT_POLL_INTERVAL)
         puts "App start sync needed"
         Rho::RhoConnectClient.doSync
       else
@@ -60,7 +60,11 @@ class AppApplication < Rho::RhoApplication
   
       # poll once an hour on android devices when the app is backgrounded
       puts "calling on_deactivate_app"
-      Rho::RhoConnectClient.pollInterval = 0 if System::get_property('platform') == 'ANDROID'
+	  if AppInfo.instance && AppInfo.instance.get_background_sync_time == "off"
+		Rho::RhoConnectClient.pollInterval = 0
+	  else	
+		Rho::RhoConnectClient.pollInterval = AppInfo.instance.get_background_sync_time.to_i * 60
+	  end
       $app_activated = "false"
       puts "In app decactive: #{$app_activated}"
       WebView.executeJavascript("setAppDeactive();") 
@@ -75,7 +79,6 @@ class AppApplication < Rho::RhoApplication
   end
   
   def on_ui_created
-    puts "calling ui_created!!!"
     #  Remove first render and adding to Activity and Contact 
     #Reset the first render flags to true for activity and contact pages
     ContactController.reset_first_render

@@ -82,7 +82,7 @@ class DependentController < Rho::RhoController
   end
   
   def confirm_dependent_delete
-    Alert.show_popup ({
+    Alert.show_popup({
         :message => "Click OK to Delete this Dependent", 
         :title => "Confirm Delete", 
         :buttons => ["Cancel", "Ok",],
@@ -101,7 +101,7 @@ class DependentController < Rho::RhoController
       contactid = @dependent.contact_id
       @dependent.destroy if @dependent
 	  Rho::RhoConnectClient.doSync
-      WebView.navigate(url_for :controller => :Contact, :action => :show, :id => contactid, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})
+      WebView.navigate(url_for(:controller => :Contact, :action => :show, :id => contactid, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}))
     else
       WebView.executeJavascript("hideSpin();")
     end 

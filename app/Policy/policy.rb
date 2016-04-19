@@ -41,6 +41,10 @@ class Policy
       new_policy
   end
   
+  def self.count
+      find(:all).count
+  end
+  
   def self.find_policy(id)
     
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))

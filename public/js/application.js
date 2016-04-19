@@ -14,7 +14,7 @@ $(document).ready(function() {
   });
 
 // Disables a form if the form was valid (prevent duplicate submits)
- $('form').live('submit', function(event) {
+ $(document).on('submit', 'form', function(event) {
      if ($(this).valid()) {
          $('input[type="submit"]').attr('disabled', 'disabled');
 		}
@@ -565,7 +565,7 @@ $(document).ready(function() {
 });
 
 // If a contact number is set as both preferred and DNC, this adjusts the styles to display correctly.
-$('#contact_show, #ACcontact_show').live('pagecreate',function(event){
+$(document).on('pagecreate', '#contact_show, #ACcontact_show',function(event){
   	var replace = $('li[two-icons] div span');
 	if ( replace.length == 1 ) // We can only have 1 preferred number, so only one of these will have the attribute
 	{
@@ -573,7 +573,7 @@ $('#contact_show, #ACcontact_show').live('pagecreate',function(event){
 	}
 });
 
-$('#opportunity_show, #contact_show, #phone_dialog').live('pagecreate',function(event){
+$(document).on('pagecreate', '#opportunity_show, #contact_show, #phone_dialog', function(event){
   	var replace = $('span[two-icons]');
 	if ( replace.length == 1 ) // We can only have 1 preferred number, so only one of these will have the attribute
 	{

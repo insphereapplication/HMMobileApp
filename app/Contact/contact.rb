@@ -89,6 +89,12 @@ class Contact
     end
   end
   
+  
+  def self.count
+      find(:all).count
+  end
+  
+  
   #given an array of contact ids, returns the IDs that are currently on the device
   def self.find_contacts_on_device(contact_ids)    
     return [] if contact_ids.empty?
@@ -182,11 +188,9 @@ class Contact
   end
   
   def self.get_search_sql(search_term)
-    #terms_ary = terms.split(/[\s,]/).reject{|term| term.blank? }
-    #terms_ary = terms
+
     term = search_term.gsub(/'/,"''")
     query_terms = term.blank? ? '' : "and (c.firstname like '" + term + "%' OR c.lastname like '" + term +"%' OR c.emailaddress1 like '" + term + "%' OR c.telephone1 like '%" + term + "%' OR c.telephone2 like '%" + term + "%' OR c.telephone3 like '%" + term +"%' OR c.mobilephone like '%" + term + "%' OR c.cssi_employer like '%" + term + "%')"
-    #puts "query #{query_terms}"
     query_terms
   end
   
@@ -349,8 +353,6 @@ class Contact
     raise "Invalid phone type #{phone_type}" unless PHONE_TYPES.include?(phone_type.downcase)
     allow_calls = self.send("cssi_allowcalls#{phone_type.downcase}phone".to_sym)
     company_dnc = self.send("cssi_companydnc#{phone_type.downcase}phone".to_sym)
-    puts "*"*80
-    puts "Type: #{phone_type}, Allow calls: #{allow_calls}, company DNC: #{company_dnc}"
     allow_calls == "False" || company_dnc == "True"
   end
   

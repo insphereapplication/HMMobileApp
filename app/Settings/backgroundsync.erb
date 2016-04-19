@@ -1,0 +1,33 @@
+<div data-role="page" data-theme="b" id="pin_reset_page">
+	<%= offline_bar %>
+	<div data-role="header" data-theme="b" data-backbtn="false">
+		<h1>Backgound Sync Setup <%= sync_spinner %></h1>
+	</div>
+
+    <div data-role="content" data-theme="b">
+	</br>
+	</br>
+	<h3>  Setting this value will attempt to update information while the HM Mobile is running in the background.  This could impact the battery life on your device. </h3>
+	 <form id="form_background_sync" method="POST" action="<%= url_for :action => :set_background_sync_time %>">
+	 
+	 
+  
+		<div data-role="fieldcontain">
+        <label for="backgroundsynctime" class="select">Duration:</label>
+        <select name="backgroundsynctime" id="backgroundsynctime" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>								
+                <option <% if AppInfo.instance.get_background_sync_time == "off" %> selected == "true" <% end %> value="off">Disable</option>
+                <option <% if AppInfo.instance.get_background_sync_time == "2" %> selected == "true" <% end %> value="2">2 Minutes</option>
+                <option <% if AppInfo.instance.get_background_sync_time == "5" %> selected == "true" <% end %> value="5">5 Minutes</option>
+                <option <% if AppInfo.instance.get_background_sync_time == "15" %> selected == "true" <% end %> value="15">15 Minutes</option>
+                <option <% if AppInfo.instance.get_background_sync_time == "30" %> selected == "true" <% end %> value="30">30 Minutes</option>
+                <option <% if AppInfo.instance.get_background_sync_time == "60" %> selected == "true" <% end %> value="60">1 Hour</option>
+        </select>
+    </div>
+		<fieldset class="ui-grid-a">
+			<div class="ui-block-a"><input type="submit" data-theme="b" class="standardButton" value="Save"/></div>
+			<div class="ui-block-b"><a type="button" data-theme="c" value="Cancel" href="<%= url_for(:action => :index, :query => {:origin => @params['origin']}) %>">Cancel</a></div>
+	    </fieldset>
+	 </form>
+	</div>
+</div>
+

@@ -16,7 +16,7 @@ class SettingsController < Rho::RhoController
   ERR_403_MESSAGE = "Sorry! You are not eligible to use the mobile app. Please contact support at hmmobile@healthmarkets.com"
 
   def index
-    $tab = 2
+    $tab = 3
     @msg = @params['msg']
     render :action => :index, :back => 'callback:', :layout => 'layout'
   end
@@ -26,14 +26,11 @@ class SettingsController < Rho::RhoController
   end
   
   def init
-    puts "In the settings init"
     if can_skip_login?
-      puts "In can_skip_login true"
       #login & sync in background
       puts "using background login"
       Rho::RhoConnectClient.login(Settings.login, Settings.password,  '/app/Settings/background_login_callback')
       #go to opportunity index page
-	  puts "^^^^^goto_opportunity_init_notify from init "
       goto_opportunity_init_notify
     else
       #go to login screen
@@ -90,15 +87,17 @@ class SettingsController < Rho::RhoController
 	puts "Need to re log in"
     Rho::NativeTabbar.remove
     @menu = { "Log" => :log }
+	# If the user must log in 
+	Rho::RhoConnectClient.pollInterval = 0
     render :action => :login, :back => '/app/Settings/login', :layout => 'layout'
   end
   
   def goto_login(msg=nil)
-    WebView.navigate ( url_for :action => :login, :query => {:msg => msg} )
+    WebView.navigate(url_for(:action => :login, :query => {:msg => msg} ))
   end
   
   def goto_login_override_auto(msg=nil)
-   WebView.navigate ( url_for :action => :login, :query => {:msg => msg, :override_auto_login => true} )
+   WebView.navigate(url_for(:action => :login, :query => {:msg => msg, :override_auto_login => true}) )
   end
   
   def background_login
@@ -115,7 +114,6 @@ class SettingsController < Rho::RhoController
     puts "In login_callback"
     errCode = @params['error_code'].to_i
     httpErrCode = @params['error_message'].split[0]
-	puts " ************ In the login callback  ***********"
     if errCode == 0
       Settings.credentials_verified = true
       Rho::RhoConnectClient.pollInterval = Constants::DEFAULT_POLL_INTERVAL
@@ -219,10 +217,26 @@ class SettingsController < Rho::RhoController
     redirect :action => :login, :query => {:msg => "You have been logged out."}
   end
   
+  def backgroundsync
+    @msg = @params['msg']
+    render :action => :backgroundsync, :back => 'callback:', :layout => 'layout'
+  end
+  
+  def set_background_sync_time
+		entered_time = @params['backgroundsynctime']
+		if entered_time != AppInfo.instance.get_background_sync_time
+			AppInfo.instance.set_background_sync_time(entered_time)
+		end	 
+		
+		redirect :action => :index, :back => 'callback:', :query => {:msg => @msg}		
+  end
+  
   def pin
     @msg = @params['msg']
     render :action => :pin, :back => 'callback:', :layout => 'layout'
   end
+  
+  
   
   def validate_pin
     enter_pin = @params['enter_pin']
@@ -234,8 +248,6 @@ class SettingsController < Rho::RhoController
           if ( password == Settings.password )
             @msg = nil
             AppInfo.instance.set_pin(enter_pin)
-            puts "SETTING APP INFO POLICY PIN TO #{enter_pin}"
-            puts "UPDATED PIN IS #{AppInfo.instance.policy_pin}"
             Settings.pin = verify_pin
             Settings.pin_confirmed = false
             @msg =  "Your PIN has been reset."
@@ -257,7 +269,7 @@ class SettingsController < Rho::RhoController
           @msg = 'Please enter matching PINs'
         end
       end
-    WebView.navigate(url_for :action => :pin, :back => 'callback:', :layout => 'layout', :query => {:msg => @msg, :origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity'], :activity => @params['activity']} )  if @msg and @msg.length > 0
+    WebView.navigate(url_for(:action => :pin, :back => 'callback:', :layout => 'layout', :query => {:msg => @msg, :origin => @params['origin'], :contact => @params['contact'], :opportunity => @params['opportunity'], :activity => @params['activity']} ))  if @msg and @msg.length > 0
   end # validate_pin
   
   def validate_pin_callback
@@ -295,6 +307,10 @@ class SettingsController < Rho::RhoController
   
   def about
     render :action => :about, :back => 'callback:'
+  end
+  
+  def model_limit_counts
+    render :action => :model_limit_counts, :back => 'callback:'
   end
   
   def do_reset
@@ -337,7 +353,6 @@ class SettingsController < Rho::RhoController
   end
   
   def push_notify
-    puts "*"*80
     #setup callbacks to use new opportunity workflow, start sync
     puts "Starting push_notify, new_opportunity_sync_pending = #{Settings.new_opportunity_sync_pending}, is_syncing = #{Rho::RhoConnectClient.isSyncing()}"
     unless Settings.new_opportunity_sync_pending
@@ -356,7 +371,6 @@ class SettingsController < Rho::RhoController
       puts "New opportunity sync is already pending"
     end
     puts "new opp sync pending in push notify: " + Settings.new_opportunity_sync_pending.to_s
-    puts "&"*80
 
     if System::get_property('platform') == 'ANDROID'
       "rho_push"
@@ -383,16 +397,12 @@ class SettingsController < Rho::RhoController
   
   def handle_new_integrated_leads
     if new_assigned_leads?
-      puts "In new_assigned_leads?"
       set_last_integrated_lead
       reassigned_leads_alert
     else
-      puts "In else handle_new_integrated_leads"
       former_last_lead = Settings.last_integrated_lead
-      puts "former_last_lead: #{former_last_lead}"
       set_last_integrated_lead
       current_last_lead = Settings.last_integrated_lead
-      puts "current_last_lead: #{current_last_lead}"
       if (former_last_lead.blank? && !current_last_lead.blank? && created_last_hour(current_last_lead)) || (!former_last_lead.blank? && !current_last_lead.blank? && Time.parse(current_last_lead)  > Time.parse(former_last_lead))
         puts "NEW LEAD CREATED AT #{current_last_lead}"
         new_leads_alert
@@ -402,9 +412,7 @@ class SettingsController < Rho::RhoController
   
   def new_assigned_leads?
     former_assigned_lead = Settings.last_assigned_lead
-    puts "!!!!! former_assigned_lead #{former_assigned_lead} "
     @current_assigned_lead = set_last_assigned_lead
-    puts "????? current_assigned_lead #{@current_assigned_lead} "
     if former_assigned_lead.blank? && @current_assigned_lead.blank?
       false
     elsif former_assigned_lead.blank? && @current_assigned_lead
@@ -417,7 +425,6 @@ class SettingsController < Rho::RhoController
   def created_last_hour(create_date)
     if (create_date)
       hours = (Time.now - Time.parse(create_date))/3600
-      puts "Created in the last hour?  hours: #{hours}"
       hours < 1
     end
   end
@@ -441,6 +448,17 @@ class SettingsController < Rho::RhoController
         :message => "New lead(s) have been synced.\nWould you like to view them?", 
         :buttons => ["Cancel", "View"],
         :callback => url_for(:action => :on_dismiss_new_opportunity_popup, :back => 'callback:') 
+      })
+    end
+  end
+  
+  def model_limit_alert 
+    if Settings.has_verified_credentials?
+      Alert.show_popup({
+        :title => 'Limits Alert',
+        :message => "The number of Opportunity, Contact, Policies, Activities or Notes is approaching the max amount allowed on HMMobile?", 
+        :buttons => ["Cancel", "View"],
+        :callback => url_for(:action => :on_model_limit_popup, :back => 'callback:') 
       })
     end
   end
@@ -483,9 +501,6 @@ class SettingsController < Rho::RhoController
     if status == "complete"
       update_last_synced_time
             
-      puts "%"*80
-      puts "SYNC COMPLETE"
-      puts "new opp sync pending: " + Settings.new_opportunity_sync_pending.to_s
       if Settings.new_opportunity_sync_pending
         puts "Sync complete, starting pending new_opportunity sync."
         SyncUtil.start_sync('new_opportunity')
@@ -494,7 +509,9 @@ class SettingsController < Rho::RhoController
       
       # store device info
       DeviceInfo.check_device_information
-      puts "****************** Call : #{@on_sync_complete} *****************"
+      if model_limits_warning?
+        model_limit_alert
+      end
 	  
       @on_sync_complete.call
       
@@ -502,9 +519,11 @@ class SettingsController < Rho::RhoController
       #if latest integrated lead createdon is greater than before sync, display popup alert
       # handle_new_integrated_leads
     elsif status == "ok"
-      if sourcename == 'AppInfo'
+	  count = sourcename == 'Opportunity' ?  Opportunity.open_opportunities_count : @params['total_count']
+      puts "#{sourcename} count is: #{count}"
+	  if sourcename == 'AppInfo'
         check_for_upgrade
-      elsif model_limits_exceeded?(sourcename, @params['total_count'])
+      elsif model_limits_exceeded?(sourcename, count)
         # model limit exceeded, stop synchronization
         return
       end
@@ -574,7 +593,7 @@ class SettingsController < Rho::RhoController
         Rho::RhoConnectClient.stopSync()
         
         #send them back to login because initial sync did not complete
-		puts "!!!!!! Rho::RhoError::ERR_NETWORK???  !!!!!!!"
+        puts "!!!!!! Rho::RhoError::ERR_NETWORK???  !!!!!!!"
         @on_sync_error.call({:error_source => 'connection'})
       elsif [Rho::RhoError::ERR_CLIENTISNOTLOGGEDIN,Rho::RhoError::ERR_UNATHORIZED].include?(err_code)      
         log_error("RhoSync error: client is not logged in / unauthorized", Rho::RhoError.err_message(err_code) + " #{@params.inspect}")
@@ -680,16 +699,15 @@ class SettingsController < Rho::RhoController
     raise "bang"
   rescue Exception => e
     ExceptionUtil.log_exception_to_server(e)
-    WebView.navigate ( url_for :action => :index )
+    WebView.navigate( url_for(:action => :index ))
   end
 
   def goto_opportunity_init_notify
     puts "%%%% In goto_opportunity_init_notify"
-    WebView.navigate ( url_for :controller => :Opportunity, :action => :init_notify)
+    WebView.navigate( url_for( :controller => :Opportunity, :action => :init_notify))
   end
   
   def setup_sync_handlers
-    puts "Setting sync handlers : #{Settings.is_init_sync?} +++ #{Settings.sync_type}"
     if Settings.is_init_sync?
       set_init_sync_handlers
     elsif Settings.is_new_opportunity_sync?
@@ -730,7 +748,6 @@ class SettingsController < Rho::RhoController
       if error_source == 'connection'
         #swallow this error, let the user through
         #navigate to opportunity init_notify controller 
-		puts "^^^^^goto_opportunity_init_notify from init init_on_sync_error initial sync completed?"
         goto_opportunity_init_notify
       end
     else
@@ -789,6 +806,15 @@ class SettingsController < Rho::RhoController
       )
     end
   end
+  
+def on_model_limit_popup
+  if @params['button_id'] == 'View'
+    Rho::NativeTabbar.switch_tab(3) 
+    WebView.navigate( 
+      url_for(:controller => :Settings, :action => :model_limit_counts, :layout => 'layout')
+    )
+  end
+end
   
   def parse_version_number(version)
     version.split(".").map{ |x| x.to_i }
@@ -910,12 +936,6 @@ class SettingsController < Rho::RhoController
         pwd_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.password}Delimit"))
                 
         quoting_tool_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}"
-      
-        # puts "Resource URL parameters are: ****#{resource_params_enc}****"
-        # puts "Current UTC is:  #{ctime}"
-
-        
-        #rc_url ="#{insphere_url}?#{quoting_tool_params_enc}"
      
         redirect :action => :index, :back => 'callback:', :layout => 'layout'
       
@@ -1011,3 +1031,28 @@ class SettingsController < Rho::RhoController
     result
   end
 end
+
+  def model_limits_warning?
+    result = false
+    begin
+      last_check_date = AppInfo.instance.get_model_limits_warning_time.blank? ? 8 : DateUtil.days_ago(AppInfo.instance.get_model_limits_warning_time)
+      if last_check_date >= 1      
+        opportunity_percentage = Opportunity.open_opportunities_count / AppInfo.instance.get_model_limits['Opportunity'].to_f
+        contact_percentage = Contact.count / AppInfo.instance.get_model_limits['Contact'].to_f
+        activity_percentage = Activity.count / AppInfo.instance.get_model_limits['Activity'].to_f 
+        policy_percentage = Policy.count / AppInfo.instance.get_model_limits['Policy'].to_f
+        note_percentage =  Note.count / AppInfo.instance.get_model_limits['Note'].to_f
+        
+        max_percentage = [opportunity_percentage, contact_percentage, activity_percentage,  policy_percentage, note_percentage].max
+        
+        if (max_percentage > '.02'.to_f && last_check_date >= 1) || (max_percentage > '.01'.to_f && last_check_date > 3) || (max_percentage > '.05'.to_f && last_check_date > 7)
+          AppInfo.instance.set_model_limits_warning_time(DateTime.now.strftime(DateUtil::DEFAULT_TIME_FORMAT))
+          result = true
+        end
+       
+      end
+    rescue Exception => e
+        puts "Unable to determine model limit warning check: #{e}"
+    end
+    result
+  end

@@ -12,7 +12,6 @@ class OpportunityController < Rho::RhoController
 
   # this callback is set once in the login_callback method of the Settings controller
   def init_notify
-    puts "In Opportunity init_notify"
 	@@delay_refresh = false
     tabbar = [
       { 
@@ -58,16 +57,13 @@ class OpportunityController < Rho::RhoController
   end
   
   def tab_switch_callback
-    puts "in tab_switch_callback"
     current_index = @params['tab_index'].to_i
     WebView.executeJavascript("setAppDeactive();", 0) 
     WebView.executeJavascript("setAppDeactive();", 1) 
     WebView.executeJavascript("setAppDeactive();", 2) 
     WebView.executeJavascript("setAppDeactive();", 3) 
     WebView.executeJavascript("setAppActive();",current_index) 
-    
-	puts "finish java script execute.  current index: #{current_index}"
-    # refresh opportunities page if changed locally @@delay_refresh should only be set true when redirecting from callback or phonecall select in activity list
+     
     if Opportunity.local_changed? && (current_index == 0)  && @@delay_refresh == false
       WebView.navigate(url_for(:action => :index, :back => 'callback:', :query => {:selected_tab => $current_nav_context}))
     end
@@ -91,7 +87,6 @@ class OpportunityController < Rho::RhoController
   end
   
   def intialize_nav_contexts
-    puts "In intialize_nav_contexts"
     $new_leads_nav_context = []
     $follow_ups_nav_context = []
     $appointments_nav_context = []
@@ -99,13 +94,10 @@ class OpportunityController < Rho::RhoController
   
   # since this is the default entry point on startup, check here for login
   def index
-    puts "In Opportunity Controller Index"
     $tab = 0
-	puts "HERE HERE LOGIN value is: #{Rho::RhoConnectClient.isLoggedIn()}"
     if Rho::RhoConnectClient.isLoggedIn()
       intialize_nav_contexts
       Opportunity.local_changed = false
-      puts "In index selected_tab: #{@params['selected_tab']}"
       @params['selected_tab'] = @params['selected_tab'].blank? ? 'new-leads' : @params['selected_tab']
       @persisted_scheduled_search = Settings.get_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS)['search']
       $current_nav_context = @params['selected_tab']
@@ -171,13 +163,24 @@ class OpportunityController < Rho::RhoController
     persisted_selection = Settings.filter_values["#{Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX}isDaily"]
     " checked='checked' " if persisted_selection == 'true'
   end
-  def jqm_scheduled_filter_options
+  def jqm_scheduled_filter_type_options
     options = [
       {:value => 'All', :label => 'All'},
       {:value => 'ScheduledAppointments', :label => 'Appointments'},
       {:value => 'ScheduledCallbacks', :label => 'Callbacks'}
     ]
-    persisted_selection = Settings.filter_values['scheduled_filter']
+    persisted_selection = Settings.filter_values['scheduled_filter_type']
+    persisted_selection = 'All' if persisted_selection.blank?
+    gen_jqm_options(options, persisted_selection)
+  end
+  def jqm_scheduled_filter_date_options
+	options = [
+      {:value => 'All', :label => 'All'},
+      {:value => 'past_due', :label => 'Past Due'},
+      {:value => 'today', :label => 'Today'},
+      {:value => 'future', :label => 'Future Date'},
+    ]
+    persisted_selection = Settings.filter_values['scheduled_filter_date']
     persisted_selection = 'All' if persisted_selection.blank?
     gen_jqm_options(options, persisted_selection)
   end
@@ -186,13 +189,12 @@ class OpportunityController < Rho::RhoController
     rows = []
     origin = 'new-leads'
     f_status = @params['statusReason']
-    puts "In get_jqm_leads #{f_status}"
     if f_status
       # follow-ups
       origin = 'follow-ups'
       rows = jqm_get_follow_ups
     else
-      f_select = @params['filter']
+      f_select = @params['filter_type']
       if f_select
         # scheduled
         origin = 'appointments'
@@ -206,7 +208,6 @@ class OpportunityController < Rho::RhoController
     render :partial => 'opportunity', :locals => { :items => rows, :origin => origin, :selected_tab => origin }
   end
   def jqm_get_new_leads
-    puts "In jqm_get_new_leads"
     Settings.record_activity
     if @params['reset'] == 'true'
       @@data_loader = ApplicationHelper::HierarchyDataLoader.new([
@@ -222,7 +223,6 @@ class OpportunityController < Rho::RhoController
     @@data_loader.load_data([page, page_size], $new_leads_nav_context)
   end
   def jqm_get_follow_ups
-    puts "In jqm_get_follow_ups"
     Settings.record_activity
     Settings.update_persisted_filter_values(Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX, Constants::FOLLOWUP_FILTERS.map{|filter| filter[:name]}, @params)
     persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_FOLLOWUP_FILTER_PREFIX, Constants::FOLLOWUP_FILTERS)
@@ -235,28 +235,42 @@ class OpportunityController < Rho::RhoController
     page = @params['page'].to_i
     page_size = @params['pageSize'].to_i
     result = @@data_loader.load_data([page, persisted_filter_values['statusReason'], persisted_filter_values['sortBy'], persisted_filter_values['created'], persisted_filter_values['isDaily'], page_size], $follow_ups_nav_context)
-    puts "end jqm_get_follow_ups #{$follow_ups_nav_context}"
     result
   end
+  
   def jqm_get_appointments
-    puts "In jqm_get_appointments"
     Settings.record_activity
+	puts "Appointment Parameters: #{@params}"
     Settings.update_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS.map{|filter| filter[:name]}, @params)
     persisted_filter_values = Settings.get_persisted_filter_values(Constants::PERSISTED_SCHEDULED_FILTER_PREFIX, Constants::SCHEDULED_FILTERS)
-    if @params['reset'] == 'true'
-      @@data_loader = ApplicationHelper::HierarchyDataLoader.new([
-          { :divider => 'Past Due' },
-          [Activity, :appointment_list, 'past_due'],
-          { :divider => 'Today' },
-          [Activity, :appointment_list, 'today'],
-          { :divider => 'Future' },
-          [Activity, :appointment_list, 'future']
-      ], 0, 4, false, 3)
+    @scheduled_date = persisted_filter_values["filter_date"]
+    if @params['reset'] == 'true'  
+        if @scheduled_date == "past_due" 
+            prms = [{ :divider => 'Past Due' },
+                        [Activity, :appointment_list, 'past_due']]
+          elsif @scheduled_date == "today"
+                prms = [{ :divider => 'Today' },
+                        [Activity, :appointment_list, 'today']]
+          elsif @scheduled_date == "future"
+                prms = [{ :divider => 'Future' },
+                          [Activity, :appointment_list, 'future'] ]
+          else
+           prms = [
+                  { :divider => 'Past Due' },
+                  [Activity, :appointment_list, 'past_due'],
+                  { :divider => 'Today' },
+                  [Activity, :appointment_list, 'today'],
+                  { :divider => 'Future' },
+                  [Activity, :appointment_list, 'future']
+                ]
+       end
+      
+      @@data_loader = ApplicationHelper::HierarchyDataLoader.new(prms, 0, 4, false, 3)
       $appointments_nav_context = []
     end
     page = @params['page'].to_i
     page_size = @params['pageSize'].to_i
-    result = @@data_loader.load_data([page, persisted_filter_values['filter'], persisted_filter_values['search'], '', page_size], $appointments_nav_context)
+    result = @@data_loader.load_data([page, persisted_filter_values['filter_type'], persisted_filter_values['filter_date'], '', page_size], $appointments_nav_context)
     $appointments_nav_context.uniq!
     puts "End jqm_get_appointments: #{$appointments_nav_context}"
     result
@@ -268,7 +282,6 @@ class OpportunityController < Rho::RhoController
   end
   
   def current_nav_context
-    puts"Current nav context is: #{$current_nav_context}"
     case $current_nav_context
       when 'new-leads' then $new_leads_nav_context
       when 'follow-ups' then $follow_ups_nav_context
@@ -314,12 +327,10 @@ class OpportunityController < Rho::RhoController
   end
   
   def show_opportunity_from_nav(direction)
-    puts "current context list: #{current_nav_context}"
+  
     if current_nav_context.blank?
-       puts "show_opportunity_from_nav current_nav_context is blank"
        opp_id = @params['id']
     else
-      puts "show_opportunity_from_nav current_nav_context is getting new opp."
       opp_id = current_nav_context.send(direction)
     end
     

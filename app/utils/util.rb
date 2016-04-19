@@ -396,7 +396,7 @@ module Constants
   
   PERSISTED_SCHEDULED_FILTER_PREFIX = 'scheduled_'
   SCHEDULED_FILTERS = [
-    {:name => 'filter', :default_value => 'All'},
-    {:name => 'search', :default_value => ''}
+    {:name => 'filter_type', :default_value => 'All'},
+    {:name => 'filter_date', :default_value => 'All'}
   ]
 end

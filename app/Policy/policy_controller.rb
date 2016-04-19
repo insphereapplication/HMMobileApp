@@ -12,9 +12,7 @@ class PolicyController < Rho::RhoController
 
   # GET /Policy/{1}
   def show
-    puts Settings.pin_confirmed.to_s
     Settings.record_activity
-    puts Settings.pin_confirmed.to_s
     @policy = Policy.find_policy(@params['id'])
     if Settings.pin_confirmed == true && @policy
       @contact = @policy.contact

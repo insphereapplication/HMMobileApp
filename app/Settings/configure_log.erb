@@ -1,41 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
-<head>
-	<title>HM Mobile</title>
-	<meta name="viewport" content="width=device-width; height=device-height; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
-	<link type="text/css" rel="stylesheet" href="/public/lib/jquery.mobile.min.css" />
-	<link type="text/css" rel="stylesheet" href="/public/insite/insphere.css" />
-	<link rel="stylesheet" href="/public/jquerymobile/jquery.ui.datepicker.mobile.css" /> 
-	<script src="/public/jquerymobile/jquery-1.4.4.min.js" type="text/javascript"></script>
-	<script src="/public/jquerymobile/jquery-mobile.js" type="text/javascript"></script>
-	<script src="/public/jquerymobile/jQuery.ui.datepicker.js"></script>
-	<script src="/public/jquerymobile/jquery.ui.datepicker.mobile.js"></script>
-	<script src="/public/js/application.js" type="text/javascript"></script>
-	<script src="/public/js/update_status.js" type="text/javascript"></script>
-	<script src="/public/js/validation.js" type="text/javascript"></script>
-	<script src="/public/js/statusvalidate.js" type="text/javascript"></script>
-
-</head>
-
-<body <% if @working %> onLoad="showSpin(null)" <% end %>>		
-    <div data-role="page" data-theme="b" data-cache="never">
-		<div data-role="header" data-theme="b">
-			<a href="/app/Settings/about" data-direction="reverse" data-icon="back">About</a>
-			<h1>Configure Log <%= sync_spinner %></h1>
-		</div>
-		<form method="post" id="logSubmitForm" action="<%= url_for(:action => :save_log_config) %>">
-			<div id="contentDiv" data-role="content" data-theme="b">
-				<ul data-role="listview" data-inset="true" data-theme="d">
-					<li><h3>MinSeverity:</h3><input name="minSeverity" value="<%= RhoConf.get_property_by_name('MinSeverity') %>" /></li> 
-					<li><h3>Log File Size (in bytes):</h3><input name="logFileSize" value="<%= RhoConf.get_property_by_name('MaxLogFileSize') %>" /></li>
-				</ul>
-				<input type="submit" id="logSubmit" value="Save Changes" />
-			<div>
-		</form>
+<div data-role="page" data-theme="b" data-cache="never">
+	<div data-role="header" data-theme="b">
+		<a href="/app/Settings/about" data-direction="reverse" data-icon="back">About</a>
+		<h1>Configure Log <%= sync_spinner %></h1>
 	</div>
-</body>
-
-
-</html>
+	<form method="post" id="logSubmitForm" action="<%= url_for(:action => :save_log_config) %>">
+		<div id="contentDiv" data-role="content" data-theme="b">
+			<ul data-role="listview" data-inset="true" data-theme="d">
+				<li><h3>MinSeverity:</h3><input name="minSeverity" value="<%= RhoConf.get_property_by_name('MinSeverity') %>" /></li> 
+				<li><h3>Log File Size (in bytes):</h3><input name="logFileSize" value="<%= RhoConf.get_property_by_name('MaxLogFileSize') %>" /></li>
+			</ul>
+			<input type="submit" id="logSubmit" value="Save Changes" />
+		<div>
+	</form>
+</div>

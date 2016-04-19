@@ -4,7 +4,7 @@ class Array
   
   def rotate! 
     a = reverse!.pop
-    replace reverse.push a if a
+    replace reverse.push(a) if a
     self
   end
   

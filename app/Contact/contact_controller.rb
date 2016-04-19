@@ -240,17 +240,13 @@ class ContactController < Rho::RhoController
       companydncfield = "cssi_companydnc#{dnctype}phone"
       
       unless @params[dncfield].blank?
-        puts "$"*80 + " dncfield = #{@params[dncfield]}"
         if @params[dncfield] == 'False'
-          puts "$"*80 + " Changing DNC values for #{dnctype}"
           @params['contact'].merge!({"cssi_#{dncfield}" => 'False', "#{companydncfield}" => 'True'}) if @params['contact']
         end
       end
     end
     
     @params['contact'].merge!({'birthdate' => dob_formatted})
-    
-    puts "CONTACT UPDATE: #{@params.inspect}"
     
     @contact = Contact.find_contact(@params['id'])
     @contact.update_attributes(@params['contact']) if @contact
@@ -319,7 +315,7 @@ class ContactController < Rho::RhoController
   end
   
   def confirm_spouse_delete
-    Alert.show_popup ({
+    Alert.show_popup({
         :message => "Click OK to Delete this Spouse", 
         :title => "Confirm Delete", 
         :buttons => ["Cancel", "Ok",],
@@ -347,7 +343,7 @@ class ContactController < Rho::RhoController
       @contact.update_attributes(:cssi_spousegender => "")
       @contact.update_attributes(:cssi_spousedelete => "true")
       Rho::RhoConnectClient.doSync
-      WebView.navigate(url_for :controller => :Contact, :action => :show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']})
+      WebView.navigate(url_for( :controller => :Contact, :action => :show, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}))
     else
       WebView.executeJavascript("hideSpin();")
     end

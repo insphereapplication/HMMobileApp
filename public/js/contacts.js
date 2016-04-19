@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	$('#load-more-button').live('click', function(){
+	$(document).on('click', '#load-more-button', function(){
 		loadMore();
 	});
 	$('#submit-ac-search').click(function(){

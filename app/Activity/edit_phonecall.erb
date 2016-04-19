@@ -34,8 +34,7 @@
 		<div data-role="fieldcontain" id="div_phone_select">
 			<input type="hidden" id="phone_type_selected" name="phone_type_selected" />
 		    <label for="phonelist" class="select">Phone Type:</label>
-			<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>				 
-				<% puts "Selected phone type is:  #{@activity.phone_type}" %>	
+			<select name="phoneList" id="phoneList" onchange="populatePhone(this.form.phoneList);" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
 				<% if (@activity_contact) %>		
 				<% @activity_contact.phone_numbers.each do |type, number| %>
 					<option <% if @activity.phone_type == type %> selected="True" <% end %> value="<%= number %>"><%= type %></option>

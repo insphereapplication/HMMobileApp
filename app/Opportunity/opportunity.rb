@@ -119,6 +119,10 @@ class Opportunity
     find(:all, :conditions => "statecode not in ('Won', 'Lost')")
   end
   
+  def self.open_opportunities_count
+    find(:all, :conditions => "statecode not in ('Won', 'Lost')").count
+  end
+  
   def self.todays_new_leads(page=nil, page_size=DEFAULT_PAGE_SIZE)
     sql = %Q{
       #{new_leads_sql}

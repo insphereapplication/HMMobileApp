@@ -45,8 +45,6 @@ class ApplicationDetailController < Rho::RhoController
   # POST /ApplicationDetail/create
   def create
     Settings.record_activity
-    puts "********** Calling ApplicationDetailController.create **********"
-    puts "********** origin = #{@params['origin']}"
     appdatetime = DateTime.strptime(@params['cssi_applicationdate'].to_s, DateUtil::BIRTHDATE_PICKER_TIME_FORMAT)
     @appdetail = ApplicationDetail.create_new(@params['appdetail'].merge({:cssi_applicationdate => appdatetime.strftime(DateUtil::DEFAULT_TIME_FORMAT)}))
     Rho::RhoConnectClient.doSync
@@ -56,9 +54,6 @@ class ApplicationDetailController < Rho::RhoController
   # POST /ApplicationDetail/{1}/update
   def update
     Settings.record_activity
-    puts "********** Calling ApplicationDetailController.update **********"
-    puts "********** id = #{@params['appdetail'].inspect}"
-    puts @params['cssi_applicationdate'].inspect
     appdatetime = DateTime.strptime(@params['cssi_applicationdate'].to_s, DateUtil::BIRTHDATE_PICKER_TIME_FORMAT)
     @appdetail = ApplicationDetail.find_application(@params['id'])
     @appdetail.update_attributes(@params['appdetail'].merge({:cssi_applicationdate => appdatetime.strftime(DateUtil::DEFAULT_TIME_FORMAT)})) if @appdetail    
@@ -76,7 +71,7 @@ class ApplicationDetailController < Rho::RhoController
   end
   
   def confirm_app_detail_delete
-    Alert.show_popup ({
+    Alert.show_popup({
         :message => "Click OK to Delete this Application", 
         :title => "Confirm Delete", 
         :buttons => ["Cancel", "Ok",],
@@ -95,7 +90,7 @@ class ApplicationDetailController < Rho::RhoController
       opportunityid = @appdetail ? @appdetail.opportunity_id : @params['opportunity'] 
       @appdetail.destroy if @appdetail
       Rho::RhoConnectClient.doSync
-      WebView.navigate(url_for :controller => :Opportunity, :action => :won, :id => opportunityid, :origin => @params['origin'], :opportunity => opportunityid)
+      WebView.navigate(url_for( :controller => :Opportunity, :action => :won, :id => opportunityid, :origin => @params['origin'], :opportunity => opportunityid))
     else
       WebView.executeJavascript("hideSpin();")
     end 

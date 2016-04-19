@@ -98,7 +98,7 @@ function checkEdit(myForm) {
 
 
 // Dependent Add / Edit
-$('#dependent_new_page, #dependent_edit_page').live('pagecreate',function(event){
+$(document).on('pagecreate','#dependent_new_page, #dependent_edit_page',function(event){
 	$("#dependent_form").validate({
 	  rules: {
 	    'dependent[cssi_name]' : {
@@ -116,12 +116,15 @@ $('#dependent_new_page, #dependent_edit_page').live('pagecreate',function(event)
 		'dependent[cssi_comments]' : {
 		  maxlength: 250
 	    }
+	  },
+	  errorPlacement: function (error, element) {
+       error.insertAfter(element.parent());
 	  }
 	});	
 });
 
 // Spouse Add / Edit
-$('#spouse_new_page, #spouse_edit_page').live('pagecreate',function(event){
+$(document).on('pagecreate','#spouse_new_page, #spouse_edit_page', function(event){
 	$("#spouse_form").validate({
 	  rules: {
 	    'contact[cssi_spousename]' : {
@@ -136,12 +139,15 @@ $('#spouse_new_page, #spouse_edit_page').live('pagecreate',function(event){
 		  max: 1000,
 		  digits: true
 	    }
+	  },
+	  errorPlacement: function (error, element) {
+         error.insertAfter(element.parent());
 	  }
 	});	
 });
 
 // Contact Edit
-$('#contact_edit_page').live('pagecreate',function(event){
+$(document).on('pagecreate','#contact_edit_page' ,function(event){
 	$("#contact_edit").validate({
 	  rules: {
 		'contact[firstname]' : {
@@ -204,7 +210,10 @@ $('#contact_edit_page').live('pagecreate',function(event){
 		'contact[address2_postalcode]' : {
 		  maxlength: 20	
 		}
-	  }
+	  },
+	  errorPlacement: function (error, element) {
+           error.insertAfter(element.parent());
+		  }
 	});
 	
 	// Creates a US phone number ('### ### ####') validator
@@ -239,7 +248,7 @@ $('#contact_edit_page').live('pagecreate',function(event){
 });
 
 // Contact Add
-$('#contact_new_page').live('pagecreate',function(event){
+$(document).on('pagecreate','#contact_new_page',function(event){
 	$("#contact_new").validate({
 		  rules: {
 			'contact[firstname]' : {
@@ -294,6 +303,9 @@ $('#contact_new_page').live('pagecreate',function(event){
 			'contact[address2_postalcode]' : {
 			  maxlength: 20	
 			}
+		  },
+		  errorPlacement: function (error, element) {
+                       error.insertAfter(element.parent());
 		  }
 		});
 
@@ -328,7 +340,7 @@ $('#contact_new_page').live('pagecreate',function(event){
 });
 
 // AppDetail Add / Edit
-$('#appdetail_add_page, #appdetail_edit_page').live('pagecreate',function(event){
+$(document).on('pagecreate','#appdetail_add_page, #appdetail_edit_page',function(event){
 	$("#appdetail").validate({
 	  rules: {
 	    'appdetail[cssi_carrierid]' : {
@@ -342,6 +354,9 @@ $('#appdetail_add_page, #appdetail_edit_page').live('pagecreate',function(event)
 			min: 1,
 			maxlength: 5
 		}
+	  },
+	  errorPlacement: function (error, element) {
+         error.insertAfter(element.parent());
 	  }
 	});
 	
@@ -351,7 +366,7 @@ $('#appdetail_add_page, #appdetail_edit_page').live('pagecreate',function(event)
 });
 
 // Lost Other 
-$('#lost_other_page').live('pagecreate',function(event){
+$(document).on('pagecreate','#lost_other_page',function(event){
 	validation_rules = {
 	    'status_code' : {
 	      notBlank: true
@@ -359,7 +374,10 @@ $('#lost_other_page').live('pagecreate',function(event){
 		}
 	validation_rules = $.extend(validation_rules,quick_task_validation)
 	$("#lost_opportunity_other_form").validate({
-	  rules: validation_rules
+	  rules: validation_rules,
+	  errorPlacement: function (error, element) {
+         error.insertAfter(element.parent());
+	  }
 	});
 	
 	jQuery.validator.addMethod('notBlank', function(val, el) {
@@ -368,7 +386,7 @@ $('#lost_other_page').live('pagecreate',function(event){
 });
 
 // Callback Add / Edit
-$('#callback_create, #callback_edit').live('pagecreate',function(event){
+$(document).on('pagecreate','#callback_create, #callback_edit',function(event){
 	$("#call_back_form").validate({
           focusInvalid: navigator.userAgent.toLowerCase().indexOf("android") < 0,
 	  rules: {
@@ -379,6 +397,9 @@ $('#callback_create, #callback_edit').live('pagecreate',function(event){
 		'phonecall_subject' : {
 		 required: true	
 		}
+	  },
+	  errorPlacement: function (error, element) {
+         error.insertAfter(element.parent());
 	  }
 	});
 	
@@ -391,18 +412,22 @@ $('#callback_create, #callback_edit').live('pagecreate',function(event){
 });
 
 //Create Activity - Task
-$('#new_task').live('pagecreate',function(event){
+$(document).on('pagecreate','#new_task',function(event){
 	$("#new_task_form").validate({
 	  rules: {
 	    'task_subject' : {
 		  required: true
 	    }
+	  },
+	  errorPlacement: function (error, element) {
+         error.insertAfter(element.parent());
 	  }
+	  
 	});
 });
 
 //Create Activity - Phone Call
-$('#new_phonecall').live('pagecreate',function(event){
+$(document).on('pagecreate','#new_phonecall',function(event){
 	$("#new_phonecall_form").validate({
 	  rules: {
 	    'phonecall_subject': {
@@ -415,6 +440,9 @@ $('#new_phonecall').live('pagecreate',function(event){
 		'callback_datetime' : {
 			required: true
 		}
+	  },
+	  errorPlacement: function (error, element) {
+         error.insertAfter(element.parent());
 	  }
 	});
 	
@@ -428,7 +456,7 @@ $('#new_phonecall').live('pagecreate',function(event){
 
 
 // //Create Activity - Phone Call from a Contact
-$('#new_phonecall_contact_page').live('pagecreate',function(event){
+$(document).on('pagecreate','#new_phonecall_contact_page',function(event){
 	$("#contact_phonecall_form").validate({
 	  rules: {
 		'phonecall_subject': {
@@ -441,6 +469,9 @@ $('#new_phonecall_contact_page').live('pagecreate',function(event){
 		'callback_datetime' : {
 			required: true
 		}
+	  },
+	  errorPlacement: function (error, element) {
+         error.insertAfter(element.parent());
 	  }
 	});
 	
@@ -454,7 +485,7 @@ $('#new_phonecall_contact_page').live('pagecreate',function(event){
 
 
 //Create Activity - Appointment
-$('#new_appointment').live('pagecreate',function(event){
+$(document).on('pagecreate','#new_appointment',function(event){
 	$("#new_appointment_form").validate({
 	  rules: {
 	    'appointment_subject' : {
@@ -467,12 +498,15 @@ $('#new_appointment').live('pagecreate',function(event){
 			required: true
 		}
 		
+	  },
+	  errorPlacement: function (error, element) {
+         error.insertAfter(element.parent());
 	  }
 	});
 });
 
 //Create Activity - Contact Appointment
-$('#new_contact_appointment').live('pagecreate',function(event){
+$(document).on('pagecreate','#new_contact_appointment',function(event){
 	$("#new_contact_appointment_form").validate({
 	  rules: {
 	    'appointment_subject' : {
@@ -484,23 +518,29 @@ $('#new_contact_appointment').live('pagecreate',function(event){
 		'location' : {
 			required: true
 		}
+	  },
+	  errorPlacement: function (error, element) {
+         error.insertAfter(element.parent());
 	  }
 	});
 });
 
 //Create Activity - task
-$('#new_contact_task').live('pagecreate',function(event){
+$(document).on('pagecreate','#new_contact_task',function(event){
 	$("#new_contact_task_form").validate({
 	  rules: {
 	    'task_subject' : {
 		  required: true
 	    }
+	  },
+	  errorPlacement: function (error, element) {
+         error.insertAfter(element.parent());
 	  }
 	});
 });
 
 // pin reset 
-$('#pin_reset_page').live('pagecreate',function(event){
+$(document).on('pagecreate','#pin_reset_page',function(event){
 	$("#reset_pin_form").validate({
 	     rules: {
 	        'enter_pin' : {
@@ -511,15 +551,21 @@ $('#pin_reset_page').live('pagecreate',function(event){
 			'verify_pin' : {
 			      equalTo: "#enter_pin"
 			    }
-	     }
+	     },
+		 errorPlacement: function (error, element) {
+			error.insertAfter(element);
+		 }
 	    });
 
 });
 
 // mark as won oage 
-$('#mark_as_won_page').live('pagecreate',function(event){
+$(document).on('pagecreate','#mark_as_won_page',function(event){
 	$("#won_form").validate({
-	     rules: quick_task_validation
+	     rules: quick_task_validation,
+		 errorPlacement: function (error, element) {
+          error.insertAfter(element.parent());
+	  }
 	    });
 
 });
@@ -527,28 +573,40 @@ $('#mark_as_won_page').live('pagecreate',function(event){
 
 
 // Appointment Add / Edit
-$('#appointment_add_page').live('pagecreate',function(event){
-	$("#appointment_form").validate();
+$(document).on('pagecreate','#appointment_add_page',function(event){
+	$("#appointment_form").validate({
+		rules: {
+			'appointment_datetime' : {
+				required: true
+			}
+		},
+		errorPlacement: function (error, element) {
+          error.insertAfter(element.parent());
+		}
+	});
 });
 
 
 // Appointment Add 
-$('#appointment_edit_page').live('pagecreate',function(event){
+$(document).on('pagecreate', '#appointment_edit_page',function(event){
 	$("#appointment_edit_form").validate({
 		rules: {
 		    'appointment_subject' : {
 			  required: true
 		    }
-		}
+		},
+	    errorPlacement: function (error, element) {
+         error.insertAfter(element.parent());
+	  }
 	});
 });
 
 // HACK ATTACK! - This is a fix for a known issue with JQuery Mobile related to focus and loss of input issues. - twitty.6.14.11
 // Please check https://github.com/jquery/jquery-mobile/issues/756 to see if the issue has been addressed offically. - twitty.6.14.11
 
-$('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_page, #contact_edit_page, #contact_new_page, #appdetail_add_page, #appdetail_edit_page, #callback_create, #callback_edit, #appointment_add_page, #appointment_edit_page, #lost_other_page, #pin_reset_page','#mark_as_won_page','#new_task', '#new_appointment', '#new_contact_task', '#new_phonecall_contact_page', '#new_contact_appointment').live('pageshow',function(event){
-	$('input').one('keypress',function(ev) { $('<div></div>').appendTo('body') });
-});
+//$('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_page, #contact_edit_page, #contact_new_page, #appdetail_add_page, #appdetail_edit_page, #callback_create, #callback_edit, #appointment_add_page, #appointment_edit_page, #lost_other_page, #pin_reset_page','#mark_as_won_page','#new_task', '#new_appointment', '#new_contact_task', '#new_phonecall_contact_page', '#new_contact_appointment').live('pageshow',function(event){
+//	$('input').one('keypress',function(ev) { $('<div></div>').appendTo('body') });
+//});
 
 // Emulate iOS phone numbers formatting on Android
 //if (navigator.userAgent.toLowerCase().indexOf("android") >= 0) {
@@ -591,7 +649,7 @@ $('#dependent_new_page, #dependent_edit_page, #spouse_new_page, #spouse_edit_pag
         });
     };
 
-    $('#contact_edit_page, #contact_new_page, #callback_create, #callback_edit, #new_phonecall_contact_page, #new_phonecall').live('pagecreate', function() {
+    $(document).on('pagecreate', '#contact_edit_page, #contact_new_page, #callback_create, #callback_edit, #new_phonecall_contact_page, #new_phonecall', function() {
         $('[type^="tel"]').usphone();
     });
 //}

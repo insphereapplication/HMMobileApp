@@ -67,9 +67,12 @@ class Note
       @opportunity
       end
   end
-  
+
+  def self.count
+      find(:all).count
+  end
+    
   def self.create_new(params)
-      puts "*"*80 + " CALLING CREATE!"
       new_note = Note.create(params)
       new_note.update_attributes( :temp_id => new_note.object )
       new_note

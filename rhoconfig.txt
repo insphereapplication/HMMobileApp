@@ -2,7 +2,7 @@ start_path = '/app/Settings/init'
 options_path = '/app/Settings'
 app_db_version = 7.0
 
-MinSeverity  = 0
+MinSeverity  = 1
 LogToOutput = 1
 LogCategories = *
 
@@ -23,7 +23,9 @@ KeepTrackOfLastVisitedPage = 0
 LastVisitedPage = ''
 #syncserver = https://rhosync.model.insphereis.net/application
 syncserver = http://localhost:9292
-
+#For android emulator connecting to local rhoconnect
+#syncserver = http://10.0.2.2:9292
+sync_poll_interval=0
 
 
 full_screen = 0
