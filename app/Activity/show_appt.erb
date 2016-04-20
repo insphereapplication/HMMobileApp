@@ -27,5 +27,6 @@
 			<li>Description: <%= @appt.description %></li>
 		</ul>
 		<a href="<%= url_for(:controller => :Activity, :action => :mark_appointment_complete, :query => {:opportunity_id => @appt.opportunity.object, :appointments => @appt.object, :origin => @params['origin']}) %>" data-theme="b" data-direction="reverse" data-role="button">Complete Appointment</a>
+		<a href="<%= url_for(:controller => :Activity, :action => :mark_appointment_noshow, :query => {:opportunity_id => @appt.opportunity.object, :appointments => @appt.object, :origin => @params['origin']}) %>" data-theme="a" data-direction="reverse" data-role="button">No Show</a>
 	</div>
 </div>

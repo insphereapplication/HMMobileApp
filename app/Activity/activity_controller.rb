@@ -717,6 +717,13 @@ class ActivityController < Rho::RhoController
     SyncUtil.start_sync
     redirect :controller => :Opportunity, :action => :show, :back => 'callback:', :id => @params['opportunity_id'], :query => {:origin => @params['origin']}
   end
+  
+  def mark_appointment_noshow
+    appointment = Activity.find(@params['appointments'], :conditions => {:type => 'Appointment'})
+    appointment.no_show if appointment
+    SyncUtil.start_sync
+    redirect :controller => :Opportunity, :action => :show, :back => 'callback:', :id => @params['opportunity_id'], :query => {:origin => @params['origin']}
+   end
     
   def update_status_call_back_requested
       opportunity = Opportunity.find_opportunity(@params['opportunity_id']) if @params['opportunity_id']

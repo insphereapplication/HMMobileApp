@@ -252,6 +252,19 @@ class Activity
     update_attributes(attrs)
     
   end
+  
+  def no_show
+    attrs = {
+      :statuscode => 'Canceled',
+      :statecode => 'Canceled',
+      :actualend => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+    }
+    attrs[:cssi_disposition] = 'Appointment No Show' 
+    Activity.local_changed=true
+    
+    update_attributes(attrs)
+        
+  end
 
   def self.emails
     find_by_sql(%Q{
