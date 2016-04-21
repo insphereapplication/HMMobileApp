@@ -46,7 +46,8 @@ class AppInfo
   end
   
   def get_model_limits
-    model_limits.blank? ? {} : Rho::JSON.parse(model_limits)
+    #limits should come from server but get out a sync every now so adding default set
+    model_limits.blank? ?  {"Activity" => 2999 ,"Opportunity" => 499, "Contact" => 3499, "Policy" => 7499, "Note" => 1749} : Rho::JSON.parse(model_limits)
   end
   
   def get_model_limits_warning_time
