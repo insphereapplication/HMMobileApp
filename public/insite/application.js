@@ -110,7 +110,7 @@ function popupBirthDateAJPicker(flag, title, field_key) {
 function setFieldValue(field, value) {
     $("[data-position='fixed']").fixedtoolbar("show");
     document.getElementById(field).value=value;
-    $("#"+field).refresh();
+    //$("#"+field).refresh();
 }
 
 // Enable the phoneNumber text box so that it submits with the form
