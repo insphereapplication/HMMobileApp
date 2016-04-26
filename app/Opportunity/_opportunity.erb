@@ -59,10 +59,8 @@
                 url2_icon = 'map'
             end
         end %>
-<div class="ui-li ui-btn-icon-right ui-li-has-alt btn-up-c">
-  <div class="ui-btn-inner ui-li ui-li-has-alt">
-    <div class="ui-btn-text">
-      <a class="ui-link-inherit btn" href="<%= url %>"<%= ' rel="external"' if urlIsExternal %>>
+<li data-icon="phone">
+      <a  href="<%= url %>"<%= ' rel="external"' if urlIsExternal %>>
 <%      if top_right_text %>
         <p class="ui-li-aside ui-li-desc" style="width: 40%;"><strong><%= top_right_text %></strong></p>
 <%      end %>
@@ -101,23 +99,15 @@
           </div>
         </div>
       </a>
-    </div>
 <%      if icon %>
     <span class="ui-icon ui-icon-<%= icon %> ui-icon-shadow"></span>
 <%      end %>
-  </div>
 <%      if url2 %>
-  <a class="ui-li-link-alt btn split-btn-up-c ui-btn-icon-notext" title="<%= url2_title %>" href="<%= url2 %>"<%= ' rel="external"' if url2IsExternal %>>
-    <span class="ui-btn-inner">
-      <span class="ui-shadow ui-btn-corner-all ui-btn-icon-notext" title="">
-        <span class="ui-btn-inner ui-btn-corner-all">
-          <span class="ui-icon ui-icon-<%= url2_icon %> ui-icon-shadow"></span>
-        </span>
-      </span>
-    </span>
+  <a href="<%= url2 %>"<%= ' rel="external"' if url2IsExternal %> >
+    
   </a>
 <%      end %>
-</div>
+</li>
 <%  end
 end %>
 

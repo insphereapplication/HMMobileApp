@@ -1,14 +1,14 @@
-<div id="opportunity_show" data-role="page" data-theme="b" data-cache="never">
+<div id="opportunity_show" data-role="page" data-theme="a" data-cache="never">
 	<%= offline_bar%>
 	<% if @params['origin'] == "contact" || @params['origin'] == "SearchContacts" %>
-	<div data-role="header" data-backbtn="false" data-theme="b">
+	<div data-role="header" data-backbtn="false" data-theme="a">
 		<a data-transition="slide"  href="<%= url_for(:controller => :Contact, :action => :show, :id => @contact.object, :query =>{:origin => @params['origin']}) %>"  data-icon="back">Contact</a>
 		<h3>
 			Opportunity<%= sync_spinner %>
 		</h3>
 	</div>
 	<% else %>
-	<div data-role="header" data-backbtn="false" data-theme="b">
+	<div data-role="header" data-backbtn="false" data-theme="a">
 		<%= opp_detail_backbutton(@params['origin']) %>
 		<h3>Opportunity <%= sync_spinner %></h3>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right" style="margin-top:-1px;">
@@ -17,7 +17,7 @@
       </div>
 	</div>
 	<% end %>
-	<div data-role="content" data-theme="b"> 
+	<div data-role="content" data-theme="a"> 
 		<% if ((@opportunity.statecode == "Won") || (@opportunity.statecode == "Lost"))%>
 			<a href="<%= url_for :action => :phone_dialog, :id => @opportunity.object, :query =>{:origin => @params['origin']}%>" rel="external" data-role="button">Call</a>
 			<% else %>
@@ -34,7 +34,7 @@
 				<a href="<%= url_for :action => :quick_quote, :id =>@opportunity.object, :query =>{:origin => @params['origin']} %>" rel="external" data-transition="none" data-role="button">Term Life Quick Quote</a>	
 			<% end %>
 		<% end %> 
-		<ul data-role="listview" data-theme="d" data-inset="true"> 
+		<ul data-role="listview" data-theme="a" data-inset="true"> 
 			<li>
 				<% if @params['origin'] == "contact" %>
 					<h3><%= @contact.full_name %></h3>
@@ -80,7 +80,7 @@
 			<li><p><strong> Last Activity:	</strong> <%= to_datetime(@opportunity.cssi_lastactivitydate) %> </li> 
 			<li><p><strong> Call Count: 	</strong> <%= @opportunity.phone_calls.size %> </li> 
 		</ul>	
-		<ul data-role="listview" data-filter="false" data-inset="true" data-theme="d">
+		<ul data-role="listview" data-filter="false" data-inset="true" data-theme="a">
 			<li data-role="list-divider">Notes</li>
 			<li data-icon="plus"><a class="UpdateStatus" href="<%= url_for(:action => :note_create, :id => @opportunity.object, :query =>{:test => "test", :origin => @params['origin']})%>" data-transition="slide">Add Note</a></li>
 			<% @notes.each do |note| %>
@@ -95,7 +95,7 @@
 			<% end %>
 		</ul>
 	
-		<ul data-role="listview" data-filter="false" data-inset="true" data-theme="d" >
+		<ul data-role="listview" data-filter="false" data-inset="true" data-theme="a" >
 			<li data-role="list-divider">Scheduled Appointments</li>		
 			<% @opportunity.incomplete_appointments.each do |appointment| %>
 			
@@ -107,16 +107,16 @@
 				</a>
 				<% if appointment.location.blank? %>
 					<% if System::get_property('platform') == 'APPLE'%>
-						<a onclick="hideSpin();" href=<%="maps:q="%> data-icon="map" data-theme="d" >
+						<a onclick="hideSpin();" href=<%="maps:q="%> data-icon="map" data-theme="a" >
 						</a>
 					<%else%>			
-						<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q="%> data-icon="map" data-theme="d" ></a>
+						<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q="%> data-icon="map" data-theme="a" ></a>
 					<%end%>
 				<% else %>
 					<% if System::get_property('platform') == 'APPLE'%>
-						<a onclick="hideSpin();" href=<%="maps:q=#{Rho::RhoSupport.url_encode(appointment.location)}"%> data-icon="map" data-theme="d" ></a>
+						<a onclick="hideSpin();" href=<%="maps:q=#{Rho::RhoSupport.url_encode(appointment.location)}"%> data-icon="map" data-theme="a" ></a>
 					<%else%>			
-						<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(appointment.location)}"%> data-icon="map" data-theme="d" ></a>
+						<a onclick="hideSpin();" href=<%="http://maps.google.com/?rho_open_target=_blank&q=#{Rho::RhoSupport.url_encode(appointment.location)}"%> data-icon="map" data-theme="a" ></a>
 					<%end%>
 				<% end %>
 			</li>
@@ -131,7 +131,7 @@
 		</ul>
 		
 		
-		<ul data-inset="true" data-filter="false" data-role="listview"  data-theme="d"  >
+		<ul data-inset="true" data-filter="false" data-role="listview"  data-theme="a"  >
 			<li data-role="list-divider"> Scheduled Callbacks</li>
 			<% @opportunity.open_phone_calls.each do |phonecall| %>
 						<li><a href="<%= url_for(:controller => :Activity, :action => :show_callback, :id => phonecall.object, :query => {:origin => @params['origin']}) %>" >
@@ -141,7 +141,7 @@
 						<% if phonecall.phonenumber.blank? %>
 							<a onclick="hideSpin()" rel="external" href="<%= url_for :action => :phone_dialog, :id=> @opportunity.object, :query =>{:opportunity => @opportunity.object, :origin => @params['origin']}%>" data-icon="phone"></a>
 						<% else %>
-							<a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub(/[^0-9]/, "") %>"  data-icon="phone" data-theme="d"  ></a> 							
+							<a onclick="hideSpin();" href="tel:<%= phonecall.phonenumber.gsub(/[^0-9]/, "") %>"  data-icon="phone" data-theme="a"  ></a> 							
 						<% end %>
 					
 				</li>

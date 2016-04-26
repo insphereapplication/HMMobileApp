@@ -95,30 +95,33 @@
                     var txt = getFilterText();
                     if (txt.length > 0)
                         txt = " " + txt;
-                    $filterTxt.text(filterTxt + txt);
+                 //   $filterTxt.text(filterTxt + txt);
                 }
                 else
                     requestData = {};
                 getContent(pageSize, true);
             }
             if ($filter) {
-                $filter = $($filter);
-                $filterTxt = $filter.find(".list-filter-txt").find("span.ui-btn-text");
-                filterTxt = $filterTxt.html();
-                var index = filterTxt.indexOf("<");
-                if (index > 0)
-                    filterTxt = filterTxt.substr(0, index);
-                filterTxt = $.trim(filterTxt);
-                $filter.find(".list-filter-find").click(function() {
-                    $filter.trigger("collapse");
-                    $this._reset();
-                });
-                $filter.find(".list-filter-clear").click(function() {
-                    if (clearFilter()) {
-                        $filter.trigger("collapse");
-                        $this._reset();
-                    }
-                });
+            	
+                //$filter = $($filter);
+                //$filterTxt = $filter.find(".list-filter-txt").find("span.ui-btn-text");
+                //filterTxt = $filterTxt.html();
+                //var index = filterTxt.indexOf("<");
+                //if (index > 0)
+                //    filterTxt = filterTxt.substr(0, index);
+                //filterTxt = $.trim(filterTxt);
+                //$filter.find(".list-filter-find").click(function() {
+                //    $filter.trigger("collapse");
+                //    $this._reset();
+                //});
+                //$filter.find(".list-filter-clear").click(function() {
+                //    if (clearFilter()) {
+                //        $filter.trigger("collapse");
+                //        $this._reset();
+                //    }
+                //});
+               
+                return false;
             }
             if (autoInitialize)
                 this._reset();

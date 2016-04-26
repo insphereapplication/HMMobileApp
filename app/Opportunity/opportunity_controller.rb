@@ -112,7 +112,7 @@ class OpportunityController < Rho::RhoController
       @pageSize = 30
       @url = '/app/Opportunity/get_jqm_leads'
       @filterBtnText = 'Filter'
-      render :action => :filters, :back => 'callback:', :layout => 'layout_jqm_opportunity_list'
+      render :action => :index, :back => 'callback:', :layout => 'layout'
     else
       redirect :controller => Settings, :action => :login, :back => 'callback:', :layout => 'layout'
     end
