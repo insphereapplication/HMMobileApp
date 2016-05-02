@@ -35,7 +35,7 @@
 			</div>
 			<div data-role="fieldcontain">
 				<label for="appointment_duration" class="select">Duration:</label>
-				<select name="appointment_duration" id="appointment_duration" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+				<select name="appointment_duration" id="appointment_duration" data-theme="d" >
 					<option value="90.0">1.5 Hours</option>
 					<option value="30.0">30 Minutes</option>
 					<option value="60.0">1 Hour</option>

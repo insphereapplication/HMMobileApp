@@ -1,18 +1,18 @@
 <div data-role="fieldcontain">
     <label for="activity_type_filter" class="select">Activity Type:</label>
-    <select name="activity_type_filter" id="activity_type_filter" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+    <select name="activity_type_filter" id="activity_type_filter" >
         <%= @type_filter %>
     </select>
 </div>
 <div data-role="fieldcontain">
     <label for="activity_status_filter" class="select">Due:</label>
-    <select name="activity_status_filter" id="activity_status_filter" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+    <select name="activity_status_filter" id="activity_status_filter" >
         <%= @status_filter %>
     </select>
 </div>
 <div data-role="fieldcontain">
     <label for="activity_priority_filter" class="select">Priority:</label>
-    <select name="activity_priority_filter" id="activity_priority_filter" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+    <select name="activity_priority_filter" id="activity_priority_filter" >
         <%= @priority_filter %>
     </select>
 </div>

@@ -10,7 +10,7 @@
     <div data-role="content" data-theme="b">
           <div data-role="fieldcontain">
                  <label for="reassign_to" class="select">Reassign opportunity to agent:</label>
-                 <select name="reassign_to" id="reassign_to" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+                 <select name="reassign_to" id="reassign_to" data-theme="d" >
                      <%=@reassign_agent_options%>
                  </select>
            </div>

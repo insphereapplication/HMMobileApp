@@ -1,19 +1,19 @@
 <div class="opp_followup_filter" data-role="fieldcontain">
     <label for="followup_status_reason_filter" class="select">Status Reason:</label>
-    <select name="followup_status_reason_filter" id="followup_status_reason_filter" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+    <select name="followup_status_reason_filter" id="followup_status_reason_filter" >
         <%= jqm_followup_status_reason_filter_options %>
     </select>
 </div>
 <div class="opp_followup_filter" data-role="fieldcontain">
     <label for="followup_sort_by_filter" class="select">Sort By:</label>
-    <select name="followup_sort_by_filter" id="followup_sort_by_filter" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+    <select name="followup_sort_by_filter" id="followup_sort_by_filter" >
         <%= jqm_followup_sort_by_filter_options %>
     </select>
 </div>
 <label for="followup_created_filter" class="opp_followup_filter select" >Created:</label>
 <div class="opp_followup_filter ui-grid-a">
     <div class="ui-block-a">
-        <select name="followup_created_filter" id="followup_created_filter" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+        <select name="followup_created_filter" id="followup_created_filter" >
             <%= jqm_followup_created_filter_options %>
         </select>
     </div>
@@ -24,13 +24,13 @@
 </div>
 <div class="appts_followup_filter" data-role="fieldcontain">
     <label for="appointments_select_type_filter" class="select">Type:</label>
-    <select name="appointments_select_type_filter" id="appointments_select_type_filter" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+    <select name="appointments_select_type_filter" id="appointments_select_type_filter" >
         <%= jqm_scheduled_filter_type_options %>
     </select>
 </div>
 <div class="appts_followup_filter" data-role="fieldcontain">
     <label for="appointments_select_date_filter" class="select">Date:</label>
-    <select name="appointments_select_date_filter" id="appointments_select_date_filter" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+    <select name="appointments_select_date_filter" id="appointments_select_date_filter" >
         <%= jqm_scheduled_filter_date_options %>
     </select>
 </div>

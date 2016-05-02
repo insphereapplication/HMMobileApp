@@ -9,7 +9,7 @@
 			</span>
 		</div>	
 		<div data-role="content" data-theme="b">
-			<ul data-role="listview" data-filter="false" data-inset="true" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>> 
+			<ul data-role="listview" data-filter="false" data-inset="true" data-theme="d" > 
 				<li data-role="list-divider">Opportunity Information</li>
 				<li>
 					<h3><%= @contact.full_name %></h3>
@@ -19,7 +19,7 @@
 			</ul>
 			<div data-role="fieldcontain">
 				<label for="opportunity_lineofbusiness" class="select">LOB:</label>
-				<select data-theme="d" id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+				<select data-theme="d" id="opportunity_lineofbusiness" name="opportunity[cssi_lineofbusiness]" data-theme="d" >
 					<option value="" selected="true"></option>
 						<% StaticEntity.get_rawlead_lob_names.each do |lob_name| %>
 							<option value="<%=lob_name%>">
@@ -30,7 +30,7 @@
 			</div>
 			<div data-role="fieldcontain">
 				<label for="opportunity_inputsource" class="select">Source:</label>
-				<select data-theme="d" id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+				<select data-theme="d" id="opportunity_inputsource" name="opportunity[cssi_leadsourceid]" data-theme="d" >
 					<option value="" selected="true"></option>
 						<% StaticEntity.get_lead_source_names.each do |lead_source_name| %>
 							<option value="<%=lead_source_name%>">

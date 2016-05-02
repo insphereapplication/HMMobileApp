@@ -16,7 +16,7 @@
 			<input type="hidden" name="appdetail[opportunity_id]" value="<%= @opportunity.object %>"/>
 			<div data-role="fieldcontain">
 				<label for="cssi_carrierid" class="select">Carrier:<font color="red">&nbsp;&nbsp;*</font></label>
-					<select id="cssi_carrierid" name="appdetail[cssi_carrierid]" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+					<select id="cssi_carrierid" name="appdetail[cssi_carrierid]" data-theme="d" >
 						<option value="" selected="true"></option>
 							<% StaticEntity.get_carrier_names.each do |carrier_name| %>
 								<option value="<%=carrier_name%>">
@@ -27,7 +27,7 @@
 			</div>
 			<div data-role="fieldcontain">
         		<label for="cssi_lineofbusinessid" class="select">LOB:<font color="red">&nbsp;&nbsp;*</font></label>
-				<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+				<select id="cssi_lineofbusinessid" name="appdetail[cssi_lineofbusinessid]" data-theme="d" >
 					<option value="" selected="true"></option>
 						<% StaticEntity.get_lob_names.each do |lob_name| %>
 							<option value="<%=lob_name%>">

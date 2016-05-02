@@ -14,7 +14,7 @@
   
 		<div data-role="fieldcontain">
         <label for="backgroundsynctime" class="select">Duration:</label>
-        <select name="backgroundsynctime" id="backgroundsynctime" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>								
+        <select name="backgroundsynctime" id="backgroundsynctime" data-theme="d" >								
                 <option <% if AppInfo.instance.get_background_sync_time == "off" %> selected == "true" <% end %> value="off">Disable</option>
                 <option <% if AppInfo.instance.get_background_sync_time == "2" %> selected == "true" <% end %> value="2">2 Minutes</option>
                 <option <% if AppInfo.instance.get_background_sync_time == "5" %> selected == "true" <% end %> value="5">5 Minutes</option>

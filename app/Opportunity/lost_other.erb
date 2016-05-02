@@ -28,7 +28,7 @@
 			<input type="hidden" name="opportunity_id" value="<%= @opportunity.object %>" />
 			<div data-role="fieldcontain">
 				<label for="status_codeid" class="select">Lost Reason:<font color="red">&nbsp;&nbsp;*</font></label>
-				<select name="status_code" id="status_codeid" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+				<select name="status_code" id="status_codeid" data-theme="d" >
 					<option data-placeholder="true"></option>
 					<% @lost_reasons.each do |reason| %>
 					    <% selected =  ( @params['selected_option'] != 'Other' && @params['selected_option'] == reason[0] ) ? 'selected="true"' : "" %>
@@ -38,7 +38,7 @@
 			</div>
 			<div data-role="fieldcontain">
 				<label for="competitorid" class="select">Competitor:</label>
-				<select name="competitorid" id="competitorid" data-theme="d" <%= ' data-native-menu="false"' if  (System.get_property('platform') == 'APPLE' && System::get_property('os_version').split('.')[0].to_i >= 9)%>>
+				<select name="competitorid" id="competitorid" data-theme="d" >
 					<option data-placeholder="true"></option>
 					<% @competitors.each do |competitor| %>
 						<option value="<%=competitor%>"><%=competitor%></option>
