@@ -529,7 +529,7 @@ class SettingsController < Rho::RhoController
       end
       
       if sourcename == 'Opportunity'
-        handle_new_integrated_leads
+        handle_new_integrated_leads if AppApplication.activated?
       end
       
       if @params['source_name'] && @params['cumulative_count'] && @params['cumulative_count'].to_i > 0
@@ -801,18 +801,15 @@ class SettingsController < Rho::RhoController
   def on_dismiss_new_opportunity_popup
     if @params['button_id'] == 'View'
       Rho::NativeTabbar.switch_tab(0) 
-      WebView.navigate( 
-        url_for(:controller => :Opportunity, :action => :index)
-      )
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :index))
     end
   end
   
 def on_model_limit_popup
   if @params['button_id'] == 'View'
-    Rho::NativeTabbar.switch_tab(3) 
+    Rho::NativeTabbar.switch_tab(Constants::TAB_INDEX['Tools']) 
     WebView.navigate( 
-      url_for(:controller => :Settings, :action => :model_limit_counts, :layout => 'layout')
-    )
+      url_for(:controller => :Settings, :action => :model_limit_counts, :layout => 'layout'), Constants::TAB_INDEX['Tools'])
   end
 end
   
@@ -1035,21 +1032,22 @@ end
   def model_limits_warning?
     result = false
     begin
-      last_check_date = AppInfo.instance.get_model_limits_warning_time.blank? ? 8 : DateUtil.days_ago(AppInfo.instance.get_model_limits_warning_time)
-      if last_check_date >= 1      
-        opportunity_percentage = Opportunity.open_opportunities_count / AppInfo.instance.get_model_limits['Opportunity'].to_f
-        contact_percentage = Contact.count / AppInfo.instance.get_model_limits['Contact'].to_f
-        activity_percentage = Activity.count / AppInfo.instance.get_model_limits['Activity'].to_f 
-        policy_percentage = Policy.count / AppInfo.instance.get_model_limits['Policy'].to_f
-        note_percentage =  Note.count / AppInfo.instance.get_model_limits['Note'].to_f
+      if AppApplication.activated?
+        last_check_date = AppInfo.instance.get_model_limits_warning_time.blank? ? 8 : DateUtil.days_ago(AppInfo.instance.get_model_limits_warning_time)
+        if last_check_date >= 1      
+          opportunity_percentage = Opportunity.open_opportunities_count / AppInfo.instance.get_model_limits['Opportunity'].to_f
+          contact_percentage = Contact.count / AppInfo.instance.get_model_limits['Contact'].to_f
+          activity_percentage = Activity.count / AppInfo.instance.get_model_limits['Activity'].to_f 
+          policy_percentage = Policy.count / AppInfo.instance.get_model_limits['Policy'].to_f
+          note_percentage =  Note.count / AppInfo.instance.get_model_limits['Note'].to_f
         
-        max_percentage = [opportunity_percentage, contact_percentage, activity_percentage,  policy_percentage, note_percentage].max
+          max_percentage = [opportunity_percentage, contact_percentage, activity_percentage,  policy_percentage, note_percentage].max
         
-        if (max_percentage > '.02'.to_f && last_check_date >= 1) || (max_percentage > '.01'.to_f && last_check_date > 3) || (max_percentage > '.05'.to_f && last_check_date > 7)
-          AppInfo.instance.set_model_limits_warning_time(DateTime.now.strftime(DateUtil::DEFAULT_TIME_FORMAT))
-          result = true
+          if (max_percentage > '.02'.to_f && last_check_date >= 1) || (max_percentage > '.01'.to_f && last_check_date > 3) || (max_percentage > '.05'.to_f && last_check_date > 7)
+            AppInfo.instance.set_model_limits_warning_time(DateTime.now.strftime(DateUtil::DEFAULT_TIME_FORMAT))
+            result = true
+          end
         end
-       
       end
     rescue Exception => e
         puts "Unable to determine model limit warning check: #{e}"
