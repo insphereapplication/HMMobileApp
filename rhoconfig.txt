@@ -22,7 +22,8 @@ logname='InsiteMobile-rhodes'
 KeepTrackOfLastVisitedPage = 0 
 LastVisitedPage = ''
 #syncserver = https://rhosync.model.insphereis.net/application
-syncserver = http://localhost:9292
+#syncserver = http://localhost:9292
+syncserver = https://rhoconnect.dev.insphereis.net
 #For android emulator connecting to local rhoconnect
 #syncserver = http://10.0.2.2:9292
 sync_poll_interval=0
