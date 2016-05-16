@@ -124,7 +124,7 @@
 						</a>
 					</li>
 				<% else %>
-					<li data-icon="add">
+					<li data-icon="plus">
 						<a href="<%= url_for(:controller => :Contact, :action => :spouse_add, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>">Add Spouse</a>
 					</li>
 				<% end %>
@@ -138,7 +138,7 @@
 			<% end %>
 			<ul data-role="listview" data-filter="false" data-inset="true" data-theme="d">
 				<li data-role="list-divider">Dependents</li>
-				<li data-icon="add">
+				<li data-icon="plus">
 					<a href="<%= url_for(:controller => :Dependent, :action => :new, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>">Add Dependent</a>
 				</li>
 				<% @contact.dependents.each do |dependent| %>
@@ -208,7 +208,7 @@
 	
 		<% if @params['origin'] == "contact" || @params['origin'] == "SearchContacts" %>		
 		 <ul data-role="listview" data-filter="false" data-inset="true" data-theme="d">
-			<li data-role="list-divider" data-theme="d">Opportunities</li>
+			<li data-role="list-divider">Opportunities</li>
 			<li data-icon="plus">
 				<a href="<%= url_for(:controller => :Opportunity, :action => :new, :id => @contact.object, :query => {:origin => @params['origin']}) %>" data-transition="slide">Add Opportunity</a>
 			</li>
@@ -226,7 +226,7 @@
 		<% end %>
 		<fieldset class="ui-grid-custom ui-grid-a">
 			<div class="ui-block-a">
-				<a href="<%= url_for(:action => :new_contact_task, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>" data-icon="add" data-role="button" style="white-space:normal" >Add <br />
+				<a href="<%= url_for(:action => :new_contact_task, :id => @contact.object, :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}) %>" data-icon="plus" data-role="button" style="white-space:normal" >Add <br />
 			  Activity</a> 
 			</div>
 			<div class="ui-block-b">
