@@ -127,6 +127,81 @@ class Activity
       end
   end
   
+  def self.create_new_task(params, contactid, sync=false)
+    db = ::Rho::RHO.get_src_db('Activity')
+    db.start_transaction
+    begin
+       activity = Activity.create_new({
+         :scheduledend => DateUtil.date_build(params['task_datetime']), 
+         :subject => params['task_subject'],
+         :description => params['task_description'],
+         :statecode => 'Open',
+         :type => "Task",
+         :prioritycode => params['task_priority_checkbox'] ? 'High' : 'Normal',
+         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+         })
+         
+        if !contactid.blank?
+          activity.update_attributes(:parent_type => 'Contact', 
+                      :parent_id => contactid)  
+        end 
+        db.commit
+    rescue Exception => e
+      puts "Exception in create new Task, rolling back: #{e.inspect} -- #{params.inspect}"
+      db.rollback
+      end
+    SyncUtil.start_sync if sync  
+  end
+  
+  def self.create_new_phonecall(params, sync=false)
+    db = ::Rho::RHO.get_src_db('Activity')
+    db.start_transaction
+    begin
+      task = Activity.create_new({
+        :scheduledstart => DateUtil.date_build(params['callback_datetime']), 
+        :scheduleddurationminutes => Rho::RhoConfig.phonecall_duration_default_minutes.to_i,
+        :scheduledend => DateUtil.end_date_time(params['callback_datetime'], Rho::RhoConfig.phonecall_duration_default_minutes.to_i),
+        :subject => params['phonecall_subject'],
+        :cssi_phonetype => "Ad Hoc",
+        :phonenumber => params['phonecall_number'],
+        :statuscode => 'Open',
+        :statecode => 'Open',
+        :type => 'PhoneCall',
+        :prioritycode => params['callback_priority_checkbox'] ? 'High' : 'Normal',
+        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+      })
+      db.commit
+    rescue Exception => e
+      puts "Exception in create new Task, rolling back: #{e.inspect} -- #{params.inspect}"
+      db.rollback
+    end
+    SyncUtil.start_sync if sync  
+  end
+  
+  def self.create_new_appointment(params, sync=false)
+       db = ::Rho::RHO.get_src_db('Activity')
+       db.start_transaction
+       begin
+         task = Activity.create_new({
+           :scheduledstart => DateUtil.date_build(params['appointment_datetime']), 
+           :scheduledend => DateUtil.end_date_time(params['appointment_datetime'], params['appointment_duration']),
+           :subject => params['appointment_subject'],
+           :cssi_location => "Ad Hoc",
+           :location => params['appointment_location'],
+           :description => params['appointment_description'],
+           :statuscode => "Busy",
+           :statecode => "Scheduled",
+           :type => 'Appointment',
+           :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
+         })
+         db.commit
+      rescue Exception => ecreate
+         puts "Exception in create new appointment, rolling back: #{e.inspect} -- #{params.inspect}"
+         db.rollback
+      end
+     SyncUtil.start_sync if sync        
+  end
+  
   def self.todays_follow_ups(page=nil, page_size=DEFAULT_PAGE_SIZE) 
     find_by_sql(%Q{
         #{SELECT_OPEN_PHONE_CALL_SQL} and

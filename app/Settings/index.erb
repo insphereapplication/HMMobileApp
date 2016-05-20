@@ -26,7 +26,7 @@
 							<li>
 								<div data-role="fieldcontain">
 									<label  for="PIN" class="fieldLabel">Please Enter PIN:</label>
-									<input  maxlength="4" type="tel" onkeypress="this.type='password';" id="PIN" name="PIN" value=""/>
+									<input  maxlength="4" type="number" style="-webkit-text-security: disc" pattern="[0-9]*" id="PIN" name="PIN" value=""/>
 								</div>
 								<fieldset class="ui-grid-a">
 									<div class="ui-block-a"><input type="submit" class="standardButton"  value="Submit"/></div>	
@@ -76,7 +76,7 @@
 			<li data-role="list-divider">Settings</li>
 			<li>
 				
-				<% if Rho::RhoConnectClient.isLoggedIn() == 1 %>
+				<% if Rho::RhoConnectClient.isLoggedIn() %>
 				<a href="<%= url_for :action => :do_logout %>"> <img src="/public/images/login-key.png" class="ui-li-icon">Logout <%= Rho::RhoConnectClient.userName %></a>
    				<% else %>
 				<a href="<%= url_for :action => :login %>"><img src="/public/images/login-key.png" class="ui-li-icon">Login</a>

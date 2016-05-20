@@ -411,97 +411,23 @@ class ActivityController < Rho::RhoController
   end
   
   def create_new_full_task
-    db = ::Rho::RHO.get_src_db('Activity')
-    db.start_transaction
-    begin
-      task = Activity.create_new({
-        :scheduledend => DateUtil.date_build(@params['task_datetime']), 
-        :subject => "#{@params['task_subject']}",
-        :description => @params['task_description'],
-        :statecode => 'Open',
-        :type => 'Task',
-        :prioritycode => @params['task_priority_checkbox'] ? 'High' : 'Normal',
-        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-      })
-      db.commit
-      finished_create_activity
-   rescue Exception => e
-      puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
-      db.rollback
-   end
+    Activity.create_new_task(@params,"", true)
+    WebView.navigate(url_for( :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'))
   end
   
   def create_new_contact_task
-     contact = Contact.find_contact(@params['id'])
-     db = ::Rho::RHO.get_src_db('Activity')
-     db.start_transaction
-     begin
-       task = Activity.create_new({
-         :scheduledend => DateUtil.date_build(@params['task_datetime']), 
-         :subject => "#{@params['task_subject']}",
-         :description => @params['task_description'],
-         :parent_type => 'Contact', 
-         :parent_id => contact.object,
-         :statecode => 'Open',
-         :type => 'Task',
-         :prioritycode => @params['task_priority_checkbox'] ? 'High' : 'Normal',
-         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-       })
-       db.commit
-       finished_contact_activity(contact)
-    rescue Exception => e
-       puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
-       db.rollback
-    end
+    Activity.create_new_task(@params, @params['id'], true)
+    WebView.navigate(url_for( :controller => :contact, :action => :show, :id => contact.object, :back => 'callback:', :layout => 'layout'))
   end
   
   def create_new_phonecall
-    db = ::Rho::RHO.get_src_db('Activity')
-    db.start_transaction
-    begin
-      task = Activity.create_new({
-        :scheduledstart => DateUtil.date_build(@params['callback_datetime']), 
-        :scheduleddurationminutes => Rho::RhoConfig.phonecall_duration_default_minutes.to_i,
-        :scheduledend => DateUtil.end_date_time(@params['callback_datetime'], Rho::RhoConfig.phonecall_duration_default_minutes.to_i),
-        :subject => "#{@params['phonecall_subject']}",
-        :cssi_phonetype => "Ad Hoc",
-        :phonenumber => @params['phonecall_number'],
-        :statuscode => 'Open',
-        :statecode => 'Open',
-        :type => 'PhoneCall',
-        :prioritycode => @params['callback_priority_checkbox'] ? 'High' : 'Normal',
-        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-      })
-      db.commit
-      finished_create_activity
-    rescue Exception => e
-      puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
-      db.rollback
-    end
+    Activity.create_new_phonecall(@params, true)
+    WebView.navigate(url_for( :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'))
   end
   
   def create_new_appointment
-    db = ::Rho::RHO.get_src_db('Activity')
-    db.start_transaction
-    begin
-      task = Activity.create_new({
-        :scheduledstart => DateUtil.date_build(@params['appointment_datetime']), 
-        :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
-        :subject => "#{@params['appointment_subject']}",
-        :cssi_location => "Ad Hoc",
-        :location => @params['appointment_location'],
-        :description => @params['appointment_description'],
-        :statuscode => "Busy",
-        :statecode => "Scheduled",
-        :type => 'Appointment',
-        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-      })
-      db.commit
-      finished_create_activity
-    rescue Exception => ecreate
-      puts "Exception in create new appointment, rolling back: #{e.inspect} -- #{@params.inspect}"
-      db.rollback
-    end
+    Activity.create_new_appointment(@params, true)
+    WebView.navigate(url_for( :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'))
   end
 
   def update_task
@@ -631,7 +557,7 @@ class ActivityController < Rho::RhoController
             db_activity.rollback
             redirect_to_index_page
           end
-          Rho::RhoConnectClient.doSyncSource("Activity", false,@params)
+          Rho::RhoConnectClient.doSyncSource("Activity", false)
           db = ::Rho::RHO.get_src_db('Opportunity')
           db.start_transaction
           begin
@@ -875,10 +801,6 @@ class ActivityController < Rho::RhoController
     redirect :controller => :Opportunity, :action => :show, :back => 'callback:', :id => opportunity.object, :query => {:origin => origin}
   end
   
-  def finished_create_activity
-    SyncUtil.start_sync
-    WebView.navigate(url_for( :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'))
-  end
   
   def finished_win_status(opportunity, origin, appointmentids=nil)
     complete_appointments(appointmentids)
@@ -901,11 +823,6 @@ class ActivityController < Rho::RhoController
         appointment.complete if appointment
       end
     end
-  end
-
-  def finished_contact_activity(contact)
-    SyncUtil.start_sync
-    WebView.navigate(url_for( :controller => :contact, :action => :show, :id => contact.object, :back => 'callback:', :layout => 'layout'))
   end
 
 end

@@ -18,11 +18,11 @@
   
 		<div data-role="fieldcontain">
       		<label for="enter_pin">Enter PIN <small>(Should consist of 4 numbers)</small></label>
-     		<input maxlength="4" type="tel" onkeypress="this.type='password';" pattern="[0-9]*" name="enter_pin" data-theme="d" id="enter_pin" />
+     		<input maxlength="4" type="number" style="-webkit-text-security: disc" pattern="[0-9]*" name="enter_pin" data-theme="d" id="enter_pin" />
 		</div>
 		<div data-role="fieldcontain">
 			 <label for="verify_pin">Verify PIN</label>
-             <input maxlength="4" type="tel" onkeypress="this.type='password';" pattern="[0-9]*" name="verify_pin" data-theme="d" id="verify_pin" />
+             <input maxlength="4" type="number" style="-webkit-text-security: disc" pattern="[0-9]*" name="verify_pin" data-theme="d" id="verify_pin" data-numpad="nmpd2"/>
 		</div>
     		<div data-role="fieldcontain">
 			<label for="pin_password">Password</label>
