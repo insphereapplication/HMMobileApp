@@ -151,6 +151,7 @@ class ActivityController < Rho::RhoController
     end
     @grouped_items = @@data_loader.load_data([page, @type, @priority, page_size])
     render :partial => 'activity', :locals => { :items => @grouped_items }
+
   end
 
   def show_all_activities
@@ -412,12 +413,19 @@ class ActivityController < Rho::RhoController
   
   def create_new_full_task
     Activity.create_new_task(@params,"", true)
+    Activity.local_changed = true
+    redirect navigate_to_index
+  end
+  
+  #This a hack.  On Android the page is not refeshing all the time if the redirect is not call first
+  def navigate_to_index
     WebView.navigate(url_for( :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'))
   end
   
   def create_new_contact_task
     Activity.create_new_task(@params, @params['id'], true)
-    WebView.navigate(url_for( :controller => :contact, :action => :show, :id => contact.object, :back => 'callback:', :layout => 'layout'))
+    Activity.local_changed = true
+    redirect navigate_to_index
   end
   
   def create_new_phonecall
@@ -427,7 +435,8 @@ class ActivityController < Rho::RhoController
   
   def create_new_appointment
     Activity.create_new_appointment(@params, true)
-    WebView.navigate(url_for( :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'))
+    Activity.local_changed = true
+    redirect navigate_to_index
   end
 
   def update_task

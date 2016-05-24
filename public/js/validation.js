@@ -553,7 +553,7 @@ $(document).on('pagecreate','#pin_reset_page',function(event){
 			    }
 	     },
 		 errorPlacement: function (error, element) {
-			error.insertAfter(element);
+			error.insertAfter(element.parent());
 		 }
 	    });
 
