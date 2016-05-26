@@ -429,12 +429,12 @@ class ActivityController < Rho::RhoController
   end
   
   def create_new_phonecall
-    Activity.create_new_phonecall(@params, true)
+    Activity.create_new_phonecall(@params, nil, "Ad Hoc", @params['phonecall_number'], true)
     WebView.navigate(url_for( :action => :index, :back => 'callback:', :layout => 'layout_jqm_list'))
   end
   
   def create_new_appointment
-    Activity.create_new_appointment(@params, true)
+    Activity.create_new_appointment(@params, nil, "Ad Hoc", @params['appointment_location'], true)
     Activity.local_changed = true
     redirect navigate_to_index
   end

@@ -143,7 +143,8 @@ class Activity
          
         if !contactid.blank?
           activity.update_attributes(:parent_type => 'Contact', 
-                      :parent_id => contactid)  
+                      :parent_id => contactid,
+                      :parent_contact_id => contactid)  
         end 
         db.commit
     rescue Exception => e
@@ -153,7 +154,7 @@ class Activity
     SyncUtil.start_sync if sync  
   end
   
-  def self.create_new_phonecall(params, sync=false)
+  def self.create_new_phonecall(params, contactid, phonetype, phone_number, sync=false)
     db = ::Rho::RHO.get_src_db('Activity')
     db.start_transaction
     begin
@@ -162,14 +163,19 @@ class Activity
         :scheduleddurationminutes => Rho::RhoConfig.phonecall_duration_default_minutes.to_i,
         :scheduledend => DateUtil.end_date_time(params['callback_datetime'], Rho::RhoConfig.phonecall_duration_default_minutes.to_i),
         :subject => params['phonecall_subject'],
-        :cssi_phonetype => "Ad Hoc",
-        :phonenumber => params['phonecall_number'],
+        :cssi_phonetype => phonetype,
+        :phonenumber => phone_number,
         :statuscode => 'Open',
         :statecode => 'Open',
         :type => 'PhoneCall',
         :prioritycode => params['callback_priority_checkbox'] ? 'High' : 'Normal',
         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
       })
+      if !contactid.blank?
+        activity.update_attributes(:parent_type => 'Contact', 
+                    :parent_id => contactid,
+                    :parent_contact_id => contactid)  
+      end 
       db.commit
     rescue Exception => e
       puts "Exception in create new Task, rolling back: #{e.inspect} -- #{params.inspect}"
@@ -178,7 +184,7 @@ class Activity
     SyncUtil.start_sync if sync  
   end
   
-  def self.create_new_appointment(params, sync=false)
+  def self.create_new_appointment(params, contactid, location_type, location, sync=false)
        db = ::Rho::RHO.get_src_db('Activity')
        db.start_transaction
        begin
@@ -186,16 +192,22 @@ class Activity
            :scheduledstart => DateUtil.date_build(params['appointment_datetime']), 
            :scheduledend => DateUtil.end_date_time(params['appointment_datetime'], params['appointment_duration']),
            :subject => params['appointment_subject'],
-           :cssi_location => "Ad Hoc",
-           :location => params['appointment_location'],
+           :cssi_location => location_type,
+           :location => location,
            :description => params['appointment_description'],
            :statuscode => "Busy",
            :statecode => "Scheduled",
            :type => 'Appointment',
            :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
          })
+         if !contactid.blank?
+           activity.update_attributes(:parent_type => 'Contact', 
+                       :parent_id => contactid,
+                       :parent_contact_id => contactid)  
+         end 
+         finished_contact_activity
          db.commit
-      rescue Exception => ecreate
+      rescue Exception => e
          puts "Exception in create new appointment, rolling back: #{e.inspect} -- #{params.inspect}"
          db.rollback
       end

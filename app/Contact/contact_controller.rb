@@ -384,96 +384,26 @@ class ContactController < Rho::RhoController
       render :action => :new_contact_phonecall, :back => 'callback:', :layout => 'layout', :query => {:origin => @params['origin'], :opportunity => @params['opportunity']}
   end
   
-  def finished_contact_activity(contact, origin, opportunity)
-    SyncUtil.start_sync
-    WebView.navigate(url_for(:action => :show, :id => contact.object, :back => 'callback:', :query => {:origin => origin, :opportunity => opportunity}, :layout => 'layout'))
+  def finished_contact_activity(contactid, origin, opportunity)
+    WebView.navigate(url_for(:action => :show, :id => contactid, :back => 'callback:', :query => {:origin => origin, :opportunity => opportunity}, :layout => 'layout'))
   end
   
   def create_new_contact_task
-     contact = Contact.find_contact(@params['id'])
-     db = ::Rho::RHO.get_src_db('Activity')
-     db.start_transaction
-     begin
-       task = Activity.create_new({
-         :scheduledend => DateUtil.date_build(@params['task_datetime']), 
-         :subject => "#{@params['task_subject']}",
-         :description => @params['task_description'],
-         :parent_type => 'Contact', 
-         :parent_id => contact.object,
-         :parent_contact_id => contact.object,
-         :statecode => 'Open',
-         :type => 'Task',
-         :prioritycode => @params['task_priority_checkbox'] ? 'High' : 'Normal',
-         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-       })
-       db.commit
-       finished_contact_activity(contact, @params['origin'], @params['opportunity'])
-    rescue Exception => e
-       puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
-       db.rollback
-    end
+     Settings.record_activity
+     Activity.create_new_task(@params,@params['id'], true)
+     redirect finished_contact_activity(@params['id'], @params['origin'], @params['opportunity'])
   end
   
   def create_new_appointment
-     contact = Contact.find_contact(@params['id'])
-     db = ::Rho::RHO.get_src_db('Activity')
-     db.start_transaction
-     begin
-       task = Activity.create_new({
-         :parent_type => 'Contact', 
-         :parent_id => contact.object,
-         :parent_contact_id => contact.object,
-         :scheduledstart => DateUtil.date_build(@params['appointment_datetime']), 
-         :scheduledend => DateUtil.end_date_time(@params['appointment_datetime'], @params['appointment_duration']),
-         :subject => "#{@params['appointment_subject']}",
-         :cssi_location => @params['cssi_location'],
-         :location => @params['location'],
-         :description => @params['appointment_description'],
-         :statuscode => "Busy",
-         :statecode => "Scheduled",
-         :type => 'Appointment',
-         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-       })
-       puts "!~!~!~!~!~!~!~!~!~ PARAMS FOR CREATE APPT ARE #{@params.inspect}"
-       db.commit
-       finished_contact_activity(contact, @params['origin'], @params['opportunity'])
-    rescue Exception => e
-       puts "Exception in create new appointment, rolling back: #{e.inspect} -- #{@params.inspect}"
-       db.rollback
-    end
+     Settings.record_activity
+     Activity.create_new_appointment(@params, @params['id'], @params['cssi_location'], @params['location'], true)
+     redirect finished_contact_activity(@params['id'], @params['origin'], @params['opportunity'])
   end
 
   def create_contact_phonecall
     Settings.record_activity
-    @contact = Contact.find_contact(@params['id'])
-    db = ::Rho::RHO.get_src_db('Activity')
-    db.start_transaction
-    begin
-      phone_call = Activity.create_new({
-        :scheduledstart => DateUtil.date_build(@params['callback_datetime']), 
-        :subject => "#{@params['phonecall_subject']}",
-        :prioritycode => @params['callback_priority_checkbox'] ? 'High' : 'Normal',
-        :scheduleddurationminutes => Rho::RhoConfig.phonecall_duration_default_minutes.to_i,
-        :scheduledend => DateUtil.end_date_time(@params['callback_datetime'], Rho::RhoConfig.phonecall_duration_default_minutes.to_i),
-        :cssi_phonetype => @params['phone_type_selected'],
-        :phonenumber => @params['phone_number'],
-        :statuscode => 'Open',
-        :statecode => 'Open',
-        :type => 'PhoneCall',
-        :parent_type => 'Contact', 
-        :parent_id => @contact.object,
-        :parent_contact_id => @contact.object,
-        :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
-      })
-   
-      db.commit
-      
-    rescue Exception => e
-      puts "Exception in create new Task, rolling back: #{e.inspect} -- #{@params.inspect}"
-      db.rollback
-    end
-
-    finished_contact_activity(@contact, @params['origin'], @params['opportunity'])
+    Activity.create_new_phonecall(@params, @params['id'], @params['phone_type_selected'], @params['phone_number'], true) 
+    redirect finished_contact_activity(@params['id'], @params['origin'], @params['opportunity'])
   end
 
   def new_contact_appointment

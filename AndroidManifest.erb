@@ -6,7 +6,7 @@
           android:installLocation='<%= @installLocation %>'>
 
   <!-- Android SDK -->
-  <uses-sdk android:minSdkVersion='<%= @minSdkVer %>' android:targetSdkVersion='16'
+  <uses-sdk android:minSdkVersion='<%= @minSdkVer %>' android:targetSdkVersion='17'
     <% if @maxSdkVer %>
       android:maxSdkVersion='<%= @maxSdkVer %>'
     <% end %>
@@ -43,7 +43,7 @@
               android:launchMode='singleTask'
               android:configChanges='orientation|screenSize|fontScale|smallestScreenSize|keyboard|keyboardHidden'
               android:screenOrientation='<%= @screenOrientation %>'
-              android:windowSoftInputMode='stateVisible|adjustResize|adjustPan'
+              android:windowSoftInputMode='stateHidden|adjustResize|adjustPan'
               <% if @hardwareAcceleration %>
               android:hardwareAccelerated='true'
               <% end %> >
