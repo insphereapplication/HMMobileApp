@@ -15,25 +15,25 @@ class OpportunityController < Rho::RhoController
 	@@delay_refresh = false
     tabbar = [
       { 
-        :label => "Opportunities", 
+        :label => "", 
         :action => '/app/Opportunity', 
         :icon => "/public/images/dollar.png", 
         :backgroundColor => 0x7F7F7F
       }, 
       { 
-        :label => "Contacts", 
+        :label => "", 
         :action => "callback:#{url_for(:controller => :Contact, :action => :show_all_contacts)}",  
         :icon => "/public/images/contacts.png", 
         :reload => true 
       },
       {
-        :label => "Activities",
+        :label => "",
         :action => "callback:#{url_for(:controller => :Activity, :action => :show_all_activities)}",
         :icon => "/public/images/glyphish-icons/117-todo.png",
         :reload => true
       },
       { 
-        :label => "Tools",  
+        :label => "",  
         :action => '/app/Settings',  
         :icon => "/public/images/iphone/tabs/settings_tab_icon.png" 
       }
