@@ -73,24 +73,23 @@ end
 
 def build_yml
   {
-    :sdk_path => '/Library/rhodes',
     :name => 'HM Mobile',
     :version => ENV['BUILD_NUMBER'] || '2.1.10',
     :iphone_config => 'Distribution',
-    :iphone_sdk => 'iphoneos6.1',
+    :iphone_sdk => 'iphoneos9.2',
     :codesignidentity => '"iPhone Distribution: Insphere Insurance Solutions, Inc"',
     :provisionprofile => 'a03c05a7-8ab0-43a0-8180-6c2e453e127d',
     :motorola_license_company => 'Insphere Insurance Solutions',
     :motorola_license => '0209646A081D151A000307711A7E1C75',
     :package_name => 'com.insphere.insite',
-    :sdk_path => "/Library/insphereapplication/rhodes",
+    :sdk_path => "/Library/rhodes",
     :sdk_version => "2.3.0",
     :build_type => "release",
     :android_cert_path => "#{APP_PATH}/insphere_insite.keystore",
     :android_cert_password => "5zW8e3ZuS7DWY0TsnCTyyWnpGSDUqUgj",
     :android_cert_alias => "Insite",
     :android_push_sender => "90041468856",
-    :android_sdk_version => "2.3.3",
+    :android_sdk_version => "4.1.2",
     :encrypt_database => '1',
     :bundle_identifier => "com.insphere.insite",
     :bundle_url_scheme => 'insite',
@@ -120,7 +119,7 @@ end
 
 def rhoconfig
   {
-    :app_db_version => '16.3', #This was last upticked for the drop on 02/19/2016 (Adding Account fields to contact)
+    :app_db_version => '16.7', #This was last upticked for the drop on 02/19/2016 (Adding Account fields to contact)
     :min_severity => '5',
     :max_log_file_size => '1000000',
     :sync_server => 'https://rhoconnect.insphereis.net/application',    
