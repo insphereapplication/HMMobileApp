@@ -7,8 +7,8 @@ app_type: rhoelements
 capabilities:
   - non_motorola_device
   - native_browser
-motorola_license_company: <%= @build_yml[:motorola_license_company] %>
-motorola_license: <%= @build_yml[:motorola_license] %>
+#motorola_license_company: <%= @build_yml[:motorola_license_company] %>
+#motorola_license: <%= @build_yml[:motorola_license] %>
 android: 
   package_name: <%= @build_yml[:package_name] %>
   URIScheme: <%= @build_yml[:uri_scheme] %>
@@ -17,7 +17,7 @@ android:
     certificate: <%= @build_yml[:android_cert_path] %>
     password: "<%= @build_yml[:android_cert_password] %>"
     alias: "<%= @build_yml[:android_cert_alias] %>"
-  emulator: rhoandroid
+  #emulator: rhoandroid
   android_title: 0
   push:
     sender: <%= @build_yml[:android_push_sender] %>
