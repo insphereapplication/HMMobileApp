@@ -122,7 +122,7 @@ def rhoconfig
     :app_db_version => '16.7', #This was last upticked for the drop on 02/19/2016 (Adding Account fields to contact)
     :min_severity => '5',
     :max_log_file_size => '1000000',
-    :sync_server => 'https://rhoconnect.insphereis.net/application',    
+    :sync_server => 'https://rhoconnect.insphereis.net',    
     :quick_quote_url => "https://mobile.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
     :resource_center_url => "https://mobile-rc.insphereis.net/_layouts/InsphereLogin.aspx",
     :log_server => 'https://mobileproxy.insphereis.net/clientlog',
@@ -136,7 +136,7 @@ def model_rhoconfig
   rhoconfig.merge({
     :min_severity => '1',
     :max_log_file_size => '2000000',
-    :sync_server => 'https://rhoconnect.model.insphereis.net/application', 
+    :sync_server => 'https://rhoconnect.model.insphereis.net', 
     :quick_quote_url => "https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
     :resource_center_url => "https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx",
     :log_server => 'https://mobileproxy.model.insphereis.net/clientlog',
@@ -149,7 +149,7 @@ def dev_rhoconfig
   rhoconfig.merge({
     :min_severity => '1',
     :max_log_file_size => '2000000',
-    :sync_server => 'https://rhoconnect.dev.insphereis.net/application', 
+    :sync_server => 'https://rhoconnect.dev.insphereis.net', 
     :quick_quote_url => "https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242",
     :resource_center_url => "https://mobile-rc.dev.insphereis.net/_layouts/InsphereLogin.aspx",
     :log_server => 'https://mobileproxy.dev.net/clientlog',
