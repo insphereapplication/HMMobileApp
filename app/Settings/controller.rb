@@ -373,10 +373,14 @@ class SettingsController < Rho::RhoController
     puts "new opp sync pending in push notify: " + Settings.new_opportunity_sync_pending.to_s
 
     if System::get_property('platform') == 'ANDROID'
-      "rho_push"
-    else
-      ""
-    end
+      # Looks like android notification changed in 5.4
+       #    "rho_push" 
+       puts "Making new notification call"
+       Rho::Notification.showPopup("#{@params['alert']}")
+     else
+       ""
+     end
+  
   end
   
   def set_last_integrated_lead
