@@ -376,7 +376,7 @@ class SettingsController < Rho::RhoController
       # Looks like android notification changed in 5.4
        #    "rho_push" 
        puts "Making new notification call"
-       Rho::Notification.showPopup("#{@params['alert']}")
+       Rho::Notification.showPopup({'message' => @params['alert'], 'buttons' =>['OK']})
      else
        ""
      end
