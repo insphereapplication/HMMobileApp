@@ -203,7 +203,7 @@ class SettingsController < Rho::RhoController
   
   def do_logout
     Settings.clear_credentials
-     Rho::RhoConnectClient.pollInterval = 0
+    Rho::RhoConnectClient.pollInterval = 0
     Settings.last_integrated_lead = ''
     Settings.last_assigned_lead = ''
     Settings.flush_instance
@@ -373,9 +373,6 @@ class SettingsController < Rho::RhoController
     puts "new opp sync pending in push notify: " + Settings.new_opportunity_sync_pending.to_s
 
     if System::get_property('platform') == 'ANDROID'
-      # Looks like android notification changed in 5.4
-       #    "rho_push" 
-       puts "Making new notification call"
        Rho::Notification.showPopup({'message' => @params['alert'], 'buttons' =>['OK']})
      else
        ""
@@ -804,8 +801,8 @@ class SettingsController < Rho::RhoController
   
   def on_dismiss_new_opportunity_popup
     if @params['button_id'] == 'View'
-      Rho::NativeTabbar.switch_tab(0) 
-      WebView.navigate(url_for(:controller => :Opportunity, :action => :index))
+      Rho::NativeTabbar.switch_tab(Contants::TAB_INDEX['Opportunities']) 
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :index), Contants::TAB_INDEX['Opportunities'])
     end
   end
   
