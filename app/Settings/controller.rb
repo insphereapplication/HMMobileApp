@@ -371,7 +371,8 @@ class SettingsController < Rho::RhoController
       puts "New opportunity sync is already pending"
     end
     puts "new opp sync pending in push notify: " + Settings.new_opportunity_sync_pending.to_s
-
+    Opportunity.local_changed = true
+    @@delay_refresh = false
     if System::get_property('platform') == 'ANDROID'
        Rho::Notification.showPopup({'message' => @params['alert'], 'buttons' =>['OK']})
      else
