@@ -801,8 +801,8 @@ class SettingsController < Rho::RhoController
   
   def on_dismiss_new_opportunity_popup
     if @params['button_id'] == 'View'
-      Rho::NativeTabbar.switch_tab(Contants::TAB_INDEX['Opportunities']) 
-      WebView.navigate(url_for(:controller => :Opportunity, :action => :index), Contants::TAB_INDEX['Opportunities'])
+      Rho::NativeTabbar.switch_tab(Constants::TAB_INDEX['Opportunities']) 
+      WebView.navigate(url_for(:controller => :Opportunity, :action => :index), Constants::TAB_INDEX['Opportunities'])
     end
   end
   
