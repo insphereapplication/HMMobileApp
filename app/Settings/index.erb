@@ -87,7 +87,9 @@
 			</li>
 			<li>
 				 <a style="padding-top: 0px; padding-bottom: 0px;" href="<%= url_for :action => :backgroundsync %>"><img src="/public/images/logo_icon_small.png" class="ui-li-icon"></img><h3>Background Sync</h3>
-				 <% if AppInfo.instance.get_background_sync_time == 'off' %>
+			     <% if System::get_property('platform') == 'APPLE' %>
+				 	<p class="ui-li-desc" > Unavailable for Apple </p>
+				 <% elsif AppInfo.instance.get_background_sync_time == 'off' %>
 					<p class="ui-li-desc" > Currently is off </p>
 				 <% else %>
 					<p class="ui-li-desc">Every <%= AppInfo.instance.get_background_sync_time %> minutes </p>

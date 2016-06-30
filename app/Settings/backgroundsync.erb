@@ -1,13 +1,17 @@
-<div data-role="page" data-theme="b" id="pin_reset_page">
+<div data-role="page" data-theme="b" id="background_sync_page">
 	<%= offline_bar %>
 	<div data-role="header" data-theme="b" data-backbtn="false">
-		<h1>Backgound Sync Setup <%= sync_spinner %></h1>
+			<a href="<%=url_for(:action => :index)%>" data-direction="reverse" rel="external" data-icon="back">Tools</a>
+		<h1>Backgound Sync<%= sync_spinner %></h1>
 	</div>
 
     <div data-role="content" data-theme="b">
 	</br>
 	</br>
-	<h3>  Setting this value will attempt to update information while the HM Mobile is running in the background.  This could impact the battery life on your device. </h3>
+	<% if System::get_property('platform') == 'APPLE' %>
+	 <h3>  Backgound syncing is not available for Apple </h3>
+	<% else %>
+	<h3>  Setting this value will attempt to update information while the HM Mobile App is running in the background.  This could impact the battery life on your device. </h3>
 	 <form id="form_background_sync" method="POST" action="<%= url_for :action => :set_background_sync_time %>">
 	 
 	 
@@ -28,6 +32,7 @@
 			<div class="ui-block-b"><a type="button" data-theme="c" value="Cancel" href="<%= url_for(:action => :index, :query => {:origin => @params['origin']}) %>">Cancel</a></div>
 	    </fieldset>
 	 </form>
+	 <% end %>
 	</div>
 </div>
 

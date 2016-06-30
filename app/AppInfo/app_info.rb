@@ -42,7 +42,8 @@ class AppInfo
   end
 
   def get_background_sync_time
-	 background_sync_time.blank? ? '5' : background_sync_time
+    default_sync_time = System::get_property('platform') == 'APPLE' ? 'off' : '15'
+	 background_sync_time.blank? ? default_sync_time : background_sync_time
   end
   
   def get_model_limits

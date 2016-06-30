@@ -1045,7 +1045,7 @@ end
         
           max_percentage = [opportunity_percentage, contact_percentage, activity_percentage,  policy_percentage, note_percentage].max
         
-          if (max_percentage > '.02'.to_f && last_check_date >= 1) || (max_percentage > '.01'.to_f && last_check_date > 3) || (max_percentage > '.05'.to_f && last_check_date > 7)
+          if (max_percentage > '.98'.to_f && last_check_date >= 1) || (max_percentage > '.95'.to_f && last_check_date > 3) || (max_percentage > '.90'.to_f && last_check_date > 7)
             AppInfo.instance.set_model_limits_warning_time(DateTime.now.strftime(DateUtil::DEFAULT_TIME_FORMAT))
             result = true
           end
