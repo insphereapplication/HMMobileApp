@@ -958,8 +958,8 @@ end
     # First, check if we need to force the client to upgrade
     if needs_upgrade?(min_required_version, app_version) 
       puts "*** Client needs to upgrade ***"
-      RhoConnectClient.stopSync()
-      RhoConnectClient.pollInterval = 0
+      Rho::RhoConnectClient.stopSync()
+      Rho::RhoConnectClient.pollInterval = 0
       Alert.show_popup(
       {
         :message => "Please upgrade to version #{min_required_version}",
