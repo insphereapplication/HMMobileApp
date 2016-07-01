@@ -1,7 +1,7 @@
 <div id="opportunity_show" data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar%>
 	<% if @params['origin'] == "contact" || @params['origin'] == "SearchContacts" %>
-	<div data-role="header" data-backbtn="false" data-theme="b">
+	<div data-role="header" data-backbtn="false" data-theme="b"  data-position="fixed" data-tap-toggle="false" >
 		<a data-transition="slide"  href="<%= url_for(:controller => :Contact, :action => :show, :id => @contact.object, :query =>{:origin => @params['origin']}) %>"  data-icon="back">Contact</a>
 		<h3>
 			Opportunity<%= sync_spinner %>
