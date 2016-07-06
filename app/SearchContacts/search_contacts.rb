@@ -49,7 +49,10 @@ class SearchContacts
   
 
     # removing the ownerid as is used to translate to user in rhosync.   This above is directly calling CRM mobile proxy instead of going through rhosync
-    res = result["body"].map do |value|
+    
+    body = Rho::JSON.parse(result["body"])
+   
+    res = body.map do |value|
        value.reject!{|k,v|  ['ownerid'].include?(k) }
        value
      end

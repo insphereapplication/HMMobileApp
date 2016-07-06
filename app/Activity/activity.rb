@@ -158,7 +158,7 @@ class Activity
     db = ::Rho::RHO.get_src_db('Activity')
     db.start_transaction
     begin
-      task = Activity.create_new({
+      activity = Activity.create_new({
         :scheduledstart => DateUtil.date_build(params['callback_datetime']), 
         :scheduleddurationminutes => Rho::RhoConfig.phonecall_duration_default_minutes.to_i,
         :scheduledend => DateUtil.end_date_time(params['callback_datetime'], Rho::RhoConfig.phonecall_duration_default_minutes.to_i),
@@ -178,7 +178,7 @@ class Activity
       end 
       db.commit
     rescue Exception => e
-      puts "Exception in create new Task, rolling back: #{e.inspect} -- #{params.inspect}"
+      puts "Exception in create new phone call, rolling back: #{e.inspect} -- #{params.inspect}"
       db.rollback
     end
     SyncUtil.start_sync if sync  
@@ -188,7 +188,7 @@ class Activity
        db = ::Rho::RHO.get_src_db('Activity')
        db.start_transaction
        begin
-         task = Activity.create_new({
+         activity = Activity.create_new({
            :scheduledstart => DateUtil.date_build(params['appointment_datetime']), 
            :scheduledend => DateUtil.end_date_time(params['appointment_datetime'], params['appointment_duration']),
            :subject => params['appointment_subject'],
@@ -205,7 +205,6 @@ class Activity
                        :parent_id => contactid,
                        :parent_contact_id => contactid)  
          end 
-         finished_contact_activity
          db.commit
       rescue Exception => e
          puts "Exception in create new appointment, rolling back: #{e.inspect} -- #{params.inspect}"
