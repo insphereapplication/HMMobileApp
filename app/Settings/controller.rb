@@ -1021,8 +1021,8 @@ end
     max_count = AppInfo.instance.get_model_limits[model_name] if AppInfo.instance
     if max_count && (total_count.to_i > max_count.to_i)
       puts "*** Limit #{max_count} exceeded for #{model_name} ***"
-      RhoConnectClient.pollInterval = 0
-      RhoConnectClient.stopSync()
+      Rho::RhoConnectClient.pollInterval = 0
+      Rho::RhoConnectClient.stopSync()
       Settings.initial_sync_complete = false
       goto_login_override_auto("The maximum number of #{model_name} records that can be synced to HM Mobile is #{max_count}. Currently you have #{total_count} record(s). Please reduce this number using the Activity Center and try again. If you have questions, please contact us at hmmobile@healthmarkets.com")
       result = true
