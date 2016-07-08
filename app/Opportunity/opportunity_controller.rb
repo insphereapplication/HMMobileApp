@@ -13,27 +13,28 @@ class OpportunityController < Rho::RhoController
   # this callback is set once in the login_callback method of the Settings controller
   def init_notify
 	@@delay_refresh = false
+  display_label = System.get_property('platform') == 'ANDROID' && System::get_property('os_version').split('.')[0].to_i >= 6
     tabbar = [
       { 
-        :label => "", 
+        :label => display_label ? "Opportunities" : "", 
         :action => '/app/Opportunity', 
         :icon => "/public/images/dollar.png", 
         :backgroundColor => 0x7F7F7F
       }, 
       { 
-        :label => "", 
+        :label => display_label ? "Contacts" : "", 
         :action => "callback:#{url_for(:controller => :Contact, :action => :show_all_contacts)}",  
         :icon => "/public/images/contacts.png", 
         :reload => true 
       },
       {
-        :label => "",
+        :label => display_label ? "Activities" : "",
         :action => "callback:#{url_for(:controller => :Activity, :action => :show_all_activities)}",
         :icon => "/public/images/glyphish-icons/117-todo.png",
         :reload => true
       },
       { 
-        :label => "",  
+        :label => display_label ? "Activities" : "",  
         :action => '/app/Settings',  
         :icon => "/public/images/iphone/tabs/settings_tab_icon.png" 
       }
