@@ -34,7 +34,7 @@ class OpportunityController < Rho::RhoController
         :reload => true
       },
       { 
-        :label => display_label ? "Activities" : "",  
+        :label => display_label ? "Tools" : "",  
         :action => '/app/Settings',  
         :icon => "/public/images/iphone/tabs/settings_tab_icon.png" 
       }
