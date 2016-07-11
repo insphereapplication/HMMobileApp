@@ -142,6 +142,7 @@ class Activity
          })
          
         if !contactid.blank?
+          contactid.gsub!(/[{}]/,"")
           activity.update_attributes(:parent_type => 'Contact', 
                       :parent_id => contactid,
                       :parent_contact_id => contactid)  
@@ -172,6 +173,7 @@ class Activity
         :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
       })
       if !contactid.blank?
+        contactid.gsub!(/[{}]/,"")
         activity.update_attributes(:parent_type => 'Contact', 
                     :parent_id => contactid,
                     :parent_contact_id => contactid)  
@@ -201,6 +203,7 @@ class Activity
            :createdon => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT)
          })
          if !contactid.blank?
+           contactid.gsub!(/[{}]/,"")
            activity.update_attributes(:parent_type => 'Contact', 
                        :parent_id => contactid,
                        :parent_contact_id => contactid)  
