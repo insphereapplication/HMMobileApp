@@ -287,6 +287,15 @@ class Opportunity
     }) 
   end
   
+  def update_noshow
+    opp_attrs = {
+      :cssi_statusdetail => 'Appointment No Show',
+      :cssi_lastactivitydate => Time.now.strftime(DateUtil::DEFAULT_TIME_FORMAT),
+      :status_update_timestamp => Time.now.utc.to_s
+    }
+    update_attributes(opp_attrs) 
+  end
+  
   def update_application_details
     
   end

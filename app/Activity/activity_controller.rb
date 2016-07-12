@@ -655,8 +655,21 @@ class ActivityController < Rho::RhoController
   
   def mark_appointment_noshow
     appointment = Activity.find(@params['appointments'], :conditions => {:type => 'Appointment'})
-    appointment.no_show if appointment
-    SyncUtil.start_sync
+    opportunity = Opportunity.find_opportunity(@params['opportunity_id']) if @params['opportunity_id']
+    if appointment
+      db = ::Rho::RHO.get_src_db('Activity')
+      db.start_transaction
+      begin
+        appointment.no_show
+        Settings.record_activity
+        opportunity.update_noshow if Opportunity
+        db.commit
+      rescue Exception => e
+        puts "Exception in update status for Appointment No Show rolling back: #{e.inspect} -- #{@params.inspect}"
+        db.rollback
+      end    
+    SyncUtil.start_sync  
+    end 
     redirect :controller => :Opportunity, :action => :show, :back => 'callback:', :id => @params['opportunity_id'], :query => {:origin => @params['origin']}
    end
     
