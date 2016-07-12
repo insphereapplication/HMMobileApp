@@ -78,10 +78,10 @@ class Contact
   end
   
   def self.find_contact(id)
+    id.gsub!(/[{}]/,"")
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
       @contact = Contact.find(id)
     else
-      id.gsub!(/[{}]/,"")
       @contact = Contact.find_by_sql(%Q{
           select c.* from Contact c where temp_id='#{id}'
         }).first
