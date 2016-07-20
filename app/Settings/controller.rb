@@ -374,12 +374,27 @@ class SettingsController < Rho::RhoController
     Opportunity.local_changed = true
     @@delay_refresh = false
     if System::get_property('platform') == 'ANDROID'
-       Rho::Notification.showPopup({'message' => @params['alert'], 'buttons' =>['OK']})
+       puts "Calling push start notification fix?"
+       if $app_activated == 'true'
+         puts "App is active and ready for android push"
+         Rho::Notification.showPopup({'message' => @params['alert'], 'buttons' =>['OK']})
+       elsif $app_activated == 'false'
+         puts "App is in back but ready for android push"
+         Rho::Notification.showPopup({'message' => @params['alert'], 'buttons' =>['OK']})
+       else
+         puts "create delayed status bar notification"
+         Rho::Timer.start(10000, '/app/Settings/delay_push_notify',  @params['alert'])
+       end
      else
        ""
      end
   
   end
+  
+  def delay_push_notify
+    message = @params.keys[1].blank? ? "You have new opportunities" : @params.keys[1]
+    Rho::Notification.showPopup({'message' => message, 'buttons' =>['OK']})
+  end  
   
   def set_last_integrated_lead
     Opportunity.latest_integrated_lead.each do |opportunity|
