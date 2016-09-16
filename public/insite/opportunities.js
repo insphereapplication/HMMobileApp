@@ -64,7 +64,7 @@ function getFilterData() {
             "statusReason": $("#followup_status_reason_filter").val(),
             "sortBy": $("#followup_sort_by_filter").val(),
             "created": $("#followup_created_filter").val(),
-            "isDaily": $("#followup_daily_filter").attr("checked") ? "true" : "false"
+            "isDaily": $("#followup_daily_filter").prop("checked") ? "true" : "false"
         };
     return {
         "filter_type": $("#appointments_select_type_filter").val(),
