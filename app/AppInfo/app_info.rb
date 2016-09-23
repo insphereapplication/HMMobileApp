@@ -27,8 +27,6 @@ class AppInfo
   
   property :model_limits_warning_time, :string
   
-  property :sts_url, :string
-  
   property :resource_center_url, :string
   
   property :insite_url, :string
