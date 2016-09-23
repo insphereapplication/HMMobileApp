@@ -870,23 +870,29 @@ end
   def resource_center
         Settings.record_activity
         if Settings.pin_confirmed == true
-          resource_url=Rho::RhoConfig.resource_center_url
-          resource_target=Rho::RhoConfig.resource_center_target
+          sts_url = AppInfo.instance.sts_url
+          resource_url=AppInfo.instance.resource_center_url
+          #rc_dir="https://sts.model.insphereis.net/adfs/ls/?wa=wsignin1.0&wtrealm=urn%3asharepoint%3aarc&wctx=https%3a%2f%2frc.model.healthmarkets.com%2f_layouts%2f15%2fAuthenticate.aspx%3fSource%3d%252F"
+          rc_dir='https://sts.model.insphereis.net/adfs/ls/?wa=wsignin1.0&wtrealm=https%3a%2f%2fmodel-insphere-marketplace.accesscontrol.windows.net%2f&wreply=https%3a%2f%2fmodel-insphere-marketplace.accesscontrol.windows.net%2fv2%2fwsfederation&wctx=cHI9d3NmZWRlcmF0aW9uJnJtPWh0dHBzJTNhJTJmJTJmaG1peC5tb2RlbC5oZWFsdGhtYXJrZXRzLmNvbSUyZiZyeT0mY3g9cm0lM2QwJTI2aWQlM2RwYXNzaXZlJTI2cnUlM2QlMjUyZmRhc2hib2FyZA2'
           ctime = Time.new.utc
           ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
           user_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.login}Delimit"))
           pwd_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.password}Delimit"))
             
-          resource_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}&ReturnURL=#{resource_target}"
-        
-          puts "Resource URL parameters are: ****#{resource_params_enc}****"
-          puts "Current UTC is:  #{ctime}"
+          resource_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}"
 
-          rc_url ="#{resource_url}?#{resource_params_enc}"
+          rc_url ="#{sts_url}&#{resource_url}&#{resource_params_enc}"
        
           redirect :action => :index, :back => 'callback:', :layout => 'layout'
         
-          System.open_url("#{resource_url}?#{resource_params_enc}")
+          #System.open_url("#{rc_url}")
+          WebView.navigate("#{rc_dir}&#{resource_params_enc}")
+          #System.open_url("#{rc_dir}&#{resource_params_enc}")
+          #WebView.navigate()
+          #ttt = Hash.new
+          #ttt["url"] = "#{rc_dir}&#{resource_params_enc}"
+            
+          #Rho::Network.get(ttt)
           
       else
           redirect :action => :index, :back => 'callback:', :layout => 'layout'
@@ -897,23 +903,26 @@ end
   def lead_amp
         Settings.record_activity
         if Settings.pin_confirmed == true
-          resource_url=Rho::RhoConfig.resource_center_url
-          lead_amp_target=Rho::RhoConfig.lead_amp_target
+          sts_url = AppInfo.instance.sts_url
+          leadamp_url= AppInfo.instance.leadamp_url 
+          #leadamp_url='https://rc.model.healthmarkets.com/sites/arc/_layouts/15/SsoPages/LeadAmpSso.aspx'
+          leadamp_url="https://sts.model.insphereis.net/adfs/ls/?wa=wsignin1.0&wtrealm=urn%3asharepoint%3aarc&wctx=https%3a%2f%2frc.model.healthmarkets.com%2fsites%2farc%2f_layouts%2f15%2fAuthenticate.aspx%3fSource%3d%252Fsites%252Farc%252F%255Flayouts%252F15%252FSsoPages%252FLeadAmpSso%252Easpx&UserName=jA6N7%2B1rxtrS5A81rfoqsl5jv0YPbHpla57GkiFyj6suMJzE1ZCCCfyJ040x%0A6Eem%0A&pwd=jA6N7%2B1rxtrS5A81rfoqsmSM2VrEBBz98dhEX3jCai8RJmXhoMl5KE6bO8ag%0AE5ed%0A&valid=jA6N7%2B1rxtrS5A81rfoqskM%2F0X0W8fmpJ2NG3ST3Rzl3ytE9ecebMaG0l5Mr%0AHeH7DZRjAL8GmLVFIcfIORXPLQ%3D%3D%0A"
           ctime = Time.new.utc
           ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
           user_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.login}Delimit"))
           pwd_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.password}Delimit"))
             
-          resource_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}&ReturnURL=#{lead_amp_target}"
-        
-          puts "Resource URL parameters are: ****#{resource_params_enc}****"
-          puts "Current UTC is:  #{ctime}"
+          resource_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}"
 
-          rc_url ="#{resource_url}?#{resource_params_enc}"
+
+          leadampsso_url ="#{sts_url}&#{leadamp_url}&#{resource_params_enc}"
+          
+          puts 'lead amp sso:  #'
        
           redirect :action => :index, :back => 'callback:', :layout => 'layout'
         
-          System.open_url("#{resource_url}?#{resource_params_enc}")
+          System.open_url("#{leadamp_url}")
+          #WebView.navigate("#{leadamp_url}")
           
       else
           redirect :action => :index, :back => 'callback:', :layout => 'layout'
@@ -925,14 +934,18 @@ end
   def medicare_soa
         Settings.record_activity
         if Settings.pin_confirmed == true
-          insphere_url = Rho::RhoConfig.insphere_url
-          medicare_soa_target = Rho::RhoConfig.medicare_soa_target
-
-          rc_url ="#{insphere_url}?#{medicare_soa_target}"
+          sts_url = AppInfo.instance.sts_url
+          medicare_soa_url = AppInfo.instance.medicare_soa_url
+          ctime = Time.new.utc
+          ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
+          user_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.login}Delimit"))
+          pwd_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.password}Delimit"))
+          params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}"
+          sso_url ="#{sts_url}&#{medicare_soa_url}&#{params_enc}"
        
           redirect :action => :index, :back => 'callback:', :layout => 'layout'
         
-          System.open_url("#{insphere_url}#{medicare_soa_target}")
+          System.open_url("#{sso_url}")
           
       else
           redirect :action => :index, :back => 'callback:', :layout => 'layout'
@@ -942,8 +955,8 @@ end
   
   def quoting_tool
         Settings.record_activity
-        quoting_tool_url = Rho::RhoConfig.quoting_tool_url
-        quoting_tool_target = Rho::RhoConfig.quoting_tool_target
+        sts_url = AppInfo.instance.sts_url
+        quoting_tool_url = AppInfo.instance.insite_url 
         ctime = Time.new.utc
         ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
         user_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.login}Delimit"))
@@ -953,7 +966,7 @@ end
      
         redirect :action => :index, :back => 'callback:', :layout => 'layout'
       
-        System.open_url("#{quoting_tool_url}#{quoting_tool_target}?#{quoting_tool_params_enc}")
+        System.open_url("#{sts_url}&#{quoting_tool_url}&#{quoting_tool_params_enc}")
           
       
   end

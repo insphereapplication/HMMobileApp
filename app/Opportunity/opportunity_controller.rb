@@ -647,25 +647,24 @@ class OpportunityController < Rho::RhoController
     #This will take the user to InSite quoting
     opportunity = Opportunity.find_opportunity(@params['id'])
     #contact = opportunity.contact unless opportunity.blank?
-    quoting_tool_url = Rho::RhoConfig.resource_center_url
-    quoting_tool_target = Rho::RhoConfig.quoting_tool_target
-    identity_provider = Rho::RhoConfig.quoting_tool_sts
-
-    opportunity_params = "?identityprovider=#{identity_provider}"
-    opportunity_params += "&opportunityid=#{opportunity.object}" if @params['id']
+    sts_url = AppInfo.instance.sts_url
+    #quoting_tool_url = AppInfo.instance.insite_url 
+    quoting_tool_url = 'https://hmix.dev.healthmarkets.com/Account/SSO' 
+    
+    opportunity_params = "opportunityId=#{opportunity.object}&identityProvider=insp" if @params['id']
 
     ctime = Time.new.utc
     ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
     user_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.login}Delimit"))
     pwd_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.password}Delimit"))
-    return_url_enc = Rho::RhoSupport.url_encode("#{quoting_tool_target}#{opportunity_params}")
-    quote_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}&ReturnURL=#{return_url_enc}"
+    quote_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}&#{opportunity_params}"
     puts "Resource URL parameters are: ****#{quote_params_enc}****"
-    quote_url="#{quoting_tool_url}?#{quote_params_enc}"
+    quote_url="#{sts_url}&#{quoting_tool_url}&#{quote_params_enc}"
  
     redirect :action => :index, :back => 'callback:', :layout => 'layout'
-  
-    System.open_url("#{quote_url}")
+    System.open_url("#{quoting_tool_url}?#{Rho::RhoSupport.url_encode(opportunity_params)}")
+    #System.open_url("#{quote_url}")
+    
            
   end
   

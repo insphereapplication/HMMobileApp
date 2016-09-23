@@ -26,6 +26,16 @@ class AppInfo
   property :model_limits_last_checked_time, :string
   
   property :model_limits_warning_time, :string
+  
+  property :sts_url, :string
+  
+  property :resource_center_url, :string
+  
+  property :insite_url, :string
+  
+  property :medicare_soa_url, :string
+  
+  property :leadamp_url, :string
 
   def self.instance
     AppInfo.find(:all).first
