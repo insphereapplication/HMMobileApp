@@ -649,7 +649,7 @@ class OpportunityController < Rho::RhoController
     quoting_tool_url = AppInfo.instance.insite_url 
 
     
-    opportunity_params = "opportunityId=#{opportunity.object}" if @params['id']
+    opportunity_params = "#{opportunity.object}" if @params['id']
 
     #ctime = Time.new.utc
     #ctime_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{ctime}Delimit"))
@@ -657,7 +657,7 @@ class OpportunityController < Rho::RhoController
     #pwd_enc = Rho::RhoSupport.url_encode(Crypto.encryptBase64("Delimit#{Settings.password}Delimit"))
     #quote_params_enc = "UserName=#{user_enc}&pwd=#{pwd_enc}&valid=#{ctime_enc}&#{opportunity_params}"
     #puts "Resource URL parameters are: ****#{quote_params_enc}****"
-    quote_url="#{quoting_tool_url}?#{opportunity_params}"
+    quote_url="#{quoting_tool_url}/#{opportunity_params}"
  
     redirect :action => :index, :back => 'callback:', :layout => 'layout'
     
