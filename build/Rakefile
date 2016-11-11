@@ -228,8 +228,8 @@ namespace :build do
   task :build_clients do
     log "Building clients for version: #{build_config['version']}"
 
-    build_device "iPhone"
-    log "Done building iPhone..."
+    #build_device "iPhone"
+    #log "Done building iPhone..."
     
     build_device "Android"
     log "Done building Android..."
