@@ -4,7 +4,7 @@ require 'yaml'
 require 'open4'
 
 APP_PATH = File.expand_path(File.dirname(__FILE__) + "/..")
-RHODES_BRANCH = "5.4_opensource"
+RHODES_BRANCH = "5.5-hm"
 
 # icon folder names
 PROD_ICON_FOLDER = "Production"
