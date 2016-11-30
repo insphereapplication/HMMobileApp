@@ -228,19 +228,17 @@ namespace :build do
   task :build_clients do
     log "Building clients for version: #{build_config['version']}"
 
-    #build_device "iPhone"
-    #log "Done building iPhone..."
+    build_device "iPhone"
+    log "Done building iPhone..."
     
     build_device "Android"
     log "Done building Android..."
   end
  
-  #task :copy_model_builds => [:copy_model_iphone_build, :copy_model_android_build] do 
-  task :copy_model_builds => [:copy_model_android_build] do 
+  task :copy_model_builds => [:copy_model_iphone_build, :copy_model_android_build] do 
   end
 
-  #task :copy_dev_builds => [:copy_dev_iphone_build, :copy_dev_android_build] do 
-  task :copy_dev_builds => [:copy_dev_android_build] do 
+  task :copy_dev_builds => [:copy_dev_iphone_build, :copy_dev_android_build] do 
   end
   
   task :prep_for_model => [:gen_rhoconfig_model, :gen_build_yml_model, :update_rhodes, 'update_icons:model_uat'] do 

@@ -43,6 +43,8 @@ iphone:
   # ----------------------------------------------------------------------
   entitlements:
   BundleURLScheme: <%= @build_yml[:bundle_url_scheme] %>
+  production:
+    ipa_itunesartwork_image: "./production/iTunesArtwork.png"
   capabilities:
   - push
   
