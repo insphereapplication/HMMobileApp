@@ -700,11 +700,11 @@ class OpportunityController < Rho::RhoController
     Opportunity.local_changed=true
     
     Rho::RhoConnectClient.doSync
-    redirect  :controller => :Contact,
+    WebView.navigate(url_for( :controller => :Contact,
             :action => :show, 
              :back => 'callback:',
              :id => @contact.object,
-             :query =>{:origin => @params['origin'], :opportunity => @opp.object}
+             :query =>{:origin => @params['origin'], :opportunity => @opp.object}))
   end
 
   def reassign

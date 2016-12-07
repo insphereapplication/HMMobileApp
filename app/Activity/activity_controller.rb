@@ -313,9 +313,9 @@ class ActivityController < Rho::RhoController
     SyncUtil.start_sync
     act = :show_appt
     act = :show if Rho::NativeTabbar.get_current_tab == 2
-    redirect :action => act, :back => 'callback:',
+    WebView.navigate(url_for(:action => act, :back => 'callback:',
               :id => @appointment.object,
-              :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
+              :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}))
   end
   
   #CR: careful with the inline 'if's; remove crufty old output; needs a transaction
@@ -345,9 +345,9 @@ class ActivityController < Rho::RhoController
     SyncUtil.start_sync
     act = :show_callback
     act = :show if Rho::NativeTabbar.get_current_tab == 2
-    redirect :action => act, :back => 'callback:',
+    WebView.navigate(url_for(:action => act, :back => 'callback:',
               :id => @callback.object,
-              :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
+              :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}))
   end
   
   def update_won_status
@@ -453,9 +453,9 @@ class ActivityController < Rho::RhoController
       }) unless @params['task']['subject'].blank?
     end  
     SyncUtil.start_sync
-    redirect :action => :show, :back => 'callback:',
+    WebView.navigate(url_for(:action => :show, :back => 'callback:',
               :id => @task.object,
-              :query =>{:origin => @params['origin'], :activity => @task.object}
+              :query =>{:origin => @params['origin'], :activity => @task.object}))
 
   end
 
@@ -650,7 +650,7 @@ class ActivityController < Rho::RhoController
   def mark_appointment_complete
     complete_appointments([@params['appointments']])
     SyncUtil.start_sync
-    redirect :controller => :Opportunity, :action => :show, :back => 'callback:', :id => @params['opportunity_id'], :query => {:origin => @params['origin']}
+    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :back => 'callback:', :id => @params['opportunity_id'], :query => {:origin => @params['origin']}))
   end
   
   def mark_appointment_noshow
@@ -670,7 +670,7 @@ class ActivityController < Rho::RhoController
       end    
     SyncUtil.start_sync  
     end 
-    redirect :controller => :Opportunity, :action => :show, :back => 'callback:', :id => @params['opportunity_id'], :query => {:origin => @params['origin']}
+    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :back => 'callback:', :id => @params['opportunity_id'], :query => {:origin => @params['origin']}))
    end
     
   def update_status_call_back_requested
@@ -820,14 +820,14 @@ class ActivityController < Rho::RhoController
   def finished_update_status(opportunity, origin, appointmentids=nil)
     complete_appointments(appointmentids)
     SyncUtil.start_sync
-    redirect :controller => :Opportunity, :action => :show, :back => 'callback:', :id => opportunity.object, :query => {:origin => origin}
+    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :back => 'callback:', :id => opportunity.object, :query => {:origin => origin}))
   end
   
   
   def finished_win_status(opportunity, origin, appointmentids=nil)
     complete_appointments(appointmentids)
     SyncUtil.start_sync
-    redirect :controller => :Opportunity, :action => :show, :id => opportunity.object, :back => 'callback:', :query => {:origin => origin}
+    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :id => opportunity.object, :back => 'callback:', :query => {:origin => origin}))
   end
 
   def finished_loss_status(opportunity, origin, appointmentids=nil)

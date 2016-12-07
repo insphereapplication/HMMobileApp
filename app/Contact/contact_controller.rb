@@ -216,10 +216,10 @@ class ContactController < Rho::RhoController
     @opp = Opportunity.create_for_new_contact(@params['opportunity'], @contact.object)
     
     Rho::RhoConnectClient.doSync
-    redirect :action => :show, 
+    WebView.navigate(url_for(:action => :show, 
              :back => 'callback:',
              :id => @contact.object,
-             :query =>{:origin => @params['origin'], :opportunity => @opp.object}
+             :query =>{:origin => @params['origin'], :opportunity => @opp.object}))
   end
 
   # POST /Contact/{1}/update
@@ -251,9 +251,9 @@ class ContactController < Rho::RhoController
     @contact = Contact.find_contact(@params['id'])
     @contact.update_attributes(@params['contact']) if @contact
     SyncUtil.start_sync
-    redirect :action => :show, :back => 'callback:',
+    WebView.navigate(url_for(:action => :show, :back => 'callback:',
               :id => @contact.object,
-              :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
+              :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}))
   end
 
   def spouse_update
@@ -271,9 +271,9 @@ class ContactController < Rho::RhoController
     @contact.update_attributes(:cssi_spousebirthdate => DateUtil.birthdate_build(@contact.cssi_spousebirthdate))
     @contact.update_attributes(:cssi_spousedelete => "")
     Rho::RhoConnectClient.doSync
-    redirect :action => :show, :back => 'callback:',
+    WebView.navigate(url_for(:action => :show, :back => 'callback:',
               :id => @contact.object,
-              :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}
+              :query =>{:opportunity => @params['opportunity'], :origin => @params['origin']}))
   end
 
   # POST /Contact/{1}/delete
@@ -365,10 +365,10 @@ class ContactController < Rho::RhoController
     puts "CREATING THE NEW OPPORTUNITY FROM AC SEARCH"  
     opp = Opportunity.create_for_new_contact(@params['opportunity'], contact.object)
     Rho::RhoConnectClient.doSync
-    redirect :controller => :Contact,
+    WebView.navigate(url_for(:controller => :Contact,
              :action => :show, 
              :id => contact.object,
-             :query => { :origin => 'SearchContacts', :back => 'callback:'}
+             :query => { :origin => 'SearchContacts', :back => 'callback:'}))
              
   end
   

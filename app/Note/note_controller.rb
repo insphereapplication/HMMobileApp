@@ -95,7 +95,7 @@ class NoteController < Rho::RhoController
   
   def finished_note_create(opportunity, origin)
     Rho::RhoConnectClient.doSync
-    redirect :controller => :Opportunity, :action => :show, :back => 'callback:', :id => opportunity.object, :query => {:origin => origin}
+    WebView.navigate(url_for(:controller => :Opportunity, :action => :show, :back => 'callback:', :id => opportunity.object, :query => {:origin => origin}))
   end
   
 end
