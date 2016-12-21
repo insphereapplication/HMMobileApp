@@ -7,6 +7,10 @@ module ExceptionUtil
       exception = new Exception(exception)
     end
     message = exception.message  ? exception.message[0,2000] : ""
+    if type=="E500" && Rho::Application.current_controller()
+      controller = Rho::Application.current_controller().class
+      message = "Controller: #{controller}.  #{message}"
+    end
     backtrace = exception.backtrace ? exception.backtrace[0,2000] : ""
     exception_data = {
       :message => message,
