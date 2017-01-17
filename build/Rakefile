@@ -76,7 +76,7 @@ def build_yml
     :name => 'HM Mobile',
     :version => ENV['BUILD_NUMBER'] || '2.1.10',
     :iphone_config => 'Distribution',
-    :iphone_sdk => 'iphoneos9.2',
+    :iphone_sdk => 'iphoneos10.2',
     :codesignidentity => '"iPhone Distribution: Insphere Insurance Solutions, Inc"',
     :provisionprofile => '14f50b76-72f3-4cf1-bbee-9135448919e5',
     :motorola_license_company => 'Insphere Insurance Solutions',
