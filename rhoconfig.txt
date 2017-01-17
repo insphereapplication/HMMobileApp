@@ -1,52 +1,56 @@
 start_path = '/app/Settings/init'
 options_path = '/app/Settings'
-app_db_version = 7.0
+app_db_version = 20.0
 
-MinSeverity  = 1
+MinSeverity  = 0
 LogToOutput = 1
 LogCategories = *
-
-
-MaxLogFileSize=10000000
-
-#turn on to exclude logging all post parameters
 log_skip_post = 0
-
-#Exclude the following parameters from logging
-
 log_exclude_filter = 'login, password, pin'
+LogFilePath = '/Users/admin/projects/HMMobileApp/rholog.txt'
 
-logserver = 'https://mobileproxy.model.insphereis.net/clientlog' 
+MaxLogFileSize=5000000
+
+logserver = 'https://mobileproxy.dev.insphereis.net/clientlog' 
 logname='InsiteMobile-rhodes'
 
 KeepTrackOfLastVisitedPage = 0 
 LastVisitedPage = ''
-#syncserver = https://rhosync.model.insphereis.net/application
-#syncserver = http://localhost:9292
 syncserver = https://rhoconnect.dev.insphereis.net
-#For android emulator connecting to local rhoconnect
-#syncserver = http://10.0.2.2:9292
-sync_poll_interval=0
+no_ruby_threads=1
 
+phonecall_duration_default_minutes = 15
 
+#If the full_screen = 0, on android we need to add android:windowSoftInputMode="adjustPan" 
+#to the platform/android/Rhodes/AndroidManifest.xml activity section.  This has been committed to our rhodes version 2.4 and 3.2
 full_screen = 0
+jqtouch_mode=1
 
 splash_screen='zoom'
 lead_cost_threshold = 100
 
-quick_quote_url =  https://mobile-uat.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242
-
-log_server = 'https://mobileproxy.dev.net/clientlog',
-crm_url = 'https://mobileproxy.dev.insphereis.net'
-resource_center_url = 'https://mobile-rc.dev.insphereis.net/_layouts/InsphereLogin.aspx'
+quick_quote_url='https://mobile.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHhzc3R2a1ArWGhUWDFHd2czN1JmY1RqSEZVRWFPcUw2ODNLanFlUWIydVVDakI0QmJLbE9jKzhobmUrRloySUpITlA5OHVMc0M3OUJrZTc0cjNpRDVPeG94QStNUnp6OGpoQW5PQzNLejczL2dqVWZBSndiak1rNm1DUHcvL1BjeGZvZW9DQ0ZldXNUUm0vQWF5U0xNRlpXVkJQYXhRPQ==&parameters=gaid=5242'
+resource_center_url='https://mobile-rc.insphereis.net/_layouts/InsphereLogin.aspx'
 resource_center_target= '/Pages/Home.aspx'
 lead_amp_target= '/Sso/Pages/LeadAmpSso.aspx'
-insphere_url=https://www.dev.insphereis.net
+insphere_url='https://www.insphereis.net'
 medicare_soa_target='/SOA'
 quoting_tool_target='/sso/Pages/InSiteSSO.aspx'
 quoting_tool_sts=ResourceCenterMobileSSO
-phonecall_duration_default_minutes ='15'
+crm_url='https://mobileproxy.dev.insphereis.net'
 
-local_server_port = 8081
-
+# 02-29-2016 - Dwayne Smith - Increasing timeout from 60 seconds to 120
 net_timeout = 120
+# 02-29-2016 - Dwayne Smith - Adding finish background sync for iphone
+finish_sync_in_background = 1
+
+net_trace = 1
+ios_net_curl = 1
+ios_direct_local_requests = 0
+
+//ios_use_WKWebView = 0
+
+//local_server_port = 8080
+
+
+
