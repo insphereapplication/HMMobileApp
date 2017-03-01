@@ -1,7 +1,8 @@
 require 'time'
 require 'date'
 require 'rho/rhotabbar'
-
+require '/lib/changed_flag'
+require 'utils/util'
 class Opportunity
   include Rhom::FixedSchema
   include ChangedFlag
@@ -50,8 +51,9 @@ class Opportunity
   belongs_to :contact_id, 'Contact'
     
   def contact
+    puts "Contact Id ?: #{contact_id}"
     contact = Contact.find_contact(contact_id) unless contact_id.blank?
-    if (!contact_id.blank? && !contact_id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}') && contact.object.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+    if (!contact_id.blank? && !contact.blank? && !contact_id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}') && contact.object.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
        #This should be handled by the rhodes framework but we have seen a couple of issues
        puts "Updating oppportunity contact id temp #{contact_id} with #{contact.object}"
        update_attributes( :contact_id => contact.object)
@@ -80,11 +82,11 @@ class Opportunity
   end
   
   def self.find_opportunity(id)
+    id.gsub!(/[{}]/,"")
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
+      puts "Looking Here: #{id}"
       @opportunity = Opportunity.find(id)
     else
-      id.gsub!(/[{}]/,"")
-
       @opportunity = Opportunity.find_by_sql(%Q{
           select o.* from Opportunity o where temp_id='#{id}'
         }).first
@@ -94,11 +96,10 @@ class Opportunity
 
   # TODO: Dave/Carter, why is find_contact here in Opportunity.rb?
   def self.find_contact(id)
-    
+    id.gsub!(/[{}]/,"")    
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
       @contact = Contact.find(id)
     else
-      id.gsub!(/[{}]/,"")
       @contact = Contact.find_by_sql(%Q{
           select c.* from Contact c where temp_id='#{id}'
         }).first

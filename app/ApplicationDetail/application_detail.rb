@@ -29,11 +29,10 @@ class ApplicationDetail
   end
   
   def self.find_application(id)
-    
+    id.gsub!(/[{}]/,"")
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
       @appdetail = ApplicationDetail.find(id)
-    else
-      id.gsub!(/[{}]/,"")
+    else 
       @appdetail = ApplicationDetail.find_by_sql(%Q{
           select a.* from ApplicationDetail a where temp_id='#{id}'
         }).first

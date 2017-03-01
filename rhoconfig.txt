@@ -2,7 +2,7 @@ start_path = '/app/Settings/init'
 options_path = '/app/Settings'
 app_db_version = 20.0
 
-MinSeverity  = 0
+MinSeverity  = 1
 LogToOutput = 1
 LogCategories = *
 log_skip_post = 0
@@ -44,7 +44,7 @@ net_timeout = 120
 # 02-29-2016 - Dwayne Smith - Adding finish background sync for iphone
 finish_sync_in_background = 1
 
-net_trace = 1
+//net_trace = 1
 ios_net_curl = 1
 ios_direct_local_requests = 0
 
@@ -52,5 +52,6 @@ ios_direct_local_requests = 0
 
 //local_server_port = 8080
 
+use_new_orm = 1  
 
 

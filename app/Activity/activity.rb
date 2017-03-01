@@ -1,3 +1,5 @@
+require '/lib/changed_flag'
+require 'utils/util'
 class Activity
   include Rhom::FixedSchema
   include ChangedFlag
@@ -56,7 +58,7 @@ class Activity
   enable :sync
   set :sync_priority, 40 # this needs to be loaded before opportunities so that opportunities can know their context
   
-  set :schema_version, '1.0'
+  set :schema_version, '2.0'
   
   OPEN_STATE_CODES = ['Open', 'Scheduled']
   
@@ -116,10 +118,10 @@ class Activity
   
   def self.find_activity(id)
     #CR: Pull pattern strings into a constant
+    id.gsub!(/[{}]/,"")
     if (id.upcase.match('[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'))
       @activity = Activity.find(id)
-    else
-      id.gsub!(/[{}]/,"")
+    else   
       @activity = Activity.find_by_sql(%Q{
           select a.* from Activity a where temp_id='#{id}'
         }).first

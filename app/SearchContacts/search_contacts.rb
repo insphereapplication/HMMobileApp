@@ -1,7 +1,7 @@
 class SearchContacts
   include Rhom::PropertyBag
-  include ChangedFlag
-  include SQLHelper
+  #include ChangedFlag
+  #include SQLHelper
   
   #enable :sync
   set :schema_version, '1.0'

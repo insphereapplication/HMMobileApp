@@ -309,12 +309,16 @@ class OpportunityController < Rho::RhoController
   def show
     Settings.record_activity
     @opportunity = Opportunity.find_opportunity(@params['id'])
+    puts "HERE is opp: #{@opportunity} for #{@params['id']}"
     @notes = @opportunity.notes if @opportunity
     current_nav_context.orient!(@opportunity.object) if @opportunity
     @contact = @opportunity.contact if @opportunity
+    puts "HERE is contact: #{@contact}"
     if @opportunity && @contact
+      puts "we have contact and opp"
       render :action => :show, :back => 'callback:', :layout => 'layout'
     else
+      puts "In else"
       redirect_to_index_page
     end
   end
