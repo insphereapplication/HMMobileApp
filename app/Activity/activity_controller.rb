@@ -640,6 +640,7 @@ class ActivityController < Rho::RhoController
         db.commit
       rescue Exception => e
         puts "Exception in update status no contact, rolling back: #{e.inspect} -- #{@params.inspect}"
+        puts "stack:  #{e.backtrace}"
         db.rollback
         redirect_to_index_page
       end
@@ -840,7 +841,7 @@ class ActivityController < Rho::RhoController
   
   def complete_appointments(appointmentids)
     Settings.record_activity
-    if appointmentids
+    if appointmentids && appointmentids != [""]
       appointmentids.each do |id|
         appointment = Activity.find(id, :conditions => {:type => 'Appointment'})
         appointment.complete if appointment
