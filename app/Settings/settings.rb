@@ -187,7 +187,7 @@ class Settings
     end
     
     def pin_is_current?
-       if Time.new - instance.pin_last_activity_time < Constants::PIN_EXPIRE_SECONDS
+       if !instance.pin_last_activity_time.blank? && (Time.new - Time.parse(instance.pin_last_activity_time) < Constants::PIN_EXPIRE_SECONDS)
          return true
        else
          return false
