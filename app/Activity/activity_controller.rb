@@ -352,7 +352,7 @@ class ActivityController < Rho::RhoController
   
   def update_won_status
       Settings.record_activity
-      opportunity = Opportunity.find(@params['opportunity_id'])
+      opportunity = Opportunity.find_opportunity(@params['opportunity_id'])
       if opportunity
         db = ::Rho::RHO.get_src_db('Opportunity')
         db.start_transaction
