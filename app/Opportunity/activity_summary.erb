@@ -15,7 +15,7 @@
 			<% @activity_list.each do |activity|%>
 				<li>
 					<h3> <%= activity.activity_type %></h3>
-						<p class="ui-li-aside"><strong><%= activity.displaytime %></strong></p>
+						<p class="ui-li-aside"><strong><%= activity.scheduledstart %></strong></p>
 					
 					<% if activity.statuscode %>
 						<p><%= activity.statuscode%></p>

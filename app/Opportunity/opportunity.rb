@@ -254,15 +254,16 @@ class Opportunity
   end
   
   def activity_list
+    #Changing date to scheduldestart for new orm
     Activity.find_by_sql(%Q{
-        select type, scheduledstart as "displaytime", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
+        select type, scheduledstart as "scheduledstart", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
         AND type in ('Appointment','PhoneCall') AND scheduledstart IS NOT NULL
         UNION
-        select type, scheduledend as "displaytime", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
+        select type, scheduledend as "scheduledstart", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
         AND type = 'Task' AND scheduledend IS NOT NULL
         UNION
-        select type, createdon as "displaytime", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
-        AND scheduledstart IS NULL AND scheduledend IS NULL order by "displaytime" desc
+        select type, createdon as "scheduledstart", statuscode, cssi_disposition, subject from Activity where #{is_owned_by_this_opportunity_sql}
+        AND scheduledstart IS NULL AND scheduledend IS NULL order by "scheduledstart" desc
       })
   end
   
