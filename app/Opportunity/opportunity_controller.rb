@@ -409,12 +409,7 @@ class OpportunityController < Rho::RhoController
   end
     
   def app_detail_show
-      # @appdetail = Opportunity.find(@params['id'])
-      # if @appdetail
         render :Controller => :ApplicationDetail, :action => :show, :back => 'callback:', :layout => 'layout'
-      # else
-      #   redirect :action => :index, :back => 'callback:'
-      # end
   end
     
   def app_detail_edit

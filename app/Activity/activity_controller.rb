@@ -656,7 +656,7 @@ class ActivityController < Rho::RhoController
   end
   
   def mark_appointment_noshow
-    appointment = Activity.find(@params['appointments'], :conditions => {:type => 'Appointment'})
+    appointment = Activity.find(:first, :conditions => {:object=> @params['appointments'], :type => 'Appointment'} )
     opportunity = Opportunity.find_opportunity(@params['opportunity_id']) if @params['opportunity_id']
     if appointment
       db = ::Rho::RHO.get_src_db('Activity')
@@ -843,8 +843,8 @@ class ActivityController < Rho::RhoController
     Settings.record_activity
     if appointmentids && appointmentids != [""]
       appointmentids.each do |id|
-        appointment = Activity.find(id, :conditions => {:type => 'Appointment'})
-        appointment.complete if appointment
+        appointment = Activity.find(:first, :conditions => {:object => id, :type => 'Appointment'})
+          appointment.complete if appointment
       end
     end
   end
