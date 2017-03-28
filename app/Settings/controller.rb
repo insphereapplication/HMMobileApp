@@ -1029,6 +1029,7 @@ end
   end
 
   def model_limits_exceeded?(model_name, total_count)
+    total_count = Opportunity.open_opportunities_count if model_name == "Opportunity"
     puts "*** Checking limits for #{model_name} with #{total_count} total rows ***"
     result = false
     max_count = AppInfo.instance.get_model_limits[model_name] if AppInfo.instance
