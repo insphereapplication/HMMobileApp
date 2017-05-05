@@ -204,7 +204,7 @@ class Settings
       if Settings.pin_last_activity_time.nil? || Settings.pin_last_activity_time==""
         Settings.pin_last_activity_time=Time.new
         Settings.pin_confirmed=false
-      elsif Time.new - Settings.pin_last_activity_time < Constants::PIN_EXPIRE_SECONDS
+      elsif Settings.pin_last_activity_time.class!=String && (Time.new - Settings.pin_last_activity_time < Constants::PIN_EXPIRE_SECONDS)
           Settings.pin_last_activity_time=Time.new
       else
           Settings.pin_confirmed=false

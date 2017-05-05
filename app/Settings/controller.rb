@@ -448,7 +448,7 @@ class SettingsController < Rho::RhoController
 
   
   def created_today?
-    if (@current_assigned_lead.createdon)
+    if (@current_assigned_lead.createdon && !@current_assigned_lead.createdon.blank?)
       hours = (Time.now - Time.parse(@current_assigned_lead.createdon))/3600
       hours <= 24
     end
