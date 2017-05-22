@@ -78,7 +78,7 @@ def build_yml
     :iphone_config => 'Distribution',
     :iphone_sdk => 'iphoneos10.2',
     :codesignidentity => '"iPhone Distribution: Insphere Insurance Solutions, Inc"',
-    :provisionprofile => '14f50b76-72f3-4cf1-bbee-9135448919e5',
+    :provisionprofile => 'ac981194-e65c-427b-aae5-78b938a6217a',
     :motorola_license_company => 'Insphere Insurance Solutions',
     :motorola_license => '0209646A081D151A000307711A7E1C75',
     :package_name => 'com.insphere.insite',
