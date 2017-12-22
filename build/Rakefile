@@ -103,7 +103,7 @@ def model_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Dwayne Smith (Q222GR78Z7)"',
     :iphone_config => 'Release',
-    :provisionprofile => 'fafff4c1-cc47-4876-9020-35dd08a5892b',
+    :provisionprofile => '83d3e010-977b-4645-b22b-3396dc3865f6',
     :android_push_sender => "452853011350"
   })
 end
@@ -112,7 +112,7 @@ def dev_build_yml
   build_yml.merge({
     :codesignidentity => '"iPhone Developer: Dwayne Smith (Q222GR78Z7)"',
     :iphone_config => 'Release',
-    :provisionprofile => 'fafff4c1-cc47-4876-9020-35dd08a5892b',
+    :provisionprofile => '83d3e010-977b-4645-b22b-3396dc3865f6',
     :android_push_sender => "452853011350"
   })
 end
