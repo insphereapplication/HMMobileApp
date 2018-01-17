@@ -1,14 +1,14 @@
 <div id="opportunity_show" data-role="page" data-theme="b" data-cache="never">
 	<%= offline_bar%>
 	<% if @params['origin'] == "contact" || @params['origin'] == "SearchContacts" %>
-	<div data-role="header" data-backbtn="false" data-theme="b"  data-tap-toggle="false" >
+	<div data-role="header" data-backbtn="false" data-theme="b"  data-position="fixed" data-tap-toggle="false" >
 		<a data-transition="slide"  href="<%= url_for(:controller => :Contact, :action => :show, :id => @contact.object, :query =>{:origin => @params['origin']}) %>"  data-icon="back">Contact</a>
 		<h3>
 			Opportunity<%= sync_spinner %>
 		</h3>
 	</div>
 	<% else %>
-	<div data-role="header" data-backbtn="false" data-theme="b" data-tap-toggle="false">
+	<div data-role="header" data-backbtn="false" data-theme="b" data-position="fixed" data-tap-toggle="false">
 		<%= opp_detail_backbutton(@params['origin']) %>
 		<h3>Opportunity <%= sync_spinner %></h3>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right" style="margin-top:-1px;">

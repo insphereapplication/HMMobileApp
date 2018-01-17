@@ -306,6 +306,8 @@ class SettingsController < Rho::RhoController
   end
   
   def about
+    info = System.getAllProperties();
+    puts "All system properties #{info}"
     render :action => :about, :back => 'callback:'
   end
   
