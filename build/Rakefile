@@ -83,7 +83,6 @@ def build_yml
     :motorola_license => '0209646A081D151A000307711A7E1C75',
     :package_name => 'com.insphere.insite',
     :sdk_path => "/Library/rhodes",
-    :sdk_version => "2.3.0",
     :build_type => "release",
     :android_cert_path => "#{APP_PATH}/insphere_insite.keystore",
     :android_cert_password => "5zW8e3ZuS7DWY0TsnCTyyWnpGSDUqUgj",
