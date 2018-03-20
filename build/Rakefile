@@ -89,7 +89,7 @@ def build_yml
     :android_cert_password => "5zW8e3ZuS7DWY0TsnCTyyWnpGSDUqUgj",
     :android_cert_alias => "Insite",
     :android_push_sender => "90041468856",
-    :android_sdk_version => "5.1.1",
+    :android_sdk_version => "7.0",
     :encrypt_database => '1',
     :bundle_identifier => "com.insphere.insite",
     :bundle_url_scheme => 'insite',
