@@ -37,6 +37,7 @@ iphone:
   configuration: <%= @build_yml[:iphone_config] %>
   sdk: <%= @build_yml[:iphone_sdk] %>
   # ------------------ INSPHERE ENTERPRISE ACCOUNT -----------------------
+  provisioning_style: Manual
   BundleIdentifier: <%= @build_yml[:bundle_identifier] %>
   codesignidentity: <%= @build_yml[:codesignidentity] %>
   provisionprofile: <%= @build_yml[:provisionprofile] %>
