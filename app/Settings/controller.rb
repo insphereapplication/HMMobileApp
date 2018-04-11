@@ -919,6 +919,23 @@ end
       
   end
   
+def leadconnect
+      Settings.record_activity
+      if Settings.pin_confirmed == true
+      
+        leadconnect_url= Rho::RhoConfig.leadconnect_url 
+     
+        redirect :action => :index, :back => 'callback:', :layout => 'layout'
+      
+        System.open_url("#{leadconnect_url}")
+        
+    else
+        redirect :action => :index, :back => 'callback:', :layout => 'layout'
+    end
+    
+end
+  
+  
   
   def medicare_soa
         Settings.record_activity

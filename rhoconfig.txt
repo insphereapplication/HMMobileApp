@@ -16,7 +16,8 @@ logname='InsiteMobile-rhodes'
 
 KeepTrackOfLastVisitedPage = 0 
 LastVisitedPage = ''
-syncserver = https://rhoconnect.dev.insphereis.net
+#syncserver = https://rhoconnect.model.insphereis.net
+syncserver = https://rhoconnect.insphereis.net
 no_ruby_threads=1
 
 phonecall_duration_default_minutes = 15
@@ -33,6 +34,7 @@ quick_quote_url='https://mobile.ipipeline.com/quote/sso/?enc=Zk9jME82eDc4RzVFcHh
 resource_center_url='https://mobile-rc.insphereis.net/_layouts/InsphereLogin.aspx'
 resource_center_target= '/Pages/Home.aspx'
 lead_amp_target= '/Sso/Pages/LeadAmpSso.aspx'
+leadconnect_url='https://lc-api-supp.healthmarkets.com/auth/start'
 insphere_url='https://www.insphereis.net'
 medicare_soa_target='/SOA'
 quoting_tool_target='/sso/Pages/InSiteSSO.aspx'

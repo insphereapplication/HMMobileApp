@@ -127,7 +127,8 @@ def rhoconfig
     :log_server => 'https://mobileproxy.insphereis.net/clientlog',
     :crm_url => 'https://mobileproxy.insphereis.net',
     :phonecall_duration_default_minutes => '15',
-    :insphere_url => 'https://www.insphereis.net'
+    :insphere_url => 'https://www.insphereis.net',
+    :leadconnect_url => 'https://lc-api.healthmarkets.com/auth/start'
   }
 end
 
@@ -140,7 +141,8 @@ def model_rhoconfig
     :resource_center_url => "https://mobile-rc.model.insphereis.net/_layouts/InsphereLogin.aspx",
     :log_server => 'https://mobileproxy.model.insphereis.net/clientlog',
     :crm_url => 'https://mobileproxy.model.insphereis.net',
-    :insphere_url => 'https://www.model.insphereis.net'
+    :insphere_url => 'https://www.model.insphereis.net',
+    :leadconnect_url => 'https://lc-api-supp.healthmarkets.com/auth/start'
   })
 end
 
@@ -153,7 +155,8 @@ def dev_rhoconfig
     :resource_center_url => "https://mobile-rc.dev.insphereis.net/_layouts/InsphereLogin.aspx",
     :log_server => 'https://mobileproxy.dev.net/clientlog',
     :crm_url => 'https://mobileproxy.dev.insphereis.net',
-    :insphere_url => 'https://www.dev.insphereis.net'
+    :insphere_url => 'https://www.dev.insphereis.net',
+    :leadconnect_url => 'https://lc-api-supp.healthmarkets.com/auth/start'
   })
 end
 

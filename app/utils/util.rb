@@ -74,7 +74,7 @@ module SQLHelper
   LATEST_INTEGRATED_LEAD = %Q{
     SELECT createdon
     FROM Opportunity
-    WHERE cssi_inputsource in ('Integrated', 'LeadAmp','Live Transfer')
+    WHERE cssi_inputsource in ('Integrated', 'LeadAmp','Live Transfer','LeadConnect','ClientConnect')
     ORDER BY createdon DESC
     LIMIT 1
   }
